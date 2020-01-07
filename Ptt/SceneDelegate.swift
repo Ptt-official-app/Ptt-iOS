@@ -8,6 +8,21 @@
 
 import UIKit
 
+struct RootViewControllerProvider {
+
+    static func tabBarController() -> UITabBarController {
+        let tabBarController = UITabBarController()
+        let tabItemFavorite = UITabBarItem(title: NSLocalizedString("Favorite Boards", comment: ""), image: nil, tag: 0)
+        let favoriteViewController = FavoriteViewController()
+        favoriteViewController.tabBarItem = tabItemFavorite
+        let tabItemHot = UITabBarItem(title: NSLocalizedString("Hot Topics", comment: ""), image: nil, tag: 1)
+        let hotTopicViewController = UIViewController()
+        hotTopicViewController.tabBarItem = tabItemHot
+        tabBarController.viewControllers = [favoriteViewController, hotTopicViewController]
+        return tabBarController
+    }
+}
+
 @available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -19,7 +34,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = ViewController()
+        window.rootViewController = RootViewControllerProvider.tabBarController()
         self.window = window
         window.makeKeyAndVisible()
     }

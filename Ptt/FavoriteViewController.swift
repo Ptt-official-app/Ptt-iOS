@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  FavoriteViewController.swift
 //  Ptt
 //
 //  Created by denkeni on 2020/1/7.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+final class FavoriteViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

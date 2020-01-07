@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if #available(iOS 13.0, *) {
         } else {
             let window = UIWindow()
-            window.rootViewController = ViewController()
+            window.rootViewController = RootViewControllerProvider.tabBarController()
             self.window = window
             window.makeKeyAndVisible()
         }
