@@ -14,12 +14,50 @@ struct RootViewControllerProvider {
         let tabBarController = UITabBarController()
         let tabItemFavorite = UITabBarItem(title: NSLocalizedString("Favorite Boards", comment: ""), image: nil, tag: 0)
         let favoriteViewController = FavoriteViewController()
-        favoriteViewController.tabBarItem = tabItemFavorite
+        let favoriteNavigationController = UINavigationController(rootViewController: favoriteViewController)
+        favoriteNavigationController.tabBarItem = tabItemFavorite
         let tabItemHot = UITabBarItem(title: NSLocalizedString("Hot Topics", comment: ""), image: nil, tag: 1)
         let hotTopicViewController = UIViewController()
         hotTopicViewController.tabBarItem = tabItemHot
-        tabBarController.viewControllers = [favoriteViewController, hotTopicViewController]
+        tabBarController.viewControllers = [favoriteNavigationController, hotTopicViewController]
         return tabBarController
+    }
+}
+
+struct GlobalAppearance {
+
+    static func apply(to window: UIWindow) {
+        if #available(iOS 11.0, *) {
+            window.tintColor = UIColor(named: "tintColor-255-159-10")
+        } else {
+            window.tintColor = UIColor(red: 255/255, green: 159/255, blue: 10/255, alpha: 1.0)
+        }
+        if #available(iOS 13.0, *) {
+        } else {
+            let attrs = [NSAttributedString.Key.foregroundColor: UIColor.white]
+            UINavigationBar.appearance().titleTextAttributes = attrs
+            if #available(iOS 11.0, *) {
+                UINavigationBar.appearance().barTintColor = UIColor(named: "blackColor-23-23-23")
+                UITabBar.appearance().barTintColor = UIColor(named: "blackColor-23-23-23")
+                UINavigationBar.appearance().largeTitleTextAttributes = attrs
+            } else {
+                UINavigationBar.appearance().barTintColor = UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0)
+                UITabBar.appearance().barTintColor = UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0)
+            }
+        }
+    }
+}
+
+extension UINavigationController {
+
+    /// Only required for iOS 12 or earilier
+    override open var preferredStatusBarStyle: UIStatusBarStyle {
+        if #available(iOS 13.0, *) {
+            // TODO: user preference for UserInterfaceStyle
+            // For forward compatibility
+//            return .darkContent
+        }
+        return .lightContent
     }
 }
 
@@ -35,6 +73,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = RootViewControllerProvider.tabBarController()
+        // TODO: user preference for UserInterfaceStyle
+        window.overrideUserInterfaceStyle = .dark
+        GlobalAppearance.apply(to: window)
         self.window = window
         window.makeKeyAndVisible()
     }

@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             let window = UIWindow()
             window.rootViewController = RootViewControllerProvider.tabBarController()
+            GlobalAppearance.apply(to: window)
             self.window = window
             window.makeKeyAndVisible()
         }
