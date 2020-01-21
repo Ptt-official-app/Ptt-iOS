@@ -10,14 +10,17 @@ import UIKit
 
 final class FavoriteViewController: UITableViewController {
 
-    private static let cellReuseIdentifier = "FavoriteCell"
-    private var backgroundColor : UIColor? {
-        if #available(iOS 11.0, *) {
-            return UIColor(named: "blackColor-23-23-23")
-        } else {
-            return UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0)
-        }
-    }
+    private let cellReuseIdentifier = "FavoriteCell"
+    private let boards = [("Gossiping", "【八卦】 請協助置底協尋"),
+                          ("C_Chat", "[希洽] 養成好習慣 看文章前先ID"),
+                          ("NBA", "[NBA] R.I.P. Mr. David Stern"),
+                          ("Lifeismoney", "[省錢] 省錢板"),
+                          ("Stock", "[股版]發文請先詳閱版規"),
+                          ("HatePolitics", "[政黑] 第三勢力先知王kusanagi02"),
+                          ("Baseball", "[棒球] 2020東奧六搶一在台灣"),
+                          ("Tech_Job", "[科技] 修機改善是設備終生職責"),
+                          ("LoL", "[LoL] PCS可憐哪"),
+                          ("Beauty", "《表特板》發文附圖")]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,14 +29,14 @@ final class FavoriteViewController: UITableViewController {
         if #available(iOS 11.0, *) {
             navigationController?.navigationBar.prefersLargeTitles = true
         }
-        view.backgroundColor = backgroundColor
+        view.backgroundColor = GlobalAppearance.backgroundColor
         tableView.estimatedRowHeight = 80.0
         tableView.separatorStyle = .none
         if #available(iOS 11.0, *) {
         } else {
             tableView.keyboardDismissMode = .onDrag // to dismiss from search bar
         }
-        tableView.register(FavoriteTableViewCell.self, forCellReuseIdentifier: FavoriteViewController.cellReuseIdentifier)
+        tableView.register(FavoriteTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
 
         let searchResultsController = UITableViewController(style: .plain)
         let searchController = UISearchController(searchResultsController: searchResultsController)
@@ -52,19 +55,28 @@ final class FavoriteViewController: UITableViewController {
     // MARK: - UITableViewDataSource
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return boards.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: FavoriteViewController.cellReuseIdentifier, for: indexPath) as! FavoriteTableViewCell
-        cell.boardName = "Test"
-        cell.boardTitle = "[測試] 每週定期清除本板文章"
-        cell.backgroundColor = backgroundColor
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! FavoriteTableViewCell
+        let index = indexPath.row
+        if index < boards.count {
+            cell.boardName = boards[index].0
+            cell.boardTitle = boards[index].1
+        }
         return cell
     }
 
+    // MARK: UITableViewDelegate
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let index = indexPath.row
+        if index < boards.count {
+            let boardViewController = BoardViewController(boardName: boards[index].0)
+            show(boardViewController, sender: self)
+        }
     }
 }
 
@@ -100,13 +112,14 @@ private class FavoriteTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
 
+        backgroundColor = GlobalAppearance.backgroundColor
         boardNameLabel.font = UIFont.preferredFont(forTextStyle: .title2)
         boardTitleLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         if #available(iOS 11.0, *) {
-            boardNameLabel.textColor = UIColor(named: "textColorWhite")
+            boardNameLabel.textColor = UIColor(named: "textColor-240-240-247")
             boardTitleLabel.textColor = UIColor(named: "textColorGray")
         } else {
-            boardNameLabel.textColor = .white
+            boardNameLabel.textColor = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
             boardTitleLabel.textColor = .systemGray
         }
 

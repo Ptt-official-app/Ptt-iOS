@@ -14,6 +14,8 @@
 		EA475F8123C4834C000867FE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA475F7F23C4834C000867FE /* LaunchScreen.storyboard */; };
 		EA475F8C23C4834C000867FE /* PttTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F8B23C4834C000867FE /* PttTests.swift */; };
 		EA475F9923C48CC1000867FE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EA475F9B23C48CC1000867FE /* Localizable.strings */; };
+		EAA4F6F123C72B01005ABCE3 /* BoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA4F6F023C72B01005ABCE3 /* BoardViewController.swift */; };
+		EAA4F6F323C72F95005ABCE3 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA4F6F223C72F95005ABCE3 /* APIClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +42,8 @@
 		EA475F9623C48C61000867FE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		EA475F9A23C48CC1000867FE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		EA475F9C23C48CC3000867FE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EAA4F6F023C72B01005ABCE3 /* BoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardViewController.swift; sourceTree = "<group>"; };
+		EAA4F6F223C72F95005ABCE3 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +88,8 @@
 				EA475F7423C4834C000867FE /* AppDelegate.swift */,
 				EA475F7623C4834C000867FE /* SceneDelegate.swift */,
 				EA475F7823C4834C000867FE /* FavoriteViewController.swift */,
+				EAA4F6F023C72B01005ABCE3 /* BoardViewController.swift */,
+				EAA4F6F223C72F95005ABCE3 /* APIClient.swift */,
 				EA475F7D23C4834C000867FE /* Assets.xcassets */,
 				EA475F7F23C4834C000867FE /* LaunchScreen.storyboard */,
 				EA475F9B23C48CC1000867FE /* Localizable.strings */,
@@ -206,6 +212,8 @@
 				EA475F7923C4834C000867FE /* FavoriteViewController.swift in Sources */,
 				EA475F7523C4834C000867FE /* AppDelegate.swift in Sources */,
 				EA475F7723C4834C000867FE /* SceneDelegate.swift in Sources */,
+				EAA4F6F323C72F95005ABCE3 /* APIClient.swift in Sources */,
+				EAA4F6F123C72B01005ABCE3 /* BoardViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -46,6 +46,14 @@ struct GlobalAppearance {
             }
         }
     }
+
+    static var backgroundColor : UIColor? {
+        if #available(iOS 11.0, *) {
+            return UIColor(named: "blackColor-23-23-23")
+        } else {
+            return UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0)
+        }
+    }
 }
 
 extension UINavigationController {
