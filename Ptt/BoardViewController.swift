@@ -9,15 +9,21 @@
 import UIKit
 import SafariServices
 
-final class BoardViewController: UITableViewController {
+final class BoardViewController: UIViewController {
 
     private var boardName : String
     private var board : APIClient.Board? = nil
     private let cellReuseIdentifier = "BoardPostCell"
 
+    private let tableView = UITableView(frame: CGRect.zero, style: .plain)
+    private let bottomView = UIView()
+    private let activityIndicator = UIActivityIndicatorView()
+    private var bottomViewHeightConstraint : NSLayoutConstraint? = nil
+
     init(boardName: String) {
         self.boardName = boardName
-        super.init(style: .plain)
+        super.init(nibName: nil, bundle: nil)
+        hidesBottomBarWhenPushed = true
     }
 
     required init?(coder: NSCoder) {
@@ -28,7 +34,9 @@ final class BoardViewController: UITableViewController {
         super.viewDidLoad()
 
         title = boardName
-        view.backgroundColor = GlobalAppearance.backgroundColor
+        tableView.backgroundColor = GlobalAppearance.backgroundColor
+        tableView.dataSource = self
+        tableView.delegate = self
         if #available(iOS 13.0, *) {
         } else {
             tableView.indicatorStyle = .white
@@ -41,10 +49,83 @@ final class BoardViewController: UITableViewController {
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         tableView.refreshControl = refreshControl
 
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(tableView)
+        bottomView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(bottomView)
+        let viewsDict = ["tableView": tableView, "bottomView": bottomView]
+        var constraints = [NSLayoutConstraint]()
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[tableView]|", options: [], metrics: nil, views: viewsDict)
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[bottomView]|", options: [], metrics: nil, views: viewsDict)
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[tableView][bottomView]|", options: [], metrics: nil, views: viewsDict)
+        let bottomViewHeightConstraint = bottomView.heightAnchor.constraint(equalToConstant: 0)
+        constraints.append(bottomViewHeightConstraint)
+        self.bottomViewHeightConstraint = bottomViewHeightConstraint
+        NSLayoutConstraint.activate(constraints)
+
+        activityIndicator.color = .lightGray
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        tableView.addSubview(activityIndicator)
+        NSLayoutConstraint.activate([
+            activityIndicator.topAnchor.constraint(equalTo: tableView.topAnchor, constant: 20.0),
+            activityIndicator.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
+        ])
+        activityIndicator.startAnimating()
         refresh()
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        let toolBarHeight : CGFloat = 49.0
+        let safeAreaBottomHeight : CGFloat = {
+            if #available(iOS 11.0, *) {
+                return view.safeAreaInsets.bottom   // only available after viewDidLayoutSubviews
+            } else {
+                return 0
+            }
+        }()
+        bottomViewHeightConstraint?.constant = toolBarHeight + safeAreaBottomHeight
+
+        let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: bottomView.frame.width, height: toolBarHeight))
+        toolBar.barTintColor = GlobalAppearance.backgroundColor
+        toolBar.translatesAutoresizingMaskIntoConstraints = false
+        bottomView.addSubview(toolBar)
+        NSLayoutConstraint.activate([
+            toolBar.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor),
+            toolBar.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor),
+            toolBar.heightAnchor.constraint(equalToConstant: toolBarHeight)
+        ])
+        if #available(iOS 11.0, *) {
+            NSLayoutConstraint.activate([
+                toolBar.bottomAnchor.constraint(equalTo: bottomView.safeAreaLayoutGuide.bottomAnchor)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                toolBar.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor)
+            ])
+        }
+
+        let refreshItem = UIBarButtonItem(title: "重整", style: .plain, target: self, action: #selector(refresh))
+        let searchItem = UIBarButtonItem(title: "搜尋", style: .plain, target: nil, action: nil)
+        let composeItem = UIBarButtonItem(title: "發文", style: .plain, target: nil, action: nil)
+        let infoItem = UIBarButtonItem(title: "看板資訊", style: .plain, target: nil, action: nil)
+        let flexible1 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let flexible2 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let flexible3 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let flexible4 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let flexible5 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        toolBar.setItems([flexible1, refreshItem, flexible2, searchItem, flexible3, composeItem, flexible4, infoItem, flexible5], animated: false)
+    }
+
     @objc private func refresh() {
+        board = nil
+        tableView.reloadData()
+        if let refreshControl = tableView.refreshControl {
+            if !refreshControl.isRefreshing {
+                activityIndicator.startAnimating()
+            }
+        }
         APIClient.getNewPostlist(board: boardName) { (error, board) in
             if let error = error {
                 DispatchQueue.main.async {
@@ -57,22 +138,26 @@ final class BoardViewController: UITableViewController {
             }
             self.board = board
             DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
                 self.tableView.reloadData()
                 self.tableView.refreshControl?.endRefreshing()
             }
         }
     }
+}
 
-    // MARK: - UITableViewDataSource
+// MARK: - UITableViewDataSource
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension BoardViewController: UITableViewDataSource {
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let board = self.board else {
             return 0
         }
         return board.PostList.count
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! BoardPostTableViewCell
         let row = indexPath.row
         guard let board = self.board, row < board.PostList.count else {
@@ -93,10 +178,13 @@ final class BoardViewController: UITableViewController {
         }
         return cell
     }
+}
 
-    // MARK: UITableViewDelegate
+// MARK: UITableViewDelegate
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+extension BoardViewController: UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let row = indexPath.row
         guard let board = self.board, row < board.PostList.count else {
