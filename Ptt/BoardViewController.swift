@@ -29,6 +29,10 @@ final class BoardViewController: UITableViewController {
 
         title = boardName
         view.backgroundColor = GlobalAppearance.backgroundColor
+        if #available(iOS 13.0, *) {
+        } else {
+            tableView.indicatorStyle = .white
+        }
         tableView.estimatedRowHeight = 80.0
         tableView.separatorStyle = .none
 

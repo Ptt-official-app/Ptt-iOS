@@ -30,6 +30,10 @@ final class FavoriteViewController: UITableViewController {
             navigationController?.navigationBar.prefersLargeTitles = true
         }
         view.backgroundColor = GlobalAppearance.backgroundColor
+        if #available(iOS 13.0, *) {
+        } else {
+            tableView.indicatorStyle = .white
+        }
         tableView.estimatedRowHeight = 80.0
         tableView.separatorStyle = .none
         if #available(iOS 11.0, *) {
