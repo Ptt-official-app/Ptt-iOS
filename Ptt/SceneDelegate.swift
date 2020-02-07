@@ -63,9 +63,7 @@ extension UINavigationController {
         if #available(iOS 13.0, *) {
             // TODO: user preference for UserInterfaceStyle
             // For forward compatibility
-            if traitCollection.userInterfaceStyle == .light {
-                return .darkContent
-            }
+//            return .darkContent
         }
         return .lightContent
     }
@@ -84,7 +82,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = RootViewControllerProvider.tabBarController()
         // TODO: user preference for UserInterfaceStyle
-//        window.overrideUserInterfaceStyle = .dark
+        window.overrideUserInterfaceStyle = .dark
         GlobalAppearance.apply(to: window)
         self.window = window
         window.makeKeyAndVisible()
