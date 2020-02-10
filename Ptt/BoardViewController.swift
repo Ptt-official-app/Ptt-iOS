@@ -13,6 +13,8 @@ final class BoardViewController: UIViewController {
 
     private var boardName : String
     private var board : APIClient.Board? = nil
+    private var isRequesting = false
+    private var receivedPage : Int = 0
     private let cellReuseIdentifier = "BoardPostCell"
 
     private let tableView = UITableView(frame: CGRect.zero, style: .plain)
@@ -37,6 +39,7 @@ final class BoardViewController: UIViewController {
         tableView.backgroundColor = GlobalAppearance.backgroundColor
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.prefetchDataSource = self
         if #available(iOS 13.0, *) {
         } else {
             tableView.indicatorStyle = .white
@@ -119,28 +122,55 @@ final class BoardViewController: UIViewController {
     }
 
     @objc private func refresh() {
-        board = nil
+        self.board = nil
+        self.receivedPage = 0
         tableView.reloadData()
         if let refreshControl = tableView.refreshControl {
             if !refreshControl.isRefreshing {
                 activityIndicator.startAnimating()
             }
         }
-        APIClient.getNewPostlist(board: boardName) { (error, board) in
+        requestNewPost(page: 1)
+    }
+
+    private func requestNewPost(page: Int) {
+        if self.isRequesting {
+            return
+        }
+        self.isRequesting = true
+        APIClient.getNewPostlist(board: boardName, page: page) { (error, board) in
             if let error = error {
                 DispatchQueue.main.async {
                     let alert = UIAlertController(title: "Error", message: error.message, preferredStyle: .alert)
                     let confirm = UIAlertAction(title: "OK", style: .default, handler: nil)
                     alert.addAction(confirm)
                     self.present(alert, animated: true, completion: nil)
+                    self.isRequesting = false
                 }
                 return
             }
-            self.board = board
+            if self.board == nil {
+                self.receivedPage = page
+                self.board = board
+            } else if let newPostList = board?.PostList {
+                // Only allow adding next page data, once
+                if page == self.receivedPage + 1 {
+                    self.receivedPage = page
+                    self.board?.PostList += newPostList
+                }
+            }
             DispatchQueue.main.async {
-                self.activityIndicator.stopAnimating()
                 self.tableView.reloadData()
-                self.tableView.refreshControl?.endRefreshing()
+                self.isRequesting = false
+                if let board = board, board.PostList.count != 0 &&
+                    board.PostList.count == self.tableView.visibleCells.count {
+                    // A special case that returns latest posts but less than one page
+                    // Automatically request next page
+                    self.requestNewPost(page: page + 1)
+                } else {
+                    self.activityIndicator.stopAnimating()
+                    self.tableView.refreshControl?.endRefreshing()
+                }
             }
         }
     }
@@ -202,6 +232,25 @@ extension BoardViewController: UITableViewDelegate {
         }
         let safariViewController = SFSafariViewController(url: url)
         present(safariViewController, animated: true, completion: nil)
+    }
+}
+
+// MARK: UITableViewDataSourcePrefetching
+
+extension BoardViewController: UITableViewDataSourcePrefetching {
+
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        guard let postList = self.board?.PostList else {
+            return
+        }
+        for indexPath in indexPaths {
+            if indexPath.row == postList.count - 1 {    // about to scroll to last row
+                requestNewPost(page: receivedPage + 1)
+            }
+        }
+    }
+
+    func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
     }
 }
 

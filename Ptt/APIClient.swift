@@ -46,17 +46,18 @@ struct APIClient {
     struct Board : Codable {
         let Page : Int
         let BoardInfo : BoardInfo
-        let PostList : [Post]
+        var PostList : [Post]
         let Message : Message?
     }
     struct APIError : Codable {
         let message : String
     }
-    static func getNewPostlist(board: String, completion: @escaping (APIError?, Board?) -> Void) {
+    static func getNewPostlist(board: String, page: Int, completion: @escaping (APIError?, Board?) -> Void) {
         var urlComponent = rootURLComponents
         urlComponent.path = "/API/GetNewPostlist"
         urlComponent.queryItems = [     // Percent encoding is automatically done with RFC 3986
-            URLQueryItem(name: "board", value: board)
+            URLQueryItem(name: "Board", value: board),
+            URLQueryItem(name: "Page", value: "\(page)")
         ]
         guard let url = urlComponent.url else {
             assertionFailure()
