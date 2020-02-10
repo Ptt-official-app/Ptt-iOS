@@ -121,6 +121,14 @@ final class BoardViewController: UIViewController {
         toolBar.setItems([flexible1, refreshItem, flexible2, searchItem, flexible3, composeItem, flexible4, infoItem, flexible5], animated: false)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        if let selectedRow = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: selectedRow, animated: true)
+        }
+    }
+
     @objc private func refresh() {
         self.board = nil
         self.receivedPage = 0
@@ -215,7 +223,6 @@ extension BoardViewController: UITableViewDataSource {
 extension BoardViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
         let row = indexPath.row
         guard let board = self.board, row < board.PostList.count else {
             return
