@@ -11,7 +11,7 @@ import UIKit
 final class FavoriteViewController: UITableViewController {
 
     private let cellReuseIdentifier = "FavoriteCell"
-    private let boards = [("Gossiping", "【八卦】 請協助置底協尋"),
+    private var boards = [("Gossiping", "【八卦】 請協助置底協尋"),
                           ("C_Chat", "[希洽] 養成好習慣 看文章前先ID"),
                           ("NBA", "[NBA] R.I.P. Mr. David Stern"),
                           ("Lifeismoney", "[省錢] 省錢板"),
@@ -22,6 +22,11 @@ final class FavoriteViewController: UITableViewController {
                           ("LoL", "[LoL] PCS可憐哪"),
                           ("Beauty", "《表特板》發文附圖")]
 
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        tableView.setEditing(editing, animated: animated)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -29,6 +34,8 @@ final class FavoriteViewController: UITableViewController {
         if #available(iOS 11.0, *) {
             navigationController?.navigationBar.prefersLargeTitles = true
         }
+        navigationItem.setRightBarButton(editButtonItem, animated: true)
+
         view.backgroundColor = GlobalAppearance.backgroundColor
         if #available(iOS 13.0, *) {
         } else {
@@ -81,6 +88,28 @@ final class FavoriteViewController: UITableViewController {
     }
 
     // MARK: UITableViewDelegate
+
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            boards.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+        let fromRow = fromIndexPath.row
+        let toRow = to.row
+        let element = boards.remove(at: fromRow)
+        boards.insert(element, at: toRow)
+    }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
