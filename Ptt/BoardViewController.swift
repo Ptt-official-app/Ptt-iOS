@@ -149,10 +149,13 @@ final class BoardViewController: UIViewController {
         APIClient.getNewPostlist(board: boardName, page: page) { (error, board) in
             if let error = error {
                 DispatchQueue.main.async {
-                    let alert = UIAlertController(title: "Error", message: error.message, preferredStyle: .alert)
-                    let confirm = UIAlertAction(title: "OK", style: .default, handler: nil)
+                    let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: error.message, preferredStyle: .alert)
+                    let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
                     alert.addAction(confirm)
-                    self.present(alert, animated: true, completion: nil)
+                    self.present(alert, animated: true, completion: {
+                        self.activityIndicator.stopAnimating()
+                        self.tableView.refreshControl?.endRefreshing()
+                    })
                     self.isRequesting = false
                 }
                 return
@@ -231,8 +234,8 @@ extension BoardViewController: UITableViewDelegate {
         var urlComponents = APIClient.pttURLComponents
         urlComponents.path = post.Href
         guard let url = urlComponents.url else {
-            let alert = UIAlertController(title: "Error", message: "wrong url", preferredStyle: .alert)
-            let confirm = UIAlertAction(title: "OK", style: .default, handler: nil)
+            let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: "wrong url", preferredStyle: .alert)
+            let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
             alert.addAction(confirm)
             self.present(alert, animated: true, completion: nil)
             return
