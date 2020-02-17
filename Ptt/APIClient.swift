@@ -68,6 +68,12 @@ struct APIClient {
                 completion(APIError(message: error.localizedDescription), nil)
                 return
             }
+            if let httpURLResponse = urlResponse as? HTTPURLResponse {
+                let statusCode = httpURLResponse.statusCode
+                if httpURLResponse.statusCode != 200 {
+                    completion(APIError(message: "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"), nil)
+                }
+            }
             guard let data = data else {
                 completion(APIError(message: "No data"), nil)
                 return

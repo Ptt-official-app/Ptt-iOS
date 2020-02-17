@@ -21,6 +21,13 @@ final class FavoriteViewController: UITableViewController {
                           ("Tech_Job", "[科技] 修機改善是設備終生職責"),
                           ("LoL", "[LoL] PCS可憐哪"),
                           ("Beauty", "《表特板》發文附圖")]
+    private let resultsTableController = ResultsTableController(style: .plain)
+    private lazy var searchController : UISearchController = {
+        // For if #available(iOS 11.0, *), no need to set searchController as property (local variable is fine).
+       return UISearchController(searchResultsController: resultsTableController)
+    }()
+    private var allBoards : [String]? = nil
+    private var boardListDict : [String: Any]? = nil
 
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
@@ -43,23 +50,24 @@ final class FavoriteViewController: UITableViewController {
         }
         tableView.estimatedRowHeight = 80.0
         tableView.separatorStyle = .none
-        if #available(iOS 11.0, *) {
-        } else {
-            tableView.keyboardDismissMode = .onDrag // to dismiss from search bar
-        }
+        tableView.keyboardDismissMode = .onDrag // to dismiss from search bar
         tableView.register(FavoriteTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
 
-        let searchResultsController = UITableViewController(style: .plain)
-        let searchController = UISearchController(searchResultsController: searchResultsController)
         searchController.delegate = self
         searchController.searchResultsUpdater = self
         searchController.searchBar.delegate = self
+        definesPresentationContext = true
+        if #available(iOS 13.0, *) {
+            searchController.searchBar.searchTextField.textColor = UIColor(named: "textColor-240-240-247")
+            // otherwise covered in GlobalAppearance
+        }
         if #available(iOS 11.0, *) {
             navigationItem.searchController = searchController
             navigationItem.hidesSearchBarWhenScrolling = false
         } else {
             tableView.tableHeaderView = searchController.searchBar
             searchController.searchBar.barStyle = .black
+            tableView.backgroundView = UIView() // See: https://stackoverflow.com/questions/31463381/background-color-for-uisearchcontroller-in-uitableview
         }
     }
 
@@ -71,7 +79,7 @@ final class FavoriteViewController: UITableViewController {
         }
     }
 
-    // MARK: - UITableViewDataSource
+    // MARK: UITableViewDataSource
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return boards.count
@@ -124,17 +132,104 @@ extension FavoriteViewController: UISearchControllerDelegate {
 
 }
 
-extension FavoriteViewController: UISearchResultsUpdating {
+extension FavoriteViewController: UISearchBarDelegate {
 
-    func updateSearchResults(for searchController: UISearchController) {
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        if boardListDict != nil {
+            return
+        }
+        var array = [String]()
+        // Raw file is 13.3 MB but with HTTP compression by default,
+        // network data usage should be actually around 750 KB.
+        let task = URLSession.shared.dataTask(with: URL(string: "https://raw.githubusercontent.com/PttCodingMan/PTTBots/master/PttApp/BoardList.json")!) { [weak self](data, urlResponse, error) in
+            guard let weakSelf = self else { return }
+            if let dict = try? JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
+                for (key, _) in dict {
+                    array.append(key)
+                }
+                weakSelf.boardListDict = dict
+            }
+            weakSelf.allBoards = array
+            DispatchQueue.main.async {
+                if let searchText = searchBar.text, searchText.count > 0 && weakSelf.resultsTableController.filteredBoards.count == 0 {
+                    weakSelf.updateSearchResults(for: weakSelf.searchController)
+                }
+            }
+        }
+        task.resume()
     }
 }
 
-extension FavoriteViewController: UISearchBarDelegate {
+extension FavoriteViewController: UISearchResultsUpdating {
 
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text, let allBoards = self.allBoards, let boardListDict = self.boardListDict else {
+            return
+        }
+        let filteredBoards = allBoards.filter { $0.localizedCaseInsensitiveContains(searchText) }
+        var result = [(String, String)]()
+        for filteredBoard in filteredBoards {
+            if let boardDesc = boardListDict[filteredBoard] as? [String: Any], let desc = boardDesc["中文敘述"] as? String {
+                result.append((filteredBoard, desc))
+            }
+        }
+        resultsTableController.filteredBoards = result
+        resultsTableController.tableView.reloadData()
+    }
 }
 
-private class FavoriteTableViewCell: UITableViewCell {
+// MARK: - ResultsTableController
+
+private final class ResultsTableController : UITableViewController {
+
+    var filteredBoards = [(String, String)]()
+
+    private let cellReuseIdentifier = "FavoriteCell"
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        view.backgroundColor = GlobalAppearance.backgroundColor
+        if #available(iOS 13.0, *) {
+        } else {
+            tableView.indicatorStyle = .white
+        }
+        tableView.estimatedRowHeight = 80.0
+        tableView.separatorStyle = .none
+        tableView.keyboardDismissMode = .onDrag // to dismiss from search bar
+        tableView.register(FavoriteTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
+    }
+
+    // MARK: UITableViewDataSource
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return filteredBoards.count
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! FavoriteTableViewCell
+        let index = indexPath.row
+        if index < filteredBoards.count {
+            cell.boardName = filteredBoards[index].0
+            cell.boardTitle = filteredBoards[index].1
+        }
+        return cell
+    }
+
+    // MARK: UITableViewDelegate
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let index = indexPath.row
+        if index < filteredBoards.count {
+            let boardViewController = BoardViewController(boardName: filteredBoards[index].0)
+            presentingViewController?.show(boardViewController, sender: self)
+        }
+    }
+}
+
+// MARK: - FavoriteTableViewCell
+
+private final class FavoriteTableViewCell: UITableViewCell {
 
     var boardName : String? {
         didSet {

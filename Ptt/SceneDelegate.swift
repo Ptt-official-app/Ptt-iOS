@@ -44,6 +44,7 @@ struct GlobalAppearance {
                 UINavigationBar.appearance().barTintColor = UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0)
                 UITabBar.appearance().barTintColor = UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0)
             }
+            UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         }
     }
 
@@ -58,7 +59,7 @@ struct GlobalAppearance {
 
 extension UINavigationController {
 
-    /// Only required for iOS 12 or earilier
+    /// Only required for iOS 12 or earlier
     override open var preferredStatusBarStyle: UIStatusBarStyle {
         if #available(iOS 13.0, *) {
             // TODO: user preference for UserInterfaceStyle
