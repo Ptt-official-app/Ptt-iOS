@@ -138,25 +138,37 @@ extension FavoriteViewController: UISearchBarDelegate {
         if boardListDict != nil {
             return
         }
+        resultsTableController.activityIndicator.startAnimating()
         var array = [String]()
-        // Raw file is 13.3 MB but with HTTP compression by default,
-        // network data usage should be actually around 750 KB.
-        let task = URLSession.shared.dataTask(with: URL(string: "https://raw.githubusercontent.com/PttCodingMan/PTTBots/master/PttApp/BoardList.json")!) { [weak self](data, urlResponse, error) in
+        APIClient.getBoardList { [weak self] (result) in
             guard let weakSelf = self else { return }
-            if let dict = try? JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
-                for (key, _) in dict {
-                    array.append(key)
+            switch result {
+            case .failure(error: let error):
+                DispatchQueue.main.async {
+                    weakSelf.resultsTableController.activityIndicator.stopAnimating()
+                    weakSelf.searchController.isActive = false
+                    let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: error.message, preferredStyle: .alert)
+                    let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
+                    alert.addAction(confirm)
+                    weakSelf.present(alert, animated: true, completion: nil)
                 }
-                weakSelf.boardListDict = dict
-            }
-            weakSelf.allBoards = array
-            DispatchQueue.main.async {
-                if let searchText = searchBar.text, searchText.count > 0 && weakSelf.resultsTableController.filteredBoards.count == 0 {
-                    weakSelf.updateSearchResults(for: weakSelf.searchController)
+            case .success(data: let data):
+                if let dict = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                    for (key, _) in dict {
+                        array.append(key)
+                    }
+                    weakSelf.boardListDict = dict
+                }
+                weakSelf.allBoards = array
+                DispatchQueue.main.async {
+                    weakSelf.resultsTableController.activityIndicator.stopAnimating()
+                    // Update UI for current typed search text
+                    if let searchText = searchBar.text, searchText.count > 0 && weakSelf.resultsTableController.filteredBoards.count == 0 {
+                        weakSelf.updateSearchResults(for: weakSelf.searchController)
+                    }
                 }
             }
         }
-        task.resume()
     }
 }
 
@@ -166,15 +178,26 @@ extension FavoriteViewController: UISearchResultsUpdating {
         guard let searchText = searchController.searchBar.text, let allBoards = self.allBoards, let boardListDict = self.boardListDict else {
             return
         }
-        let filteredBoards = allBoards.filter { $0.localizedCaseInsensitiveContains(searchText) }
-        var result = [(String, String)]()
-        for filteredBoard in filteredBoards {
-            if let boardDesc = boardListDict[filteredBoard] as? [String: Any], let desc = boardDesc["中文敘述"] as? String {
-                result.append((filteredBoard, desc))
+        resultsTableController.activityIndicator.startAnimating()
+        // Note: Using GCD here is imperfect but elegant. We'll have Search API later.
+        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+            guard let weakSelf = self else { return }
+            let filteredBoards = allBoards.filter { $0.localizedCaseInsensitiveContains(searchText) }
+            var result = [(String, String)]()
+            for filteredBoard in filteredBoards {
+                if let boardDesc = boardListDict[filteredBoard] as? [String: Any], let desc = boardDesc["中文敘述"] as? String {
+                    result.append((filteredBoard, desc))
+                }
+            }
+            weakSelf.resultsTableController.filteredBoards = result
+            DispatchQueue.main.async {
+                // Only update UI for the matching result
+                if searchText == searchController.searchBar.text {
+                    weakSelf.resultsTableController.activityIndicator.stopAnimating()
+                    weakSelf.resultsTableController.tableView.reloadData()
+                }
             }
         }
-        resultsTableController.filteredBoards = result
-        resultsTableController.tableView.reloadData()
     }
 }
 
@@ -183,6 +206,7 @@ extension FavoriteViewController: UISearchResultsUpdating {
 private final class ResultsTableController : UITableViewController {
 
     var filteredBoards = [(String, String)]()
+    let activityIndicator = UIActivityIndicatorView()
 
     private let cellReuseIdentifier = "FavoriteCell"
 
@@ -198,6 +222,14 @@ private final class ResultsTableController : UITableViewController {
         tableView.separatorStyle = .none
         tableView.keyboardDismissMode = .onDrag // to dismiss from search bar
         tableView.register(FavoriteTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
+
+        activityIndicator.color = .lightGray
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        tableView.addSubview(activityIndicator)
+        NSLayoutConstraint.activate([
+            activityIndicator.topAnchor.constraint(equalTo: tableView.topAnchor, constant: 20.0),
+            activityIndicator.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
+        ])
     }
 
     // MARK: UITableViewDataSource

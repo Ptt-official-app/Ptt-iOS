@@ -49,10 +49,11 @@ struct APIClient {
         var PostList : [Post]
         let Message : Message?
     }
-    struct APIError : Codable {
-        let message : String
+    enum NewPostlistResult {
+        case failure(error: APIError)
+        case success(board: Board)
     }
-    static func getNewPostlist(board: String, page: Int, completion: @escaping (APIError?, Board?) -> Void) {
+    static func getNewPostlist(board: String, page: Int, completion: @escaping (NewPostlistResult) -> Void) {
         var urlComponent = rootURLComponents
         urlComponent.path = "/API/GetNewPostlist"
         urlComponent.queryItems = [     // Percent encoding is automatically done with RFC 3986
@@ -64,27 +65,61 @@ struct APIClient {
             return
         }
         let task = URLSession.shared.dataTask(with: url) { (data, urlResponse, error) in
-            if let error = error {
-                completion(APIError(message: error.localizedDescription), nil)
-                return
-            }
-            if let httpURLResponse = urlResponse as? HTTPURLResponse {
-                let statusCode = httpURLResponse.statusCode
-                if httpURLResponse.statusCode != 200 {
-                    completion(APIError(message: "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"), nil)
+            let result = processResponse(data: data, urlResponse: urlResponse, error: error)
+            switch result {
+            case .failure(error: let apiError):
+                completion(.failure(error: apiError))
+            case .success(data: let resultData):
+                do {
+                    let board = try decoder.decode(Board.self, from: resultData)
+                    completion(.success(board: board))
+                } catch (let parseError) {
+                    completion(.failure(error: APIError(message: parseError.localizedDescription)))
                 }
-            }
-            guard let data = data else {
-                completion(APIError(message: "No data"), nil)
-                return
-            }
-            do {
-                let board = try decoder.decode(Board.self, from: data)
-                completion(nil, board)
-            } catch {
-                completion(APIError(message: error.localizedDescription), nil)
             }
         }
         task.resume()
+    }
+
+    enum BoardListResult {
+        case failure(error: APIError)
+        case success(data: Data)
+    }
+    static func getBoardList(completion: @escaping (BoardListResult) -> Void) {
+        // Raw file is 13.3 MB but with HTTP compression by default,
+        // network data usage should be actually around 750 KB.
+        let task = URLSession.shared.dataTask(with: URL(string: "https://raw.githubusercontent.com/PttCodingMan/PTTBots/master/PttApp/BoardList.json")!) { (data, urlResponse, error) in
+            let result = processResponse(data: data, urlResponse: urlResponse, error: error)
+            switch result {
+            case .failure(error: let apiError):
+                completion(.failure(error: apiError))
+            case .success(data: let resultData):
+                completion(.success(data: resultData))
+            }
+        }
+        task.resume()
+    }
+
+    struct APIError : Codable {
+        let message : String
+    }
+    private enum ProcessResult {
+        case failure(error: APIError)
+        case success(data: Data)
+    }
+    private static func processResponse(data: Data?, urlResponse: URLResponse?, error: Error?) -> ProcessResult {
+        if let error = error {
+            return .failure(error: APIError(message: error.localizedDescription))
+        }
+        if let httpURLResponse = urlResponse as? HTTPURLResponse {
+            let statusCode = httpURLResponse.statusCode
+            if httpURLResponse.statusCode != 200 {
+                return .failure(error: APIError(message: "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"))
+            }
+        }
+        guard let resultData = data else {
+            return .failure(error: (APIError(message: "No data")))
+        }
+        return .success(data: resultData)
     }
 }
