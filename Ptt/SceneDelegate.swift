@@ -27,11 +27,7 @@ struct RootViewControllerProvider {
 struct GlobalAppearance {
 
     static func apply(to window: UIWindow) {
-        if #available(iOS 11.0, *) {
-            window.tintColor = UIColor(named: "tintColor-255-159-10")
-        } else {
-            window.tintColor = UIColor(red: 255/255, green: 159/255, blue: 10/255, alpha: 1.0)
-        }
+        window.tintColor = tintColor
         if #available(iOS 13.0, *) {
         } else {
             let attrs = [NSAttributedString.Key.foregroundColor: UIColor.white]
@@ -45,6 +41,14 @@ struct GlobalAppearance {
                 UITabBar.appearance().barTintColor = UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0)
             }
             UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        }
+    }
+
+    static var tintColor : UIColor? {
+        if #available(iOS 11.0, *) {
+            return UIColor(named: "tintColor-255-159-10")
+        } else {
+            return UIColor(red: 255/255, green: 159/255, blue: 10/255, alpha: 1.0)
         }
     }
 

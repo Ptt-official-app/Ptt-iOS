@@ -8,19 +8,59 @@
 
 import UIKit
 
+struct Board : Codable {
+
+    let name : String
+    let title : String
+}
+
+struct Favorite {
+
+    // TODO: Switch to Ptt API later
+    private static let savePath : URL? = {
+        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let path = dir.appendingPathComponent("favoriteBoardsData")
+            return path
+        }
+        assertionFailure()
+        return nil
+    }()
+    static var boards : [Board] = {
+        guard let url = savePath,
+            let data = try? Data(contentsOf: url),
+            let boards = try? JSONDecoder().decode([Board].self, from: data) else {
+                return [Board(name: "Gossiping", title: "【八卦】 請協助置底協尋"),
+                        Board(name: "C_Chat", title: "[希洽] 養成好習慣 看文章前先ID"),
+                        Board(name: "NBA", title: "[NBA] R.I.P. Mr. David Stern"),
+                        Board(name: "Lifeismoney", title: "[省錢] 省錢板"),
+                        Board(name: "Stock", title: "[股版]發文請先詳閱版規"),
+                        Board(name: "HatePolitics", title: "[政黑] 第三勢力先知王kusanagi02"),
+                        Board(name: "Baseball", title: "[棒球] 2020東奧六搶一在台灣"),
+                        Board(name: "Tech_Job", title: "[科技] 修機改善是設備終生職責"),
+                        Board(name: "LoL", title: "[LoL] PCS可憐哪"),
+                        Board(name: "Beauty", title: "《表特板》發文附圖")]
+        }
+        return boards
+        }() {
+        willSet {
+            guard let data = try? JSONEncoder().encode(newValue), let url = savePath else {
+                assertionFailure()
+                return
+            }
+            do {
+                try data.write(to: url)
+            } catch (let error) {
+                assertionFailure(error.localizedDescription)
+            }
+        }
+    }
+}
+
+// MARK: -
+
 final class FavoriteViewController: UITableViewController {
 
     private let cellReuseIdentifier = "FavoriteCell"
-    private var boards = [("Gossiping", "【八卦】 請協助置底協尋"),
-                          ("C_Chat", "[希洽] 養成好習慣 看文章前先ID"),
-                          ("NBA", "[NBA] R.I.P. Mr. David Stern"),
-                          ("Lifeismoney", "[省錢] 省錢板"),
-                          ("Stock", "[股版]發文請先詳閱版規"),
-                          ("HatePolitics", "[政黑] 第三勢力先知王kusanagi02"),
-                          ("Baseball", "[棒球] 2020東奧六搶一在台灣"),
-                          ("Tech_Job", "[科技] 修機改善是設備終生職責"),
-                          ("LoL", "[LoL] PCS可憐哪"),
-                          ("Beauty", "《表特板》發文附圖")]
     private let resultsTableController = ResultsTableController(style: .plain)
     private lazy var searchController : UISearchController = {
         // For if #available(iOS 11.0, *), no need to set searchController as property (local variable is fine).
@@ -69,6 +109,8 @@ final class FavoriteViewController: UITableViewController {
             searchController.searchBar.barStyle = .black
             tableView.backgroundView = UIView() // See: https://stackoverflow.com/questions/31463381/background-color-for-uisearchcontroller-in-uitableview
         }
+
+        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name("didUpdateFavoriteBoards"), object: nil)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -79,18 +121,22 @@ final class FavoriteViewController: UITableViewController {
         }
     }
 
+    @objc private func refresh() {
+        tableView.reloadData()
+    }
+
     // MARK: UITableViewDataSource
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return boards.count
+        return Favorite.boards.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! FavoriteTableViewCell
         let index = indexPath.row
-        if index < boards.count {
-            cell.boardName = boards[index].0
-            cell.boardTitle = boards[index].1
+        if index < Favorite.boards.count {
+            cell.boardName = Favorite.boards[index].name
+            cell.boardTitle = Favorite.boards[index].title
         }
         return cell
     }
@@ -103,7 +149,7 @@ final class FavoriteViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            boards.remove(at: indexPath.row)
+            Favorite.boards.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
@@ -115,14 +161,14 @@ final class FavoriteViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
         let fromRow = fromIndexPath.row
         let toRow = to.row
-        let element = boards.remove(at: fromRow)
-        boards.insert(element, at: toRow)
+        let element = Favorite.boards.remove(at: fromRow)
+        Favorite.boards.insert(element, at: toRow)
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
-        if index < boards.count {
-            let boardViewController = BoardViewController(boardName: boards[index].0)
+        if index < Favorite.boards.count {
+            let boardViewController = BoardViewController(boardName: Favorite.boards[index].name)
             show(boardViewController, sender: self)
         }
     }
@@ -183,10 +229,10 @@ extension FavoriteViewController: UISearchResultsUpdating {
         DispatchQueue.global(qos: .userInteractive).async { [weak self] in
             guard let weakSelf = self else { return }
             let filteredBoards = allBoards.filter { $0.localizedCaseInsensitiveContains(searchText) }
-            var result = [(String, String)]()
+            var result = [Board]()
             for filteredBoard in filteredBoards {
                 if let boardDesc = boardListDict[filteredBoard] as? [String: Any], let desc = boardDesc["中文敘述"] as? String {
-                    result.append((filteredBoard, desc))
+                    result.append(Board(name: filteredBoard, title: desc))
                 }
             }
             weakSelf.resultsTableController.filteredBoards = result
@@ -201,11 +247,11 @@ extension FavoriteViewController: UISearchResultsUpdating {
     }
 }
 
-// MARK: - ResultsTableController
+// MARK: -
 
 private final class ResultsTableController : UITableViewController {
 
-    var filteredBoards = [(String, String)]()
+    var filteredBoards = [Board]()
     let activityIndicator = UIActivityIndicatorView()
 
     private let cellReuseIdentifier = "FavoriteCell"
@@ -232,6 +278,23 @@ private final class ResultsTableController : UITableViewController {
         ])
     }
 
+    @objc private func addToFavorite(sender: FavoriteButton) {
+        switch sender.isSelected {
+        case false:
+            sender.isSelected = true
+            if let boardToAdded = sender.board {
+                Favorite.boards.append(boardToAdded)
+            }
+        case true:
+            sender.isSelected = false
+            if let boardToRemoved = sender.board,
+                let indexToRemoved = Favorite.boards.firstIndex(where: {$0.name == boardToRemoved.name}) {
+                Favorite.boards.remove(at: indexToRemoved)
+            }
+        }
+        NotificationCenter.default.post(name: NSNotification.Name("didUpdateFavoriteBoards"), object: nil)
+    }
+
     // MARK: UITableViewDataSource
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -240,10 +303,12 @@ private final class ResultsTableController : UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! FavoriteTableViewCell
+        cell.favoriteButton.addTarget(self, action: #selector(addToFavorite), for: .touchUpInside)
         let index = indexPath.row
         if index < filteredBoards.count {
-            cell.boardName = filteredBoards[index].0
-            cell.boardTitle = filteredBoards[index].1
+            cell.boardName = filteredBoards[index].name
+            cell.boardTitle = filteredBoards[index].title
+            cell.favoriteButton.board = filteredBoards[index]
         }
         return cell
     }
@@ -253,13 +318,13 @@ private final class ResultsTableController : UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
         if index < filteredBoards.count {
-            let boardViewController = BoardViewController(boardName: filteredBoards[index].0)
+            let boardViewController = BoardViewController(boardName: filteredBoards[index].name)
             presentingViewController?.show(boardViewController, sender: self)
         }
     }
 }
 
-// MARK: - FavoriteTableViewCell
+// MARK: -
 
 private final class FavoriteTableViewCell: UITableViewCell {
 
@@ -273,6 +338,18 @@ private final class FavoriteTableViewCell: UITableViewCell {
             boardTitleLabel.text = boardTitle
         }
     }
+    lazy var favoriteButton : FavoriteButton = {
+        let button = FavoriteButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(button)
+        NSLayoutConstraint.activate([
+            button.topAnchor.constraint(equalTo: contentView.topAnchor),
+            button.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            button.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            button.widthAnchor.constraint(equalTo: button.heightAnchor)
+        ])
+        return button
+    }()
     private let boardNameLabel = UILabel()
     private let boardTitleLabel = UILabel()
 
@@ -304,6 +381,48 @@ private final class FavoriteTableViewCell: UITableViewCell {
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|-(vp)-[boardNameLabel]-(vps)-[boardTitleLabel]-(vp)-|",
                                                       options: [], metrics: metrics, views: viewsDict)
         NSLayoutConstraint.activate(constraints)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// MARK: -
+
+private final class FavoriteButton : UIButton {
+
+    var board : Board? = nil {
+        didSet {
+            if let board = self.board, Favorite.boards.contains(where: { $0.name == board.name }) {
+                isSelected = true
+            } else {
+                isSelected = false
+            }
+        }
+    }
+    override var isSelected : Bool {
+        didSet {
+            if isSelected {
+                imageView?.tintColor = GlobalAppearance.tintColor
+            } else {
+                imageView?.tintColor = UIColor(hue: 0.667, saturation: 0.079, brightness: 0.4, alpha: 1)
+            }
+        }
+    }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+
+        let image = StyleKit.imageOfFavorite(with: CGSize(width: 30.0, height: 30.0))
+        setImage(image.withRenderingMode(.alwaysTemplate), for: .normal)
+        isSelected = false
+        showsTouchWhenHighlighted = true    // comment me for easier view hierarchy debugging
+        if #available(iOS 11.0, *) {
+            adjustsImageSizeForAccessibilityContentSizeCategory = true
+        } else {
+            // Sorry, iOS 10.
+        }
     }
 
     required init?(coder: NSCoder) {
