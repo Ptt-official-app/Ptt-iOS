@@ -405,8 +405,16 @@ private final class FavoriteButton : UIButton {
         didSet {
             if isSelected {
                 imageView?.tintColor = GlobalAppearance.tintColor
+                if let boardName = board?.name {
+                    accessibilityLabel = boardName + NSLocalizedString("In favorite", comment: "")
+                    accessibilityHint = NSLocalizedString("Removes", comment: "") + boardName + NSLocalizedString("from favorite.", comment: "")
+                }
             } else {
                 imageView?.tintColor = UIColor(hue: 0.667, saturation: 0.079, brightness: 0.4, alpha: 1)
+                if let boardName = board?.name {
+                    accessibilityLabel = boardName + NSLocalizedString("Not in favorite", comment: "")
+                    accessibilityHint = NSLocalizedString("Adds", comment: "") + boardName + NSLocalizedString("to favorite.", comment: "")
+                }
             }
         }
     }

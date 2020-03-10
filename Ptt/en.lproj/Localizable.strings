@@ -11,3 +11,11 @@
 
 "Error" = "Error";
 "Confirm" = "Confirm";
+
+/* VoiceOver */
+"In favorite" = "In favorite";
+"Not in favorite" = "Not in favorite";
+"Removes" = "Removes";
+"from favorite." = "from favorite.";
+"Adds" = "Adds";
+"to favorite." = "to favorite.";

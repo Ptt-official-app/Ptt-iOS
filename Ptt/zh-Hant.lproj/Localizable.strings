@@ -11,3 +11,11 @@
 
 "Error" = "錯誤";
 "Confirm" = "確認";
+
+/* VoiceOver */
+"In favorite" = "已加入最愛";
+"Not in favorite" = "未加入最愛";
+"Removes" = "將";
+"from favorite." = "移出最愛。";
+"Adds" = "將";
+"to favorite." = "加入最愛。";
