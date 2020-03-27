@@ -19,6 +19,7 @@ final class BoardViewController: UIViewController {
 
     private let tableView = UITableView(frame: CGRect.zero, style: .plain)
     private let bottomView = UIView()
+    private let toolBar = UIToolbar()
     private let activityIndicator = UIActivityIndicatorView()
     private var bottomViewHeightConstraint : NSLayoutConstraint? = nil
 
@@ -86,34 +87,40 @@ final class BoardViewController: UIViewController {
         }()
         bottomViewHeightConstraint?.constant = toolBarHeight + safeAreaBottomHeight
 
-        let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: bottomView.frame.width, height: toolBarHeight))
-        toolBar.barTintColor = GlobalAppearance.backgroundColor
-        bottomView.ptt_add(subviews: [toolBar])
-        NSLayoutConstraint.activate([
-            toolBar.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor),
-            toolBar.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor),
-            toolBar.heightAnchor.constraint(equalToConstant: toolBarHeight)
-        ])
-        if #available(iOS 11.0, *) {
+        if toolBar.superview == nil {
+            toolBar.frame = CGRect(x: 0, y: 0, width: bottomView.frame.width, height: toolBarHeight)
+            toolBar.barTintColor = GlobalAppearance.backgroundColor
+            bottomView.ptt_add(subviews: [toolBar])
             NSLayoutConstraint.activate([
-                toolBar.bottomAnchor.constraint(equalTo: bottomView.safeAreaLayoutGuide.bottomAnchor)
+                toolBar.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor),
+                toolBar.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor),
+                toolBar.heightAnchor.constraint(equalToConstant: toolBarHeight)
             ])
-        } else {
-            NSLayoutConstraint.activate([
-                toolBar.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor)
-            ])
-        }
+            if #available(iOS 11.0, *) {
+                NSLayoutConstraint.activate([
+                    toolBar.bottomAnchor.constraint(equalTo: bottomView.safeAreaLayoutGuide.bottomAnchor)
+                ])
+            } else {
+                NSLayoutConstraint.activate([
+                    toolBar.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor)
+                ])
+            }
 
-        let refreshItem = UIBarButtonItem(title: "重整", style: .plain, target: self, action: #selector(refresh))
-        let searchItem = UIBarButtonItem(title: "搜尋", style: .plain, target: nil, action: nil)
-        let composeItem = UIBarButtonItem(title: "發文", style: .plain, target: nil, action: nil)
-        let infoItem = UIBarButtonItem(title: "看板資訊", style: .plain, target: nil, action: nil)
-        let flexible1 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let flexible2 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let flexible3 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let flexible4 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let flexible5 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        toolBar.setItems([flexible1, refreshItem, flexible2, searchItem, flexible3, composeItem, flexible4, infoItem, flexible5], animated: false)
+            let refreshItem = UIBarButtonItem(image: StyleKit.imageOfRefresh().withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(refresh))
+            refreshItem.accessibilityLabel = NSLocalizedString("Refresh", comment: "")
+            let searchItem = UIBarButtonItem(image: StyleKit.imageOfSearch().withRenderingMode(.alwaysOriginal), style: .plain, target: nil, action: nil)
+            searchItem.accessibilityLabel = NSLocalizedString("Search", comment: "")
+            let composeItem = UIBarButtonItem(image: StyleKit.imageOfCompose().withRenderingMode(.alwaysOriginal), style: .plain, target: nil, action: nil)
+            composeItem.accessibilityLabel = NSLocalizedString("Compose", comment: "")
+            let infoItem = UIBarButtonItem(image: StyleKit.imageOfMoreH().withRenderingMode(.alwaysOriginal), style: .plain, target: nil, action: nil)
+            infoItem.accessibilityLabel = NSLocalizedString("More actions", comment: "")
+            let flexible1 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            let flexible2 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            let flexible3 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            let flexible4 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            let flexible5 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            toolBar.setItems([flexible1, refreshItem, flexible2, searchItem, flexible3, composeItem, flexible4, infoItem, flexible5], animated: false)
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -317,7 +324,7 @@ private class BoardPostTableViewCell: UITableViewCell {
             titleLabel.textColor = UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0)
         }
         let moreButton = UIButton(type: .custom)
-        moreButton.setImage(StyleKit.imageOfMore(), for: .normal)
+        moreButton.setImage(StyleKit.imageOfMoreV(), for: .normal)
         moreButton.accessibilityLabel = NSLocalizedString("More actions", comment: "")
         moreButton.showsTouchWhenHighlighted = true
         if #available(iOS 11.0, *) {

@@ -12,7 +12,7 @@ struct RootViewControllerProvider {
 
     static func tabBarController() -> UITabBarController {
         let tabBarController = UITabBarController()
-        let tabItemFavorite = UITabBarItem(title: NSLocalizedString("Favorite Boards", comment: ""), image: nil, tag: 0)
+        let tabItemFavorite = UITabBarItem(title: NSLocalizedString("Favorite Boards", comment: ""), image: StyleKit.imageOfFavorite(), tag: 0)
         let favoriteViewController = FavoriteViewController()
         let favoriteNavigationController = UINavigationController(rootViewController: favoriteViewController)
         favoriteNavigationController.tabBarItem = tabItemFavorite
