@@ -52,10 +52,7 @@ final class BoardViewController: UIViewController {
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         tableView.refreshControl = refreshControl
 
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(tableView)
-        bottomView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(bottomView)
+        view.ptt_add(subviews: [tableView, bottomView])
         let viewsDict = ["tableView": tableView, "bottomView": bottomView]
         var constraints = [NSLayoutConstraint]()
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[tableView]|", options: [], metrics: nil, views: viewsDict)
@@ -67,8 +64,7 @@ final class BoardViewController: UIViewController {
         NSLayoutConstraint.activate(constraints)
 
         activityIndicator.color = .lightGray
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        tableView.addSubview(activityIndicator)
+        tableView.ptt_add(subviews: [activityIndicator])
         NSLayoutConstraint.activate([
             activityIndicator.topAnchor.constraint(equalTo: tableView.topAnchor, constant: 20.0),
             activityIndicator.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
@@ -92,8 +88,7 @@ final class BoardViewController: UIViewController {
 
         let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: bottomView.frame.width, height: toolBarHeight))
         toolBar.barTintColor = GlobalAppearance.backgroundColor
-        toolBar.translatesAutoresizingMaskIntoConstraints = false
-        bottomView.addSubview(toolBar)
+        bottomView.ptt_add(subviews: [toolBar])
         NSLayoutConstraint.activate([
             toolBar.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor),
             toolBar.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor),
@@ -207,9 +202,10 @@ extension BoardViewController: UITableViewDataSource {
             return cell
         }
         let post = board.PostList[row]
+        cell.category = post.Category
         cell.dateString = post.Date
         cell.authorName = post.Author
-        cell.title = post.Title
+        cell.title = post.TitleWithoutCategory
         if row % 2 == 0 {
             if #available(iOS 11.0, *) {
                 cell.backgroundColor = UIColor(named: "blackColor-28-28-31")
@@ -268,6 +264,11 @@ extension BoardViewController: UITableViewDataSourcePrefetching {
 
 private class BoardPostTableViewCell: UITableViewCell {
 
+    var category : String? {
+        didSet {
+            categoryLabel.text = category
+        }
+    }
     var dateString : String? {
         didSet {
             dateLabel.text = dateString
@@ -283,6 +284,7 @@ private class BoardPostTableViewCell: UITableViewCell {
             titleLabel.text = title
         }
     }
+    private let categoryLabel = UILabel()
     private let dateLabel = UILabel()
     private let authorNameLabel = UILabel()
     private let titleLabel = UILabel()
@@ -290,37 +292,56 @@ private class BoardPostTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
 
+        let categoryImage = UIImageView(image: StyleKit.imageOfCategory())
+        let clockImage = UIImageView(image: StyleKit.imageOfClock())
+        let authorImage = UIImageView(image: StyleKit.imageOfAuthor())
+        if #available(iOS 11.0, *) {
+            categoryImage.adjustsImageSizeForAccessibilityContentSizeCategory = true
+            clockImage.adjustsImageSizeForAccessibilityContentSizeCategory = true
+            authorImage.adjustsImageSizeForAccessibilityContentSizeCategory = true
+        }
+        categoryLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         dateLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         authorNameLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         titleLabel.font = UIFont.preferredFont(forTextStyle: .title3)
-        titleLabel.numberOfLines = 0
+        titleLabel.numberOfLines = 2
         if #available(iOS 11.0, *) {
+            categoryLabel.textColor = UIColor(named: "textColorGray")
             dateLabel.textColor = UIColor(named: "textColorGray")
             authorNameLabel.textColor = UIColor(named: "textColorGray")
             titleLabel.textColor = UIColor(named: "textColor-240-240-247")
         } else {
+            categoryLabel.textColor = .systemGray
             dateLabel.textColor = .systemGray
             authorNameLabel.textColor = .systemGray
             titleLabel.textColor = UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0)
         }
+        let moreButton = UIButton(type: .custom)
+        moreButton.setImage(StyleKit.imageOfMore(), for: .normal)
+        moreButton.accessibilityLabel = NSLocalizedString("More actions", comment: "")
+        moreButton.showsTouchWhenHighlighted = true
+        if #available(iOS 11.0, *) {
+            moreButton.adjustsImageSizeForAccessibilityContentSizeCategory = true
+        }
 
-        dateLabel.translatesAutoresizingMaskIntoConstraints = false
-        authorNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(dateLabel)
-        contentView.addSubview(authorNameLabel)
-        contentView.addSubview(titleLabel)
-        let viewsDict = ["dateLabel": dateLabel, "authorNameLabel": authorNameLabel, "titleLabel": titleLabel]
-        let metrics = ["hp": 20, "vp": 16, "vps": 6]
+        contentView.ptt_add(subviews: [categoryImage, categoryLabel, clockImage, dateLabel, authorImage, authorNameLabel, titleLabel, moreButton])
+        let viewsDict = ["categoryImage": categoryImage, "categoryLabel": categoryLabel, "clockImage": clockImage, "dateLabel": dateLabel, "authorImage": authorImage, "authorNameLabel": authorNameLabel, "titleLabel": titleLabel, "moreButton": moreButton]
+        let metrics = ["hp": 20, "vp": 14, "vps": 6]
         var constraints = [NSLayoutConstraint]()
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(hp)-[dateLabel]-(vps)-[authorNameLabel]-(hp)-|",
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(hp)-[categoryImage]-(7)-[categoryLabel]-(14)-[clockImage]-(7)-[dateLabel]-(14)-[authorImage]-(7)-[authorNameLabel]",
                                                       options: [], metrics: metrics, views: viewsDict)
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(hp)-[titleLabel]-(hp)-|",
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(hp)-[titleLabel][moreButton]|",
                                                       options: [], metrics: metrics, views: viewsDict)
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|-(vp)-[dateLabel]-(vps)-[titleLabel]-(vp)-|",
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|-(vp)-[categoryImage]-(vps)-[titleLabel]-(vp)-|",
                                                       options: [], metrics: metrics, views: viewsDict)
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|-(vp)-[authorNameLabel]-(vps)-[titleLabel]-(vp)-|",
-        options: [], metrics: metrics, views: viewsDict)
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[moreButton]|",
+                                                      options: [], metrics: metrics, views: viewsDict)
+        constraints.append(categoryLabel.centerYAnchor.constraint(equalTo: categoryImage.centerYAnchor))
+        constraints.append(clockImage.centerYAnchor.constraint(equalTo: categoryImage.centerYAnchor))
+        constraints.append(dateLabel.lastBaselineAnchor.constraint(equalTo: categoryLabel.lastBaselineAnchor))
+        constraints.append(authorImage.centerYAnchor.constraint(equalTo: categoryImage.centerYAnchor))
+        constraints.append(authorNameLabel.lastBaselineAnchor.constraint(equalTo: categoryLabel.lastBaselineAnchor))
+        constraints.append(moreButton.widthAnchor.constraint(equalToConstant: 34.0))
         NSLayoutConstraint.activate(constraints)
     }
 

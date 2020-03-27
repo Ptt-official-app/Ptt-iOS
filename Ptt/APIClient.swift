@@ -26,6 +26,25 @@ struct APIClient {
     private static let decoder = JSONDecoder()
 
     struct Post : Codable {
+        var Category : String {
+            if let leftBracket = Title.firstIndex(of: "["), let rightBracket = Title.firstIndex(of: "]") {
+                let nextLeftBracket = Title.index(after: leftBracket)
+                let range = nextLeftBracket..<rightBracket
+                let category = Title[range]
+                return String(category)
+            }
+            return "　　"
+        }
+        var TitleWithoutCategory : String {
+            if let leftBracket = Title.firstIndex(of: "["), let rightBracket = Title.firstIndex(of: "]") {
+                var title = Title
+                let nextRightBracket = Title.index(after: rightBracket)
+                let range = leftBracket...nextRightBracket
+                title.removeSubrange(range)
+                return title
+            }
+            return Title
+        }
         let Title : String
         let Href : String
         let Author : String

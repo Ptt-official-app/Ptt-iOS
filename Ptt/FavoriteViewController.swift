@@ -270,8 +270,7 @@ private final class ResultsTableController : UITableViewController {
         tableView.register(FavoriteTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
 
         activityIndicator.color = .lightGray
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        tableView.addSubview(activityIndicator)
+        tableView.ptt_add(subviews: [activityIndicator])
         NSLayoutConstraint.activate([
             activityIndicator.topAnchor.constraint(equalTo: tableView.topAnchor, constant: 20.0),
             activityIndicator.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
@@ -340,8 +339,7 @@ private final class FavoriteTableViewCell: UITableViewCell {
     }
     lazy var favoriteButton : FavoriteButton = {
         let button = FavoriteButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(button)
+        contentView.ptt_add(subviews: [button])
         NSLayoutConstraint.activate([
             button.topAnchor.constraint(equalTo: contentView.topAnchor),
             button.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
@@ -367,10 +365,7 @@ private final class FavoriteTableViewCell: UITableViewCell {
             boardTitleLabel.textColor = .systemGray
         }
 
-        boardNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        boardTitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(boardNameLabel)
-        contentView.addSubview(boardTitleLabel)
+        contentView.ptt_add(subviews: [boardNameLabel, boardTitleLabel])
         let viewsDict = ["boardNameLabel": boardNameLabel, "boardTitleLabel": boardTitleLabel]
         let metrics = ["hp": 20, "vp": 10, "vps": 4]
         var constraints = [NSLayoutConstraint]()
@@ -422,7 +417,7 @@ private final class FavoriteButton : UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        let image = StyleKit.imageOfFavorite(with: CGSize(width: 30.0, height: 30.0))
+        let image = StyleKit.imageOfFavorite()
         setImage(image.withRenderingMode(.alwaysTemplate), for: .normal)
         isSelected = false
         showsTouchWhenHighlighted = true    // comment me for easier view hierarchy debugging
