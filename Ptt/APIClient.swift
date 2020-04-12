@@ -8,6 +8,38 @@
 
 import Foundation
 
+protocol Post : Codable {
+    var Category : String { get }
+    var TitleWithoutCategory : String { get }
+
+    var Title : String { get }
+    var Href : String { get }
+    var Author : String { get }
+    var Date : String { get }
+}
+
+extension Post {
+    var Category : String {
+        if let leftBracket = Title.firstIndex(of: "["), let rightBracket = Title.firstIndex(of: "]") {
+            let nextLeftBracket = Title.index(after: leftBracket)
+            let range = nextLeftBracket..<rightBracket
+            let category = Title[range]
+            return String(category)
+        }
+        return "　　"
+    }
+    var TitleWithoutCategory : String {
+        if let leftBracket = Title.firstIndex(of: "["), let rightBracket = Title.firstIndex(of: "]") {
+            var title = Title
+            let nextRightBracket = Title.index(after: rightBracket)
+            let range = leftBracket...nextRightBracket
+            title.removeSubrange(range)
+            return title
+        }
+        return Title
+    }
+}
+
 struct APIClient {
 
     private static var rootURLComponents : URLComponents {
@@ -25,26 +57,7 @@ struct APIClient {
 
     private static let decoder = JSONDecoder()
 
-    struct Post : Codable {
-        var Category : String {
-            if let leftBracket = Title.firstIndex(of: "["), let rightBracket = Title.firstIndex(of: "]") {
-                let nextLeftBracket = Title.index(after: leftBracket)
-                let range = nextLeftBracket..<rightBracket
-                let category = Title[range]
-                return String(category)
-            }
-            return "　　"
-        }
-        var TitleWithoutCategory : String {
-            if let leftBracket = Title.firstIndex(of: "["), let rightBracket = Title.firstIndex(of: "]") {
-                var title = Title
-                let nextRightBracket = Title.index(after: rightBracket)
-                let range = leftBracket...nextRightBracket
-                title.removeSubrange(range)
-                return title
-            }
-            return Title
-        }
+    struct BoardPost : Post {
         let Title : String
         let Href : String
         let Author : String
@@ -65,14 +78,14 @@ struct APIClient {
     struct Board : Codable {
         let Page : Int
         let BoardInfo : BoardInfo
-        var PostList : [Post]
+        var PostList : [BoardPost]
         let Message : Message?
     }
-    enum NewPostlistResult {
+    enum GetNewPostlistResult {
         case failure(error: APIError)
         case success(board: Board)
     }
-    static func getNewPostlist(board: String, page: Int, completion: @escaping (NewPostlistResult) -> Void) {
+    static func getNewPostlist(board: String, page: Int, completion: @escaping (GetNewPostlistResult) -> Void) {
         var urlComponent = rootURLComponents
         urlComponent.path = "/API/GetNewPostlist"
         urlComponent.queryItems = [     // Percent encoding is automatically done with RFC 3986
@@ -92,6 +105,53 @@ struct APIClient {
                 do {
                     let board = try decoder.decode(Board.self, from: resultData)
                     completion(.success(board: board))
+                } catch (let parseError) {
+                    completion(.failure(error: APIError(message: parseError.localizedDescription)))
+                }
+            }
+        }
+        task.resume()
+    }
+
+    struct FullPost : Post {
+        let Title : String
+        let Href : String
+        let Author : String
+        let Date : String
+        let Board : String
+        let Nickname : String
+        let Content : String
+        let Pushs : [Push]
+    }
+    struct Push : Codable {
+        let Userid : String
+        let Content : String
+        let IPdatetime : String
+    }
+    enum GetPostResult {
+        case failure(error: APIError)
+        case success(post: Post)
+    }
+    static func getPost(board: String, filename: String, completion: @escaping (GetPostResult) -> Void) {
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/API/GetPost"
+        urlComponent.queryItems = [     // Percent encoding is automatically done with RFC 3986
+            URLQueryItem(name: "Board", value: board),
+            URLQueryItem(name: "Filename", value: filename)
+        ]
+        guard let url = urlComponent.url else {
+            assertionFailure()
+            return
+        }
+        let task = URLSession.shared.dataTask(with: url) { (data, urlResponse, error) in
+            let result = processResponse(data: data, urlResponse: urlResponse, error: error)
+            switch result {
+            case .failure(error: let apiError):
+                completion(.failure(error: apiError))
+            case .success(data: let resultData):
+                do {
+                    let post = try decoder.decode(FullPost.self, from: resultData)
+                    completion(.success(post: post))
                 } catch (let parseError) {
                     completion(.failure(error: APIError(message: parseError.localizedDescription)))
                 }

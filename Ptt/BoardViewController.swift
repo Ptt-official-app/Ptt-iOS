@@ -236,17 +236,8 @@ extension BoardViewController: UITableViewDelegate {
             return
         }
         let post = board.PostList[row]
-        var urlComponents = APIClient.pttURLComponents
-        urlComponents.path = post.Href
-        guard let url = urlComponents.url else {
-            let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: "wrong url", preferredStyle: .alert)
-            let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
-            alert.addAction(confirm)
-            self.present(alert, animated: true, completion: nil)
-            return
-        }
-        let safariViewController = SFSafariViewController(url: url)
-        present(safariViewController, animated: true, completion: nil)
+        let postViewController = PostViewController(post: post, boardName: boardName)
+        show(postViewController, sender: self)
     }
 }
 

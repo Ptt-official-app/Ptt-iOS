@@ -16,10 +16,12 @@ struct RootViewControllerProvider {
         let favoriteViewController = FavoriteViewController()
         let favoriteNavigationController = UINavigationController(rootViewController: favoriteViewController)
         favoriteNavigationController.tabBarItem = tabItemFavorite
-        let tabItemHot = UITabBarItem(title: NSLocalizedString("Hot Topics", comment: ""), image: nil, tag: 1)
-        let hotTopicViewController = UIViewController()
-        hotTopicViewController.tabBarItem = tabItemHot
-        tabBarController.viewControllers = [favoriteNavigationController, hotTopicViewController]
+//        let tabItemHot = UITabBarItem(title: NSLocalizedString("Hot Topics", comment: ""), image: nil, tag: 1)
+        let tabItemHot = UITabBarItem(tabBarSystemItem: .featured, tag: 1)
+        let hotTopicViewController = HotTopicViewController()
+        let hotTopicNavigationController = UINavigationController(rootViewController: hotTopicViewController)
+        hotTopicNavigationController.tabBarItem = tabItemHot
+        tabBarController.viewControllers = [favoriteNavigationController, hotTopicNavigationController]
         return tabBarController
     }
 }

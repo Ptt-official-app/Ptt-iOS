@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EA41D65D243EF51A0052F4A1 /* HotTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA41D65C243EF51A0052F4A1 /* HotTopicViewController.swift */; };
 		EA475F7523C4834C000867FE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F7423C4834C000867FE /* AppDelegate.swift */; };
 		EA475F7723C4834C000867FE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F7623C4834C000867FE /* SceneDelegate.swift */; };
 		EA475F7923C4834C000867FE /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F7823C4834C000867FE /* FavoriteViewController.swift */; };
@@ -14,6 +15,7 @@
 		EA475F8123C4834C000867FE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA475F7F23C4834C000867FE /* LaunchScreen.storyboard */; };
 		EA475F8C23C4834C000867FE /* PttTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F8B23C4834C000867FE /* PttTests.swift */; };
 		EA475F9923C48CC1000867FE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EA475F9B23C48CC1000867FE /* Localizable.strings */; };
+		EA479EB42431F27C008A0D99 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA479EB32431F27C008A0D99 /* PostViewController.swift */; };
 		EA62540E242DAAF600E977FE /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA62540D242DAAF600E977FE /* Extension.swift */; };
 		EA78E0C124050EB100309694 /* StyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA78E0C024050EB000309694 /* StyleKit.swift */; };
 		EAA4F6F123C72B01005ABCE3 /* BoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA4F6F023C72B01005ABCE3 /* BoardViewController.swift */; };
@@ -31,6 +33,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EA41D65C243EF51A0052F4A1 /* HotTopicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotTopicViewController.swift; sourceTree = "<group>"; };
 		EA475F7123C4834C000867FE /* Ptt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ptt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA475F7423C4834C000867FE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EA475F7623C4834C000867FE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -44,6 +47,7 @@
 		EA475F9623C48C61000867FE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		EA475F9A23C48CC1000867FE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		EA475F9C23C48CC3000867FE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EA479EB32431F27C008A0D99 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		EA62540D242DAAF600E977FE /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		EA78E0C024050EB000309694 /* StyleKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleKit.swift; sourceTree = "<group>"; };
 		EAA4F6F023C72B01005ABCE3 /* BoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardViewController.swift; sourceTree = "<group>"; };
@@ -93,6 +97,8 @@
 				EA475F7623C4834C000867FE /* SceneDelegate.swift */,
 				EA475F7823C4834C000867FE /* FavoriteViewController.swift */,
 				EAA4F6F023C72B01005ABCE3 /* BoardViewController.swift */,
+				EA479EB32431F27C008A0D99 /* PostViewController.swift */,
+				EA41D65C243EF51A0052F4A1 /* HotTopicViewController.swift */,
 				EAA4F6F223C72F95005ABCE3 /* APIClient.swift */,
 				EA62540D242DAAF600E977FE /* Extension.swift */,
 				EA78E0C024050EB000309694 /* StyleKit.swift */,
@@ -215,6 +221,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA479EB42431F27C008A0D99 /* PostViewController.swift in Sources */,
+				EA41D65D243EF51A0052F4A1 /* HotTopicViewController.swift in Sources */,
 				EA78E0C124050EB100309694 /* StyleKit.swift in Sources */,
 				EA475F7923C4834C000867FE /* FavoriteViewController.swift in Sources */,
 				EA62540E242DAAF600E977FE /* Extension.swift in Sources */,
@@ -386,7 +394,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				INFOPLIST_FILE = Ptt/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -405,7 +413,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				INFOPLIST_FILE = Ptt/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
