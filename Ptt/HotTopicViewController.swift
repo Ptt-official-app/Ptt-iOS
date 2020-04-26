@@ -12,6 +12,7 @@ import WebKit
 final class HotTopicViewController: UIViewController {
 
     private let webView = WKWebView()
+    private let webProgressView = UIProgressView(progressViewStyle: .bar)
     private var webViewProgressObservation : NSKeyValueObservation!
 
     private lazy var backItem : UIBarButtonItem = {
@@ -50,7 +51,6 @@ final class HotTopicViewController: UIViewController {
             automaticallyAdjustsScrollViewInsets = true
             webView.scrollView.decelerationRate = .normal
         }
-        let webProgressView = UIProgressView(progressViewStyle: .bar)
         navigationController?.navigationBar.ptt_add(subviews: [webProgressView])
         var constraints = [NSLayoutConstraint]()
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[webProgressView]-0-|", options: [], metrics: nil, views: ["webProgressView": webProgressView])
@@ -60,15 +60,15 @@ final class HotTopicViewController: UIViewController {
             guard let progress = change.newValue else { return }
             switch progress {
             case 1.0:
-                webProgressView.setProgress(Float(progress), animated: false)
+                self.webProgressView.setProgress(Float(progress), animated: false)
                 UIView.animate(withDuration: 0.2, delay: 0.3, options: .curveEaseIn, animations: {
-                    webProgressView.alpha = 0
+                    self.webProgressView.alpha = 0
                 }) { (isFinished) in
-                    webProgressView.setProgress(0, animated: false)
+                    self.webProgressView.setProgress(0, animated: false)
                 }
             default:
-                webProgressView.setProgress(Float(progress), animated: true)
-                webProgressView.alpha = 1.0
+                self.webProgressView.setProgress(Float(progress), animated: true)
+                self.webProgressView.alpha = 1.0
             }
         })
 
@@ -79,6 +79,16 @@ final class HotTopicViewController: UIViewController {
         navigationItem.rightBarButtonItem = refreshItem
 
         refresh()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        webProgressView.isHidden = false
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        webProgressView.isHidden = true
     }
 
     override func viewDidLayoutSubviews() {
