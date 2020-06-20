@@ -9,34 +9,34 @@
 import Foundation
 
 protocol Post : Codable {
-    var Category : String { get }
-    var TitleWithoutCategory : String { get }
+    var category : String { get }
+    var titleWithoutCategory : String { get }
 
-    var Title : String { get }
-    var Href : String { get }
-    var Author : String { get }
-    var Date : String { get }
+    var title : String { get }
+    var href : String { get }
+    var author : String { get }
+    var date : String { get }
 }
 
 extension Post {
-    var Category : String {
-        if let leftBracket = Title.firstIndex(of: "["), let rightBracket = Title.firstIndex(of: "]") {
-            let nextLeftBracket = Title.index(after: leftBracket)
+    var category : String {
+        if let leftBracket = title.firstIndex(of: "["), let rightBracket = title.firstIndex(of: "]") {
+            let nextLeftBracket = title.index(after: leftBracket)
             let range = nextLeftBracket..<rightBracket
-            let category = Title[range]
+            let category = title[range]
             return String(category)
         }
         return "　　"
     }
-    var TitleWithoutCategory : String {
-        if let leftBracket = Title.firstIndex(of: "["), let rightBracket = Title.firstIndex(of: "]") {
-            var title = Title
-            let nextRightBracket = Title.index(after: rightBracket)
+    var titleWithoutCategory : String {
+        if let leftBracket = title.firstIndex(of: "["), let rightBracket = title.firstIndex(of: "]") {
+            var _title = title
+            let nextRightBracket = _title.index(after: rightBracket)
             let range = leftBracket...nextRightBracket
-            title.removeSubrange(range)
-            return title
+            _title.removeSubrange(range)
+            return _title
         }
-        return Title
+        return title
     }
 }
 
@@ -58,28 +58,28 @@ struct APIClient {
     private static let decoder = JSONDecoder()
 
     struct BoardPost : Post {
-        let Title : String
-        let Href : String
-        let Author : String
-        let Date : String
+        let title : String
+        let href : String
+        let author : String
+        let date : String
     }
     struct BoardInfo : Codable {
-        let Name : String
-        let Nuser : String
-        let Class : String
-        let Title : String
-        let Href : String
-        let MaxSize : Int
+        let name : String
+        let nuser : String
+        let `class` : String
+        let title : String
+        let href : String
+        let maxSize : Int
     }
     struct Message : Codable {
-        let Error : String?
-        let Metadata : String?
+        let error : String?
+        let metadata : String?
     }
     struct Board : Codable {
-        let Page : Int
-        let BoardInfo : BoardInfo
-        var PostList : [BoardPost]
-        let Message : Message?
+        let page : Int
+        let boardInfo : BoardInfo
+        var postList : [BoardPost]
+        let message : Message?
     }
     enum GetNewPostlistResult {
         case failure(error: APIError)
@@ -87,10 +87,9 @@ struct APIClient {
     }
     static func getNewPostlist(board: String, page: Int, completion: @escaping (GetNewPostlistResult) -> Void) {
         var urlComponent = rootURLComponents
-        urlComponent.path = "/API/GetNewPostlist"
+        urlComponent.path = "/api/Article/\(board)"
         urlComponent.queryItems = [     // Percent encoding is automatically done with RFC 3986
-            URLQueryItem(name: "Board", value: board),
-            URLQueryItem(name: "Page", value: "\(page)")
+            URLQueryItem(name: "page", value: "\(page)")
         ]
         guard let url = urlComponent.url else {
             assertionFailure()
@@ -114,19 +113,19 @@ struct APIClient {
     }
 
     struct FullPost : Post {
-        let Title : String
-        let Href : String
-        let Author : String
-        let Date : String
-        let Board : String
-        let Nickname : String
-        let Content : String
-        let Pushs : [Push]
+        let title : String
+        let href : String
+        let author : String
+        let date : String
+        let board : String
+        let nickname : String
+        let content : String
+        let pushs : [Push]
     }
     struct Push : Codable {
-        let Userid : String
-        let Content : String
-        let IPdatetime : String
+        let userid : String
+        let content : String
+        let iPdatetime : String
     }
     enum GetPostResult {
         case failure(error: APIError)
@@ -134,11 +133,7 @@ struct APIClient {
     }
     static func getPost(board: String, filename: String, completion: @escaping (GetPostResult) -> Void) {
         var urlComponent = rootURLComponents
-        urlComponent.path = "/API/GetPost"
-        urlComponent.queryItems = [     // Percent encoding is automatically done with RFC 3986
-            URLQueryItem(name: "Board", value: board),
-            URLQueryItem(name: "Filename", value: filename)
-        ]
+        urlComponent.path = "/api/Article/\(board)/\(filename)"
         guard let url = urlComponent.url else {
             assertionFailure()
             return

@@ -34,7 +34,7 @@ final class PostViewController: UIViewController {
                     return
                 }
                 DispatchQueue.main.async {
-                    self.title = post.Title
+                    self.title = post.title
                     // lower level tip for NSAttributedString
                     // See: https://developer.apple.com/videos/play/wwdc2017/244/?time=2130
                     let attributedText = NSMutableAttributedString()
@@ -65,7 +65,7 @@ final class PostViewController: UIViewController {
                     } else {
                         contentAttributes[.foregroundColor] = UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0)
                     }
-                    attributedText.append(NSAttributedString(string: post.Content, attributes: contentAttributes))
+                    attributedText.append(NSAttributedString(string: post.content, attributes: contentAttributes))
                     // Comments
                     let commentsAttributedString = NSMutableAttributedString()
                     let commentAuthorAttributes : [NSAttributedString.Key : Any] = [
@@ -90,10 +90,10 @@ final class PostViewController: UIViewController {
                     } else {
                         commentDateAttributes[.foregroundColor] = UIColor.systemGray
                     }
-                    for push in post.Pushs {
-                        commentsAttributedString.append(NSAttributedString(string: push.Userid, attributes: commentAuthorAttributes))
-                        commentsAttributedString.append(NSAttributedString(string: push.Content, attributes: commentContentAttributes))
-                        commentsAttributedString.append(NSAttributedString(string: " " + push.IPdatetime, attributes: commentDateAttributes))
+                    for push in post.pushs {
+                        commentsAttributedString.append(NSAttributedString(string: push.userid, attributes: commentAuthorAttributes))
+                        commentsAttributedString.append(NSAttributedString(string: push.content, attributes: commentContentAttributes))
+                        commentsAttributedString.append(NSAttributedString(string: " " + push.iPdatetime, attributes: commentDateAttributes))
                     }
                     attributedText.append(commentsAttributedString)
                     self.textView.attributedText = attributedText
@@ -106,10 +106,10 @@ final class PostViewController: UIViewController {
     init(post: Post, boardName: String) {
         self.post = post
         self.boardName = boardName
-        let (_, filename) = Utility.info(from: post.Href)
+        let (_, filename) = Utility.info(from: post.href)
         self.filename = filename
         super.init(nibName: nil, bundle: nil)
-        self.title = post.Title
+        self.title = post.title
         hidesBottomBarWhenPushed = true
 
         // Because self.post didSet will not be called in initializer
@@ -222,7 +222,7 @@ final class PostViewController: UIViewController {
     @objc private func share(sender: UIBarButtonItem) {
         var shareUrl : URL? = nil
         if let post = post as? APIClient.FullPost {
-            shareUrl = URL(string: post.Href)
+            shareUrl = URL(string: post.href)
         } else {
             shareUrl = url
         }
@@ -270,21 +270,21 @@ final class PostViewController: UIViewController {
         headerAttributedString.append(NSAttributedString(attachment: categoryAttachment))
         // Workaround: We cannot vertically center align attachments easily, so use tab to align text.
         if let _post = post as? APIClient.BoardPost, let boardName = self.boardName {
-            headerAttributedString.append(NSAttributedString(string: "\t\(boardName) / \(_post.Category)\n"))
+            headerAttributedString.append(NSAttributedString(string: "\t\(boardName) / \(_post.category)\n"))
         } else if let _post = post as? APIClient.FullPost {
-            headerAttributedString.append(NSAttributedString(string: "\t\(_post.Board) / \(_post.Category)\n"))
+            headerAttributedString.append(NSAttributedString(string: "\t\(_post.board) / \(_post.category)\n"))
         }
         headerAttributedString.append(NSAttributedString(attachment: authorAttachment))
         if let _post = post as? APIClient.FullPost {
-            headerAttributedString.append(NSAttributedString(string: "\t\(post.Author) (\(_post.Nickname))\n"))
+            headerAttributedString.append(NSAttributedString(string: "\t\(post.author) (\(_post.nickname))\n"))
         } else {
-            headerAttributedString.append(NSAttributedString(string: "\t\(post.Author)\n"))
+            headerAttributedString.append(NSAttributedString(string: "\t\(post.author)\n"))
         }
         headerAttributedString.append(NSAttributedString(attachment: dateAttachment))
         if let _ = post as? APIClient.BoardPost {
-            headerAttributedString.append(NSAttributedString(string: "\t\(post.Date.dropFirst())\n\n"))
+            headerAttributedString.append(NSAttributedString(string: "\t\(post.date.dropFirst())\n\n"))
         } else {
-            headerAttributedString.append(NSAttributedString(string: "\t\(post.Date)\n\n"))
+            headerAttributedString.append(NSAttributedString(string: "\t\(post.date)\n\n"))
         }
         headerAttributedString.addAttributes(headAttributes, range: NSRange(location: 0, length: headerAttributedString.length))
         return headerAttributedString

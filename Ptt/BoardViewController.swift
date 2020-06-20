@@ -170,14 +170,14 @@ final class BoardViewController: UIViewController {
                     // Only allow adding next page data, once
                     if page == self.receivedPage + 1 {
                         self.receivedPage = page
-                        self.board?.PostList += board.PostList
+                        self.board?.postList += board.postList
                     }
                 }
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                     self.isRequesting = false
-                    if board.PostList.count != 0 &&
-                        board.PostList.count == self.tableView.visibleCells.count {
+                    if board.postList.count != 0 &&
+                        board.postList.count == self.tableView.visibleCells.count {
                         // A special case that returns latest posts but less than one page
                         // Automatically request next page
                         self.requestNewPost(page: page + 1)
@@ -199,20 +199,20 @@ extension BoardViewController: UITableViewDataSource {
         guard let board = self.board else {
             return 0
         }
-        return board.PostList.count
+        return board.postList.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! BoardPostTableViewCell
         let row = indexPath.row
-        guard let board = self.board, row < board.PostList.count else {
+        guard let board = self.board, row < board.postList.count else {
             return cell
         }
-        let post = board.PostList[row]
-        cell.category = post.Category
-        cell.dateString = post.Date
-        cell.authorName = post.Author
-        cell.title = post.TitleWithoutCategory
+        let post = board.postList[row]
+        cell.category = post.category
+        cell.dateString = post.date
+        cell.authorName = post.author
+        cell.title = post.titleWithoutCategory
         if row % 2 == 0 {
             if #available(iOS 11.0, *) {
                 cell.backgroundColor = UIColor(named: "blackColor-28-28-31")
@@ -232,10 +232,10 @@ extension BoardViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let row = indexPath.row
-        guard let board = self.board, row < board.PostList.count else {
+        guard let board = self.board, row < board.postList.count else {
             return
         }
-        let post = board.PostList[row]
+        let post = board.postList[row]
         let postViewController = PostViewController(post: post, boardName: boardName)
         show(postViewController, sender: self)
     }
@@ -246,7 +246,7 @@ extension BoardViewController: UITableViewDelegate {
 extension BoardViewController: UITableViewDataSourcePrefetching {
 
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        guard let postList = self.board?.PostList else {
+        guard let postList = self.board?.postList else {
             return
         }
         for indexPath in indexPaths {
