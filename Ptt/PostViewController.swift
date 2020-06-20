@@ -33,8 +33,10 @@ final class PostViewController: UIViewController {
                 guard let post = self.post as? APIClient.FullPost else {
                     return
                 }
+                let separator = "\r\n"
+                let contentArray = post.content.components(separatedBy: separator)
                 DispatchQueue.main.async {
-                    self.title = post.title
+                    self.title = post.titleWithoutCategory
                     // lower level tip for NSAttributedString
                     // See: https://developer.apple.com/videos/play/wwdc2017/244/?time=2130
                     let attributedText = NSMutableAttributedString()
@@ -60,12 +62,20 @@ final class PostViewController: UIViewController {
                         .font: UIFont.preferredFont(forTextStyle: .body),
                         .paragraphStyle: contentParagraphStyle
                     ]
-                    if #available(iOS 11.0, *) {
-                        contentAttributes[.foregroundColor] = UIColor(named: "textColor-240-240-247")
-                    } else {
-                        contentAttributes[.foregroundColor] = UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0)
+                    for contentElement in contentArray {
+                        if contentElement.hasPrefix("※") {
+                            contentAttributes[.foregroundColor] = UIColor(red: 0.00, green: 0.60, blue: 0.00, alpha: 1.00)
+                        } else if contentElement.hasPrefix(": ") {
+                            contentAttributes[.foregroundColor] = UIColor(red: 0.00, green: 0.60, blue: 0.60, alpha: 1.00)
+                        } else {
+                            if #available(iOS 11.0, *) {
+                                contentAttributes[.foregroundColor] = UIColor(named: "textColor-240-240-247")
+                            } else {
+                                contentAttributes[.foregroundColor] = UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0)
+                            }
+                        }
+                        attributedText.append(NSAttributedString(string: contentElement + separator, attributes: contentAttributes))
                     }
-                    attributedText.append(NSAttributedString(string: post.content, attributes: contentAttributes))
                     // Comments
                     let commentsAttributedString = NSMutableAttributedString()
                     let commentAuthorAttributes : [NSAttributedString.Key : Any] = [
@@ -109,7 +119,7 @@ final class PostViewController: UIViewController {
         let (_, filename) = Utility.info(from: post.href)
         self.filename = filename
         super.init(nibName: nil, bundle: nil)
-        self.title = post.title
+        self.title = post.titleWithoutCategory
         hidesBottomBarWhenPushed = true
 
         // Because self.post didSet will not be called in initializer
