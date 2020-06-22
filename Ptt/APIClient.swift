@@ -104,8 +104,9 @@ struct APIClient {
                 do {
                     let board = try decoder.decode(Board.self, from: resultData)
                     completion(.success(board: board))
-                } catch (let parseError) {
-                    completion(.failure(error: APIError(message: parseError.localizedDescription)))
+                } catch (let decodingError) {
+                    let message = APIClient.message(of: decodingError)
+                    completion(.failure(error: APIError(message: message)))
                 }
             }
         }
@@ -147,8 +148,9 @@ struct APIClient {
                 do {
                     let post = try decoder.decode(FullPost.self, from: resultData)
                     completion(.success(post: post))
-                } catch (let parseError) {
-                    completion(.failure(error: APIError(message: parseError.localizedDescription)))
+                } catch (let decodingError) {
+                    let message = APIClient.message(of: decodingError)
+                    completion(.failure(error: APIError(message: message)))
                 }
             }
         }
@@ -195,5 +197,26 @@ struct APIClient {
             return .failure(error: (APIError(message: "No data")))
         }
         return .success(data: resultData)
+    }
+
+    private static func message(of decodingError: Error) -> String {
+        let message : String
+        if let decodingError = decodingError as? DecodingError {
+            switch decodingError {
+            case .typeMismatch(_, let context):
+                message = context.debugDescription + " \(context.codingPath.map({$0.stringValue}))"
+            case .valueNotFound( _, let context):
+                message = context.debugDescription + " \(context.codingPath.map({$0.stringValue}))"
+            case .keyNotFound(_, let context):
+                message = context.debugDescription
+            case .dataCorrupted(let context):
+                message = context.debugDescription
+            @unknown default:
+                message = "unknowd error value"
+            }
+        } else {
+            message = decodingError.localizedDescription
+        }
+        return message
     }
 }
