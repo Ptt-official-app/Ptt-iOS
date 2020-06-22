@@ -100,10 +100,10 @@ final class PostViewController: UIViewController {
                     } else {
                         commentDateAttributes[.foregroundColor] = UIColor.systemGray
                     }
-                    for push in post.pushs {
-                        commentsAttributedString.append(NSAttributedString(string: push.userid, attributes: commentAuthorAttributes))
-                        commentsAttributedString.append(NSAttributedString(string: push.content, attributes: commentContentAttributes))
-                        commentsAttributedString.append(NSAttributedString(string: " " + push.iPdatetime, attributes: commentDateAttributes))
+                    for comment in post.comments {
+                        commentsAttributedString.append(NSAttributedString(string: comment.userid, attributes: commentAuthorAttributes))
+                        commentsAttributedString.append(NSAttributedString(string: comment.content, attributes: commentContentAttributes))
+                        commentsAttributedString.append(NSAttributedString(string: " " + comment.iPdatetime, attributes: commentDateAttributes))
                     }
                     attributedText.append(commentsAttributedString)
                     self.textView.attributedText = attributedText

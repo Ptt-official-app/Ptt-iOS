@@ -121,9 +121,9 @@ struct APIClient {
         let board : String
         let nickname : String
         let content : String
-        let pushs : [Push]
+        let comments : [Comment]
     }
-    struct Push : Codable {
+    struct Comment : Codable {
         let userid : String
         let content : String
         let iPdatetime : String
