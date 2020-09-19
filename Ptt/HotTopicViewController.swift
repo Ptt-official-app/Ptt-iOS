@@ -44,6 +44,7 @@ final class HotTopicViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.title = NSLocalizedString("PTT FB Page", comment: "");
         if #available(iOS 11.0, *) {
             // will change contentInset later
             webView.scrollView.contentInsetAdjustmentBehavior = .never
