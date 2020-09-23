@@ -157,7 +157,9 @@ final class BoardViewController: UIViewController {
                     alert.addAction(confirm)
                     self.present(alert, animated: true, completion: {
                         self.activityIndicator.stopAnimating()
-                        self.tableView.refreshControl?.endRefreshing()
+                        if let refreshControl = self.tableView.refreshControl, refreshControl.isRefreshing {
+                            refreshControl.endRefreshing()
+                        }
                     })
                     self.isRequesting = false
                 }
@@ -183,7 +185,9 @@ final class BoardViewController: UIViewController {
                         self.requestNewPost(page: page + 1)
                     } else {
                         self.activityIndicator.stopAnimating()
-                        self.tableView.refreshControl?.endRefreshing()
+                        if let refreshControl = self.tableView.refreshControl, refreshControl.isRefreshing {
+                            refreshControl.endRefreshing()
+                        }
                     }
                 }
             }
