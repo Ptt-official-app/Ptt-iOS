@@ -1,5 +1,13 @@
-# Modified from https://www.gitignore.io/api/xcode,macos
-# Edit at https://www.gitignore.io/?templates=xcode,macos
+# Modified from https://www.toptal.com/developers/gitignore/api/xcode,macos,cocoapods
+# Edit at https://www.toptal.com/developers/gitignore?templates=xcode,macos,cocoapods
+
+### CocoaPods ###
+## CocoaPods GitIgnore Template
+
+# CocoaPods - Only use to conserve bandwidth / Save time on Pushing
+#           - Also handy if you have a large number of dependant pods
+#           - AS PER https://guides.cocoapods.org/using/using-cocoapods.html NEVER IGNORE THE LOCK FILE
+Pods/
 
 ### macOS ###
 # General
@@ -37,16 +45,13 @@ Temporary Items
 ## User settings
 xcuserdata/
 
-## Xcode Patch
+### Xcode Patch ###
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
 !*.xcodeproj/xcshareddata/
 !*.xcworkspace/contents.xcworkspacedata
-/*.gcno
+**/xcshareddata/WorkspaceSettings.xcsettings
 UserInterfaceState.xcuserstate
 xcschememanagement.plist
 
-### Xcode Patch ###
-**/xcshareddata/WorkspaceSettings.xcsettings
-
-# End of https://www.gitignore.io/api/xcode,macos
+# End of https://www.toptal.com/developers/gitignore/api/xcode,macos,cocoapods

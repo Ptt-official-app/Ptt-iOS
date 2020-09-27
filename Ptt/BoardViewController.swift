@@ -8,8 +8,14 @@
 
 import UIKit
 import SafariServices
+import AsyncDisplayKit
 
-final class BoardViewController: UIViewController {
+final class BoardViewController: ASDKViewController<ASTableNode> {
+
+    private let tableNode = ASTableNode(style: .plain)
+    private var tableView : UITableView {
+        return tableNode.view
+    }
 
     private var boardName : String
     private var board : APIClient.Board? = nil
@@ -17,7 +23,6 @@ final class BoardViewController: UIViewController {
     private var receivedPage : Int = 0
     private let cellReuseIdentifier = "BoardPostCell"
 
-    private let tableView = UITableView(frame: CGRect.zero, style: .plain)
     private let bottomView = UIView()
     private let toolBar = UIToolbar()
     private let activityIndicator = UIActivityIndicatorView()
@@ -25,7 +30,7 @@ final class BoardViewController: UIViewController {
 
     init(boardName: String) {
         self.boardName = boardName
-        super.init(nibName: nil, bundle: nil)
+        super.init(node: tableNode)
         hidesBottomBarWhenPushed = true
     }
 
@@ -37,32 +42,23 @@ final class BoardViewController: UIViewController {
         super.viewDidLoad()
 
         title = boardName
-        tableView.backgroundColor = GlobalAppearance.backgroundColor
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.prefetchDataSource = self
+        tableNode.backgroundColor = GlobalAppearance.backgroundColor
+        tableNode.dataSource = self
+        tableNode.delegate = self
         if #available(iOS 13.0, *) {
         } else {
             tableView.indicatorStyle = .white
         }
-        tableView.estimatedRowHeight = 80.0
         tableView.separatorStyle = .none
 
-        tableView.register(BoardPostTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        tableView.refreshControl = refreshControl
-
-        view.ptt_add(subviews: [tableView, bottomView])
-        let viewsDict = ["tableView": tableView, "bottomView": bottomView]
-        var constraints = [NSLayoutConstraint]()
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[tableView]|", options: [], metrics: nil, views: viewsDict)
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[bottomView]|", options: [], metrics: nil, views: viewsDict)
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[tableView][bottomView]|", options: [], metrics: nil, views: viewsDict)
-        let bottomViewHeightConstraint = bottomView.heightAnchor.constraint(equalToConstant: 0)
-        constraints.append(bottomViewHeightConstraint)
-        self.bottomViewHeightConstraint = bottomViewHeightConstraint
-        NSLayoutConstraint.activate(constraints)
+        if #available(iOS 10.0, *) {
+            let refreshControl = UIRefreshControl()
+            refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+            tableView.refreshControl = refreshControl
+        } else {
+            let refreshItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(refresh))
+            navigationItem.rightBarButtonItem = refreshItem
+        }
 
         activityIndicator.color = .lightGray
         tableView.ptt_add(subviews: [activityIndicator])
@@ -70,7 +66,7 @@ final class BoardViewController: UIViewController {
             activityIndicator.topAnchor.constraint(equalTo: tableView.topAnchor, constant: 20.0),
             activityIndicator.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
         ])
-        activityIndicator.startAnimating()
+
         refresh()
     }
 
@@ -87,6 +83,8 @@ final class BoardViewController: UIViewController {
         }()
         bottomViewHeightConstraint?.constant = toolBarHeight + safeAreaBottomHeight
 
+        // TODO:
+        /*
         if toolBar.superview == nil {
             toolBar.frame = CGRect(x: 0, y: 0, width: bottomView.frame.width, height: toolBarHeight)
             toolBar.barTintColor = GlobalAppearance.backgroundColor
@@ -121,6 +119,7 @@ final class BoardViewController: UIViewController {
             let flexible5 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
             toolBar.setItems([flexible1, refreshItem, flexible2, searchItem, flexible3, composeItem, flexible4, infoItem, flexible5], animated: false)
         }
+         */
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -134,31 +133,38 @@ final class BoardViewController: UIViewController {
     @objc private func refresh() {
         self.board = nil
         self.receivedPage = 0
-        tableView.reloadData()
-        if let refreshControl = tableView.refreshControl {
-            if !refreshControl.isRefreshing {
-                activityIndicator.startAnimating()
+        tableNode.reloadData()
+        if #available(iOS 10.0, *) {
+            if let refreshControl = tableView.refreshControl {
+                if !refreshControl.isRefreshing {
+                    activityIndicator.startAnimating()
+                }
             }
+        } else {
+            activityIndicator.startAnimating()
         }
-        requestNewPost(page: 1)
     }
 
-    private func requestNewPost(page: Int) {
+    private func requestNewPost(page: Int, context: ASBatchContext) {
         if self.isRequesting {
             return
         }
         self.isRequesting = true
+        context.beginBatchFetching()
         APIClient.getNewPostlist(board: boardName, page: page) { (result) in
             switch result {
             case .failure(error: let apiError):
+                context.cancelBatchFetching()
                 DispatchQueue.main.async {
                     let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: apiError.message, preferredStyle: .alert)
                     let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
                     alert.addAction(confirm)
                     self.present(alert, animated: true, completion: {
                         self.activityIndicator.stopAnimating()
-                        if let refreshControl = self.tableView.refreshControl, refreshControl.isRefreshing {
-                            refreshControl.endRefreshing()
+                        if #available(iOS 10.0, *) {
+                            if let refreshControl = self.tableView.refreshControl, refreshControl.isRefreshing {
+                                refreshControl.endRefreshing()
+                            }
                         }
                     })
                     self.isRequesting = false
@@ -168,23 +174,35 @@ final class BoardViewController: UIViewController {
                 if self.board == nil {
                     self.receivedPage = page
                     self.board = board
+                    var indexPaths = [IndexPath]()
+                    for (index, _) in board.postList.enumerated() {
+                        indexPaths.append(IndexPath(row: index, section: 0))
+                    }
+                    DispatchQueue.main.async {
+                        self.tableNode.insertRows(at: indexPaths, with: .none)
+                        context.completeBatchFetching(true)
+                    }
                 } else {
                     // Only allow adding next page data, once
                     if page == self.receivedPage + 1 {
                         self.receivedPage = page
+                        var indexPaths = [IndexPath]()
+                        if let oldCount = self.board?.postList.count {
+                            for (index, _) in board.postList.enumerated() {
+                                indexPaths.append(IndexPath(row: index + oldCount, section: 0))
+                            }
+                        }
                         self.board?.postList += board.postList
+                        DispatchQueue.main.async {
+                            self.tableNode.insertRows(at: indexPaths, with: .none)
+                            context.completeBatchFetching(true)
+                        }
                     }
                 }
+                self.isRequesting = false
                 DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    self.isRequesting = false
-                    if board.postList.count != 0 &&
-                        board.postList.count == self.tableView.visibleCells.count {
-                        // A special case that returns latest posts but less than one page
-                        // Automatically request next page
-                        self.requestNewPost(page: page + 1)
-                    } else {
-                        self.activityIndicator.stopAnimating()
+                    self.activityIndicator.stopAnimating()
+                    if #available(iOS 10.0, *) {
                         if let refreshControl = self.tableView.refreshControl, refreshControl.isRefreshing {
                             refreshControl.endRefreshing()
                         }
@@ -195,46 +213,54 @@ final class BoardViewController: UIViewController {
     }
 }
 
-// MARK: - UITableViewDataSource
+// MARK: - ASTableDataSource
 
-extension BoardViewController: UITableViewDataSource {
+extension BoardViewController: ASTableDataSource {
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableNode(_ tableNode: ASTableNode, numberOfRowsInSection section: Int) -> Int {
         guard let board = self.board else {
             return 0
         }
         return board.postList.count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! BoardPostTableViewCell
+    func tableNode(_ tableNode: ASTableNode, nodeBlockForRowAt indexPath: IndexPath) -> ASCellNodeBlock {
         let row = indexPath.row
         guard let board = self.board, row < board.postList.count else {
-            return cell
+            let nodeBlock: ASCellNodeBlock = {
+                return ASCellNode()
+            }
+            return nodeBlock
         }
         let post = board.postList[row]
-        cell.category = post.category
-        cell.dateString = post.date
-        cell.authorName = post.author
-        cell.title = post.titleWithoutCategory
-        if row % 2 == 0 {
-            if #available(iOS 11.0, *) {
-                cell.backgroundColor = UIColor(named: "blackColor-28-28-31")
+        let nodeBlock: ASCellNodeBlock = {
+            let cell = BoardCellNode(post: post)
+            if row % 2 == 0 {
+                if #available(iOS 11.0, *) {
+                    cell.backgroundColor = UIColor(named: "blackColor-28-28-31")
+                } else {
+                    cell.backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 31/255, alpha: 1.0)
+                }
             } else {
-                cell.backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 31/255, alpha: 1.0)
+                cell.backgroundColor = GlobalAppearance.backgroundColor
             }
-        } else {
-            cell.backgroundColor = GlobalAppearance.backgroundColor
+            return cell
         }
-        return cell
+        return nodeBlock
     }
 }
 
-// MARK: UITableViewDelegate
+extension BoardViewController: ASTableDelegate {
 
-extension BoardViewController: UITableViewDelegate {
+    func shouldBatchFetch(for tableNode: ASTableNode) -> Bool {
+        return true
+    }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableNode(_ tableNode: ASTableNode, willBeginBatchFetchWith context: ASBatchContext) {
+        requestNewPost(page: receivedPage + 1, context: context)
+    }
+
+    func tableNode(_ tableNode: ASTableNode, didSelectRowAt indexPath: IndexPath) {
         let row = indexPath.row
         guard let board = self.board, row < board.postList.count else {
             return
@@ -245,109 +271,86 @@ extension BoardViewController: UITableViewDelegate {
     }
 }
 
-// MARK: UITableViewDataSourcePrefetching
+private class BoardCellNode: ASCellNode {
 
-extension BoardViewController: UITableViewDataSourcePrefetching {
-
-    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        guard let postList = self.board?.postList else {
-            return
-        }
-        for indexPath in indexPaths {
-            if indexPath.row == postList.count - 1 {    // about to scroll to last row
-                requestNewPost(page: receivedPage + 1)
-            }
-        }
-    }
-
-    func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
-    }
-}
-
-private class BoardPostTableViewCell: UITableViewCell {
-
-    var category : String? {
-        didSet {
-            categoryLabel.text = category
-        }
-    }
-    var dateString : String? {
-        didSet {
-            dateLabel.text = dateString
-        }
-    }
-    var authorName : String? {
-        didSet {
-            authorNameLabel.text = authorName
-        }
-    }
-    var title : String? {
-        didSet {
-            titleLabel.text = title
-        }
-    }
-    private let categoryLabel = UILabel()
-    private let dateLabel = UILabel()
-    private let authorNameLabel = UILabel()
-    private let titleLabel = UILabel()
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
-
-        let categoryImage = UIImageView(image: StyleKit.imageOfCategory())
-        let clockImage = UIImageView(image: StyleKit.imageOfClock())
-        let authorImage = UIImageView(image: StyleKit.imageOfAuthor())
+    private var titleAttributes : [NSAttributedString.Key : Any] {
+        let textColor : UIColor
         if #available(iOS 11.0, *) {
-            categoryImage.adjustsImageSizeForAccessibilityContentSizeCategory = true
-            clockImage.adjustsImageSizeForAccessibilityContentSizeCategory = true
-            authorImage.adjustsImageSizeForAccessibilityContentSizeCategory = true
-        }
-        categoryLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
-        dateLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
-        authorNameLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
-        titleLabel.font = UIFont.preferredFont(forTextStyle: .title3)
-        titleLabel.numberOfLines = 2
-        if #available(iOS 11.0, *) {
-            categoryLabel.textColor = UIColor(named: "textColorGray")
-            dateLabel.textColor = UIColor(named: "textColorGray")
-            authorNameLabel.textColor = UIColor(named: "textColorGray")
-            titleLabel.textColor = UIColor(named: "textColor-240-240-247")
+            textColor = UIColor(named: "textColor-240-240-247")!
         } else {
-            categoryLabel.textColor = .systemGray
-            dateLabel.textColor = .systemGray
-            authorNameLabel.textColor = .systemGray
-            titleLabel.textColor = UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0)
+            textColor = UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0)
         }
-        let moreButton = UIButton(type: .custom)
-        moreButton.setImage(StyleKit.imageOfMoreV(), for: .normal)
-        moreButton.accessibilityLabel = NSLocalizedString("More actions", comment: "")
-        moreButton.showsTouchWhenHighlighted = true
+        let attrs : [NSAttributedString.Key : Any] =
+            [.font: UIFont.preferredFont(forTextStyle: .title3),
+             .foregroundColor: textColor]
+        return attrs
+    }
+    private var metadataAttributes : [NSAttributedString.Key : Any] {
+        let textColor : UIColor
         if #available(iOS 11.0, *) {
-            moreButton.adjustsImageSizeForAccessibilityContentSizeCategory = true
+            textColor = UIColor(named: "textColorGray")!
+        } else {
+            textColor = .systemGray
         }
+        let attrs : [NSAttributedString.Key : Any] =
+            [.font: UIFont.preferredFont(forTextStyle: .footnote),
+             .foregroundColor: textColor]
+        return attrs
+    }
+    private let categoryImageNode = ASImageNode()
+    private let categoryNode = ASTextNode()
+    private let clockImageNode = ASImageNode()
+    private let dateNode = ASTextNode()
+    private let authorImageNode = ASImageNode()
+    private let authorNameNode = ASTextNode()
 
-        contentView.ptt_add(subviews: [categoryImage, categoryLabel, clockImage, dateLabel, authorImage, authorNameLabel, titleLabel, moreButton])
-        let viewsDict = ["categoryImage": categoryImage, "categoryLabel": categoryLabel, "clockImage": clockImage, "dateLabel": dateLabel, "authorImage": authorImage, "authorNameLabel": authorNameLabel, "titleLabel": titleLabel, "moreButton": moreButton]
-        let metrics = ["hp": 20, "vp": 14, "vps": 6]
-        var constraints = [NSLayoutConstraint]()
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(hp)-[categoryImage]-(7)-[categoryLabel]-(14)-[clockImage]-(7)-[dateLabel]-(14)-[authorImage]-(7)-[authorNameLabel]",
-                                                      options: [], metrics: metrics, views: viewsDict)
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(hp)-[titleLabel][moreButton]|",
-                                                      options: [], metrics: metrics, views: viewsDict)
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|-(vp)-[categoryImage]-(vps)-[titleLabel]-(vp)-|",
-                                                      options: [], metrics: metrics, views: viewsDict)
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[moreButton]|",
-                                                      options: [], metrics: metrics, views: viewsDict)
-        constraints.append(categoryLabel.centerYAnchor.constraint(equalTo: categoryImage.centerYAnchor))
-        constraints.append(clockImage.centerYAnchor.constraint(equalTo: categoryImage.centerYAnchor))
-        constraints.append(dateLabel.lastBaselineAnchor.constraint(equalTo: categoryLabel.lastBaselineAnchor))
-        constraints.append(authorImage.centerYAnchor.constraint(equalTo: categoryImage.centerYAnchor))
-        constraints.append(authorNameLabel.lastBaselineAnchor.constraint(equalTo: categoryLabel.lastBaselineAnchor))
-        constraints.append(moreButton.widthAnchor.constraint(equalToConstant: 34.0))
-        NSLayoutConstraint.activate(constraints)
+    private let titleNode = ASTextNode()
+    private let moreButtonNode = ASButtonNode()
+
+    init(post: APIClient.BoardPost) {
+        super.init()
+
+        automaticallyManagesSubnodes = true
+
+        categoryNode.attributedText = NSAttributedString(string: post.category, attributes: metadataAttributes)
+        dateNode.attributedText = NSAttributedString(string: post.date, attributes: metadataAttributes)
+        authorNameNode.attributedText = NSAttributedString(string: post.author, attributes: metadataAttributes)
+        titleNode.attributedText = NSAttributedString(string: post.titleWithoutCategory, attributes: titleAttributes)
+
+        categoryImageNode.image = StyleKit.imageOfCategory()
+        clockImageNode.image = StyleKit.imageOfClock()
+        authorImageNode.image = StyleKit.imageOfAuthor()
+
+        moreButtonNode.setImage(StyleKit.imageOfMoreV(), for: .normal)
+        moreButtonNode.accessibilityLabel = NSLocalizedString("More actions", comment: "")
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
+        let categoryStackSpec = ASStackLayoutSpec(direction: .horizontal,
+                                                  spacing: 7,
+                                                  justifyContent: .start,
+                                                  alignItems: .center,
+                                                  children: [categoryImageNode, categoryNode])
+        let dateStackSpec = ASStackLayoutSpec(direction: .horizontal,
+                                              spacing: 7,
+                                              justifyContent: .start,
+                                              alignItems: .center,
+                                              children: [clockImageNode, dateNode])
+        let authorStackSpec = ASStackLayoutSpec(direction: .horizontal,
+                                                spacing: 7,
+                                                justifyContent: .start,
+                                                alignItems: .center,
+                                                children: [authorImageNode, authorNameNode])
+        let metadataStackSpec = ASStackLayoutSpec(direction: .horizontal,
+                                                  spacing: 14,
+                                                  justifyContent: .start,
+                                                  alignItems: .start,
+                                                  children: [categoryStackSpec, dateStackSpec, authorStackSpec])
+        let contentStackSpec = ASStackLayoutSpec(direction: .vertical,
+                                                 spacing: 6,
+                                                 justifyContent: .start,
+                                                 alignItems: .start,
+                                                 children: [metadataStackSpec, titleNode])
+        return ASInsetLayoutSpec(insets: UIEdgeInsets(top: 14, left: 20, bottom: 14, right: 10), child: contentStackSpec)
     }
 }

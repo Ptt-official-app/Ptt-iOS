@@ -146,7 +146,9 @@ final class PostViewController: UIViewController {
         }
 
         textView.backgroundColor = GlobalAppearance.backgroundColor
-        textView.adjustsFontForContentSizeCategory = true
+        if #available(iOS 10.0, *) {
+            textView.adjustsFontForContentSizeCategory = true
+        }
         if #available(iOS 13.0, *) {
         } else {
             textView.indicatorStyle = .white
@@ -171,7 +173,12 @@ final class PostViewController: UIViewController {
 
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        textView.refreshControl = refreshControl
+        if #available(iOS 10.0, *) {
+            textView.refreshControl = refreshControl
+        } else {
+            let refreshItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(refresh))
+            navigationItem.rightBarButtonItem = refreshItem
+        }
 
         activityIndicator.color = .lightGray
         textView.ptt_add(subviews: [activityIndicator])
@@ -205,15 +212,21 @@ final class PostViewController: UIViewController {
             self.present(alert, animated: true, completion: nil)
             return
         }
-        if let refreshControl = textView.refreshControl {
-            if !refreshControl.isRefreshing {
-                activityIndicator.startAnimating()
+        if #available(iOS 10.0, *) {
+            if let refreshControl = textView.refreshControl {
+                if !refreshControl.isRefreshing {
+                    activityIndicator.startAnimating()
+                }
             }
+        } else {
+            activityIndicator.startAnimating()
         }
         APIClient.getPost(board: boardName, filename: filename) { (result) in
             DispatchQueue.main.async {
                 self.activityIndicator.stopAnimating()
-                self.textView.refreshControl?.endRefreshing()
+                if #available(iOS 10.0, *) {
+                    self.textView.refreshControl?.endRefreshing()
+                }
             }
             switch result {
             case .failure(error: let apiError):
@@ -305,7 +318,17 @@ final class PostViewController: UIViewController {
 
 extension PostViewController : UITextViewDelegate {
 
+    /// Legacy method for pre-iOS 10
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
+        return self.shouldInteractWith(URL: URL)
+    }
+
+    @available(iOS 10.0, *)
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        return self.shouldInteractWith(URL: URL)
+    }
+
+    private func shouldInteractWith(URL: URL) -> Bool {
         if Utility.isPttArticle(url: URL) {
             let postViewController = PostViewController(url: URL)
             show(postViewController, sender: self)
@@ -313,9 +336,11 @@ extension PostViewController : UITextViewDelegate {
         }
         if URL.scheme == "http" || URL.scheme == "https" {
             let safariViewController = SFSafariViewController(url: URL)
-            safariViewController.preferredControlTintColor = GlobalAppearance.tintColor
+            if #available(iOS 10.0, *) {
+                safariViewController.preferredControlTintColor = GlobalAppearance.tintColor
+            }
             if #available(iOS 13.0, *) {
-            } else {
+            } else if #available(iOS 10.0, *) {
                 safariViewController.preferredBarTintColor = GlobalAppearance.backgroundColor
             }
             if #available(iOS 11.0, *) {
