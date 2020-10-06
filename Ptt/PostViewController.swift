@@ -305,7 +305,7 @@ final class PostViewController: UIViewController {
         }
         headerAttributedString.append(NSAttributedString(attachment: dateAttachment))
         if let _ = post as? APIClient.BoardPost {
-            headerAttributedString.append(NSAttributedString(string: "\t\(post.date.dropFirst())\n\n"))
+            headerAttributedString.append(NSAttributedString(string: "\t\(post.date)\n\n"))
         } else {
             headerAttributedString.append(NSAttributedString(string: "\t\(post.date)\n\n"))
         }
