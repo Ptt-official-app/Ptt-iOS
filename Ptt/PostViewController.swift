@@ -30,7 +30,7 @@ final class PostViewController: UIViewController {
     private var post : Post? = nil {
         didSet {
             if post != nil {
-                guard let post = self.post as? APIClient.FullPost else {
+                guard let post = self.post as? APIModel.FullPost else {
                     return
                 }
                 let separator = "\r\n"
@@ -221,7 +221,7 @@ final class PostViewController: UIViewController {
         } else {
             activityIndicator.startAnimating()
         }
-        APIClient.getPost(board: boardName, filename: filename) { (result) in
+        APIClient.shared.getPost(board: boardName, filename: filename) { (result) in
             DispatchQueue.main.async {
                 self.activityIndicator.stopAnimating()
                 if #available(iOS 10.0, *) {
@@ -244,7 +244,7 @@ final class PostViewController: UIViewController {
 
     @objc private func share(sender: UIBarButtonItem) {
         var shareUrl : URL? = nil
-        if let post = post as? APIClient.FullPost {
+        if let post = post as? APIModel.FullPost {
             shareUrl = URL(string: post.href)
         } else {
             shareUrl = url
@@ -292,19 +292,19 @@ final class PostViewController: UIViewController {
         }
         headerAttributedString.append(NSAttributedString(attachment: categoryAttachment))
         // Workaround: We cannot vertically center align attachments easily, so use tab to align text.
-        if let _post = post as? APIClient.BoardPost, let boardName = self.boardName {
+        if let _post = post as? APIModel.BoardPost, let boardName = self.boardName {
             headerAttributedString.append(NSAttributedString(string: "\t\(boardName) / \(_post.category)\n"))
-        } else if let _post = post as? APIClient.FullPost {
+        } else if let _post = post as? APIModel.FullPost {
             headerAttributedString.append(NSAttributedString(string: "\t\(_post.board) / \(_post.category)\n"))
         }
         headerAttributedString.append(NSAttributedString(attachment: authorAttachment))
-        if let _post = post as? APIClient.FullPost {
+        if let _post = post as? APIModel.FullPost {
             headerAttributedString.append(NSAttributedString(string: "\t\(post.author) (\(_post.nickname))\n"))
         } else {
             headerAttributedString.append(NSAttributedString(string: "\t\(post.author)\n"))
         }
         headerAttributedString.append(NSAttributedString(attachment: dateAttachment))
-        if let _ = post as? APIClient.BoardPost {
+        if let _ = post as? APIModel.BoardPost {
             headerAttributedString.append(NSAttributedString(string: "\t\(post.date)\n\n"))
         } else {
             headerAttributedString.append(NSAttributedString(string: "\t\(post.date)\n\n"))
