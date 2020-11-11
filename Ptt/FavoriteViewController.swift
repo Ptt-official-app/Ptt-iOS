@@ -186,7 +186,7 @@ extension FavoriteViewController: UISearchBarDelegate {
         }
         resultsTableController.activityIndicator.startAnimating()
         var array = [String]()
-        APIClient.getBoardList { [weak self] (result) in
+        APIClient.shared.getBoardList { [weak self] (result) in
             guard let weakSelf = self else { return }
             switch result {
             case .failure(error: let error):

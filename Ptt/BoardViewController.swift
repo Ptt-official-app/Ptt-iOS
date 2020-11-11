@@ -18,7 +18,7 @@ final class BoardViewController: ASDKViewController<ASTableNode> {
     }
 
     private var boardName : String
-    private var board : APIClient.Board? = nil
+    private var board : APIModel.Board? = nil
     private var isRequesting = false
     private var receivedPage : Int = 0
     private let cellReuseIdentifier = "BoardPostCell"
@@ -151,7 +151,7 @@ final class BoardViewController: ASDKViewController<ASTableNode> {
         }
         self.isRequesting = true
         context.beginBatchFetching()
-        APIClient.getNewPostlist(board: boardName, page: page) { (result) in
+        APIClient.shared.getNewPostlist(board: boardName, page: page) { (result) in
             switch result {
             case .failure(error: let apiError):
                 context.cancelBatchFetching()
@@ -307,7 +307,7 @@ private class BoardCellNode: ASCellNode {
     private let titleNode = ASTextNode()
     private let moreButtonNode = ASButtonNode()
 
-    init(post: APIClient.BoardPost) {
+    init(post: APIModel.BoardPost) {
         super.init()
 
         automaticallyManagesSubnodes = true
