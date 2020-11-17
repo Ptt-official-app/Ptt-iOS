@@ -10,7 +10,7 @@ import UIKit
 import SafariServices
 import AsyncDisplayKit
 
-final class BoardViewController: ASDKViewController<ASTableNode> {
+final class BoardViewController: ASDKViewController<ASTableNode>, FullscreenSwipeable {
 
     private let tableNode = ASTableNode(style: .plain)
     private var tableView : UITableView {
@@ -42,6 +42,8 @@ final class BoardViewController: ASDKViewController<ASTableNode> {
         super.viewDidLoad()
 
         title = boardName
+        enableFullscreenSwipeBack()
+
         tableNode.backgroundColor = GlobalAppearance.backgroundColor
         tableNode.dataSource = self
         tableNode.delegate = self
