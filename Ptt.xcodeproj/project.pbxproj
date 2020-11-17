@@ -30,6 +30,7 @@
 		EA479EB42431F27C008A0D99 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA479EB32431F27C008A0D99 /* PostViewController.swift */; };
 		EA62540E242DAAF600E977FE /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA62540D242DAAF600E977FE /* Extension.swift */; };
 		EA78E0C124050EB100309694 /* StyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA78E0C024050EB000309694 /* StyleKit.swift */; };
+		EA9DE10F2563A82200AEFC19 /* FullscreenSwipeBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9DE10E2563A82200AEFC19 /* FullscreenSwipeBack.swift */; };
 		EAA4F6F123C72B01005ABCE3 /* BoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA4F6F023C72B01005ABCE3 /* BoardViewController.swift */; };
 		EAA4F6F323C72F95005ABCE3 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA4F6F223C72F95005ABCE3 /* APIClient.swift */; };
 		FFC18D2A87D55C733ABEBA14 /* Pods_Ptt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBDA47B1E79A476E2E89A118 /* Pods_Ptt.framework */; };
@@ -80,6 +81,7 @@
 		EA479EB32431F27C008A0D99 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		EA62540D242DAAF600E977FE /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		EA78E0C024050EB000309694 /* StyleKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleKit.swift; sourceTree = "<group>"; };
+		EA9DE10E2563A82200AEFC19 /* FullscreenSwipeBack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullscreenSwipeBack.swift; sourceTree = "<group>"; };
 		EAA4F6F023C72B01005ABCE3 /* BoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardViewController.swift; sourceTree = "<group>"; };
 		EAA4F6F223C72F95005ABCE3 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -190,6 +192,7 @@
 				EA479EB32431F27C008A0D99 /* PostViewController.swift */,
 				EA41D65C243EF51A0052F4A1 /* HotTopicViewController.swift */,
 				EA62540D242DAAF600E977FE /* Extension.swift */,
+				EA9DE10E2563A82200AEFC19 /* FullscreenSwipeBack.swift */,
 				EA78E0C024050EB000309694 /* StyleKit.swift */,
 				EA475F7D23C4834C000867FE /* Assets.xcassets */,
 				EA475F7F23C4834C000867FE /* LaunchScreen.storyboard */,
@@ -387,6 +390,7 @@
 				EA78E0C124050EB100309694 /* StyleKit.swift in Sources */,
 				3E65527D25595FD30026290B /* Board.swift in Sources */,
 				3E65527525595F9E0026290B /* BoardPost.swift in Sources */,
+				EA9DE10F2563A82200AEFC19 /* FullscreenSwipeBack.swift in Sources */,
 				EA475F7923C4834C000867FE /* FavoriteViewController.swift in Sources */,
 				EA62540E242DAAF600E977FE /* Extension.swift in Sources */,
 				EA475F7523C4834C000867FE /* AppDelegate.swift in Sources */,

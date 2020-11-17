@@ -9,7 +9,7 @@
 import UIKit
 import SafariServices
 
-final class PostViewController: UIViewController {
+final class PostViewController: UIViewController, FullscreenSwipeable {
 
     private var boardName : String?
     private var filename : String?
@@ -144,6 +144,7 @@ final class PostViewController: UIViewController {
         if #available(iOS 11.0, *) {
             navigationItem.largeTitleDisplayMode = .never
         }
+        enableFullscreenSwipeBack()
 
         textView.backgroundColor = GlobalAppearance.backgroundColor
         if #available(iOS 10.0, *) {
