@@ -25,6 +25,12 @@
 		3E65529A255962DA0026290B /* APIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E655299255962DA0026290B /* APIModel.swift */; };
 		3ED16B3E25713D64004A33E0 /* APITestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED16B3D25713D64004A33E0 /* APITestClient.swift */; };
 		98E73DAD0503CF0D8D585826 /* Pods_PttTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E84C05B084821F8B5031D3BD /* Pods_PttTests.framework */; };
+		9B564C28256A9D7800787FD7 /* Coordinatorable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B564C27256A9D7800787FD7 /* Coordinatorable.swift */; };
+		9B564C2F256A9EAC00787FD7 /* Presentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B564C2E256A9EAC00787FD7 /* Presentable.swift */; };
+		9B564C33256A9F3500787FD7 /* Routerable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B564C32256A9F3500787FD7 /* Routerable.swift */; };
+		9B564C3D256AA0EB00787FD7 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B564C3C256AA0EB00787FD7 /* Router.swift */; };
+		9B564C41256AA1F400787FD7 /* CoordinatorFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B564C40256AA1F400787FD7 /* CoordinatorFactoryProtocol.swift */; };
+		9B564C6B256AA8C800787FD7 /* BaseCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B564C6A256AA8C800787FD7 /* BaseCoordinator.swift */; };
 		EA41D65D243EF51A0052F4A1 /* HotTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA41D65C243EF51A0052F4A1 /* HotTopicViewController.swift */; };
 		EA475F7523C4834C000867FE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F7423C4834C000867FE /* AppDelegate.swift */; };
 		EA475F7723C4834C000867FE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F7623C4834C000867FE /* SceneDelegate.swift */; };
@@ -74,6 +80,12 @@
 		46B9993AD4E3522178E28D0D /* Pods-Ptt.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ptt.debug.xcconfig"; path = "Target Support Files/Pods-Ptt/Pods-Ptt.debug.xcconfig"; sourceTree = "<group>"; };
 		80D0972759B39673EF30B8DB /* Pods-Ptt.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ptt.release.xcconfig"; path = "Target Support Files/Pods-Ptt/Pods-Ptt.release.xcconfig"; sourceTree = "<group>"; };
 		8A0F49F3FB80A16A715149ED /* Pods-PttTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PttTests.release.xcconfig"; path = "Target Support Files/Pods-PttTests/Pods-PttTests.release.xcconfig"; sourceTree = "<group>"; };
+		9B564C27256A9D7800787FD7 /* Coordinatorable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinatorable.swift; sourceTree = "<group>"; };
+		9B564C2E256A9EAC00787FD7 /* Presentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presentable.swift; sourceTree = "<group>"; };
+		9B564C32256A9F3500787FD7 /* Routerable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routerable.swift; sourceTree = "<group>"; };
+		9B564C3C256AA0EB00787FD7 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		9B564C40256AA1F400787FD7 /* CoordinatorFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorFactoryProtocol.swift; sourceTree = "<group>"; };
+		9B564C6A256AA8C800787FD7 /* BaseCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCoordinator.swift; sourceTree = "<group>"; };
 		DBDA47B1E79A476E2E89A118 /* Pods_Ptt.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Ptt.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E84C05B084821F8B5031D3BD /* Pods_PttTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PttTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA41D65C243EF51A0052F4A1 /* HotTopicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotTopicViewController.swift; sourceTree = "<group>"; };
@@ -200,6 +212,42 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		9B564C26256A9D3200787FD7 /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				9B564C2B256A9DC000787FD7 /* Protocols */,
+				9B564C3C256AA0EB00787FD7 /* Router.swift */,
+				9B564C6A256AA8C800787FD7 /* BaseCoordinator.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		9B564C2B256A9DC000787FD7 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				9B564C27256A9D7800787FD7 /* Coordinatorable.swift */,
+				9B564C2E256A9EAC00787FD7 /* Presentable.swift */,
+				9B564C32256A9F3500787FD7 /* Routerable.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		9B564C44256AA22700787FD7 /* Factories */ = {
+			isa = PBXGroup;
+			children = (
+				9B564C47256AA23500787FD7 /* Protocols */,
+			);
+			path = Factories;
+			sourceTree = "<group>";
+		};
+		9B564C47256AA23500787FD7 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				9B564C40256AA1F400787FD7 /* CoordinatorFactoryProtocol.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
 		EA475F6823C4834C000867FE = {
 			isa = PBXGroup;
 			children = (
@@ -223,6 +271,8 @@
 		EA475F7323C4834C000867FE /* Ptt */ = {
 			isa = PBXGroup;
 			children = (
+				9B564C44256AA22700787FD7 /* Factories */,
+				9B564C26256A9D3200787FD7 /* Coordinator */,
 				3E65526A25595EB90026290B /* API */,
 				EA475F7423C4834C000867FE /* AppDelegate.swift */,
 				EA475F7623C4834C000867FE /* SceneDelegate.swift */,
@@ -426,10 +476,13 @@
 			files = (
 				3E29388125596BA900240C0F /* URLSessionProtocol.swift in Sources */,
 				EA479EB42431F27C008A0D99 /* PostViewController.swift in Sources */,
+				9B564C3D256AA0EB00787FD7 /* Router.swift in Sources */,
 				EA41D65D243EF51A0052F4A1 /* HotTopicViewController.swift in Sources */,
 				3E655288255960910026290B /* FullPost.swift in Sources */,
 				3E6552822559604C0026290B /* APIClientProtocol.swift in Sources */,
 				3E65527125595F0D0026290B /* BoardInfo.swift in Sources */,
+				9B564C28256A9D7800787FD7 /* Coordinatorable.swift in Sources */,
+				9B564C2F256A9EAC00787FD7 /* Presentable.swift in Sources */,
 				3E65528C255960AE0026290B /* Comment.swift in Sources */,
 				EA78E0C124050EB100309694 /* StyleKit.swift in Sources */,
 				3E65527D25595FD30026290B /* Board.swift in Sources */,
@@ -438,10 +491,13 @@
 				EA475F7923C4834C000867FE /* FavoriteViewController.swift in Sources */,
 				EA62540E242DAAF600E977FE /* Extension.swift in Sources */,
 				EA475F7523C4834C000867FE /* AppDelegate.swift in Sources */,
+				9B564C33256A9F3500787FD7 /* Routerable.swift in Sources */,
 				EA475F7723C4834C000867FE /* SceneDelegate.swift in Sources */,
+				9B564C6B256AA8C800787FD7 /* BaseCoordinator.swift in Sources */,
 				3E65527925595FBE0026290B /* Message.swift in Sources */,
 				EAA4F6F323C72F95005ABCE3 /* APIClient.swift in Sources */,
 				EAA4F6F123C72B01005ABCE3 /* BoardViewController.swift in Sources */,
+				9B564C41256AA1F400787FD7 /* CoordinatorFactoryProtocol.swift in Sources */,
 				3E65526D25595EE60026290B /* Post.swift in Sources */,
 				3E65529A255962DA0026290B /* APIModel.swift in Sources */,
 				3E655290255960CF0026290B /* APIError.swift in Sources */,
