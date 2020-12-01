@@ -61,14 +61,7 @@ final class APIClientTest: XCTestCase {
     }
     
     func testNewPostlistSuccess() {
-        guard let path = Bundle(for: type(of: self)).path(forResource: "NewPostlist", ofType: "json") else {
-            fatalError("NewPostlist.json not found")
-        }
-        let data = try! Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-        
-        let dataTask = MockURLSessionDataTask()
-        let session = MockURLSession(mockDataTask: dataTask, fakeData: data, error: nil)
-        let client = APIClient(session: session)
+        let client = APITestClient.newPostClient()
         
         client.getNewPostlist(board:"MyBoard", page: 1) { (result) in
             switch (result) {
@@ -85,14 +78,7 @@ final class APIClientTest: XCTestCase {
     }
     
     func testGetPostSuccess() {
-        guard let path = Bundle(for: type(of: self)).path(forResource: "GetPost", ofType: "json") else {
-            fatalError("GetPost.json not found")
-        }
-        let data = try! Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-        
-        let dataTask = MockURLSessionDataTask()
-        let session = MockURLSession(mockDataTask: dataTask, fakeData: data, error: nil)
-        let client = APIClient(session: session)
+        let client = APITestClient.getPostClient()
         
         client.getPost(board: "MyBoard", filename: "M.392837.A.F25") { (result) in
             switch (result) {

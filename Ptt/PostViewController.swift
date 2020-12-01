@@ -11,6 +11,7 @@ import SafariServices
 
 final class PostViewController: UIViewController, FullscreenSwipeable {
 
+    private let apiClient: APIClientProtocol
     private var boardName : String?
     private var filename : String?
     private var url : URL? {
@@ -113,9 +114,10 @@ final class PostViewController: UIViewController, FullscreenSwipeable {
     }
     private let cellReuseIdentifier = "CommentCell"
 
-    init(post: Post, boardName: String) {
+    init(post: Post, boardName: String, apiClient: APIClientProtocol=APIClient.shared) {
         self.post = post
         self.boardName = boardName
+        self.apiClient = apiClient
         let (_, filename) = Utility.info(from: post.href)
         self.filename = filename
         super.init(nibName: nil, bundle: nil)
@@ -126,10 +128,11 @@ final class PostViewController: UIViewController, FullscreenSwipeable {
         textView.attributedText = headerAttributedString(of: post)
     }
 
-    init(url: URL) {
+    init(url: URL, apiClient: APIClientProtocol=APIClient.shared) {
         let (boardName, filename) = Utility.info(from: url.path)
         self.boardName = boardName
         self.filename = filename
+        self.apiClient = apiClient
         super.init(nibName: nil, bundle: nil)
         hidesBottomBarWhenPushed = true
     }
@@ -222,7 +225,7 @@ final class PostViewController: UIViewController, FullscreenSwipeable {
         } else {
             activityIndicator.startAnimating()
         }
-        APIClient.shared.getPost(board: boardName, filename: filename) { (result) in
+        self.apiClient.getPost(board: boardName, filename: filename) { (result) in
             DispatchQueue.main.async {
                 self.activityIndicator.stopAnimating()
                 if #available(iOS 10.0, *) {
