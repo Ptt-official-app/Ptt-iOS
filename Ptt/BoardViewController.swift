@@ -16,6 +16,7 @@ final class BoardViewController: ASDKViewController<ASTableNode>, FullscreenSwip
     private var tableView : UITableView {
         return tableNode.view
     }
+    private let apiClient: APIClientProtocol
 
     private var boardName : String
     private var board : APIModel.Board? = nil
@@ -28,7 +29,8 @@ final class BoardViewController: ASDKViewController<ASTableNode>, FullscreenSwip
     private let activityIndicator = UIActivityIndicatorView()
     private var bottomViewHeightConstraint : NSLayoutConstraint? = nil
 
-    init(boardName: String) {
+    init(boardName: String, apiClient: APIClientProtocol=APIClient.shared) {
+        self.apiClient = apiClient
         self.boardName = boardName
         super.init(node: tableNode)
         hidesBottomBarWhenPushed = true
@@ -153,7 +155,7 @@ final class BoardViewController: ASDKViewController<ASTableNode>, FullscreenSwip
         }
         self.isRequesting = true
         context.beginBatchFetching()
-        APIClient.shared.getNewPostlist(board: boardName, page: page) { (result) in
+        self.apiClient.getNewPostlist(board: boardName, page: page) { (result) in
             switch result {
             case .failure(error: let apiError):
                 context.cancelBatchFetching()
