@@ -8,151 +8,186 @@
 
 import Foundation
 import UIKit
+import AsyncDisplayKit
 
-final class LoginViewController: UIViewController {
+final class LoginViewController: ASDKViewController<ASDisplayNode>, ASEditableTextNodeDelegate {
     
     //private let apiClient: APIClientProtocol = nil
+    private let rootNode = ASDisplayNode()
+    
+    
+    func init_layout() -> ASLayoutSpec {
+        
+        let global_width = 265
+        let forgetCenterLayout = ASCenterLayoutSpec(centeringOptions: .X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: btnForget)
 
-    private var svScrollView:UIScrollView = UIScrollView()
-    private var isRequesting = false
-    private var receivedPage : Int = 0
+        
+        let funcStackSpec = ASStackLayoutSpec(direction: .horizontal,
+                                                   spacing: 10,
+                                                   justifyContent: .start,
+                                                   alignItems: .start,
+                                                   children: [btnTypeLogin, lbLine, btnTypeRegister])
+        
+        funcStackSpec.style.preferredSize = CGSize(width: global_width, height: 30)
+        
+        let contentStackSpec = ASStackLayoutSpec(direction: .vertical,
+                                                   spacing: 10,
+                                                   justifyContent: .center,
+                                                   alignItems: .center,
+                                                   children: [lbTitle, funcStackSpec, tfUsername,
+                                                              tfPassword, btnLogin, forgetCenterLayout])
+
+        contentStackSpec.style.preferredSize.width =  CGFloat(global_width)
+        contentStackSpec.style.preferredSize.width =  CGFloat(global_width)
+        
+        lbTitle.style.preferredSize = CGSize(width: global_width, height: 200)
+        tfUsername.style.preferredSize = CGSize(width: global_width, height: 30)
+        tfPassword.style.preferredSize = CGSize(width: global_width, height: 30)
+        btnForget.style.preferredSize = CGSize(width: 100, height: 30)
+
+        
+        node.addSubnode(self.lbTitle)
+        node.addSubnode(self.tfUsername)
+        node.addSubnode(self.tfPassword)
+        
+        return contentStackSpec
+    }
     
-    private let activityIndicator = UIActivityIndicatorView()
+    override init() {
+        super.init(node: rootNode)
+        
+        node.automaticallyManagesSubnodes = true
+        
+        let stack = self.init_layout()
+        node.layoutSpecBlock = { _, _ in
+            return ASCenterLayoutSpec(centeringOptions: .XY,
+                                      sizingOptions: [],
+                                      child: stack)
+        }
+    }
+
     
-    lazy var lbTitle:UILabel =  {
-        let label = UILabel()
-            let paragraphStyle = NSMutableParagraphStyle.init()
-            paragraphStyle.alignment = .left
-            paragraphStyle.paragraphSpacing = 20
-            let attributes = [
-                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 30),
-                NSAttributedString.Key.foregroundColor: UIColor.white,
-                NSAttributedString.Key.paragraphStyle: paragraphStyle
-            ]
-            
-            label.attributedText = NSAttributedString.init(string: "批踢踢實業坊\nPtt.cc", attributes: attributes)
-            label.numberOfLines = 0
-            label.backgroundColor = GlobalAppearance.backgroundColor
-            return label
-        }()
+    required init?(coder aDecoder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+    }
+    
+    var btnTypeRegister:ASButtonNode = {
+        let button = ASButtonNode()
+        let title = NSLocalizedString("登入", comment:"")
+        
+        let attr: [NSAttributedString.Key : Any] = [
+           .foregroundColor: UIColor.white,
+           .font: UIFont(name: "HelveticaNeue-Bold", size: 16)!
+        ]
+        
+        button.titleNode.attributedText = NSAttributedString.init(string: title, attributes: attr)
+        return button
+    }()
+    
+    var btnTypeLogin:ASButtonNode = {
+        let button = ASButtonNode()
+        let title = NSLocalizedString("註冊", comment:"")
+
+        let attr: [NSAttributedString.Key : Any] = [
+           .foregroundColor: UIColor.white,
+           .font: UIFont(name: "HelveticaNeue-Bold", size: 16)!
+        ]
+        
+        button.titleNode.attributedText = NSAttributedString.init(string: title, attributes: attr)
+        return button
+    }()
+    
+    var lbLine:ASTextNode =  {
+        let label = ASTextNode()
+        let attr:[NSAttributedString.Key : Any] = [
+            .foregroundColor: UIColor.white,
+            .font: UIFont(name: "HelveticaNeue-Bold", size: 16)!
+        ]
+        
+        var title = NSAttributedString.init(string: " | ", attributes: attr)
+        label.attributedText = title
+        return label
+    }()
+    
+    var lbTitle:ASTextNode =  {
+        let label = ASTextNode()
+        let paragraphStyle = NSMutableParagraphStyle.init()
+        paragraphStyle.alignment = .left
+        paragraphStyle.paragraphSpacing = 20
+        let attributes = [
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 30),
+            NSAttributedString.Key.foregroundColor: UIColor.white,
+            NSAttributedString.Key.paragraphStyle: paragraphStyle
+        ]
+        
+        label.attributedText = NSAttributedString.init(string: "批踢踢實業坊\nPtt.cc", attributes: attributes)
+        label.backgroundColor = GlobalAppearance.backgroundColor
+        return label
+    }()
     
     lazy var tfUsername:LoginTextField = {
         let textField = LoginTextField()
-            textField.placeholder = NSLocalizedString("User Id", comment:"")
-            return textField
-        }()
+        let title = NSLocalizedString("User Id", comment: "")
+        let attr = [
+            NSAttributedString.Key.foregroundColor: UIColor.white,
+        ]
+        textField.attributedPlaceholderText = NSAttributedString.init(string: title, attributes:attr)
+        //textField.placeholder = NSLocalizedString("User Id", comment:"")
+        textField.backgroundColor = self.textfield_backgroundcolor
+        return textField
+    }()
     
     lazy var tfPassword: LoginTextField = {
         let textField = LoginTextField()
-            textField.isSecureTextEntry = true
-            textField.placeholder = NSLocalizedString("Password", comment:"")
-            return textField
-        }()
+        let title = NSLocalizedString("Password", comment: "")
+        let attr = [
+            NSAttributedString.Key.foregroundColor: UIColor.white,
+        ]
+        textField.attributedPlaceholderText = NSAttributedString.init(string: title, attributes:attr)
+        textField.isSecureTextEntry = true
+        textField.backgroundColor = self.textfield_backgroundcolor
+        return textField
+        
+    }()
     
-    lazy var btnLogin:UIButton = {
-        let button = UIButton()
-            button.titleLabel?.text = NSLocalizedString("Login", comment:"")
-            return button
-        }()
+    var btnLogin:ASButtonNode = {
+        let button = ASButtonNode()
+        let title = NSLocalizedString("Login", comment:"")
+        let attr = [
+            NSAttributedString.Key.foregroundColor: UIColor.white,
+        ]
+        button.titleNode.attributedText = NSAttributedString.init(string: title, attributes: attr)
+        return button
+    }()
 
-    lazy var sgFuncSwitch: UISegmentedControl = {
-        let segmentedControl = UISegmentedControl(items: [NSLocalizedString("Login", comment: ""), NSLocalizedString("Register",comment: "")])
-            return segmentedControl
-        }()
-
+    var btnForget:ASButtonNode = {
+        let button = ASButtonNode()
+        let title = NSLocalizedString("Forget", comment:"")
+        let attr = [
+            NSAttributedString.Key.foregroundColor: UIColor.white,
+        ]
+        button.titleNode.attributedText = NSAttributedString.init(string: title, attributes: attr)
+        return button
+    }()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.view.backgroundColor = GlobalAppearance.backgroundColor
-        activityIndicator.color = .lightGray
-        self.init_layouts()
+
+    class LoginTextField: ASEditableTextNode {
+        
+        override func nodeDidLoad() {
+            super.nodeDidLoad()
+            self.backgroundColor = .white ;
+        }
+        
+
     }
     
-    func init_layouts() {
-    
-        
-        for v in [lbTitle, sgFuncSwitch, tfUsername, tfPassword, btnLogin] {
-            v.translatesAutoresizingMaskIntoConstraints = false
-            self.view.addSubview(v)
+    var textfield_backgroundcolor : UIColor? {
+        if #available(iOS 11.0, *) {
+            return UIColor(red: 42/255, green: 42/255, blue: 48/255, alpha: 1.0)
+            //return UIColor(named: "tintColor-42-42-48")
+        } else {
+            return UIColor(red: 42/255, green: 42/255, blue: 48/255, alpha: 1.0)
         }
-        
-        NSLayoutConstraint.activate([
-            self.tfUsername.widthAnchor.constraint(equalToConstant: 250),
-            self.tfUsername.heightAnchor.constraint(equalToConstant: 45),
-            self.tfUsername.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.tfUsername.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
-        ])
-        
-        NSLayoutConstraint.activate([
-            self.tfPassword.widthAnchor.constraint(equalTo: tfUsername.widthAnchor),
-            self.tfPassword.heightAnchor.constraint(equalTo: tfUsername.heightAnchor),
-            self.tfPassword.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.tfPassword.topAnchor.constraint(equalTo: tfUsername.bottomAnchor, constant: 20),
-        ])
-        
-        
-        NSLayoutConstraint.activate([
-            self.lbTitle.widthAnchor.constraint(equalTo: tfUsername.widthAnchor),
-            self.lbTitle.heightAnchor.constraint(equalToConstant: 120),
-            self.lbTitle.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.lbTitle.bottomAnchor.constraint(equalTo: tfUsername.topAnchor, constant: -150),
-        ])
-        
-        NSLayoutConstraint.activate([
-            self.sgFuncSwitch.leftAnchor.constraint(equalTo: tfUsername.leftAnchor),
-            self.sgFuncSwitch.bottomAnchor.constraint(equalTo: tfUsername.topAnchor, constant: -50),
-        ])
-        
-        NSLayoutConstraint.activate([
-            self.btnLogin.widthAnchor.constraint(equalTo: tfUsername.widthAnchor),
-            self.btnLogin.leftAnchor.constraint(equalTo: tfUsername.leftAnchor),
-            self.btnLogin.topAnchor.constraint(equalTo: tfPassword.topAnchor, constant: 70),
-        ])
-    }
-
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
     }
     
-    class LoginTextField: UITextField {
-        @IBInspectable var insetX: CGFloat = 16
-        @IBInspectable var insetY: CGFloat = 16
-
-        
-        required init(coder aDecoder: NSCoder) {
-            super.init(coder: aDecoder)!
-            self.setup_view()
-        }
-        required override init(frame: CGRect) {
-            super.init(frame: frame)
-            self.setup_view()
-        }
-        func setup_view(){
-            self.clipsToBounds = true
-            self.layer.masksToBounds = false
-            self.layer.cornerRadius = 20
-            backgroundColor = textfield_backgroundcolor
-        }
-    
-        // placeholder position
-        override func textRect(forBounds bounds: CGRect) -> CGRect {
-            return bounds.insetBy(dx: insetX, dy: insetY)
-        }
-
-        // text position
-        override func editingRect(forBounds bounds: CGRect) -> CGRect {
-            return bounds.insetBy(dx: insetX, dy: insetY)
-        }
-        
-        var textfield_backgroundcolor : UIColor? {
-            if #available(iOS 11.0, *) {
-                return UIColor(red: 42/255, green: 42/255, blue: 48/255, alpha: 1.0)
-                //return UIColor(named: "tintColor-42-42-48")
-            } else {
-                return UIColor(red: 42/255, green: 42/255, blue: 48/255, alpha: 1.0)
-            }
-        }
-        
-    }
 }
