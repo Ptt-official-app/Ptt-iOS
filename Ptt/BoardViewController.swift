@@ -10,7 +10,9 @@ import UIKit
 import SafariServices
 import AsyncDisplayKit
 
-final class BoardViewController: ASDKViewController<ASTableNode>, FullscreenSwipeable {
+protocol BoardView: BaseView {}
+
+final class BoardViewController: ASDKViewController<ASTableNode>, FullscreenSwipeable, BoardView {
 
     private let tableNode = ASTableNode(style: .plain)
     private var tableView : UITableView {

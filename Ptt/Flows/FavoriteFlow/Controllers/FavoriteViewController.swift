@@ -58,7 +58,9 @@ struct Favorite {
 
 // MARK: -
 
-final class FavoriteViewController: UITableViewController {
+protocol FavoriteView: BaseView {}
+
+final class FavoriteViewController: UITableViewController, FavoriteView {
 
     private let cellReuseIdentifier = "FavoriteCell"
     private let resultsTableController = ResultsTableController(style: .plain)

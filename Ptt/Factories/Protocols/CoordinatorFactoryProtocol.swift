@@ -6,8 +6,9 @@
 //  Copyright © 2020 Ptt. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 protocol CoordinatorFactoryProtocol {
     func makeTabbarCoordinator() -> (coordinator: Coordinatorable, toPresent: Presentable?)
+    func makeFavoriteCoordinator(navigationController: UINavigationController?) -> Coordinatorable
 }

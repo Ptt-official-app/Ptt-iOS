@@ -19,16 +19,19 @@ class TabBarCoordinator: BaseCoordinator {
     }
     
     override func start() {
-        
+        tabBarView.onViewDidLoad = runFavoriteFlow()
+        tabBarView.onFavoriteFlowSelect = runFavoriteFlow()
     }
 }
 
 private extension TabBarCoordinator {
     
     func runFavoriteFlow() -> ((UINavigationController) -> Void) {
-        return { navController in
+        return { [unowned self] navController in
             if navController.viewControllers.isEmpty {
-                
+                let favoriteCoordinator = self.coordinatorFactory.makeFavoriteCoordinator(navigationController: navController)
+                self.addDependency(favoriteCoordinator)
+                favoriteCoordinator.start()
             }
         }
     }

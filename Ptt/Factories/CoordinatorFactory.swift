@@ -6,7 +6,7 @@
 //  Copyright © 2020 Ptt. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 final class CoordinatorFactory: CoordinatorFactoryProtocol {
     
@@ -14,5 +14,27 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
         let controller = TabBarController.controllerFromStoryboard(.main)
         let coordinator = TabBarCoordinator(tabBarView: controller, coordinatorFactory: CoordinatorFactory())
         return (coordinator, controller)
+    }
+    
+    func makeFavoriteCoordinator(navigationController: UINavigationController?) -> Coordinatorable {
+        let coordinator = FavoriteCoordinator(router: router(navigationController),
+                                              factory: SceneFactory(),
+                                              coordinatoryFactory: CoordinatorFactory())
+        return coordinator
+    }
+}
+
+private extension CoordinatorFactory {
+    
+    func router(_ navigationController: UINavigationController?) -> Routerable {
+        return Router(rootController: self.navigationController(navigationController))
+    }
+    
+    func navigationController(_ navController: UINavigationController?) -> UINavigationController {
+        if let navController = navController {
+            return navController
+        } else {
+            return UINavigationController()
+        }
     }
 }
