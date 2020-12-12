@@ -8,23 +8,6 @@
 
 import UIKit
 
-struct RootViewControllerProvider {
-
-    static func tabBarController() -> UITabBarController {
-        let tabBarController = UITabBarController()
-        let tabItemFavorite = UITabBarItem(title: NSLocalizedString("Favorite Boards", comment: ""), image: StyleKit.imageOfFavoriteTabBar(), tag: 0)
-        let favoriteViewController = FavoriteViewController()
-        let favoriteNavigationController = UINavigationController(rootViewController: favoriteViewController)
-        favoriteNavigationController.tabBarItem = tabItemFavorite
-        let tabItemHot = UITabBarItem(title: NSLocalizedString("Hot Topics", comment: ""), image: StyleKit.imageOfHotTopic(), tag: 1)
-        let hotTopicViewController = HotTopicViewController()
-        let hotTopicNavigationController = UINavigationController(rootViewController: hotTopicViewController)
-        hotTopicNavigationController.tabBarItem = tabItemHot
-        tabBarController.viewControllers = [favoriteNavigationController, hotTopicNavigationController]
-        return tabBarController
-    }
-}
-
 struct GlobalAppearance {
 
     static func apply(to window: UIWindow) {
