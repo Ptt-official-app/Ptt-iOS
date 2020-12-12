@@ -22,6 +22,13 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
                                               coordinatoryFactory: CoordinatorFactory())
         return coordinator
     }
+    
+    func makeHotTopicCoordinator(navigationController: UINavigationController?) -> Coordinatorable {
+        let coordinator = HotTopicCoordinator(router: router(navigationController),
+                                              factory: SceneFactory(),
+                                              coordinatoryFactory: CoordinatorFactory())
+        return coordinator
+    }
 }
 
 private extension CoordinatorFactory {

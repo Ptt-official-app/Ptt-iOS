@@ -26,6 +26,8 @@ final class TabBarController: UITabBarController, UITabBarControllerDelegate, Ta
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        configureTabBarItems()
+        
         delegate = self
         if let controller = customizableViewControllers?.first as? UINavigationController {
             onViewDidLoad?(controller)
@@ -34,7 +36,7 @@ final class TabBarController: UITabBarController, UITabBarControllerDelegate, Ta
     
     // MARK: - UITabBarControllerDelegate
     
-    override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         guard let controller = viewControllers?[selectedIndex] as? UINavigationController,
               let tab = Tab(rawValue: selectedIndex) else { return }
         
@@ -43,6 +45,31 @@ final class TabBarController: UITabBarController, UITabBarControllerDelegate, Ta
             onFavoriteFlowSelect?(controller)
         case .hotTopic:
             onHotTopicFlowSelect?(controller)
+        }
+    }
+}
+
+private extension TabBarController {
+    
+    func configureTabBarItems() {
+        guard let controllers = customizableViewControllers as? [UINavigationController] else { return }
+        
+        for (index, controller) in controllers.enumerated() {
+            guard let tab = Tab(rawValue: index) else { return }
+            
+            var localizedString = ""
+            var image: UIImage = UIImage()
+            
+            switch tab {
+            case .favorite:
+                localizedString = "Favorite Boards"
+                image = StyleKit.imageOfFavoriteTabBar()
+            case .hotTopic:
+                localizedString = "Hot Topics"
+                image = StyleKit.imageOfHotTopic()
+            }
+            
+            controller.tabBarItem = UITabBarItem(title: NSLocalizedString(localizedString, comment: ""), image: image, tag: index)
         }
     }
 }

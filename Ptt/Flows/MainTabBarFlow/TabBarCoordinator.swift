@@ -21,6 +21,7 @@ class TabBarCoordinator: BaseCoordinator {
     override func start() {
         tabBarView.onViewDidLoad = runFavoriteFlow()
         tabBarView.onFavoriteFlowSelect = runFavoriteFlow()
+        tabBarView.onHotTopicFlowSelect = runHotTopicFlow()
     }
 }
 
@@ -32,6 +33,16 @@ private extension TabBarCoordinator {
                 let favoriteCoordinator = self.coordinatorFactory.makeFavoriteCoordinator(navigationController: navController)
                 self.addDependency(favoriteCoordinator)
                 favoriteCoordinator.start()
+            }
+        }
+    }
+    
+    func runHotTopicFlow() -> ((UINavigationController) -> Void) {
+        return { [unowned self] navController in
+            if navController.viewControllers.isEmpty {
+                let hotTopicCoordinator = self.coordinatorFactory.makeHotTopicCoordinator(navigationController: navController)
+                self.addDependency(hotTopicCoordinator)
+                hotTopicCoordinator.start()
             }
         }
     }
