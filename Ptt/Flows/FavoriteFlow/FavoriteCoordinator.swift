@@ -10,7 +10,7 @@ import UIKit
 
 class FavoriteCoordinator: BaseCoordinator {
 
-    private let factory: FavoriteSceneFactoryProtocol
+    private let factory: FavoriteSceneFactoryProtocol & BoardSceneFactoryProtocol
     private let coordinatoryFactory: CoordinatorFactoryProtocol
     private let router: Routerable
     
@@ -31,6 +31,17 @@ private extension FavoriteCoordinator {
     
     func showFavoriteView() {
         let favoriteView = factory.makeFavoriteView()
+        
+        favoriteView.onBoardSelect = { [unowned self] (boardName) in
+            self.runBoardFlow(withBoardName: boardName)
+        }
+        
         router.setRootModule(favoriteView)
+    }
+    
+    func runBoardFlow(withBoardName boardName: String) {
+        let coordinator = BoardCoordinator(router: router, factory: factory, coordinatoryFactory: coordinatoryFactory)
+        addDependency(coordinator)
+        coordinator.start(withBoardName: boardName)
     }
 }

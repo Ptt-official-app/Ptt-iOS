@@ -9,7 +9,9 @@
 import UIKit
 import SafariServices
 
-final class PostViewController: UIViewController, FullscreenSwipeable {
+protocol PostView: BaseView {}
+
+final class PostViewController: UIViewController, FullscreenSwipeable, PostView {
 
     private let apiClient: APIClientProtocol
     private var boardName : String?

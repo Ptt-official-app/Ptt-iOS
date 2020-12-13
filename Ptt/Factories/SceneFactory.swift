@@ -24,4 +24,8 @@ final class SceneFactory: FavoriteSceneFactoryProtocol,
     func makeBoardView(withBoardName boardName: String) -> BoardView {
         return BoardViewController(boardName: boardName)
     }
+    
+    func makePostView(withBoardPost boardPost: BoardPost) -> PostView {
+        return PostViewController(post: boardPost.post, boardName: boardPost.boardName)
+    }
 }

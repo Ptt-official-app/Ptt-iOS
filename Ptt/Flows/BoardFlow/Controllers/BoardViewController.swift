@@ -10,9 +10,18 @@ import UIKit
 import SafariServices
 import AsyncDisplayKit
 
-protocol BoardView: BaseView {}
+struct BoardPost {
+    let post: APIModel.BoardPost
+    let boardName: String
+}
+
+protocol BoardView: BaseView {
+    var onPostSelect: ((BoardPost) -> Void)? { get set }
+}
 
 final class BoardViewController: ASDKViewController<ASTableNode>, FullscreenSwipeable, BoardView {
+    
+    var onPostSelect: ((BoardPost) -> Void)?
 
     private let tableNode = ASTableNode(style: .plain)
     private var tableView : UITableView {
@@ -272,8 +281,7 @@ extension BoardViewController: ASTableDelegate {
             return
         }
         let post = board.postList[row]
-        let postViewController = PostViewController(post: post, boardName: boardName)
-        show(postViewController, sender: self)
+        onPostSelect?(BoardPost(post: post, boardName: boardName))
     }
 }
 

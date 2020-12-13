@@ -6,7 +6,6 @@
 //  Copyright © 2020 Ptt. All rights reserved.
 //
 
-protocol FavoriteSceneFactoryProtocol {
+protocol FavoriteSceneFactoryProtocol: BoardSceneFactoryProtocol {
     func makeFavoriteView() -> FavoriteView
-    func makeBoardView(withBoardName boardName: String) -> BoardView
 }
