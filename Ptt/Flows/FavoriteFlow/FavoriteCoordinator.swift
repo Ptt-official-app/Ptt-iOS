@@ -41,6 +41,11 @@ private extension FavoriteCoordinator {
     
     func runBoardFlow(withBoardName boardName: String) {
         let coordinator = BoardCoordinator(router: router, factory: factory, coordinatoryFactory: coordinatoryFactory)
+        
+        coordinator.finshFlow = { [unowned self] in
+            self.removeDependency(coordinator)
+        }
+        
         addDependency(coordinator)
         coordinator.start(withBoardName: boardName)
     }

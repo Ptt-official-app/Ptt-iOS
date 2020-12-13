@@ -15,6 +15,8 @@ final class Router: NSObject, Routerable {
     init(rootController: UINavigationController) {
         self.rootController = rootController
         completions = [:]
+        super.init()
+        rootController.delegate = self
     }
     
     func toPresent() -> UIViewController? {
@@ -99,5 +101,16 @@ final class Router: NSObject, Routerable {
         guard let completion = completions[controller] else { return }
         completion()
         completions.removeValue(forKey: controller)
+    }
+}
+
+extension Router: UINavigationControllerDelegate {
+    
+    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        guard let previousController = navigationController.transitionCoordinator?.viewController(forKey: .from),
+              !navigationController.viewControllers.contains(previousController) else {
+            return
+        }
+        runCompletion(for: previousController)
     }
 }

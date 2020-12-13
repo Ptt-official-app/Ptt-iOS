@@ -8,6 +8,7 @@
 
 class BaseCoordinator: Coordinatorable {
     
+    var finshFlow: (() -> Void)?
     var childCoordinators: [Coordinatorable] = []
 
         func start() {}

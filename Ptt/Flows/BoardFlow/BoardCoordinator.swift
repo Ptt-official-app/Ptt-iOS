@@ -36,7 +36,9 @@ private extension BoardCoordinator {
             self?.showPostView(withBoardPost: boardPost)
         }
         
-        router.push(boardView)
+        router.push(boardView, animated: true, hideBottomBar: true) { [weak self] in
+            self?.finshFlow?()
+        }
     }
     
     func showPostView(withBoardPost boardPost: BoardPost) {
