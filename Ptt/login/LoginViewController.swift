@@ -15,20 +15,18 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, ASEditableTe
     //private let apiClient: APIClientProtocol = nil
     private let rootNode = ASDisplayNode()
     
-    
     func init_layout() -> ASLayoutSpec {
         
         let global_width = 265
         let forgetCenterLayout = ASCenterLayoutSpec(centeringOptions: .X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: btnForget)
-
         
         let funcStackSpec = ASStackLayoutSpec(direction: .horizontal,
-                                                   spacing: 10,
+                                                   spacing: 5,
                                                    justifyContent: .start,
                                                    alignItems: .start,
                                                    children: [btnTypeLogin, lbLine, btnTypeRegister])
         
-        funcStackSpec.style.preferredSize = CGSize(width: global_width, height: 30)
+        funcStackSpec.style.preferredSize = CGSize(width: global_width, height: 44)
         
         let contentStackSpec = ASStackLayoutSpec(direction: .vertical,
                                                    spacing: 10,
@@ -36,15 +34,11 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, ASEditableTe
                                                    alignItems: .center,
                                                    children: [lbTitle, funcStackSpec, tfUsername,
                                                               tfPassword, btnLogin, forgetCenterLayout])
-
-        contentStackSpec.style.preferredSize.width =  CGFloat(global_width)
-        contentStackSpec.style.preferredSize.width =  CGFloat(global_width)
         
-        lbTitle.style.preferredSize = CGSize(width: global_width, height: 200)
-        tfUsername.style.preferredSize = CGSize(width: global_width, height: 30)
-        tfPassword.style.preferredSize = CGSize(width: global_width, height: 30)
-        btnForget.style.preferredSize = CGSize(width: 100, height: 30)
-
+        lbTitle.style.preferredSize = CGSize(width: global_width, height: 100)
+        tfUsername.style.preferredSize = CGSize(width: global_width, height: 44)
+        tfPassword.style.preferredSize = CGSize(width: global_width, height: 44)
+        btnForget.style.preferredSize = CGSize(width: 100, height: 44)
         
         node.addSubnode(self.lbTitle)
         node.addSubnode(self.tfUsername)
@@ -53,19 +47,48 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, ASEditableTe
         return contentStackSpec
     }
     
+    func bind_event(){
+        btnTypeLogin.addTarget(self, action: #selector(switchTypeRegister), forControlEvents: ASControlNodeEvent.touchDown)
+        btnTypeRegister.addTarget(self, action: #selector(switchTypeRegister), forControlEvents: ASControlNodeEvent.touchDown)
+    }
+    
+    override func viewDidLoad() {
+        self.bind_event()
+    }
+    
     override init() {
         super.init(node: rootNode)
         
-        node.automaticallyManagesSubnodes = true
-        
         let stack = self.init_layout()
+        
         node.layoutSpecBlock = { _, _ in
             return ASCenterLayoutSpec(centeringOptions: .XY,
                                       sizingOptions: [],
                                       child: stack)
         }
+        
+        node.automaticallyManagesSubnodes = true
     }
 
+    
+    @objc func switchTypeRegister(_ button:ASButtonNode) {
+        
+        if button == btnTypeRegister {
+            btnTypeRegister.isSelected = true
+            btnTypeLogin.isSelected = false
+        }
+        else if button == btnTypeLogin {
+            btnTypeRegister.isSelected = false
+            btnTypeLogin.isSelected = true
+        }
+        
+        if btnTypeRegister.isSelected {
+            
+        }
+        else if btnLogin.isSelected {
+            
+        }
+    }
     
     required init?(coder aDecoder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
@@ -80,9 +103,13 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, ASEditableTe
            .font: UIFont(name: "HelveticaNeue-Bold", size: 16)!
         ]
         
-        button.titleNode.attributedText = NSAttributedString.init(string: title, attributes: attr)
+        button.setTitle(title, with: nil, with: .white, for: UIControl.State.selected)
+        button.setTitle(title, with: nil, with: .gray, for: UIControl.State.normal)
+        
+        button.isSelected = false
         return button
     }()
+    
     
     var btnTypeLogin:ASButtonNode = {
         let button = ASButtonNode()
@@ -92,8 +119,12 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, ASEditableTe
            .foregroundColor: UIColor.white,
            .font: UIFont(name: "HelveticaNeue-Bold", size: 16)!
         ]
+        button.setTitle(title, with: nil, with: .white, for: UIControl.State.selected)
+        button.setTitle(title, with: nil, with: .gray, for: UIControl.State.normal)
         
-        button.titleNode.attributedText = NSAttributedString.init(string: title, attributes: attr)
+
+        button.isSelected = true
+        
         return button
     }()
     
@@ -104,7 +135,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, ASEditableTe
             .font: UIFont(name: "HelveticaNeue-Bold", size: 16)!
         ]
         
-        var title = NSAttributedString.init(string: " | ", attributes: attr)
+        var title = NSAttributedString.init(string: "|", attributes: attr)
         label.attributedText = title
         return label
     }()
@@ -125,8 +156,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, ASEditableTe
         return label
     }()
     
-    lazy var tfUsername:LoginTextField = {
-        let textField = LoginTextField()
+    lazy var tfUsername:ASEditableTextNode = {
+        let textField = ASEditableTextNode()
         let title = NSLocalizedString("User Id", comment: "")
         let attr = [
             NSAttributedString.Key.foregroundColor: UIColor.white,
@@ -136,19 +167,21 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, ASEditableTe
         textField.backgroundColor = self.textfield_backgroundcolor
         return textField
     }()
+
     
-    lazy var tfPassword: LoginTextField = {
-        let textField = LoginTextField()
+    lazy var tfPassword = ASDisplayNode.init { () -> UIView in
+        var textField:UITextField = UITextField()
         let title = NSLocalizedString("Password", comment: "")
         let attr = [
             NSAttributedString.Key.foregroundColor: UIColor.white,
         ]
-        textField.attributedPlaceholderText = NSAttributedString.init(string: title, attributes:attr)
         textField.isSecureTextEntry = true
+        textField.attributedPlaceholder = NSAttributedString.init(string: title, attributes:attr)
         textField.backgroundColor = self.textfield_backgroundcolor
+
         return textField
-        
-    }()
+    }
+
     
     var btnLogin:ASButtonNode = {
         let button = ASButtonNode()
@@ -169,17 +202,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, ASEditableTe
         button.titleNode.attributedText = NSAttributedString.init(string: title, attributes: attr)
         return button
     }()
-    
-
-    class LoginTextField: ASEditableTextNode {
-        
-        override func nodeDidLoad() {
-            super.nodeDidLoad()
-            self.backgroundColor = .white ;
-        }
-        
-
-    }
     
     var textfield_backgroundcolor : UIColor? {
         if #available(iOS 11.0, *) {
