@@ -9,12 +9,26 @@
 import Foundation
 
 class APIClient {
+    private enum Method: String {
+        case GET = "GET"
+        case POST = "POST"
+        case DELETE = "DELETE"
+        case PUT = "PUT"
+    }
     static let shared: APIClient = APIClient()
     
     private var rootURLComponents : URLComponents {
         var urlComponent = URLComponents()
         urlComponent.scheme = "https"
         urlComponent.host = "webptt.azurewebsites.net"
+        return urlComponent
+    }
+    
+    private var tempURLComponents : URLComponents {
+        var urlComponent = URLComponents()
+        urlComponent.scheme = "http"
+        urlComponent.host = "173.255.216.176"
+        urlComponent.port = 3457
         return urlComponent
     }
     
@@ -36,6 +50,42 @@ class APIClient {
 
 // MARK: Public api function
 extension APIClient: APIClientProtocol {
+    func login(account: String, password: String, completion: @escaping (LoginResult) -> Void) {
+        let bodyDic = ["client_id": "test_client_id",
+                       "client_secret": "test_client_secret",
+                       "user_id": account,
+                       "password": password]
+        
+        var urlComponent = tempURLComponents
+        urlComponent.path = "/api/account/login"
+        guard let url = urlComponent.url,
+              let jsonBody = try? JSONSerialization.data(withJSONObject: bodyDic) else {
+            assertionFailure()
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.POST.rawValue
+        request.httpBody = jsonBody
+        
+        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
+            switch result {
+            case .failure(let apiError):
+                completion(.failure(apiError))
+            case .success(let resultData):
+                do {
+                    let token = try self.decoder.decode(APIModel.LoginToken.self, from: resultData)
+                    completion(.success(token))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(APIError(message: message)))
+                }
+            }
+        }
+        task.resume()
+    }
+    
     func getNewPostlist(board: String, page: Int, completion: @escaping (GetNewPostlistResult) -> Void) {
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/Article/\(board)"

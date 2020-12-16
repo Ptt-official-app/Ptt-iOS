@@ -23,6 +23,8 @@
 		3E65528C255960AE0026290B /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65528B255960AE0026290B /* Comment.swift */; };
 		3E655290255960CF0026290B /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65528F255960CF0026290B /* APIError.swift */; };
 		3E65529A255962DA0026290B /* APIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E655299255962DA0026290B /* APIModel.swift */; };
+		3E8D8C83258A511600346690 /* LoginToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8D8C82258A511600346690 /* LoginToken.swift */; };
+		3E8D8C87258A519F00346690 /* Login.json in Resources */ = {isa = PBXBuildFile; fileRef = 3E8D8C86258A519F00346690 /* Login.json */; };
 		3ED16B3E25713D64004A33E0 /* APITestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED16B3D25713D64004A33E0 /* APITestClient.swift */; };
 		98E73DAD0503CF0D8D585826 /* Pods_PttTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E84C05B084821F8B5031D3BD /* Pods_PttTests.framework */; };
 		EA41D65D243EF51A0052F4A1 /* HotTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA41D65C243EF51A0052F4A1 /* HotTopicViewController.swift */; };
@@ -70,6 +72,8 @@
 		3E65528B255960AE0026290B /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		3E65528F255960CF0026290B /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		3E655299255962DA0026290B /* APIModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIModel.swift; sourceTree = "<group>"; };
+		3E8D8C82258A511600346690 /* LoginToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginToken.swift; sourceTree = "<group>"; };
+		3E8D8C86258A519F00346690 /* Login.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Login.json; sourceTree = "<group>"; };
 		3ED16B3D25713D64004A33E0 /* APITestClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITestClient.swift; sourceTree = "<group>"; };
 		46B9993AD4E3522178E28D0D /* Pods-Ptt.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ptt.debug.xcconfig"; path = "Target Support Files/Pods-Ptt/Pods-Ptt.debug.xcconfig"; sourceTree = "<group>"; };
 		80D0972759B39673EF30B8DB /* Pods-Ptt.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ptt.release.xcconfig"; path = "Target Support Files/Pods-Ptt/Pods-Ptt.release.xcconfig"; sourceTree = "<group>"; };
@@ -141,6 +145,7 @@
 			children = (
 				3E0101B42566A9C500D39FAD /* NewPostlist.json */,
 				3E0101BC2566AD1400D39FAD /* GetPost.json */,
+				3E8D8C86258A519F00346690 /* Login.json */,
 			);
 			path = FakeData;
 			sourceTree = "<group>";
@@ -169,6 +174,7 @@
 			children = (
 				3E65526C25595EE60026290B /* Post.swift */,
 				3E65527025595F0D0026290B /* BoardInfo.swift */,
+				3E8D8C82258A511600346690 /* LoginToken.swift */,
 				3E65527425595F9E0026290B /* BoardPost.swift */,
 				3E65527825595FBE0026290B /* Message.swift */,
 				3E65527C25595FD30026290B /* Board.swift */,
@@ -348,6 +354,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3E8D8C87258A519F00346690 /* Login.json in Resources */,
 				3E0101BD2566AD1400D39FAD /* GetPost.json in Resources */,
 				3E0101B52566A9C500D39FAD /* NewPostlist.json in Resources */,
 			);
@@ -429,6 +436,7 @@
 				EA41D65D243EF51A0052F4A1 /* HotTopicViewController.swift in Sources */,
 				3E655288255960910026290B /* FullPost.swift in Sources */,
 				3E6552822559604C0026290B /* APIClientProtocol.swift in Sources */,
+				3E8D8C83258A511600346690 /* LoginToken.swift in Sources */,
 				3E65527125595F0D0026290B /* BoardInfo.swift in Sources */,
 				3E65528C255960AE0026290B /* Comment.swift in Sources */,
 				EA78E0C124050EB100309694 /* StyleKit.swift in Sources */,
