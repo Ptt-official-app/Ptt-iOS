@@ -111,4 +111,24 @@ final class APIClientTest: XCTestCase {
             }
         }
     }
+    
+    func testBoardListSuccess() {
+        let client = manager.getBoardList()
+        
+        client.getBoardListV2(token: "eyJhbGc....", keyword: "", startIdx: "", max: 300) { (result) in
+            switch (result) {
+                case .failure(_):
+                    XCTAssert(false)
+                case .success(let list):
+                    XCTAssert(list.next_idx == "")
+                    XCTAssert(list.list.count == 6)
+                    let info = list.list[0]
+                    XCTAssert(info.bid == "6_ALLPOST")
+                    XCTAssert(info.brdname == "ALLPOST")
+                    XCTAssert(info.title == "跨板式LOCAL新文章")
+                    XCTAssert(info.flag == 32)
+                    XCTAssert(info.nuser == 0)
+            }
+        }
+    }
 }

@@ -155,6 +155,50 @@ extension APIClient: APIClientProtocol {
         }
         task.resume()
     }
+    
+    
+    /// Get board list
+    /// - Parameters:
+    ///   - token: access token
+    ///   - keyword: query string, '' returns all boards
+    ///   - startIdx: starting idx, '' if fetch from the beginning.
+    ///   - max: max number of the returned list, requiring <= 300
+    ///   - completion: the list of board information
+    func getBoardListV2(token: String, keyword: String="", startIdx: String="", max: Int=300, completion: @escaping (BoardListResultV2) -> Void) {
+        var urlComponent = tempURLComponents
+        urlComponent.path = "/api/boards"
+        // Percent encoding is automatically done with RFC 3986
+        urlComponent.queryItems = [
+            URLQueryItem(name: "keyword", value: keyword),
+            URLQueryItem(name: "startIdx", value: startIdx),
+            URLQueryItem(name: "max", value: "\(max)")
+        ]
+        guard let url = urlComponent.url else {
+            assertionFailure()
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.GET.rawValue
+        request.setValue("bearer \(token)", forHTTPHeaderField: "Authorization")
+        
+        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
+            switch result {
+            case .failure(let apiError):
+                completion(.failure(apiError))
+            case .success(let resultData):
+                do {
+                    let list = try self.decoder.decode(APIModel.BoardInfoList.self, from: resultData)
+                    completion(.success(list))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(APIError(message: message)))
+                }
+            }
+        }
+        task.resume()
+    }
 }
 
 // MARK: Private helper function

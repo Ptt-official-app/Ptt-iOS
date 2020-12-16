@@ -24,7 +24,7 @@ class APITestClient {
     }
     
     func newPostClient() -> APIClientProtocol {
-        guard let path = Bundle.main.path(forResource: "NewPostlist", ofType: "json") else {
+        guard let path = Bundle(for: type(of: self)).path(forResource: "NewPostlist", ofType: "json") else {
             fatalError("NewPostlist.json not found")
         }
         let data = try! Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
@@ -36,8 +36,20 @@ class APITestClient {
     }
     
     func getPostClient() -> APIClientProtocol {
-        guard let path = Bundle.main.path(forResource: "GetPost", ofType: "json") else {
+        guard let path = Bundle(for: type(of: self)).path(forResource: "GetPost", ofType: "json") else {
             fatalError("GetPost.json not found")
+        }
+        let data = try! Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
+        
+        let dataTask = MockURLSessionDataTask()
+        let session = MockURLSession(mockDataTask: dataTask, fakeData: data, error: nil)
+        let client = APIClient(session: session)
+        return client
+    }
+    
+    func getBoardList() -> APIClientProtocol {
+        guard let path = Bundle(for: type(of: self)).path(forResource: "BoardList", ofType: "json") else {
+            fatalError("BoardList.json not found")
         }
         let data = try! Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
         
