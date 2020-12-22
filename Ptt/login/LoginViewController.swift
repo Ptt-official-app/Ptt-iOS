@@ -62,9 +62,25 @@ final class LoginViewController: ASDKViewController<ASDisplayNode> {
         return contentStackSpec!
     }
     
+    @objc func hideKeyboard() {
+        print("did hide keyboard")
+        if let tf = tfPassword.view as? UITextField {
+            tf.endEditing(true)
+        }
+        if let tf = tfUsername.view as? UITextField {
+            tf.endEditing(true)
+        }
+    }
+    
     func bind_event(){
         btnTypeLogin.addTarget(self, action: #selector(switchTypeRegister), forControlEvents: ASControlNodeEvent.touchDown)
         btnTypeRegister.addTarget(self, action: #selector(switchTypeRegister), forControlEvents: ASControlNodeEvent.touchDown)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        self.node.view.addGestureRecognizer(tap)
+        
+        self.btnLogin.addTarget(self, action: #selector(loginPress), forControlEvents: ASControlNodeEvent.touchDown)
+        self.btnForget.addTarget(self, action: #selector(forgetPress), forControlEvents: ASControlNodeEvent.touchDown)
     }
     
     override func viewDidLoad() {
@@ -73,12 +89,15 @@ final class LoginViewController: ASDKViewController<ASDisplayNode> {
     
     override init() {
         super.init(node: rootNode)
+        self.rootNode.backgroundColor = self.blackColor
         
         let stack = self.init_layout()
         
         
         self.scrollNode.automaticallyManagesSubnodes = true
         self.scrollNode.automaticallyManagesContentSize = true
+        self.scrollNode.view.showsHorizontalScrollIndicator = false
+        self.scrollNode.view.showsVerticalScrollIndicator = false
         
         scrollNode.layoutSpecBlock = { node, constrainedSize in
             return stack
@@ -86,11 +105,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode> {
         
         node.layoutSpecBlock = { _, _ in
             return ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0), child: self.scrollNode)
-//            self.contentCenterLayoutSpec = ASCenterLayoutSpec(centeringOptions: .XY,
-//                                                             sizingOptions: [],
-//                                                             child: stack)
-//
-//            return self.contentCenterLayoutSpec!
         }
         
         node.automaticallyManagesSubnodes = true
@@ -117,6 +131,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode> {
         }
         else if btnLogin.isSelected {
         }
+        
+        self.hideKeyboard()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -273,6 +289,13 @@ final class LoginViewController: ASDKViewController<ASDisplayNode> {
         }
     }
     
+    @objc func loginPress() {
+        print("login press")
+    }
+    
+    @objc func forgetPress() {
+        print("forget press")
+    }
     lazy var btnLogin:ASButtonNode = {
         let button = ASButtonNode()
         let title = NSLocalizedString("Login", comment:"")
@@ -280,8 +303,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode> {
             NSAttributedString.Key.foregroundColor: self.textfield_backgroundcolor,
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12)
         ]
-        button.titleNode.attributedText = NSAttributedString.init(string: title, attributes: attr)
         button.backgroundColor = self.slateGrey
+        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
         
         button.layer.cornerRadius = 15
         button.clipsToBounds = true
@@ -296,9 +319,21 @@ final class LoginViewController: ASDKViewController<ASDisplayNode> {
             NSAttributedString.Key.foregroundColor: self.slateGrey,
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12)
         ]
-        button.titleNode.attributedText = NSAttributedString.init(string: title, attributes: attr)
+        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
         return button
     }()
+    
+    
+    
+    
+    
+    var blackColor : UIColor? {
+        if #available(iOS 11.0, *) {
+            return UIColor(named: "blackColor-23-23-23")
+        } else {
+            return UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0)
+        }
+    }
     
     var textfield_backgroundcolor : UIColor {
         if #available(iOS 11.0, *) {
@@ -321,19 +356,23 @@ final class LoginViewController: ASDKViewController<ASDisplayNode> {
 
 extension LoginViewController: UITextFieldDelegate {
     public func textFieldDidBeginEditing(_ textField: UITextField) {
-        print("begin edit")
+        let screenHeight = Int(self.view.bounds.height)
+        let keyboardHeight = 253+50 // todo: get keyboard height from addObserver
+        let margin_to_keyboard = 10
+        let diff = Int(btnLogin.view.frame.origin.y) - (screenHeight-keyboardHeight) + margin_to_keyboard
         
-        let point = CGPoint(x: 0, y: self.scrollNode.view.contentSize.height - self.scrollNode.view.bounds.height + self.scrollNode.view.contentInset.bottom)
+        print("screen height=", UIScreen.main.bounds.height)
+        print("btn login pos=", btnLogin.view.frame.origin, btnLogin.view.bounds)
+        print("screen diff=", diff)
         
-        self.scrollNode.view.setContentOffset(point, animated: true)
-        
+        if ( diff > 0){
+            let point = CGPoint(x: 0, y: Int(diff) )
+            self.scrollNode.view.setContentOffset(point, animated: true)
+        }
     }
     
     public func textFieldDidEndEditing(_ textField: UITextField) {
-        print("end edit")
         let point = CGPoint(x: 0, y: 0)
-        
         self.scrollNode.view.setContentOffset(point, animated: true)
-        
     }
 }
