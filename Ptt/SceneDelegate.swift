@@ -8,23 +8,6 @@
 
 import UIKit
 
-struct RootViewControllerProvider {
-
-    static func tabBarController() -> UITabBarController {
-        let tabBarController = UITabBarController()
-        let tabItemFavorite = UITabBarItem(title: NSLocalizedString("Favorite Boards", comment: ""), image: StyleKit.imageOfFavoriteTabBar(), tag: 0)
-        let favoriteViewController = FavoriteViewController()
-        let favoriteNavigationController = UINavigationController(rootViewController: favoriteViewController)
-        favoriteNavigationController.tabBarItem = tabItemFavorite
-        let tabItemHot = UITabBarItem(title: NSLocalizedString("Hot Topics", comment: ""), image: StyleKit.imageOfHotTopic(), tag: 1)
-        let hotTopicViewController = HotTopicViewController()
-        let hotTopicNavigationController = UINavigationController(rootViewController: hotTopicViewController)
-        hotTopicNavigationController.tabBarItem = tabItemHot
-        tabBarController.viewControllers = [favoriteNavigationController, hotTopicNavigationController]
-        return tabBarController
-    }
-}
-
 struct GlobalAppearance {
 
     static func apply(to window: UIWindow) {
@@ -79,6 +62,13 @@ extension UINavigationController {
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    var rootController: UINavigationController {
+        return (self.window?.rootViewController as? UINavigationController) ?? UINavigationController()
+    }
+    
+    private lazy var applicationCoordinator: Coordinatorable = self.makeCoordinator()
+    
+    // MARK: - UIWindowSceneDelegate
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -86,12 +76,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = RootViewControllerProvider.tabBarController()
+        window.rootViewController = UINavigationController()
         // TODO: user preference for UserInterfaceStyle
         window.overrideUserInterfaceStyle = .dark
         GlobalAppearance.apply(to: window)
         self.window = window
+        applicationCoordinator.start()
         window.makeKeyAndVisible()
+        
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -121,7 +113,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-
-
 }
 
+// MARK: - Private
+
+@available(iOS 13.0, *)
+private extension SceneDelegate {
+    
+    func makeCoordinator() -> Coordinatorable {
+        return ApplicationCoordinator(router: Router(rootController: self.rootController), coordinatorFactory: CoordinatorFactory())
+    }
+}

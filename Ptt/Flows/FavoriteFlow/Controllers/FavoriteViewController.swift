@@ -58,10 +58,16 @@ struct Favorite {
 
 // MARK: -
 
-final class FavoriteViewController: UITableViewController {
+protocol FavoriteView: BaseView {
+    var onBoardSelect: ((String) -> Void)? { get set }
+}
+
+final class FavoriteViewController: UITableViewController, FavoriteView {
+    
+    var onBoardSelect: ((String) -> Void)?
 
     private let cellReuseIdentifier = "FavoriteCell"
-    private let resultsTableController = ResultsTableController(style: .plain)
+    private lazy var resultsTableController = configureResultsTableController()
     private lazy var searchController : UISearchController = {
         // For if #available(iOS 11.0, *), no need to set searchController as property (local variable is fine).
        return UISearchController(searchResultsController: resultsTableController)
@@ -168,9 +174,14 @@ final class FavoriteViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
         if index < Favorite.boards.count {
-            let boardViewController = BoardViewController(boardName: Favorite.boards[index].name)
-            show(boardViewController, sender: self)
+            onBoardSelect?(Favorite.boards[index].name)
         }
+    }
+    
+    private func configureResultsTableController() -> ResultsTableController {
+        let controller = ResultsTableController(style: .plain)
+        controller.onBoardSelect = onBoardSelect
+        return controller
     }
 }
 
@@ -249,8 +260,9 @@ extension FavoriteViewController: UISearchResultsUpdating {
 
 // MARK: -
 
-private final class ResultsTableController : UITableViewController {
+private final class ResultsTableController : UITableViewController, FavoriteView {
 
+    var onBoardSelect: ((String) -> Void)?
     var filteredBoards = [Board]()
     let activityIndicator = UIActivityIndicatorView()
 
@@ -317,8 +329,7 @@ private final class ResultsTableController : UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
         if index < filteredBoards.count {
-            let boardViewController = BoardViewController(boardName: filteredBoards[index].name)
-            presentingViewController?.show(boardViewController, sender: self)
+            onBoardSelect?(filteredBoards[index].name)
         }
     }
 }

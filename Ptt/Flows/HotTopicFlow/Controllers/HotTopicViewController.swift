@@ -9,7 +9,9 @@
 import UIKit
 import WebKit
 
-final class HotTopicViewController: UIViewController {
+protocol HotTopicView: BaseView {}
+
+final class HotTopicViewController: UIViewController, HotTopicView {
 
     private let webView = WKWebView()
     private let webProgressView = UIProgressView(progressViewStyle: .bar)
