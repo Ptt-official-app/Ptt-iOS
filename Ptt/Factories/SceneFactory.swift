@@ -9,7 +9,13 @@
 import Foundation
 
 final class SceneFactory: FavoriteSceneFactoryProtocol,
-                          HotTopicSceneFactoryProtocol {
+                          HotTopicSceneFactoryProtocol,
+                          LoginSceneFactoryProtocol{
+    
+    func makeLoginView() -> LoginView {
+        let loginViewController = LoginViewController()
+        return loginViewController
+    }
     
     func makeFavoriteView() -> FavoriteView {
         let favoriteViewController = FavoriteViewController()

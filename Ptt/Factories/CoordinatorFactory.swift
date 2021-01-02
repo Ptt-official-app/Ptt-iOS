@@ -29,6 +29,14 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
                                               coordinatoryFactory: CoordinatorFactory())
         return coordinator
     }
+    
+    
+    func makeLoginCoordinator() -> (coordinator: Coordinatorable, toPresent: Presentable?) {
+        let controller = LoginViewController() ;
+        let coordinator = LoginCoordinator(loginView: controller, coordinatorFactory: CoordinatorFactory())
+
+        return (coordinator, controller)
+    }
 }
 
 private extension CoordinatorFactory {

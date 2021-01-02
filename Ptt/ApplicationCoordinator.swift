@@ -9,7 +9,7 @@
 import Foundation
 
 fileprivate var onboardingWasShown = true
-fileprivate var isAutorized = true
+fileprivate var isAutorized = false
 
 fileprivate enum LaunchInstructor {
     case main, auth, onboarding
@@ -50,13 +50,15 @@ final class ApplicationCoordinator: BaseCoordinator {
     private func runAuthFlow() {
         // TODO: 登入流程放這邊
 //        let coordinator = coordinatorFactory.makeAuthCoordinatorBox(router: router)
+        let (coordinator, module) = coordinatorFactory.makeLoginCoordinator()
+        router.setRootModule(module, hideBar: true)
 //        coordinator.finishFlow = { [weak self, weak coordinator] in
 //            isAutorized = true
 //            self?.start()
 //            self?.removeDependency(coordinator)
 //        }
-//        addDependency(coordinator)
-//        coordinator.start()
+        addDependency(coordinator)
+        coordinator.start()
     }
     
     private func runOnboardingFlow() {
