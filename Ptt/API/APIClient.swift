@@ -26,9 +26,8 @@ class APIClient {
     
     private var tempURLComponents : URLComponents {
         var urlComponent = URLComponents()
-        urlComponent.scheme = "http"
-        urlComponent.host = "173.255.216.176"
-        urlComponent.port = 3457
+        urlComponent.scheme = "https"
+        urlComponent.host = "www.devptt.site"
         return urlComponent
     }
     
@@ -53,7 +52,7 @@ extension APIClient: APIClientProtocol {
     func login(account: String, password: String, completion: @escaping (LoginResult) -> Void) {
         let bodyDic = ["client_id": "test_client_id",
                        "client_secret": "test_client_secret",
-                       "user_id": account,
+                       "username": account,
                        "password": password]
         
         var urlComponent = tempURLComponents

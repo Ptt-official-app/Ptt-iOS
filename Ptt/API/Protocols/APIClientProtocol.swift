@@ -19,5 +19,13 @@ protocol APIClientProtocol: class {
     func getNewPostlist(board: String, page: Int, completion: @escaping (GetNewPostlistResult) -> Void)
     func getPost(board: String, filename: String, completion: @escaping (GetPostResult) -> Void)
     func getBoardList(completion: @escaping (BoardListResult) -> Void)
+    
+    /// Get board list
+    /// - Parameters:
+    ///   - token: access token
+    ///   - keyword: query string, '' returns all boards
+    ///   - startIdx: starting idx, '' if fetch from the beginning.
+    ///   - max: max number of the returned list, requiring <= 300
+    ///   - completion: the list of board information
     func getBoardListV2(token: String, keyword: String, startIdx: String, max: Int, completion: @escaping (BoardListResultV2) -> Void)
 }
