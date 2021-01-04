@@ -10,6 +10,7 @@ import XCTest
 @testable import Ptt
 
 final class APIClientTest: XCTestCase {
+    private lazy var manager = APITestClient()
     
     func testNetworkError() {
         let dataTask = MockURLSessionDataTask()
@@ -60,8 +61,21 @@ final class APIClientTest: XCTestCase {
         }
     }
     
+    func testLoginSuccess() {
+        let client = manager.login()
+        client.login(account: "asd", password: "123") { (result) in
+            switch (result) {
+            case .failure(_):
+                XCTAssert(false)
+            case .success(let token):
+                XCTAssert(token.access_token == "fake token")
+                XCTAssert(token.token_type == "fake type")
+            }
+        }
+    }
+    
     func testNewPostlistSuccess() {
-        let client = APITestClient.newPostClient()
+        let client = manager.newPostClient()
         
         client.getNewPostlist(board:"MyBoard", page: 1) { (result) in
             switch (result) {
@@ -78,7 +92,7 @@ final class APIClientTest: XCTestCase {
     }
     
     func testGetPostSuccess() {
-        let client = APITestClient.getPostClient()
+        let client = manager.getPostClient()
         
         client.getPost(board: "MyBoard", filename: "M.392837.A.F25") { (result) in
             switch (result) {
@@ -94,6 +108,26 @@ final class APIClientTest: XCTestCase {
                     XCTAssert(post.titleWithoutCategory == "有沒有問卦的八卦")
                     XCTAssert(fullPost.comments.count == 2)
                     XCTAssert(fullPost.comments[1].content == ": 叫學長啦")
+            }
+        }
+    }
+    
+    func testBoardListSuccess() {
+        let client = manager.getBoardList()
+        
+        client.getBoardListV2(token: "eyJhbGc....", keyword: "", startIdx: "", max: 300) { (result) in
+            switch (result) {
+                case .failure(_):
+                    XCTAssert(false)
+                case .success(let list):
+                    XCTAssert(list.next_idx == "")
+                    XCTAssert(list.list.count == 6)
+                    let info = list.list[0]
+                    XCTAssert(info.bid == "6_ALLPOST")
+                    XCTAssert(info.brdname == "ALLPOST")
+                    XCTAssert(info.title == "跨板式LOCAL新文章")
+                    XCTAssert(info.flag == 32)
+                    XCTAssert(info.nuser == 0)
             }
         }
     }
