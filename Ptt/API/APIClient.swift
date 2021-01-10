@@ -9,12 +9,26 @@
 import Foundation
 
 class APIClient {
+    private enum Method: String {
+        case GET = "GET"
+        case POST = "POST"
+        case DELETE = "DELETE"
+        case PUT = "PUT"
+    }
     static let shared: APIClient = APIClient()
     
     private var rootURLComponents : URLComponents {
         var urlComponent = URLComponents()
         urlComponent.scheme = "https"
         urlComponent.host = "webptt.azurewebsites.net"
+        return urlComponent
+    }
+    
+    private var tempURLComponents : URLComponents {
+        var urlComponent = URLComponents()
+        urlComponent.scheme = "https"
+        urlComponent.host = "api.devptt.site"
+        urlComponent.port = 3457
         return urlComponent
     }
     
@@ -36,6 +50,42 @@ class APIClient {
 
 // MARK: Public api function
 extension APIClient: APIClientProtocol {
+    func login(account: String, password: String, completion: @escaping (LoginResult) -> Void) {
+        let bodyDic = ["client_id": "test_client_id",
+                       "client_secret": "test_client_secret",
+                       "username": account,
+                       "password": password]
+        
+        var urlComponent = tempURLComponents
+        urlComponent.path = "/api/account/login"
+        guard let url = urlComponent.url,
+              let jsonBody = try? JSONSerialization.data(withJSONObject: bodyDic) else {
+            assertionFailure()
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.POST.rawValue
+        request.httpBody = jsonBody
+        
+        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
+            switch result {
+            case .failure(let apiError):
+                completion(.failure(apiError))
+            case .success(let resultData):
+                do {
+                    let token = try self.decoder.decode(APIModel.LoginToken.self, from: resultData)
+                    completion(.success(token))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(APIError(message: message)))
+                }
+            }
+        }
+        task.resume()
+    }
+    
     func getNewPostlist(board: String, page: Int, completion: @escaping (GetNewPostlistResult) -> Void) {
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/Article/\(board)"
@@ -101,6 +151,50 @@ extension APIClient: APIClientProtocol {
                 completion(.failure(apiError))
             case .success(data: let resultData):
                 completion(.success(resultData))
+            }
+        }
+        task.resume()
+    }
+    
+    
+    /// Get board list
+    /// - Parameters:
+    ///   - token: access token
+    ///   - keyword: query string, '' returns all boards
+    ///   - startIdx: starting idx, '' if fetch from the beginning.
+    ///   - max: max number of the returned list, requiring <= 300
+    ///   - completion: the list of board information
+    func getBoardListV2(token: String, keyword: String="", startIdx: String="", max: Int=300, completion: @escaping (BoardListResultV2) -> Void) {
+        var urlComponent = tempURLComponents
+        urlComponent.path = "/api/boards"
+        // Percent encoding is automatically done with RFC 3986
+        urlComponent.queryItems = [
+            URLQueryItem(name: "keyword", value: keyword),
+            URLQueryItem(name: "startIdx", value: startIdx),
+            URLQueryItem(name: "max", value: "\(max)")
+        ]
+        guard let url = urlComponent.url else {
+            assertionFailure()
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.GET.rawValue
+        request.setValue("bearer \(token)", forHTTPHeaderField: "Authorization")
+        
+        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
+            switch result {
+            case .failure(let apiError):
+                completion(.failure(apiError))
+            case .success(let resultData):
+                do {
+                    let list = try self.decoder.decode(APIModel.BoardInfoList.self, from: resultData)
+                    completion(.success(list))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(APIError(message: message)))
+                }
             }
         }
         task.resume()

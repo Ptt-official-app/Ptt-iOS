@@ -54,4 +54,7 @@ xcuserdata/
 UserInterfaceState.xcuserstate
 xcschememanagement.plist
 
+### Gem ###
+Gemfile.lock
+
 # End of https://www.toptal.com/developers/gitignore/api/xcode,macos,cocoapods
