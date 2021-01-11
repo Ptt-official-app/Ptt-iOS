@@ -29,6 +29,13 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
                                               coordinatoryFactory: CoordinatorFactory())
         return coordinator
     }
+    
+    func makePopularBoardsCoordinator(navigationController: UINavigationController?) -> Coordinatorable {
+        let coordinator = PopularBoardsCoordinator(router: router(navigationController),
+                                              factory: SceneFactory(),
+                                              coordinatoryFactory: CoordinatorFactory())
+        return coordinator
+    }
 }
 
 private extension CoordinatorFactory {

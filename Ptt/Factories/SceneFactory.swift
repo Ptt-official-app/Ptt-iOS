@@ -9,7 +9,8 @@
 import Foundation
 
 final class SceneFactory: FavoriteSceneFactoryProtocol,
-                          HotTopicSceneFactoryProtocol {
+                          HotTopicSceneFactoryProtocol,
+                          PopularBoardsSceneFactoryProtocol {
     
     func makeFavoriteView() -> FavoriteView {
         let favoriteViewController = FavoriteViewController()
@@ -19,6 +20,11 @@ final class SceneFactory: FavoriteSceneFactoryProtocol,
     func makeHotTopicView() -> HotTopicView {
         let hotTopicViewController = HotTopicViewController()
         return hotTopicViewController
+    }
+    
+    func makePopularBoardsView() -> PopularBoardsView {
+        let popularBoardsViewController = PopularBoardsViewController()
+        return popularBoardsViewController
     }
         
     func makeBoardView(withBoardName boardName: String) -> BoardView {

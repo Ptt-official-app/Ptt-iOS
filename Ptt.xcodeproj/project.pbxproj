@@ -51,6 +51,12 @@
 		9BEE1CB42584F644002A9D95 /* HotTopicSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1CB32584F644002A9D95 /* HotTopicSceneFactoryProtocol.swift */; };
 		9BEE1CC02585D8E8002A9D95 /* BoardCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1CBF2585D8E8002A9D95 /* BoardCoordinator.swift */; };
 		9BEE1CC42585DA6B002A9D95 /* BoardSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1CC32585DA6B002A9D95 /* BoardSceneFactoryProtocol.swift */; };
+		CD694CED25A74D3100428DC9 /* PopularBoardsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD694CEC25A74D3100428DC9 /* PopularBoardsCoordinator.swift */; };
+		CD694CF325A74F0400428DC9 /* PopularBoardsSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD694CF225A74F0400428DC9 /* PopularBoardsSceneFactoryProtocol.swift */; };
+		CD694CF825A7608E00428DC9 /* PopularBoardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD694CF725A7608E00428DC9 /* PopularBoardsViewController.swift */; };
+		CD6C141125A9E8F40043E7EC /* PopularBoardsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6C141025A9E8F40043E7EC /* PopularBoardsTableViewCell.swift */; };
+		CD6C141825AB0C660043E7EC /* PopularBoardsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6C141725AB0C660043E7EC /* PopularBoardsViewModel.swift */; };
+		CD6FB78C25ACAE910034A51B /* PopularBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6FB78B25ACAE910034A51B /* PopularBoard.swift */; };
 		EA41D65D243EF51A0052F4A1 /* HotTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA41D65C243EF51A0052F4A1 /* HotTopicViewController.swift */; };
 		EA475F7523C4834C000867FE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F7423C4834C000867FE /* AppDelegate.swift */; };
 		EA475F7723C4834C000867FE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F7623C4834C000867FE /* SceneDelegate.swift */; };
@@ -126,6 +132,12 @@
 		9BEE1CB32584F644002A9D95 /* HotTopicSceneFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotTopicSceneFactoryProtocol.swift; sourceTree = "<group>"; };
 		9BEE1CBF2585D8E8002A9D95 /* BoardCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardCoordinator.swift; sourceTree = "<group>"; };
 		9BEE1CC32585DA6B002A9D95 /* BoardSceneFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSceneFactoryProtocol.swift; sourceTree = "<group>"; };
+		CD694CEC25A74D3100428DC9 /* PopularBoardsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularBoardsCoordinator.swift; sourceTree = "<group>"; };
+		CD694CF225A74F0400428DC9 /* PopularBoardsSceneFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularBoardsSceneFactoryProtocol.swift; sourceTree = "<group>"; };
+		CD694CF725A7608E00428DC9 /* PopularBoardsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularBoardsViewController.swift; sourceTree = "<group>"; };
+		CD6C141025A9E8F40043E7EC /* PopularBoardsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularBoardsTableViewCell.swift; sourceTree = "<group>"; };
+		CD6C141725AB0C660043E7EC /* PopularBoardsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularBoardsViewModel.swift; sourceTree = "<group>"; };
+		CD6FB78B25ACAE910034A51B /* PopularBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularBoard.swift; sourceTree = "<group>"; };
 		DBDA47B1E79A476E2E89A118 /* Pods_Ptt.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Ptt.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E84C05B084821F8B5031D3BD /* Pods_PttTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PttTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA41D65C243EF51A0052F4A1 /* HotTopicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotTopicViewController.swift; sourceTree = "<group>"; };
@@ -293,6 +305,7 @@
 				9BEE1CA12584E82E002A9D95 /* FavoriteSceneFactoryProtocol.swift */,
 				9BEE1CB32584F644002A9D95 /* HotTopicSceneFactoryProtocol.swift */,
 				9BEE1CC32585DA6B002A9D95 /* BoardSceneFactoryProtocol.swift */,
+				CD694CF225A74F0400428DC9 /* PopularBoardsSceneFactoryProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -303,6 +316,7 @@
 				9BEE1CB92585D89A002A9D95 /* BoardFlow */,
 				9BEE1CAB2584F5C9002A9D95 /* HotTopicFlow */,
 				9BEE1C762584E50F002A9D95 /* FavoriteFlow */,
+				CD694CEB25A74CDA00428DC9 /* PopularBoardsFlow */,
 				9B564C5F256AA74A00787FD7 /* MainTabBarFlow */,
 			);
 			path = Flows;
@@ -388,6 +402,49 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
+		CD694CEB25A74CDA00428DC9 /* PopularBoardsFlow */ = {
+			isa = PBXGroup;
+			children = (
+				CD694CEC25A74D3100428DC9 /* PopularBoardsCoordinator.swift */,
+				CD6C141625AB0C290043E7EC /* ViewModels */,
+				CD6C140F25A9E8CC0043E7EC /* Cells */,
+				CD694CF625A75FF100428DC9 /* Controllers */,
+			);
+			path = PopularBoardsFlow;
+			sourceTree = "<group>";
+		};
+		CD694CF625A75FF100428DC9 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				CD694CF725A7608E00428DC9 /* PopularBoardsViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		CD6C140F25A9E8CC0043E7EC /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				CD6C141025A9E8F40043E7EC /* PopularBoardsTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		CD6C141625AB0C290043E7EC /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				CD6C141725AB0C660043E7EC /* PopularBoardsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		CD6FB78A25ACAE270034A51B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				CD6FB78B25ACAE910034A51B /* PopularBoard.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		EA475F6823C4834C000867FE = {
 			isa = PBXGroup;
 			children = (
@@ -417,6 +474,7 @@
 				9B564C5A256AA72C00787FD7 /* Flows */,
 				9BEE1C622584BBA8002A9D95 /* Storyboards */,
 				9BEE1C6D2584BCA5002A9D95 /* Extensions */,
+				CD6FB78A25ACAE270034A51B /* Model */,
 				9BEE1C582584B2C0002A9D95 /* ApplicationCoordinator.swift */,
 				EA475F7423C4834C000867FE /* AppDelegate.swift */,
 				EA475F7623C4834C000867FE /* SceneDelegate.swift */,
@@ -620,14 +678,18 @@
 				3E29388125596BA900240C0F /* URLSessionProtocol.swift in Sources */,
 				EA479EB42431F27C008A0D99 /* PostViewController.swift in Sources */,
 				9B564C3D256AA0EB00787FD7 /* Router.swift in Sources */,
+				CD6C141825AB0C660043E7EC /* PopularBoardsViewModel.swift in Sources */,
 				EA41D65D243EF51A0052F4A1 /* HotTopicViewController.swift in Sources */,
+				CD694CF325A74F0400428DC9 /* PopularBoardsSceneFactoryProtocol.swift in Sources */,
 				9BEE1C682584BC5C002A9D95 /* UIViewControllerExtension.swift in Sources */,
 				9B564C65256AA83100787FD7 /* TabBarView.swift in Sources */,
 				3E655288255960910026290B /* FullPost.swift in Sources */,
+				CD6C141125A9E8F40043E7EC /* PopularBoardsTableViewCell.swift in Sources */,
 				3E6552822559604C0026290B /* APIClientProtocol.swift in Sources */,
 				3E8D8C83258A511600346690 /* LoginToken.swift in Sources */,
 				3E65527125595F0D0026290B /* BoardInfo.swift in Sources */,
 				9B564C28256A9D7800787FD7 /* Coordinatorable.swift in Sources */,
+				CD694CF825A7608E00428DC9 /* PopularBoardsViewController.swift in Sources */,
 				9B564C2F256A9EAC00787FD7 /* Presentable.swift in Sources */,
 				9BEE1C712584BCC9002A9D95 /* NSObjectExtensions.swift in Sources */,
 				3E65528C255960AE0026290B /* Comment.swift in Sources */,
@@ -645,6 +707,7 @@
 				9B564C5C256AA74100787FD7 /* TabBarController.swift in Sources */,
 				EA9DE10F2563A82200AEFC19 /* FullscreenSwipeBack.swift in Sources */,
 				EA475F7923C4834C000867FE /* FavoriteViewController.swift in Sources */,
+				CD694CED25A74D3100428DC9 /* PopularBoardsCoordinator.swift in Sources */,
 				9B564C57256AA69500787FD7 /* CoordinatorFactory.swift in Sources */,
 				EA62540E242DAAF600E977FE /* Extension.swift in Sources */,
 				EA475F7523C4834C000867FE /* AppDelegate.swift in Sources */,
@@ -654,6 +717,7 @@
 				9B564C6B256AA8C800787FD7 /* BaseCoordinator.swift in Sources */,
 				9BEE1CC02585D8E8002A9D95 /* BoardCoordinator.swift in Sources */,
 				3E65527925595FBE0026290B /* Message.swift in Sources */,
+				CD6FB78C25ACAE910034A51B /* PopularBoard.swift in Sources */,
 				EAA4F6F323C72F95005ABCE3 /* APIClient.swift in Sources */,
 				EAA4F6F123C72B01005ABCE3 /* BoardViewController.swift in Sources */,
 				9BEE1CA62584EA13002A9D95 /* SceneFactory.swift in Sources */,

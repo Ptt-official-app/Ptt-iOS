@@ -9,7 +9,8 @@
 import UIKit
 
 private enum Tab: Int {
-    case favorite = 0
+    case popularBoards = 0
+    case favorite
     case hotTopic
 }
 
@@ -20,6 +21,7 @@ final class TabBarController: UITabBarController, UITabBarControllerDelegate, Ta
     var onViewDidLoad: ((UINavigationController) -> Void)?
     var onFavoriteFlowSelect: ((UINavigationController) -> Void)?
     var onHotTopicFlowSelect: ((UINavigationController) -> Void)?
+    var onPopularBoardsFlowSelect: ((UINavigationController) -> Void)?
     
     // MARK: - Life Cycle
 
@@ -48,6 +50,8 @@ final class TabBarController: UITabBarController, UITabBarControllerDelegate, Ta
             onFavoriteFlowSelect?(controller)
         case .hotTopic:
             onHotTopicFlowSelect?(controller)
+        case .popularBoards:
+            onPopularBoardsFlowSelect?(controller)
         }
     }
 }
@@ -65,11 +69,14 @@ private extension TabBarController {
             
             switch tab {
             case .favorite:
-                localizedString = "Favorite Boards"
+                localizedString = "Favorite Boards123"
                 image = StyleKit.imageOfFavoriteTabBar()
             case .hotTopic:
                 localizedString = "Hot Topics"
                 image = StyleKit.imageOfHotTopic()
+            case .popularBoards:
+                localizedString = "Popular Boards"
+                image = StyleKit.imageOfPopularBoard()
             }
             
             controller.tabBarItem = UITabBarItem(title: NSLocalizedString(localizedString, comment: ""), image: image, tag: index)
