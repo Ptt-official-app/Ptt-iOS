@@ -30,6 +30,7 @@
 		9411EDA625A0AEC30005ADCB /* LoginCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9411EDA525A0AEC30005ADCB /* LoginCoordinator.swift */; };
 		9411EDAA25A0B03C0005ADCB /* LoginSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9411EDA925A0B03C0005ADCB /* LoginSceneFactoryProtocol.swift */; };
 		94EB641225AC183F00BF69AB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EB641125AC183F00BF69AB /* LoginViewController.swift */; };
+		94EB641A25AD2FF800BF69AB /* LoginKeyChainItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EB641925AD2FF800BF69AB /* LoginKeyChainItem.swift */; };
 		98E73DAD0503CF0D8D585826 /* Pods_PttTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E84C05B084821F8B5031D3BD /* Pods_PttTests.framework */; };
 		9B564C28256A9D7800787FD7 /* Coordinatorable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B564C27256A9D7800787FD7 /* Coordinatorable.swift */; };
 		9B564C2F256A9EAC00787FD7 /* Presentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B564C2E256A9EAC00787FD7 /* Presentable.swift */; };
@@ -109,6 +110,7 @@
 		9411EDA525A0AEC30005ADCB /* LoginCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCoordinator.swift; sourceTree = "<group>"; };
 		9411EDA925A0B03C0005ADCB /* LoginSceneFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSceneFactoryProtocol.swift; sourceTree = "<group>"; };
 		94EB641125AC183F00BF69AB /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		94EB641925AD2FF800BF69AB /* LoginKeyChainItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginKeyChainItem.swift; sourceTree = "<group>"; };
 		9B564C27256A9D7800787FD7 /* Coordinatorable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinatorable.swift; sourceTree = "<group>"; };
 		9B564C2E256A9EAC00787FD7 /* Presentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presentable.swift; sourceTree = "<group>"; };
 		9B564C32256A9F3500787FD7 /* Routerable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routerable.swift; sourceTree = "<group>"; };
@@ -266,6 +268,7 @@
 			children = (
 				9411ED9825A0A8C70005ADCB /* Controllers */,
 				9411EDA525A0AEC30005ADCB /* LoginCoordinator.swift */,
+				94EB641925AD2FF800BF69AB /* LoginKeyChainItem.swift */,
 			);
 			path = LoginFlow;
 			sourceTree = "<group>";
@@ -680,6 +683,7 @@
 				9B564C6B256AA8C800787FD7 /* BaseCoordinator.swift in Sources */,
 				9BEE1CC02585D8E8002A9D95 /* BoardCoordinator.swift in Sources */,
 				3E65527925595FBE0026290B /* Message.swift in Sources */,
+				94EB641A25AD2FF800BF69AB /* LoginKeyChainItem.swift in Sources */,
 				EAA4F6F323C72F95005ABCE3 /* APIClient.swift in Sources */,
 				EAA4F6F123C72B01005ABCE3 /* BoardViewController.swift in Sources */,
 				9BEE1CA62584EA13002A9D95 /* SceneFactory.swift in Sources */,

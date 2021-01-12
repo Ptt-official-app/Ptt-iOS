@@ -20,6 +20,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     private let rootNode = ASDisplayNode()
     var scrollNode = ASScrollNode()
 
+    var loginKeyChain:LoginKeyChainItem
     var contentStackSpec:ASStackLayoutSpec?
     var contentCenterLayoutSpec:ASCenterLayoutSpec?
 
@@ -93,13 +94,13 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         print("login view did load") ;
         self.bind_event()
     }
-    
+
     override init() {
+        self.loginKeyChain = LoginKeyChainItem(service: "service", group: "group")
         super.init(node: rootNode)
         self.rootNode.backgroundColor = self.blackColor
         
         let stack = self.init_layout()
-        
         
         self.scrollNode.automaticallyManagesSubnodes = true
         self.scrollNode.automaticallyManagesContentSize = true
@@ -360,10 +361,15 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
                     self.showAlert(title: "Error", msg: "登入失敗")
                 case .success(let token):
                     print(token.access_token)
+                    self.onLoginSuccess(token: token.access_token)
                 }
-                
             }
         }
+    }
+    
+    func onLoginSuccess(token:String) {
+        _ = loginKeyChain.saveToken(token)
+        // todo: push view
     }
     
     @objc func forgetPress() {
@@ -396,10 +402,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
         return button
     }()
-    
-    
-    
-    
     
     var blackColor : UIColor? {
         if #available(iOS 11.0, *) {
