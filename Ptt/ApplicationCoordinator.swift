@@ -49,16 +49,32 @@ final class ApplicationCoordinator: BaseCoordinator {
     
     private func runAuthFlow() {
         // TODO: 登入流程放這邊
-//        let coordinator = coordinatorFactory.makeAuthCoordinatorBox(router: router)
-        let (coordinator, module) = coordinatorFactory.makeLoginCoordinator()
-        router.setRootModule(module, hideBar: true)
-//        coordinator.finishFlow = { [weak self, weak coordinator] in
-//            isAutorized = true
-//            self?.start()
-//            self?.removeDependency(coordinator)
-//        }
-        addDependency(coordinator)
-        coordinator.start()
+        // uncomment to force logout
+        _ = LoginKeyChainItem.shared.removeToken()
+        
+        if LoginKeyChainItem.shared.readToken() != nil {
+            isAutorized = true
+            // TODO: check token Expire from internet
+            runMainFlow()
+        }
+        else {
+            isAutorized = false
+            let loginCoordinator = coordinatorFactory.makeLoginCoordinator(navigationController: nil)
+            let loginView = SceneFactory().makeLoginView()
+            self.addDependency(loginCoordinator)
+            
+            // private loginCoordinator.factory.makeLoginView()
+            router.setRootModule(loginView, hideBar: true)
+            
+            loginView.finishFlow = { [unowned self] (token) in
+                print("login with token:", token)
+                isAutorized = true
+                removeDependency(loginCoordinator)
+                runMainFlow()
+            }
+            loginCoordinator.start()
+            
+        }
     }
     
     private func runOnboardingFlow() {

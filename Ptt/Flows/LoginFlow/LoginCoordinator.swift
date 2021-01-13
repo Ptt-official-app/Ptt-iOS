@@ -13,22 +13,32 @@ import UIKit
 
 class LoginCoordinator: BaseCoordinator {
     
-    private let loginView: LoginView
-    private let coordinatorFactory: CoordinatorFactoryProtocol
-
-    init(loginView: LoginView, coordinatorFactory: CoordinatorFactoryProtocol) {
-        self.loginView = loginView
-        self.coordinatorFactory = coordinatorFactory
+    private let factory: LoginSceneFactoryProtocol
+    private let coordinatoryFactory: CoordinatorFactoryProtocol
+    private let router: Routerable
+    
+    init(router: Routerable, factory: LoginSceneFactoryProtocol, coordinatoryFactory: CoordinatorFactoryProtocol) {
+        self.router = router
+        self.factory = factory
+        self.coordinatoryFactory = coordinatoryFactory
     }
     
+    override func start() {
+        showLoginView()
+    }
 }
 
 // MARK: - Private
 
 private extension LoginCoordinator {
     
-    func finishFlow() {
+    func showLoginView() {
+        let loginView = factory.makeLoginView()
         
+        self.finshFlow = { [unowned self] in
+            self.removeDependency(self)
+        }
+        router.setRootModule(loginView)
     }
 }
 

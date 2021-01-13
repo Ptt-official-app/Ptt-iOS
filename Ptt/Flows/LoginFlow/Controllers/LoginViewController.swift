@@ -10,17 +10,18 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 
-protocol LoginView: BaseView {}
-
+protocol LoginView: BaseView {
+    var finishFlow: ((String) -> Void)? { get set }
+}
 
 final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
+    var finishFlow: ((String) -> Void)?
     
     //private let apiClient: APIClientProtocol = nil
 
     private let rootNode = ASDisplayNode()
     var scrollNode = ASScrollNode()
 
-    var loginKeyChain:LoginKeyChainItem
     var contentStackSpec:ASStackLayoutSpec?
     var contentCenterLayoutSpec:ASCenterLayoutSpec?
 
@@ -96,7 +97,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     }
 
     override init() {
-        self.loginKeyChain = LoginKeyChainItem(service: "service", group: "group")
         super.init(node: rootNode)
         self.rootNode.backgroundColor = self.blackColor
         
@@ -368,8 +368,11 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     }
     
     func onLoginSuccess(token:String) {
-        _ = loginKeyChain.saveToken(token)
+        _ = LoginKeyChainItem.shared.saveToken(token)
         // todo: push view
+        DispatchQueue.main.async {
+            self.finishFlow?(token)
+        }
     }
     
     @objc func forgetPress() {
@@ -451,6 +454,5 @@ extension LoginViewController: UITextFieldDelegate {
         let point = CGPoint(x: 0, y: 0)
         self.scrollNode.view.setContentOffset(point, animated: true)
     }
-    
 }
 

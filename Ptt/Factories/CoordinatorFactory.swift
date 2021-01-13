@@ -30,12 +30,12 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
         return coordinator
     }
     
-    
-    func makeLoginCoordinator() -> (coordinator: Coordinatorable, toPresent: Presentable?) {
-        let controller = LoginViewController() ;
-        let coordinator = LoginCoordinator(loginView: controller, coordinatorFactory: CoordinatorFactory())
 
-        return (coordinator, controller)
+    func makeLoginCoordinator(navigationController: UINavigationController?) -> Coordinatorable {
+        let coordinator = LoginCoordinator(router: router(navigationController),
+                                              factory: SceneFactory(),
+                                              coordinatoryFactory: CoordinatorFactory())
+        return coordinator
     }
 }
 

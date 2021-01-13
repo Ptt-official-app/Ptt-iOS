@@ -9,6 +9,8 @@
 import Foundation
 class LoginKeyChainItem: NSObject {
     
+    static let shared: LoginKeyChainItem = LoginKeyChainItem(service: "service", group: "group")
+    
     private var service = ""
     private var group = ""
    
