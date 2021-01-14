@@ -57,6 +57,7 @@
 		EA475F8C23C4834C000867FE /* PttTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F8B23C4834C000867FE /* PttTests.swift */; };
 		EA475F9923C48CC1000867FE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EA475F9B23C48CC1000867FE /* Localizable.strings */; };
 		EA479EB42431F27C008A0D99 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA479EB32431F27C008A0D99 /* PostViewController.swift */; };
+		EA61C22C25AFD8F500C382B4 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA61C22B25AFD8F500C382B4 /* SettingsViewController.swift */; };
 		EA62540E242DAAF600E977FE /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA62540D242DAAF600E977FE /* Extension.swift */; };
 		EA78E0C124050EB100309694 /* StyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA78E0C024050EB000309694 /* StyleKit.swift */; };
 		EA9DE10F2563A82200AEFC19 /* FullscreenSwipeBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9DE10E2563A82200AEFC19 /* FullscreenSwipeBack.swift */; };
@@ -137,6 +138,7 @@
 		EA475F9A23C48CC1000867FE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		EA475F9C23C48CC3000867FE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EA479EB32431F27C008A0D99 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
+		EA61C22B25AFD8F500C382B4 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		EA62540D242DAAF600E977FE /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		EA78E0C024050EB000309694 /* StyleKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleKit.swift; sourceTree = "<group>"; };
 		EA9DE10E2563A82200AEFC19 /* FullscreenSwipeBack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullscreenSwipeBack.swift; sourceTree = "<group>"; };
@@ -297,6 +299,7 @@
 				9BEE1CB92585D89A002A9D95 /* BoardFlow */,
 				9BEE1CAB2584F5C9002A9D95 /* HotTopicFlow */,
 				9BEE1C762584E50F002A9D95 /* FavoriteFlow */,
+				EAF6F68D25AFD87800F5DDC1 /* SettingsFlow */,
 				9B564C5F256AA74A00787FD7 /* MainTabBarFlow */,
 			);
 			path = Flows;
@@ -424,6 +427,22 @@
 				EA475F8D23C4834C000867FE /* Info.plist */,
 			);
 			path = PttTests;
+			sourceTree = "<group>";
+		};
+		EAF6F68D25AFD87800F5DDC1 /* SettingsFlow */ = {
+			isa = PBXGroup;
+			children = (
+				EAF6F68E25AFD88600F5DDC1 /* Controllers */,
+			);
+			path = SettingsFlow;
+			sourceTree = "<group>";
+		};
+		EAF6F68E25AFD88600F5DDC1 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				EA61C22B25AFD8F500C382B4 /* SettingsViewController.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -632,6 +651,7 @@
 				9B7D371C25A98E2E0058758E /* TabBarPage.swift in Sources */,
 				EA475F7723C4834C000867FE /* SceneDelegate.swift in Sources */,
 				9B564C6B256AA8C800787FD7 /* BaseCoordinator.swift in Sources */,
+				EA61C22C25AFD8F500C382B4 /* SettingsViewController.swift in Sources */,
 				9BEE1CC02585D8E8002A9D95 /* BoardCoordinator.swift in Sources */,
 				3E65527925595FBE0026290B /* Message.swift in Sources */,
 				EAA4F6F323C72F95005ABCE3 /* APIClient.swift in Sources */,
