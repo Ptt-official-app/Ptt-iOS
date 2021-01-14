@@ -316,6 +316,7 @@
 		9BEE1C6D2584BCA5002A9D95 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				EA62540D242DAAF600E977FE /* Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -403,7 +404,6 @@
 				9BEE1C582584B2C0002A9D95 /* ApplicationCoordinator.swift */,
 				EA475F7423C4834C000867FE /* AppDelegate.swift */,
 				EA475F7623C4834C000867FE /* SceneDelegate.swift */,
-				EA62540D242DAAF600E977FE /* Extension.swift */,
 				EA9DE10E2563A82200AEFC19 /* FullscreenSwipeBack.swift */,
 				EA78E0C024050EB000309694 /* StyleKit.swift */,
 				EA475F7D23C4834C000867FE /* Assets.xcassets */,
