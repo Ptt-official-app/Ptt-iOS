@@ -482,8 +482,6 @@
 		EA475F7323C4834C000867FE /* Ptt */ = {
 			isa = PBXGroup;
 			children = (
-				CD767B5025B0B79B0050E12A /* NotificationName.swift */,
-				CD767B4F25B0B79B0050E12A /* UserDefaultsManager.swift */,
 				9B564C44256AA22700787FD7 /* Factories */,
 				9B564C26256A9D3200787FD7 /* Coordinator */,
 				3E65526A25595EB90026290B /* API */,
@@ -495,6 +493,8 @@
 				EA475F7623C4834C000867FE /* SceneDelegate.swift */,
 				EA9DE10E2563A82200AEFC19 /* FullscreenSwipeBack.swift */,
 				EA78E0C024050EB000309694 /* StyleKit.swift */,
+				CD767B5025B0B79B0050E12A /* NotificationName.swift */,
+				CD767B4F25B0B79B0050E12A /* UserDefaultsManager.swift */,
 				EA475F7D23C4834C000867FE /* Assets.xcassets */,
 				EA475F7F23C4834C000867FE /* LaunchScreen.storyboard */,
 				EA475F9B23C48CC1000867FE /* Localizable.strings */,
