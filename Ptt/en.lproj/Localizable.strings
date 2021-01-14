@@ -9,9 +9,24 @@
 "Favorite Boards" = "Favorite Boards";
 "Hot Topics" = "Hot Topics";
 "PTT FB Page" = "PTT FB Page";
+"Settings" = "Settings";
+"Appearance Mode" = "Appearance Mode";
+"Changing this value requires iOS 13 or later." = "Changing this value requires iOS 13 or later.";
+"Use System Default" = "Use System Default";
+"System Default" = "System Default";
+"Light" = "Light";
+"Dark" = "Dark";
+"Customization Mode" = "Customization Mode";
+"Clear Cache" = "Clear Cache";
+"Are you sure to clear cache?" = "Are you sure to clear cache?";
+"Clear" = "Clear";
+"About This Software" = "About This Software";
+"Third Party License" = "Third Party License";
+"Version" = "Version";
 
 "Error" = "Error";
 "Confirm" = "Confirm";
+"Cancel" = "Cancel";
 
 /* VoiceOver */
 "In favorite" = "In favorite";

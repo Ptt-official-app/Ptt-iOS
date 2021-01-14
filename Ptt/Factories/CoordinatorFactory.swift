@@ -9,9 +9,9 @@
 import UIKit
 
 final class CoordinatorFactory: CoordinatorFactoryProtocol {
-    
+ 
     func makeTabbarCoordinator() -> (coordinator: Coordinatorable, toPresent: Presentable?) {
-        let controller = TabBarController.controllerFromStoryboard(.main)
+        let controller = TabBarController()
         let coordinator = TabBarCoordinator(tabBarView: controller, coordinatorFactory: CoordinatorFactory())
         return (coordinator, controller)
     }

@@ -8,9 +8,15 @@
 
 import UIKit
 
-class TabBarCoordinator: BaseCoordinator {
+protocol TabBarCoordinatorProtocol {
+    var tabBarView: TabBarView { get set }
+    func selectPage(_ page: TabBarPage)
+    func setSelectedIndex(_ index: Int)
+    func currentPage() -> TabBarPage?
+}
+
+class TabBarCoordinator: BaseCoordinator, TabBarCoordinatorProtocol {
     
-    private let tabBarView: TabBarView
     private let coordinatorFactory: CoordinatorFactoryProtocol
     
     init(tabBarView: TabBarView, coordinatorFactory: CoordinatorFactoryProtocol) {
@@ -19,42 +25,68 @@ class TabBarCoordinator: BaseCoordinator {
     }
     
     override func start() {
-        tabBarView.onViewDidLoad = runFavoriteFlow()
-        tabBarView.onFavoriteFlowSelect = runFavoriteFlow()
-        tabBarView.onHotTopicFlowSelect = runHotTopicFlow()
-        tabBarView.onPopularBoardsFlowSelect = runPopularBoardsFlow()
+        // Let's define which pages do we want to add into tab bar
+        let pages: [TabBarPage] = [.favorite, .hotTopic, .settings]
+            .sorted(by: { $0.pageOrderNumber() < $1.pageOrderNumber() })
+        // Initialization of ViewControllers or these pages
+        let controllers: [UINavigationController] = pages.map({ getTabController($0) })
+        
+        prepareTabBarController(withTabControllers: controllers)
+    }
+    
+    // MARK: - TabBarCoordinatorProtocol
+    var tabBarView: TabBarView
+    
+    func currentPage() -> TabBarPage? {
+        TabBarPage.init(index: tabBarView.selectedIndex)
+    }
+    
+    func selectPage(_ page: TabBarPage) {
+        tabBarView.selectedIndex = page.pageOrderNumber()
+    }
+    
+    func setSelectedIndex(_ index: Int) {
+        guard let page = TabBarPage.init(index: index) else { return }
+        
+        tabBarView.selectedIndex = page.pageOrderNumber()
     }
 }
 
 private extension TabBarCoordinator {
     
-    func runFavoriteFlow() -> ((UINavigationController) -> Void) {
-        return { [unowned self] navController in
-            if navController.viewControllers.isEmpty {
-                let favoriteCoordinator = self.coordinatorFactory.makeFavoriteCoordinator(navigationController: navController)
-                self.addDependency(favoriteCoordinator)
-                favoriteCoordinator.start()
-            }
-        }
+    func prepareTabBarController(withTabControllers tabControllers: [UIViewController]) {
+        /// Assign page's controllers
+        tabBarView.setViewControllers(tabControllers, animated: true)
+        /// Let set index
+        tabBarView.selectedIndex = TabBarPage.favorite.pageOrderNumber()
     }
     
-    func runHotTopicFlow() -> ((UINavigationController) -> Void) {
-        return { [unowned self] navController in
-            if navController.viewControllers.isEmpty {
-                let hotTopicCoordinator = self.coordinatorFactory.makeHotTopicCoordinator(navigationController: navController)
-                self.addDependency(hotTopicCoordinator)
-                hotTopicCoordinator.start()
+    func getTabController(_ page: TabBarPage) -> UINavigationController {
+        let navController = UINavigationController()
+        navController.setNavigationBarHidden(false, animated: false)
+        navController.tabBarItem = UITabBarItem(title: NSLocalizedString(page.pageTitleValue(), comment: ""),
+                                                image: page.pageIconImage(),
+                                                tag: page.pageOrderNumber())
+        
+        switch page {
+        case .favorite:
+            let favoriteCoordinator = self.coordinatorFactory.makeFavoriteCoordinator(navigationController: navController)
+            self.addDependency(favoriteCoordinator)
+            favoriteCoordinator.start()
+        case .hotTopic:
+            let hotTopicCoordinator = self.coordinatorFactory.makeHotTopicCoordinator(navigationController: navController)
+            self.addDependency(hotTopicCoordinator)
+            hotTopicCoordinator.start()
+        case .settings:
+            let settingsViewController : SettingsViewController
+            if #available(iOS 13.0, *) {
+                settingsViewController = SettingsViewController(style: .insetGrouped)
+            } else {
+                settingsViewController = SettingsViewController(style: .grouped)
             }
+            navController.setViewControllers([settingsViewController], animated: false)
         }
-    }
-    
-    func runPopularBoardsFlow() -> ((UINavigationController) -> Void) {
-        return { [unowned self] navController in
-            if navController.viewControllers.isEmpty {
-                let popularBoardsCoordinator = self.coordinatorFactory.makePopularBoardsCoordinator(navigationController: navController)
-                self.addDependency(popularBoardsCoordinator)
-                popularBoardsCoordinator.start()
-            }
-        }
+        
+        return navController
     }
 }
