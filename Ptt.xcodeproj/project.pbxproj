@@ -38,11 +38,8 @@
 		9B564C65256AA83100787FD7 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B564C64256AA83100787FD7 /* TabBarView.swift */; };
 		9B564C6B256AA8C800787FD7 /* BaseCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B564C6A256AA8C800787FD7 /* BaseCoordinator.swift */; };
 		9B564C71256AAF8000787FD7 /* TabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B564C70256AAF8000787FD7 /* TabBarCoordinator.swift */; };
+		9B7D371C25A98E2E0058758E /* TabBarPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7D371B25A98E2E0058758E /* TabBarPage.swift */; };
 		9BEE1C592584B2C0002A9D95 /* ApplicationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1C582584B2C0002A9D95 /* ApplicationCoordinator.swift */; };
-		9BEE1C5F2584BA0A002A9D95 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9BEE1C5E2584BA0A002A9D95 /* Main.storyboard */; };
-		9BEE1C642584BBD2002A9D95 /* Storyboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1C632584BBD2002A9D95 /* Storyboards.swift */; };
-		9BEE1C682584BC5C002A9D95 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1C672584BC5C002A9D95 /* UIViewControllerExtension.swift */; };
-		9BEE1C712584BCC9002A9D95 /* NSObjectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1C702584BCC9002A9D95 /* NSObjectExtensions.swift */; };
 		9BEE1C972584E773002A9D95 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1C962584E773002A9D95 /* BaseView.swift */; };
 		9BEE1C9E2584E7E1002A9D95 /* FavoriteCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1C9D2584E7E1002A9D95 /* FavoriteCoordinator.swift */; };
 		9BEE1CA22584E82E002A9D95 /* FavoriteSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1CA12584E82E002A9D95 /* FavoriteSceneFactoryProtocol.swift */; };
@@ -113,11 +110,8 @@
 		9B564C64256AA83100787FD7 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		9B564C6A256AA8C800787FD7 /* BaseCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCoordinator.swift; sourceTree = "<group>"; };
 		9B564C70256AAF8000787FD7 /* TabBarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarCoordinator.swift; sourceTree = "<group>"; };
+		9B7D371B25A98E2E0058758E /* TabBarPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarPage.swift; sourceTree = "<group>"; };
 		9BEE1C582584B2C0002A9D95 /* ApplicationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationCoordinator.swift; sourceTree = "<group>"; };
-		9BEE1C5E2584BA0A002A9D95 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		9BEE1C632584BBD2002A9D95 /* Storyboards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboards.swift; sourceTree = "<group>"; };
-		9BEE1C672584BC5C002A9D95 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
-		9BEE1C702584BCC9002A9D95 /* NSObjectExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSObjectExtensions.swift; sourceTree = "<group>"; };
 		9BEE1C962584E773002A9D95 /* BaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
 		9BEE1C9D2584E7E1002A9D95 /* FavoriteCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCoordinator.swift; sourceTree = "<group>"; };
 		9BEE1CA12584E82E002A9D95 /* FavoriteSceneFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteSceneFactoryProtocol.swift; sourceTree = "<group>"; };
@@ -312,26 +306,17 @@
 			isa = PBXGroup;
 			children = (
 				9B564C5B256AA74100787FD7 /* TabBarController.swift */,
+				9B7D371B25A98E2E0058758E /* TabBarPage.swift */,
 				9B564C64256AA83100787FD7 /* TabBarView.swift */,
 				9B564C70256AAF8000787FD7 /* TabBarCoordinator.swift */,
 			);
 			path = MainTabBarFlow;
 			sourceTree = "<group>";
 		};
-		9BEE1C622584BBA8002A9D95 /* Storyboards */ = {
-			isa = PBXGroup;
-			children = (
-				9BEE1C632584BBD2002A9D95 /* Storyboards.swift */,
-				9BEE1C5E2584BA0A002A9D95 /* Main.storyboard */,
-			);
-			path = Storyboards;
-			sourceTree = "<group>";
-		};
 		9BEE1C6D2584BCA5002A9D95 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				9BEE1C672584BC5C002A9D95 /* UIViewControllerExtension.swift */,
-				9BEE1C702584BCC9002A9D95 /* NSObjectExtensions.swift */,
+				EA62540D242DAAF600E977FE /* Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -415,12 +400,10 @@
 				9B564C26256A9D3200787FD7 /* Coordinator */,
 				3E65526A25595EB90026290B /* API */,
 				9B564C5A256AA72C00787FD7 /* Flows */,
-				9BEE1C622584BBA8002A9D95 /* Storyboards */,
 				9BEE1C6D2584BCA5002A9D95 /* Extensions */,
 				9BEE1C582584B2C0002A9D95 /* ApplicationCoordinator.swift */,
 				EA475F7423C4834C000867FE /* AppDelegate.swift */,
 				EA475F7623C4834C000867FE /* SceneDelegate.swift */,
-				EA62540D242DAAF600E977FE /* Extension.swift */,
 				EA9DE10E2563A82200AEFC19 /* FullscreenSwipeBack.swift */,
 				EA78E0C024050EB000309694 /* StyleKit.swift */,
 				EA475F7D23C4834C000867FE /* Assets.xcassets */,
@@ -531,7 +514,6 @@
 				EA475F8123C4834C000867FE /* LaunchScreen.storyboard in Resources */,
 				EA475F9923C48CC1000867FE /* Localizable.strings in Resources */,
 				EA475F7E23C4834C000867FE /* Assets.xcassets in Resources */,
-				9BEE1C5F2584BA0A002A9D95 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -621,7 +603,6 @@
 				EA479EB42431F27C008A0D99 /* PostViewController.swift in Sources */,
 				9B564C3D256AA0EB00787FD7 /* Router.swift in Sources */,
 				EA41D65D243EF51A0052F4A1 /* HotTopicViewController.swift in Sources */,
-				9BEE1C682584BC5C002A9D95 /* UIViewControllerExtension.swift in Sources */,
 				9B564C65256AA83100787FD7 /* TabBarView.swift in Sources */,
 				3E655288255960910026290B /* FullPost.swift in Sources */,
 				3E6552822559604C0026290B /* APIClientProtocol.swift in Sources */,
@@ -629,7 +610,6 @@
 				3E65527125595F0D0026290B /* BoardInfo.swift in Sources */,
 				9B564C28256A9D7800787FD7 /* Coordinatorable.swift in Sources */,
 				9B564C2F256A9EAC00787FD7 /* Presentable.swift in Sources */,
-				9BEE1C712584BCC9002A9D95 /* NSObjectExtensions.swift in Sources */,
 				3E65528C255960AE0026290B /* Comment.swift in Sources */,
 				9B564C71256AAF8000787FD7 /* TabBarCoordinator.swift in Sources */,
 				EA78E0C124050EB100309694 /* StyleKit.swift in Sources */,
@@ -639,7 +619,6 @@
 				9BEE1CA22584E82E002A9D95 /* FavoriteSceneFactoryProtocol.swift in Sources */,
 				9BEE1CB02584F60B002A9D95 /* HotTopicCoordinator.swift in Sources */,
 				3E65527525595F9E0026290B /* BoardPost.swift in Sources */,
-				9BEE1C642584BBD2002A9D95 /* Storyboards.swift in Sources */,
 				9BEE1C592584B2C0002A9D95 /* ApplicationCoordinator.swift in Sources */,
 				9BEE1CC42585DA6B002A9D95 /* BoardSceneFactoryProtocol.swift in Sources */,
 				9B564C5C256AA74100787FD7 /* TabBarController.swift in Sources */,
@@ -650,6 +629,7 @@
 				EA475F7523C4834C000867FE /* AppDelegate.swift in Sources */,
 				9B564C33256A9F3500787FD7 /* Routerable.swift in Sources */,
 				9BEE1C9E2584E7E1002A9D95 /* FavoriteCoordinator.swift in Sources */,
+				9B7D371C25A98E2E0058758E /* TabBarPage.swift in Sources */,
 				EA475F7723C4834C000867FE /* SceneDelegate.swift in Sources */,
 				9B564C6B256AA8C800787FD7 /* BaseCoordinator.swift in Sources */,
 				9BEE1CC02585D8E8002A9D95 /* BoardCoordinator.swift in Sources */,
