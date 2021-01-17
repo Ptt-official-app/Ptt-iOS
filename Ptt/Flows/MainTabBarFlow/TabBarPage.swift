@@ -11,6 +11,7 @@ import UIKit
 enum TabBarPage {
     case favorite
     case hotTopic
+    case settings
     
     init?(index: Int) {
         switch index {
@@ -18,6 +19,8 @@ enum TabBarPage {
             self = .favorite
         case 1:
             self = .hotTopic
+        case 2:
+            self = .settings
         default:
             return nil
         }
@@ -29,6 +32,8 @@ enum TabBarPage {
             return 0
         case .hotTopic:
             return 1
+        case .settings:
+            return 2
         }
     }
     
@@ -39,6 +44,8 @@ enum TabBarPage {
             return "Favorite Boards"
         case .hotTopic:
             return "Hot Topics"
+        case .settings:
+            return "Settings"
         }
     }
     
@@ -48,6 +55,14 @@ enum TabBarPage {
             return StyleKit.imageOfFavoriteTabBar()
         case .hotTopic:
             return StyleKit.imageOfHotTopic()
+        case .settings:
+            // TODO: update design from Zeplin
+            if #available(iOS 13.0, *) {
+                if let gearImage = UIImage(systemName: "gear") {
+                    return gearImage
+                }
+            }
+            return UIImage()
         }
     }
     // Add tab icon selected / deselected color
