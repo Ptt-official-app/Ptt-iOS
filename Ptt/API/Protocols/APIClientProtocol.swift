@@ -28,4 +28,6 @@ protocol APIClientProtocol: class {
     ///   - max: max number of the returned list, requiring <= 300
     ///   - completion: the list of board information
     func getBoardListV2(token: String, keyword: String, startIdx: String, max: Int, completion: @escaping (BoardListResultV2) -> Void)
+    
+    func getBoardListV3(subPath: String, token: String, querys: Dictionary<String, Any>, completion: @escaping (BoardListResultV2) -> Void)
 }

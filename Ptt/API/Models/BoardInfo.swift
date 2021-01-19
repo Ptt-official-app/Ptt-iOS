@@ -35,6 +35,24 @@ extension APIModel {
         let reason: String
         let read: Bool
         let total: Int
+        let last_post_time: Int
+        let stat_attr: Int
+        
+        init(brdname: String, title: String, nuser: Int) {
+            self.bid = "bid"
+            self.brdname = brdname
+            self.title = title
+            self.flag = 0
+            self.type = ""
+            self.class = ""
+            self.nuser = nuser
+            self.moderators = []
+            self.reason = ""
+            self.read = false
+            self.total = 0
+            self.last_post_time = 0
+            self.stat_attr = 0
+        }
     }
 }
 

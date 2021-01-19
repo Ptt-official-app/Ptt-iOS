@@ -52,7 +52,6 @@
 		CD694CF825A7608E00428DC9 /* PopularBoardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD694CF725A7608E00428DC9 /* PopularBoardsViewController.swift */; };
 		CD6C141125A9E8F40043E7EC /* PopularBoardsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6C141025A9E8F40043E7EC /* PopularBoardsTableViewCell.swift */; };
 		CD6C141825AB0C660043E7EC /* PopularBoardsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6C141725AB0C660043E7EC /* PopularBoardsViewModel.swift */; };
-		CD6FB78C25ACAE910034A51B /* PopularBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6FB78B25ACAE910034A51B /* PopularBoard.swift */; };
 		CD767B4225B0B6690050E12A /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD767B4125B0B6690050E12A /* Extension.swift */; };
 		CD767B5125B0B79B0050E12A /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD767B4F25B0B79B0050E12A /* UserDefaultsManager.swift */; };
 		CD767B5225B0B79B0050E12A /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD767B5025B0B79B0050E12A /* NotificationName.swift */; };
@@ -135,7 +134,6 @@
 		CD694CF725A7608E00428DC9 /* PopularBoardsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularBoardsViewController.swift; sourceTree = "<group>"; };
 		CD6C141025A9E8F40043E7EC /* PopularBoardsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularBoardsTableViewCell.swift; sourceTree = "<group>"; };
 		CD6C141725AB0C660043E7EC /* PopularBoardsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularBoardsViewModel.swift; sourceTree = "<group>"; };
-		CD6FB78B25ACAE910034A51B /* PopularBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularBoard.swift; sourceTree = "<group>"; };
 		CD767B4125B0B6690050E12A /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		CD767B4F25B0B79B0050E12A /* UserDefaultsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		CD767B5025B0B79B0050E12A /* NotificationName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
@@ -433,14 +431,6 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		CD6FB78A25ACAE270034A51B /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				CD6FB78B25ACAE910034A51B /* PopularBoard.swift */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
 		CD767B7325B0B9980050E12A /* SettingsFlow */ = {
 			isa = PBXGroup;
 			children = (
@@ -487,7 +477,6 @@
 				3E65526A25595EB90026290B /* API */,
 				9B564C5A256AA72C00787FD7 /* Flows */,
 				9BEE1C6D2584BCA5002A9D95 /* Extensions */,
-				CD6FB78A25ACAE270034A51B /* Model */,
 				9BEE1C582584B2C0002A9D95 /* ApplicationCoordinator.swift */,
 				EA475F7423C4834C000867FE /* AppDelegate.swift */,
 				EA475F7623C4834C000867FE /* SceneDelegate.swift */,
@@ -733,7 +722,6 @@
 				CD767B5125B0B79B0050E12A /* UserDefaultsManager.swift in Sources */,
 				CD767B7A25B0B9980050E12A /* SettingsViewController.swift in Sources */,
 				CD767B4225B0B6690050E12A /* Extension.swift in Sources */,
-				CD6FB78C25ACAE910034A51B /* PopularBoard.swift in Sources */,
 				EAA4F6F323C72F95005ABCE3 /* APIClient.swift in Sources */,
 				EAA4F6F123C72B01005ABCE3 /* BoardViewController.swift in Sources */,
 				9BEE1CA62584EA13002A9D95 /* SceneFactory.swift in Sources */,

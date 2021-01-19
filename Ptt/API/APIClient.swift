@@ -199,6 +199,42 @@ extension APIClient: APIClientProtocol {
         }
         task.resume()
     }
+    
+    func getBoardListV3(subPath: String, token: String, querys: Dictionary<String, Any>, completion: @escaping (BoardListResultV2) -> Void) {
+        var urlComponent = tempURLComponents
+        urlComponent.path = "/api/"+subPath
+        
+//        urlComponent.queryItems = []
+//        for (key, value) in querys {
+//            urlComponent.queryItems?.append(URLQueryItem(name: key, value: value as? String))
+//        }
+        
+        guard let url = urlComponent.url else {
+            assertionFailure()
+            return
+        }
+        print("HHHHHHHHHHHH   ",url)
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.GET.rawValue
+        request.setValue("bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
+            switch result {
+            case .failure(let apiError):
+                completion(.failure(apiError))
+            case .success(let resultData):
+                do {
+                    let list = try self.decoder.decode(APIModel.BoardInfoList.self, from: resultData)
+                    completion(.success(list))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(APIError(message: message)))
+                }
+            }
+        }
+        task.resume()
+    }
 }
 
 // MARK: Private helper function

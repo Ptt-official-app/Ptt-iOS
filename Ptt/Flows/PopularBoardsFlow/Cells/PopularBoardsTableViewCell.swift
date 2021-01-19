@@ -11,7 +11,7 @@ import UIKit
 class PopularBoardsTableViewCell: UITableViewCell {
     lazy var boardNameLabel: UILabel = {
         let boardNameLabel = UILabel()
-        boardNameLabel.font = UIFont.preferredFont(forTextStyle: .title2)
+        boardNameLabel.font = UIFont.systemFont(ofSize: 19)
         return boardNameLabel
     }()
     
@@ -21,17 +21,18 @@ class PopularBoardsTableViewCell: UITableViewCell {
         return boardTitleLabel
     }()
     
-//    lazy var favoriteButton : FavoriteButton = {
-//        let button = FavoriteButton()
-//        contentView.ptt_add(subviews: [button])
-//        NSLayoutConstraint.activate([
-//            button.topAnchor.constraint(equalTo: contentView.topAnchor),
-//            button.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-//            button.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-//            button.widthAnchor.constraint(equalTo: button.heightAnchor)
-//        ])
-//        return button
-//    }()
+    lazy var nuserLabel: UILabel = {
+        let nuserLabel = UILabel()
+        nuserLabel.font = UIFont.systemFont(ofSize: 12)
+        return nuserLabel
+    }()
+    
+    lazy var nuserUIImageView: UIImageView = {
+        let nuserUIImageView = UIImageView()
+        nuserUIImageView.contentMode = .scaleAspectFit
+        nuserUIImageView.image = StyleKit.imageOfPopularNUser()
+        return nuserUIImageView
+    }()
     
 //    var delegate: DetailTableViewCellDelegate?
     
@@ -46,7 +47,7 @@ class PopularBoardsTableViewCell: UITableViewCell {
             boardNameLabel.textColor = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
             boardTitleLabel.textColor = .systemGray
         }
-        contentView.ptt_add(subviews: [boardNameLabel, boardTitleLabel])
+        setConstraints()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -55,53 +56,35 @@ class PopularBoardsTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        setConstraints()
     }
     
     func configure(_ viewModel: PopularBoardsViewModel, index: Int) {
-//        let imageUrl = viewModel.imageUrls.value[index]
-//        picImageView.image = nil
-//        if imageUrl.hasSuffix("gif") {
-//            if viewModel.uiImages.keys.contains(imageUrl) {
-//                picImageView.image = viewModel.uiImages[imageUrl]
-//                return
-//            }
-//            loadGif(url: imageUrl)
-////            picImageView.loadGif(url: imageUrl)
-//
-////            guard let imageViewAccessibilityIdentifier = picImageView.accessibilityIdentifier else {return}
-////            if imageViewAccessibilityIdentifier.isEmpty {
-////                picImageView.accessibilityIdentifier = viewModel.title.value
-////            }
-////            if viewModel.title.value == picImageView.accessibilityIdentifier {
-////                picImageView.loadGif(url: imageUrl)
-////            }
-//        }
-//        else if imageUrl.hasSuffix("mp4") {
-//            guard let videoUrl = URL(string: imageUrl) else {return}
-//            let player = AVPlayer(url: videoUrl)
-//            let playerLayer = AVPlayerLayer(player: player)
-//            playerLayer.frame = picImageView.bounds
-//            contentView.layer.addSublayer(playerLayer)
-//            player.play()
-//            loopVideo(videoPlayer: player)
-//        }
-//        else {
-//            picImageView.sd_setImage(with: URL(string: imageUrl))
-//        }
+        boardNameLabel.text = viewModel.popularBoards.value[index].brdname
+        boardTitleLabel.text = viewModel.popularBoards.value[index].title
+        nuserLabel.text = "\(viewModel.popularBoards.value[index].nuser)"
+        
+        if (viewModel.popularBoards.value[index].nuser < 2000) {
+            nuserUIImageView.setImageColor(color: UIColor.white)
+        }
+        else if (viewModel.popularBoards.value[index].nuser < 5000) {
+            nuserUIImageView.setImageColor(color: UIColor.red)
+        }
+        else if (viewModel.popularBoards.value[index].nuser < 10000) {
+            nuserUIImageView.setImageColor(color: UIColor.blue)
+        }
+        else if (viewModel.popularBoards.value[index].nuser >= 10000) {
+            nuserUIImageView.setImageColor(color: UIColor.cyan)
+        }
     }
     
     func setConstraints() {
-//        NSLayoutConstraint(item: boardNameLabel!, attribute: .trailing, relatedBy: .equal, toItem: contentView, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
-//        NSLayoutConstraint(item: boardNameLabel!, attribute: .top, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
-//        NSLayoutConstraint(item: boardNameLabel!, attribute: .leading, relatedBy: .equal, toItem: contentView, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
-//        NSLayoutConstraint(item: boardNameLabel!, attribute: .bottom, relatedBy: .equal, toItem: contentView, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
-//
-//        NSLayoutConstraint(item: boardTitleLabel!, attribute: .trailing, relatedBy: .equal, toItem: contentView, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
-//        NSLayoutConstraint(item: boardTitleLabel!, attribute: .top, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
-//        NSLayoutConstraint(item: boardTitleLabel!, attribute: .leading, relatedBy: .equal, toItem: contentView, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
-//        NSLayoutConstraint(item: boardTitleLabel!, attribute: .bottom, relatedBy: .equal, toItem: contentView, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
+        contentView.ptt_add(subviews: [boardNameLabel, boardTitleLabel, nuserLabel, nuserUIImageView])
         
+        NSLayoutConstraint(item: nuserLabel, attribute: .trailing, relatedBy: .equal, toItem: contentView, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: nuserLabel, attribute: .top, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1.0, constant: 10).isActive = true
+        NSLayoutConstraint(item: nuserLabel, attribute: .leading, relatedBy: .equal, toItem: nuserUIImageView, attribute: .trailing, multiplier: 1.0, constant: 4).isActive = true
+        
+        NSLayoutConstraint(item: nuserUIImageView, attribute: .top, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1.0, constant: 11).isActive = true
         
         let viewsDict = ["boardNameLabel": boardNameLabel, "boardTitleLabel": boardTitleLabel]
         let metrics = ["hp": 20, "vp": 10, "vps": 4]
@@ -114,4 +97,12 @@ class PopularBoardsTableViewCell: UITableViewCell {
                                                       options: [], metrics: metrics, views: viewsDict)
         NSLayoutConstraint.activate(constraints)
     }
+}
+
+extension UIImageView {
+  func setImageColor(color: UIColor) {
+    let templateImage = self.image?.withRenderingMode(.alwaysTemplate)
+    self.image = templateImage
+    self.tintColor = color
+  }
 }
