@@ -23,10 +23,10 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
         return coordinator
     }
     
-    func makeHotTopicCoordinator(navigationController: UINavigationController?) -> Coordinatorable {
-        let coordinator = HotTopicCoordinator(router: router(navigationController),
-                                              factory: SceneFactory(),
-                                              coordinatoryFactory: CoordinatorFactory())
+    func makeFBPageCoordinator(navigationController: UINavigationController?) -> Coordinatorable {
+        let coordinator = FBPageCoordinator(router: router(navigationController),
+                                            factory: SceneFactory(),
+                                            coordinatoryFactory: CoordinatorFactory())
         return coordinator
     }
 }

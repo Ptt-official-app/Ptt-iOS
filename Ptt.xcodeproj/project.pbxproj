@@ -44,11 +44,11 @@
 		9BEE1C9E2584E7E1002A9D95 /* FavoriteCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1C9D2584E7E1002A9D95 /* FavoriteCoordinator.swift */; };
 		9BEE1CA22584E82E002A9D95 /* FavoriteSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1CA12584E82E002A9D95 /* FavoriteSceneFactoryProtocol.swift */; };
 		9BEE1CA62584EA13002A9D95 /* SceneFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1CA52584EA13002A9D95 /* SceneFactory.swift */; };
-		9BEE1CB02584F60B002A9D95 /* HotTopicCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1CAF2584F60B002A9D95 /* HotTopicCoordinator.swift */; };
-		9BEE1CB42584F644002A9D95 /* HotTopicSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1CB32584F644002A9D95 /* HotTopicSceneFactoryProtocol.swift */; };
+		9BEE1CB02584F60B002A9D95 /* FBPageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1CAF2584F60B002A9D95 /* FBPageCoordinator.swift */; };
+		9BEE1CB42584F644002A9D95 /* FBPageSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1CB32584F644002A9D95 /* FBPageSceneFactoryProtocol.swift */; };
 		9BEE1CC02585D8E8002A9D95 /* BoardCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1CBF2585D8E8002A9D95 /* BoardCoordinator.swift */; };
 		9BEE1CC42585DA6B002A9D95 /* BoardSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1CC32585DA6B002A9D95 /* BoardSceneFactoryProtocol.swift */; };
-		EA41D65D243EF51A0052F4A1 /* HotTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA41D65C243EF51A0052F4A1 /* HotTopicViewController.swift */; };
+		EA41D65D243EF51A0052F4A1 /* FBPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA41D65C243EF51A0052F4A1 /* FBPageViewController.swift */; };
 		EA475F7523C4834C000867FE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F7423C4834C000867FE /* AppDelegate.swift */; };
 		EA475F7723C4834C000867FE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F7623C4834C000867FE /* SceneDelegate.swift */; };
 		EA475F7923C4834C000867FE /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F7823C4834C000867FE /* FavoriteViewController.swift */; };
@@ -121,13 +121,13 @@
 		9BEE1C9D2584E7E1002A9D95 /* FavoriteCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCoordinator.swift; sourceTree = "<group>"; };
 		9BEE1CA12584E82E002A9D95 /* FavoriteSceneFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteSceneFactoryProtocol.swift; sourceTree = "<group>"; };
 		9BEE1CA52584EA13002A9D95 /* SceneFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneFactory.swift; sourceTree = "<group>"; };
-		9BEE1CAF2584F60B002A9D95 /* HotTopicCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotTopicCoordinator.swift; sourceTree = "<group>"; };
-		9BEE1CB32584F644002A9D95 /* HotTopicSceneFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotTopicSceneFactoryProtocol.swift; sourceTree = "<group>"; };
+		9BEE1CAF2584F60B002A9D95 /* FBPageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBPageCoordinator.swift; sourceTree = "<group>"; };
+		9BEE1CB32584F644002A9D95 /* FBPageSceneFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBPageSceneFactoryProtocol.swift; sourceTree = "<group>"; };
 		9BEE1CBF2585D8E8002A9D95 /* BoardCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardCoordinator.swift; sourceTree = "<group>"; };
 		9BEE1CC32585DA6B002A9D95 /* BoardSceneFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSceneFactoryProtocol.swift; sourceTree = "<group>"; };
 		DBDA47B1E79A476E2E89A118 /* Pods_Ptt.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Ptt.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E84C05B084821F8B5031D3BD /* Pods_PttTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PttTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		EA41D65C243EF51A0052F4A1 /* HotTopicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotTopicViewController.swift; sourceTree = "<group>"; };
+		EA41D65C243EF51A0052F4A1 /* FBPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBPageViewController.swift; sourceTree = "<group>"; };
 		EA475F7123C4834C000867FE /* Ptt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ptt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA475F7423C4834C000867FE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EA475F7623C4834C000867FE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -295,7 +295,7 @@
 			children = (
 				9B564C40256AA1F400787FD7 /* CoordinatorFactoryProtocol.swift */,
 				9BEE1CA12584E82E002A9D95 /* FavoriteSceneFactoryProtocol.swift */,
-				9BEE1CB32584F644002A9D95 /* HotTopicSceneFactoryProtocol.swift */,
+				9BEE1CB32584F644002A9D95 /* FBPageSceneFactoryProtocol.swift */,
 				9BEE1CC32585DA6B002A9D95 /* BoardSceneFactoryProtocol.swift */,
 			);
 			path = Protocols;
@@ -305,7 +305,7 @@
 			isa = PBXGroup;
 			children = (
 				9BEE1CB92585D89A002A9D95 /* BoardFlow */,
-				9BEE1CAB2584F5C9002A9D95 /* HotTopicFlow */,
+				9BEE1CAB2584F5C9002A9D95 /* FBPageFlow */,
 				9BEE1C762584E50F002A9D95 /* FavoriteFlow */,
 				EAF6F68D25AFD87800F5DDC1 /* SettingsFlow */,
 				9B564C5F256AA74A00787FD7 /* MainTabBarFlow */,
@@ -349,19 +349,19 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		9BEE1CAB2584F5C9002A9D95 /* HotTopicFlow */ = {
+		9BEE1CAB2584F5C9002A9D95 /* FBPageFlow */ = {
 			isa = PBXGroup;
 			children = (
-				9BEE1CAF2584F60B002A9D95 /* HotTopicCoordinator.swift */,
+				9BEE1CAF2584F60B002A9D95 /* FBPageCoordinator.swift */,
 				9BEE1CAC2584F5EF002A9D95 /* Controllers */,
 			);
-			path = HotTopicFlow;
+			path = FBPageFlow;
 			sourceTree = "<group>";
 		};
 		9BEE1CAC2584F5EF002A9D95 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				EA41D65C243EF51A0052F4A1 /* HotTopicViewController.swift */,
+				EA41D65C243EF51A0052F4A1 /* FBPageViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -633,7 +633,7 @@
 				3E29388125596BA900240C0F /* URLSessionProtocol.swift in Sources */,
 				EA479EB42431F27C008A0D99 /* PostViewController.swift in Sources */,
 				9B564C3D256AA0EB00787FD7 /* Router.swift in Sources */,
-				EA41D65D243EF51A0052F4A1 /* HotTopicViewController.swift in Sources */,
+				EA41D65D243EF51A0052F4A1 /* FBPageViewController.swift in Sources */,
 				9B564C65256AA83100787FD7 /* TabBarView.swift in Sources */,
 				3E655288255960910026290B /* FullPost.swift in Sources */,
 				3E6552822559604C0026290B /* APIClientProtocol.swift in Sources */,
@@ -646,11 +646,11 @@
 				3E65528C255960AE0026290B /* Comment.swift in Sources */,
 				9B564C71256AAF8000787FD7 /* TabBarCoordinator.swift in Sources */,
 				EA78E0C124050EB100309694 /* StyleKit.swift in Sources */,
-				9BEE1CB42584F644002A9D95 /* HotTopicSceneFactoryProtocol.swift in Sources */,
+				9BEE1CB42584F644002A9D95 /* FBPageSceneFactoryProtocol.swift in Sources */,
 				9BEE1C972584E773002A9D95 /* BaseView.swift in Sources */,
 				3E65527D25595FD30026290B /* Board.swift in Sources */,
 				9BEE1CA22584E82E002A9D95 /* FavoriteSceneFactoryProtocol.swift in Sources */,
-				9BEE1CB02584F60B002A9D95 /* HotTopicCoordinator.swift in Sources */,
+				9BEE1CB02584F60B002A9D95 /* FBPageCoordinator.swift in Sources */,
 				3E65527525595F9E0026290B /* BoardPost.swift in Sources */,
 				9BEE1C592584B2C0002A9D95 /* ApplicationCoordinator.swift in Sources */,
 				9BEE1CC42585DA6B002A9D95 /* BoardSceneFactoryProtocol.swift in Sources */,

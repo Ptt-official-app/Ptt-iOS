@@ -10,7 +10,7 @@ import UIKit
 
 enum TabBarPage {
     case favorite
-    case hotTopic
+    case fbPage
     case settings
     
     init?(index: Int) {
@@ -18,7 +18,7 @@ enum TabBarPage {
         case 0:
             self = .favorite
         case 1:
-            self = .hotTopic
+            self = .fbPage
         case 2:
             self = .settings
         default:
@@ -30,7 +30,7 @@ enum TabBarPage {
         switch self {
         case .favorite:
             return 0
-        case .hotTopic:
+        case .fbPage:
             return 1
         case .settings:
             return 2
@@ -42,8 +42,8 @@ enum TabBarPage {
         switch self {
         case .favorite:
             return "Favorite Boards"
-        case .hotTopic:
-            return "Hot Topics"
+        case .fbPage:
+            return "FB Page"
         case .settings:
             return "Settings"
         }
@@ -53,8 +53,8 @@ enum TabBarPage {
         switch self {
         case .favorite:
             return StyleKit.imageOfFavoriteTabBar()
-        case .hotTopic:
-            return StyleKit.imageOfHotTopic()
+        case .fbPage:
+            return StyleKit.imageOfFBPage()
         case .settings:
             // TODO: update design from Zeplin
             if #available(iOS 13.0, *) {

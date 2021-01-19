@@ -26,7 +26,7 @@ class TabBarCoordinator: BaseCoordinator, TabBarCoordinatorProtocol {
     
     override func start() {
         // Let's define which pages do we want to add into tab bar
-        let pages: [TabBarPage] = [.favorite, .hotTopic, .settings]
+        let pages: [TabBarPage] = [.favorite, .fbPage, .settings]
             .sorted(by: { $0.pageOrderNumber() < $1.pageOrderNumber() })
         // Initialization of ViewControllers or these pages
         let controllers: [UINavigationController] = pages.map({ getTabController($0) })
@@ -73,10 +73,10 @@ private extension TabBarCoordinator {
             let favoriteCoordinator = self.coordinatorFactory.makeFavoriteCoordinator(navigationController: navController)
             self.addDependency(favoriteCoordinator)
             favoriteCoordinator.start()
-        case .hotTopic:
-            let hotTopicCoordinator = self.coordinatorFactory.makeHotTopicCoordinator(navigationController: navController)
-            self.addDependency(hotTopicCoordinator)
-            hotTopicCoordinator.start()
+        case .fbPage:
+            let fbPageCoordinator = self.coordinatorFactory.makeFBPageCoordinator(navigationController: navController)
+            self.addDependency(fbPageCoordinator)
+            fbPageCoordinator.start()
         case .settings:
             let settingsViewController : SettingsViewController
             if #available(iOS 13.0, *) {
