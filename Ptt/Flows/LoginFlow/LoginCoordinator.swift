@@ -30,15 +30,22 @@ class LoginCoordinator: BaseCoordinator {
 
 // MARK: - Private
 
-private extension LoginCoordinator {
-    
+extension LoginCoordinator {
+
     func showLoginView() {
         let loginView = factory.makeLoginView()
         
-        self.finshFlow = { [unowned self] in
+        // self.finshFlow =
+        loginView.finishFlow = { [unowned self] in
+            print("run finish flow")
             self.removeDependency(self)
+            let (coordinator, module) = coordinatoryFactory.makeTabbarCoordinator()
+            addDependency(coordinator)
+            router.setRootModule(module, hideBar: true)
+            coordinator.start()
         }
-        router.setRootModule(loginView)
+        
+        router.setRootModule(loginView, hideBar: true)
     }
 }
 

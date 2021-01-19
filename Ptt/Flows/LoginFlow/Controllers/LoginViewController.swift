@@ -11,11 +11,11 @@ import UIKit
 import AsyncDisplayKit
 
 protocol LoginView: BaseView {
-    var finishFlow: ((String) -> Void)? { get set }
+    var finishFlow: (() -> Void)? { get set }
 }
 
 final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
-    var finishFlow: ((String) -> Void)?
+    var finishFlow: (() -> Void)?
     
     //private let apiClient: APIClientProtocol = nil
 
@@ -371,7 +371,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         _ = LoginKeyChainItem.shared.saveToken(token)
         // todo: push view
         DispatchQueue.main.async {
-            self.finishFlow?(token)
+            print("ready to call finish flow in main thread")
+            self.finishFlow?()
         }
     }
     

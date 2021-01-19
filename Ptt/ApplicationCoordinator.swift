@@ -59,21 +59,10 @@ final class ApplicationCoordinator: BaseCoordinator {
         }
         else {
             isAutorized = false
-            let loginCoordinator = coordinatorFactory.makeLoginCoordinator(navigationController: nil)
-            let loginView = SceneFactory().makeLoginView()
+            
+            let loginCoordinator = coordinatorFactory.makeLoginCoordinator(router: self.router)
             self.addDependency(loginCoordinator)
-            
-            // private loginCoordinator.factory.makeLoginView()
-            router.setRootModule(loginView, hideBar: true)
-            
-            loginView.finishFlow = { [unowned self] (token) in
-                print("login with token:", token)
-                isAutorized = true
-                removeDependency(loginCoordinator)
-                runMainFlow()
-            }
             loginCoordinator.start()
-            
         }
     }
     
