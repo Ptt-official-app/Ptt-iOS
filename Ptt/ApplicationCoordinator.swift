@@ -50,7 +50,7 @@ final class ApplicationCoordinator: BaseCoordinator {
     private func runAuthFlow() {
         // TODO: 登入流程放這邊
         // uncomment to force logout
-        _ = LoginKeyChainItem.shared.removeToken()
+        // _ = LoginKeyChainItem.shared.removeToken()
         
         if LoginKeyChainItem.shared.readToken() != nil {
             isAutorized = true
@@ -61,6 +61,11 @@ final class ApplicationCoordinator: BaseCoordinator {
             isAutorized = false
             
             let loginCoordinator = coordinatorFactory.makeLoginCoordinator(router: self.router)
+            (loginCoordinator as? LoginCoordinator)?.finshFlow = { [unowned self] in
+                // authed
+                self.removeDependency(self)
+                start()
+            }
             self.addDependency(loginCoordinator)
             loginCoordinator.start()
         }
@@ -81,6 +86,13 @@ final class ApplicationCoordinator: BaseCoordinator {
     private func runMainFlow() {
         let (coordinator, module) = coordinatorFactory.makeTabbarCoordinator()
         addDependency(coordinator)
+        
+        (coordinator as? TabBarCoordinator)?.finshFlow = { [unowned self] () in
+            print("finish flow in TabBarCoordinator ")
+            removeDependency(self)
+            isAutorized = false
+            start()
+        }
         router.setRootModule(module, hideBar: true)
         coordinator.start()
     }

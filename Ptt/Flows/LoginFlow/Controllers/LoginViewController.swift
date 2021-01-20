@@ -11,11 +11,11 @@ import UIKit
 import AsyncDisplayKit
 
 protocol LoginView: BaseView {
-    var finishFlow: (() -> Void)? { get set }
+    var onCompleteAuth: (() -> Void)? { get set }
 }
 
 final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
-    var finishFlow: (() -> Void)?
+    var onCompleteAuth: (() -> Void)?
     
     //private let apiClient: APIClientProtocol = nil
 
@@ -24,8 +24,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
 
     var contentStackSpec:ASStackLayoutSpec?
     var contentCenterLayoutSpec:ASCenterLayoutSpec?
-
-    // var finishFlow
     
     func init_layout() -> ASLayoutSpec {
         
@@ -372,7 +370,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         // todo: push view
         DispatchQueue.main.async {
             print("ready to call finish flow in main thread")
-            self.finishFlow?()
+            self.onCompleteAuth?()
         }
     }
     

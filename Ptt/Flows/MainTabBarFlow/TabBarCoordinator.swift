@@ -31,6 +31,12 @@ private extension TabBarCoordinator {
         return { [unowned self] navController in
             if navController.viewControllers.isEmpty {
                 let favoriteCoordinator = self.coordinatorFactory.makeFavoriteCoordinator(navigationController: navController)
+                
+                (favoriteCoordinator as? FavoriteCoordinator)?.finshFlow = { [unowned self] () in
+                    print("finish flow in favo")
+                    removeDependency(self)
+                    self.finshFlow?()
+                }
                 self.addDependency(favoriteCoordinator)
                 favoriteCoordinator.start()
             }

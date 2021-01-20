@@ -36,13 +36,14 @@ extension LoginCoordinator {
         let loginView = factory.makeLoginView()
         
         // self.finshFlow =
-        loginView.finishFlow = { [unowned self] in
+        loginView.onCompleteAuth = { [unowned self] in
             print("run finish flow")
             self.removeDependency(self)
-            let (coordinator, module) = coordinatoryFactory.makeTabbarCoordinator()
-            addDependency(coordinator)
-            router.setRootModule(module, hideBar: true)
-            coordinator.start()
+//            let (coordinator, module) = coordinatoryFactory.makeTabbarCoordinator()
+//            addDependency(coordinator)
+//            router.setRootModule(module, hideBar: true)
+//            coordinator.start()
+            finshFlow?();
         }
         
         router.setRootModule(loginView, hideBar: true)
