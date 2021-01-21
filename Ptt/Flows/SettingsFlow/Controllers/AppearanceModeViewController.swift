@@ -79,6 +79,7 @@ final class AppearanceModeViewController: UITableViewController, FullscreenSwipe
             case .system:
                 cell.textLabel?.text = NSLocalizedString("Use System Default", comment: "")
                 let switchControl = UISwitch()
+                switchControl.onTintColor = GlobalAppearance.tintColor
                 switchControl.isOn = (UserDefaultsManager.appearanceMode() == .system)
                 switchControl.addTarget(self, action: #selector(useSystemDefault), for: .valueChanged)
                 cell.accessoryView = switchControl
