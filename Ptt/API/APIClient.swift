@@ -203,20 +203,20 @@ extension APIClient: APIClientProtocol {
     func getBoardListV3(subPath: String, token: String, querys: Dictionary<String, Any>, completion: @escaping (BoardListResultV2) -> Void) {
         var urlComponent = tempURLComponents
         urlComponent.path = "/api/"+subPath
-        
+
 //        urlComponent.queryItems = []
 //        for (key, value) in querys {
 //            urlComponent.queryItems?.append(URLQueryItem(name: key, value: value as? String))
 //        }
-        
+
         guard let url = urlComponent.url else {
             assertionFailure()
             return
         }
-        print("HHHHHHHHHHHH   ",url)
+
         var request = URLRequest(url: url)
         request.httpMethod = Method.GET.rawValue
-        request.setValue("bearer \(token)", forHTTPHeaderField: "Authorization")
+//        request.setValue("bearer \(token)", forHTTPHeaderField: "Authorization")
 
         let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
             let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)

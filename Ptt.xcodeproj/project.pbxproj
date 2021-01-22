@@ -47,6 +47,9 @@
 		9BEE1CB42584F644002A9D95 /* HotTopicSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1CB32584F644002A9D95 /* HotTopicSceneFactoryProtocol.swift */; };
 		9BEE1CC02585D8E8002A9D95 /* BoardCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1CBF2585D8E8002A9D95 /* BoardCoordinator.swift */; };
 		9BEE1CC42585DA6B002A9D95 /* BoardSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE1CC32585DA6B002A9D95 /* BoardSceneFactoryProtocol.swift */; };
+		CD65EBAD25B85E0800A128BC /* BoardsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD65EBAC25B85E0800A128BC /* BoardsTableViewCell.swift */; };
+		CD65EBCA25B86F4900A128BC /* FavoriteBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD65EBC925B86F4900A128BC /* FavoriteBoard.swift */; };
+		CD68ADF825B9C10C0021175C /* ResultsTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD68ADF725B9C10C0021175C /* ResultsTableController.swift */; };
 		CD694CED25A74D3100428DC9 /* PopularBoardsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD694CEC25A74D3100428DC9 /* PopularBoardsCoordinator.swift */; };
 		CD694CF325A74F0400428DC9 /* PopularBoardsSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD694CF225A74F0400428DC9 /* PopularBoardsSceneFactoryProtocol.swift */; };
 		CD694CF825A7608E00428DC9 /* PopularBoardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD694CF725A7608E00428DC9 /* PopularBoardsViewController.swift */; };
@@ -129,6 +132,9 @@
 		9BEE1CB32584F644002A9D95 /* HotTopicSceneFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotTopicSceneFactoryProtocol.swift; sourceTree = "<group>"; };
 		9BEE1CBF2585D8E8002A9D95 /* BoardCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardCoordinator.swift; sourceTree = "<group>"; };
 		9BEE1CC32585DA6B002A9D95 /* BoardSceneFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSceneFactoryProtocol.swift; sourceTree = "<group>"; };
+		CD65EBAC25B85E0800A128BC /* BoardsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardsTableViewCell.swift; sourceTree = "<group>"; };
+		CD65EBC925B86F4900A128BC /* FavoriteBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteBoard.swift; sourceTree = "<group>"; };
+		CD68ADF725B9C10C0021175C /* ResultsTableController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsTableController.swift; sourceTree = "<group>"; };
 		CD694CEC25A74D3100428DC9 /* PopularBoardsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularBoardsCoordinator.swift; sourceTree = "<group>"; };
 		CD694CF225A74F0400428DC9 /* PopularBoardsSceneFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularBoardsSceneFactoryProtocol.swift; sourceTree = "<group>"; };
 		CD694CF725A7608E00428DC9 /* PopularBoardsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularBoardsViewController.swift; sourceTree = "<group>"; };
@@ -315,6 +321,7 @@
 		9B564C5A256AA72C00787FD7 /* Flows */ = {
 			isa = PBXGroup;
 			children = (
+				CD65EBAA25B85DDC00A128BC /* Common */,
 				CD767B7325B0B9980050E12A /* SettingsFlow */,
 				9BEE1CB92585D89A002A9D95 /* BoardFlow */,
 				9BEE1CAB2584F5C9002A9D95 /* HotTopicFlow */,
@@ -394,6 +401,40 @@
 				EA479EB32431F27C008A0D99 /* PostViewController.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		CD65EBAA25B85DDC00A128BC /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				CD68ADF625B9C0EF0021175C /* ResultsTableController */,
+				CD65EBC825B86ED800A128BC /* Model */,
+				CD65EBAB25B85DE500A128BC /* Cells */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		CD65EBAB25B85DE500A128BC /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				CD65EBAC25B85E0800A128BC /* BoardsTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		CD65EBC825B86ED800A128BC /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				CD65EBC925B86F4900A128BC /* FavoriteBoard.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		CD68ADF625B9C0EF0021175C /* ResultsTableController */ = {
+			isa = PBXGroup;
+			children = (
+				CD68ADF725B9C10C0021175C /* ResultsTableController.swift */,
+			);
+			path = ResultsTableController;
 			sourceTree = "<group>";
 		};
 		CD694CEB25A74CDA00428DC9 /* PopularBoardsFlow */ = {
@@ -718,10 +759,13 @@
 				EA475F7723C4834C000867FE /* SceneDelegate.swift in Sources */,
 				9B564C6B256AA8C800787FD7 /* BaseCoordinator.swift in Sources */,
 				9BEE1CC02585D8E8002A9D95 /* BoardCoordinator.swift in Sources */,
+				CD68ADF825B9C10C0021175C /* ResultsTableController.swift in Sources */,
 				3E65527925595FBE0026290B /* Message.swift in Sources */,
 				CD767B5125B0B79B0050E12A /* UserDefaultsManager.swift in Sources */,
+				CD65EBAD25B85E0800A128BC /* BoardsTableViewCell.swift in Sources */,
 				CD767B7A25B0B9980050E12A /* SettingsViewController.swift in Sources */,
 				CD767B4225B0B6690050E12A /* Extension.swift in Sources */,
+				CD65EBCA25B86F4900A128BC /* FavoriteBoard.swift in Sources */,
 				EAA4F6F323C72F95005ABCE3 /* APIClient.swift in Sources */,
 				EAA4F6F123C72B01005ABCE3 /* BoardViewController.swift in Sources */,
 				9BEE1CA62584EA13002A9D95 /* SceneFactory.swift in Sources */,
