@@ -17,8 +17,7 @@ class PopularBoardsViewModel {
     var delegate: PopularBoardsViewModelDelegate?
     
     let subPath = "boards/popular"
-    let token = "123"
-    let querys: Dictionary<String, Any> = ["start_idx": "", "limit": 0, "asc": false]
+    let token = ""
     
     init() {
         initViewModel()
@@ -29,8 +28,7 @@ class PopularBoardsViewModel {
     }
     
     func start() {
-        
-        APIClient.shared.getBoardListV3(subPath: subPath, token: token, querys: querys) { [weak self] (result) in
+        APIClient.shared.getBoardListV3(subPath: subPath, token: token) { [weak self] (result) in
             guard let weakSelf = self else { return }
             switch result {
                 case .failure(error: let apiError):
@@ -41,23 +39,7 @@ class PopularBoardsViewModel {
                     var tempList: [APIModel.BoardInfoV2] = []
                     
                     for item in data.list {
-//                        weakSelf.popularBoards.value.append(item)
                         tempList.append(item)
-                    }
-                    
-                    if (tempList.count <= 2) {
-                        tempList.append(contentsOf: [
-                            APIModel.BoardInfoV2(brdname: "Gossiping", title: "[八卦] 請協助置底協尋", nuser: 188),
-                            APIModel.BoardInfoV2(brdname: "C_Chat", title: "[希洽] 養成好習慣 看文章前先ID", nuser: 4886),
-                            APIModel.BoardInfoV2(brdname: "NBA", title: "[NBA] R.I.P. Mr. David Stern", nuser: 3760),
-                            APIModel.BoardInfoV2(brdname: "Lifeismoney", title: "[省錢] 省錢板", nuser: 5238),
-                            APIModel.BoardInfoV2(brdname: "Stock", title: "[股版] 發文請先詳閱版規", nuser: 254),
-                            APIModel.BoardInfoV2(brdname: "HatePolitics", title: "[政黑] 第三勢力先知王kusanagi02", nuser: 37890),
-                            APIModel.BoardInfoV2(brdname: "Baseball", title: "[棒球] 2020東奧六搶一在台灣", nuser: 598333),
-                            APIModel.BoardInfoV2(brdname: "Tech_Job", title: "[科技] 修機改善是設備終生職責", nuser: 20009),
-                            APIModel.BoardInfoV2(brdname: "LoL", title: "[LoL] PCS可憐哪", nuser: 12345),
-                            APIModel.BoardInfoV2(brdname: "Beauty", title: "[表特] 發文附圖", nuser: 5376),
-                        ])
                     }
                     weakSelf.initViewModel()
                     weakSelf.popularBoards.value = tempList

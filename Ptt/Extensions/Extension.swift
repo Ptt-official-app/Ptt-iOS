@@ -50,3 +50,17 @@ struct Utility {
         return (boardName, filename)
     }
 }
+
+extension UITableViewCell {
+    static func cellIdentifier() -> String {
+        return String(describing: self)
+    }
+}
+
+extension UIImageView {
+  func setImageColor(color: UIColor) {
+    let templateImage = self.image?.withRenderingMode(.alwaysTemplate)
+    self.image = templateImage
+    self.tintColor = color
+  }
+}

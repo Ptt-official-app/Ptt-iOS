@@ -15,9 +15,7 @@ protocol PopularBoardsView: BaseView {
 class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PopularBoardsView {
     
     var onBoardSelect: ((String) -> Void)?
-    
-    var allBoards : [String]? = nil
-    var boardListDict : [String: Any]? = nil
+    var boardListDict: [APIModel.BoardInfoV2]? = nil
     
     lazy var resultsTableController = configureResultsTableController()
     
@@ -49,7 +47,6 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
     lazy var searchController : UISearchController = {
         // For if #available(iOS 11.0, *), no need to set searchController as property (local variable is fine).
         let searchController = UISearchController(searchResultsController: resultsTableController)
-//        searchController.delegate = self
         searchController.searchResultsUpdater = self
         searchController.searchBar.delegate = self
         return searchController
@@ -153,76 +150,53 @@ extension PopularBoardsViewController: PopularBoardsViewModelDelegate {
     }
 }
 
-extension UITableViewCell {
-    static func cellIdentifier() -> String {
-        return String(describing: self)
-    }
-}
-
 extension PopularBoardsViewController: UISearchBarDelegate {
-
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         if boardListDict != nil {
             return
         }
         resultsTableController.activityIndicator.startAnimating()
-        var array = [String]()
-        APIClient.shared.getBoardList { [weak self] (result) in
+        
+        APIClient.shared.getBoardListV3(subPath: "boards", token: "") { [weak self] (result) in
             guard let weakSelf = self else { return }
             switch result {
-            case .failure(error: let error):
-                DispatchQueue.main.async {
-                    weakSelf.resultsTableController.activityIndicator.stopAnimating()
-                    weakSelf.searchController.isActive = false
-                    let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: error.message, preferredStyle: .alert)
-                    let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
-                    alert.addAction(confirm)
-                    weakSelf.present(alert, animated: true, completion: nil)
-                }
-            case .success(data: let data):
-                if let dict = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                    for (key, _) in dict {
-                        array.append(key)
+                case .failure(error: let error):
+                    DispatchQueue.main.async {
+                        weakSelf.resultsTableController.activityIndicator.stopAnimating()
+                        weakSelf.searchController.isActive = false
+                        let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: error.message, preferredStyle: .alert)
+                        let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
+                        alert.addAction(confirm)
+                        weakSelf.present(alert, animated: true, completion: nil)
                     }
-                    weakSelf.boardListDict = dict
-                }
-                weakSelf.allBoards = array
-                DispatchQueue.main.async {
-                    weakSelf.resultsTableController.activityIndicator.stopAnimating()
-                    // Update UI for current typed search text
-                    if let searchText = searchBar.text, searchText.count > 0 && weakSelf.resultsTableController.filteredBoards.count == 0 {
-                        weakSelf.updateSearchResults(for: weakSelf.searchController)
+                case .success(data: let data):
+                    weakSelf.boardListDict = data.list
+                    
+                    DispatchQueue.main.async {
+                        weakSelf.resultsTableController.activityIndicator.stopAnimating()
+                        // Update UI for current typed search text
+                        if let searchText = searchBar.text, searchText.count > 0 && weakSelf.resultsTableController.filteredBoards.count == 0 {
+                            weakSelf.updateSearchResults(for: weakSelf.searchController)
+                        }
                     }
-                }
             }
         }
     }
 }
 
 extension PopularBoardsViewController: UISearchResultsUpdating {
-
     func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text, let allBoards = self.allBoards, let boardListDict = self.boardListDict else {
+        guard let searchText = searchController.searchBar.text, let boardListDict = self.boardListDict else {
             return
         }
         resultsTableController.activityIndicator.startAnimating()
-        // Note: Using GCD here is imperfect but elegant. We'll have Search API later.
-        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
-            guard let weakSelf = self else { return }
-            let filteredBoards = allBoards.filter { $0.localizedCaseInsensitiveContains(searchText) }
-            var result = [Board]()
-            for filteredBoard in filteredBoards {
-                if let boardDesc = boardListDict[filteredBoard] as? [String: Any], let desc = boardDesc["中文敘述"] as? String {
-                    result.append(Board(name: filteredBoard, title: desc))
-                }
-            }
-            weakSelf.resultsTableController.filteredBoards = result
-            DispatchQueue.main.async {
-                // Only update UI for the matching result
-                if searchText == searchController.searchBar.text {
-                    weakSelf.resultsTableController.activityIndicator.stopAnimating()
-                    weakSelf.resultsTableController.tableView.reloadData()
-                }
+        let filteredBoards = boardListDict.filter { $0.brdname.localizedCaseInsensitiveContains(searchText) }
+        self.resultsTableController.filteredBoards = filteredBoards
+        DispatchQueue.main.async {
+            // Only update UI for the matching result
+            if searchText == searchController.searchBar.text {
+                self.resultsTableController.activityIndicator.stopAnimating()
+                self.resultsTableController.tableView.reloadData()
             }
         }
     }

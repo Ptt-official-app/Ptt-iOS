@@ -69,9 +69,9 @@ class BoardsTableViewCell: UITableViewCell {
 
 class FavoriteButton: UIButton {
 
-    var board : Board? = nil {
+    var board : APIModel.BoardInfoV2? = nil {
         didSet {
-            if let board = self.board, Favorite.boards.contains(where: { $0.name == board.name }) {
+            if let board = self.board, Favorite.boards.contains(where: { $0.brdname == board.brdname }) {
                 isSelected = true
             } else {
                 isSelected = false
@@ -82,13 +82,13 @@ class FavoriteButton: UIButton {
         didSet {
             if isSelected {
                 imageView?.tintColor = GlobalAppearance.tintColor
-                if let boardName = board?.name {
+                if let boardName = board?.brdname {
                     accessibilityLabel = boardName + NSLocalizedString("In favorite", comment: "")
                     accessibilityHint = NSLocalizedString("Removes", comment: "") + boardName + NSLocalizedString("from favorite.", comment: "")
                 }
             } else {
                 imageView?.tintColor = UIColor(hue: 0.667, saturation: 0.079, brightness: 0.4, alpha: 1)
-                if let boardName = board?.name {
+                if let boardName = board?.brdname {
                     accessibilityLabel = boardName + NSLocalizedString("Not in favorite", comment: "")
                     accessibilityHint = NSLocalizedString("Adds", comment: "") + boardName + NSLocalizedString("to favorite.", comment: "")
                 }

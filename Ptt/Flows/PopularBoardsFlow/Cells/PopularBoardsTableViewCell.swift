@@ -61,11 +61,3 @@ class PopularBoardsTableViewCell: BoardsTableViewCell {
         NSLayoutConstraint(item: nuserUIImageView, attribute: .top, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1.0, constant: 11).isActive = true
     }
 }
-
-extension UIImageView {
-  func setImageColor(color: UIColor) {
-    let templateImage = self.image?.withRenderingMode(.alwaysTemplate)
-    self.image = templateImage
-    self.tintColor = color
-  }
-}

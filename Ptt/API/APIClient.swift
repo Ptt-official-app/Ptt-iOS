@@ -200,14 +200,16 @@ extension APIClient: APIClientProtocol {
         task.resume()
     }
     
-    func getBoardListV3(subPath: String, token: String, querys: Dictionary<String, Any>, completion: @escaping (BoardListResultV2) -> Void) {
+    func getBoardListV3(subPath: String, token: String, querys: Dictionary<String, Any>=[:], completion: @escaping (BoardListResultV2) -> Void) {
         var urlComponent = tempURLComponents
         urlComponent.path = "/api/"+subPath
 
-//        urlComponent.queryItems = []
-//        for (key, value) in querys {
-//            urlComponent.queryItems?.append(URLQueryItem(name: key, value: value as? String))
-//        }
+        urlComponent.queryItems = []
+        if (querys.count > 0) {
+            for (key, value) in querys {
+                urlComponent.queryItems?.append(URLQueryItem(name: key, value: value as? String))
+            }
+        }
 
         guard let url = urlComponent.url else {
             assertionFailure()

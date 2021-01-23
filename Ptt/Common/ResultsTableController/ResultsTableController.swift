@@ -11,10 +11,12 @@ import UIKit
 class ResultsTableController : UITableViewController, FavoriteView {
 
     var onBoardSelect: ((String) -> Void)?
-    var filteredBoards = [Board]()
+    
+    lazy var filteredBoards: [APIModel.BoardInfoV2] = {
+        return [APIModel.BoardInfoV2]()
+    }()
+    
     let activityIndicator = UIActivityIndicatorView()
-
-    private let cellReuseIdentifier = "FavoriteCell"
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +29,7 @@ class ResultsTableController : UITableViewController, FavoriteView {
         tableView.estimatedRowHeight = 80.0
         tableView.separatorStyle = .none
         tableView.keyboardDismissMode = .onDrag // to dismiss from search bar
-        tableView.register(BoardsTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
+        tableView.register(BoardsTableViewCell.self, forCellReuseIdentifier: BoardsTableViewCell.cellIdentifier())
 
         activityIndicator.color = .lightGray
         tableView.ptt_add(subviews: [activityIndicator])
@@ -47,7 +49,7 @@ class ResultsTableController : UITableViewController, FavoriteView {
         case true:
             sender.isSelected = false
             if let boardToRemoved = sender.board,
-                let indexToRemoved = Favorite.boards.firstIndex(where: {$0.name == boardToRemoved.name}) {
+               let indexToRemoved = Favorite.boards.firstIndex(where: {$0.brdname == boardToRemoved.brdname}) {
                 Favorite.boards.remove(at: indexToRemoved)
             }
         }
@@ -61,11 +63,11 @@ class ResultsTableController : UITableViewController, FavoriteView {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! BoardsTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: BoardsTableViewCell.cellIdentifier(), for: indexPath) as! BoardsTableViewCell
         cell.favoriteButton.addTarget(self, action: #selector(addToFavorite), for: .touchUpInside)
         let index = indexPath.row
         if index < filteredBoards.count {
-            cell.boardName = filteredBoards[index].name
+            cell.boardName = filteredBoards[index].brdname
             cell.boardTitle = filteredBoards[index].title
             cell.favoriteButton.board = filteredBoards[index]
         }
@@ -77,7 +79,7 @@ class ResultsTableController : UITableViewController, FavoriteView {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
         if index < filteredBoards.count {
-            onBoardSelect?(filteredBoards[index].name)
+            onBoardSelect?(filteredBoards[index].brdname)
         }
     }
 }

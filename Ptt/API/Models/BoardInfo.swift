@@ -39,7 +39,7 @@ extension APIModel {
         let stat_attr: Int
         var level_idx: String? = nil
         
-        init(brdname: String, title: String, nuser: Int) {
+        init(brdname: String, title: String, nuser: Int = 0) {
             self.bid = "bid"
             self.brdname = brdname
             self.title = title
