@@ -29,7 +29,7 @@ class PopularBoardsViewModel {
     }
     
     func start() {
-        initViewModel()
+        
         APIClient.shared.getBoardListV3(subPath: subPath, token: token, querys: querys) { [weak self] (result) in
             guard let weakSelf = self else { return }
             switch result {
@@ -38,13 +38,15 @@ class PopularBoardsViewModel {
                     weakSelf.delegate?.showErrorAlert(errorMessage: apiError.message)
                     return
                 case .success(data: let data):
+                    var tempList: [APIModel.BoardInfoV2] = []
+                    
                     for item in data.list {
-                        weakSelf.popularBoards.value.append(item)
+//                        weakSelf.popularBoards.value.append(item)
+                        tempList.append(item)
                     }
                     
-                    //test
-                    if (weakSelf.popularBoards.value.count <= 2) {
-                        weakSelf.popularBoards.value.append(contentsOf: [
+                    if (tempList.count <= 2) {
+                        tempList.append(contentsOf: [
                             APIModel.BoardInfoV2(brdname: "Gossiping", title: "[八卦] 請協助置底協尋", nuser: 188),
                             APIModel.BoardInfoV2(brdname: "C_Chat", title: "[希洽] 養成好習慣 看文章前先ID", nuser: 4886),
                             APIModel.BoardInfoV2(brdname: "NBA", title: "[NBA] R.I.P. Mr. David Stern", nuser: 3760),
@@ -57,6 +59,8 @@ class PopularBoardsViewModel {
                             APIModel.BoardInfoV2(brdname: "Beauty", title: "[表特] 發文附圖", nuser: 5376),
                         ])
                     }
+                    weakSelf.initViewModel()
+                    weakSelf.popularBoards.value = tempList
                     return
             }
         }

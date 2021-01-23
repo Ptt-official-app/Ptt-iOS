@@ -97,7 +97,9 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
     
     func initBinding() {
         viewModel.popularBoards.addObserver(fireNow: false) { [weak self] (popularBoards) in
-            self?.tableview.reloadData()
+            if (popularBoards.count > 0) {
+                self?.tableview.reloadData()
+            }
         }
     }
     
