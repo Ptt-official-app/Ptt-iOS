@@ -56,8 +56,13 @@
 		CD731CD925BC8945008C43DA /* BoardsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD731CD425BC8945008C43DA /* BoardsTableViewCell.swift */; };
 		CD731CDA25BC8945008C43DA /* ResultsTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD731CD625BC8945008C43DA /* ResultsTableController.swift */; };
 		CD731CDB25BC8945008C43DA /* FavoriteStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD731CD825BC8945008C43DA /* FavoriteStruct.swift */; };
-    CD767B5625B0B8010050E12A /* TabBarPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD767B5525B0B8010050E12A /* TabBarPage.swift */; };
-
+		CD767B4225B0B6690050E12A /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD767B4125B0B6690050E12A /* Extension.swift */; };
+		CD767B5125B0B79B0050E12A /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD767B4F25B0B79B0050E12A /* UserDefaultsManager.swift */; };
+		CD767B5225B0B79B0050E12A /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD767B5025B0B79B0050E12A /* NotificationName.swift */; };
+		CD767B5625B0B8010050E12A /* TabBarPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD767B5525B0B8010050E12A /* TabBarPage.swift */; };
+		CD767B7825B0B9980050E12A /* AppearanceModeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD767B7525B0B9980050E12A /* AppearanceModeViewController.swift */; };
+		CD767B7925B0B9980050E12A /* LicenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD767B7625B0B9980050E12A /* LicenseViewController.swift */; };
+		CD767B7A25B0B9980050E12A /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD767B7725B0B9980050E12A /* SettingsViewController.swift */; };
 		EA41D65D243EF51A0052F4A1 /* FBPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA41D65C243EF51A0052F4A1 /* FBPageViewController.swift */; };
 
 		EA475F7523C4834C000867FE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F7423C4834C000867FE /* AppDelegate.swift */; };
@@ -68,14 +73,6 @@
 		EA475F8C23C4834C000867FE /* PttTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F8B23C4834C000867FE /* PttTests.swift */; };
 		EA475F9923C48CC1000867FE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EA475F9B23C48CC1000867FE /* Localizable.strings */; };
 		EA479EB42431F27C008A0D99 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA479EB32431F27C008A0D99 /* PostViewController.swift */; };
-
-		EA61C22C25AFD8F500C382B4 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA61C22B25AFD8F500C382B4 /* SettingsViewController.swift */; };
-		EA61C23025AFF16100C382B4 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA61C22F25AFF16100C382B4 /* UserDefaultsManager.swift */; };
-		EA61C23425B010FF00C382B4 /* AppearanceModeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA61C23325B010FF00C382B4 /* AppearanceModeViewController.swift */; };
-		EA61C23825B0200A00C382B4 /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA61C23725B0200A00C382B4 /* NotificationName.swift */; };
-		EA61C23C25B0230E00C382B4 /* LicenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA61C23B25B0230E00C382B4 /* LicenseViewController.swift */; };
-		EA62540E242DAAF600E977FE /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA62540D242DAAF600E977FE /* Extension.swift */; };
-
 		EA78E0C124050EB100309694 /* StyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA78E0C024050EB000309694 /* StyleKit.swift */; };
 		EA9DE10F2563A82200AEFC19 /* FullscreenSwipeBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9DE10E2563A82200AEFC19 /* FullscreenSwipeBack.swift */; };
 		EAA4F6F123C72B01005ABCE3 /* BoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA4F6F023C72B01005ABCE3 /* BoardViewController.swift */; };
@@ -145,7 +142,13 @@
 		CD731CD425BC8945008C43DA /* BoardsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardsTableViewCell.swift; sourceTree = "<group>"; };
 		CD731CD625BC8945008C43DA /* ResultsTableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultsTableController.swift; sourceTree = "<group>"; };
 		CD731CD825BC8945008C43DA /* FavoriteStruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteStruct.swift; sourceTree = "<group>"; };
-    CD767B5525B0B8010050E12A /* TabBarPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarPage.swift; sourceTree = "<group>"; };
+		CD767B4125B0B6690050E12A /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		CD767B4F25B0B79B0050E12A /* UserDefaultsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
+		CD767B5025B0B79B0050E12A /* NotificationName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
+		CD767B5525B0B8010050E12A /* TabBarPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarPage.swift; sourceTree = "<group>"; };
+		CD767B7525B0B9980050E12A /* AppearanceModeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearanceModeViewController.swift; sourceTree = "<group>"; };
+		CD767B7625B0B9980050E12A /* LicenseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LicenseViewController.swift; sourceTree = "<group>"; };
+		CD767B7725B0B9980050E12A /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		DBDA47B1E79A476E2E89A118 /* Pods_Ptt.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Ptt.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E84C05B084821F8B5031D3BD /* Pods_PttTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PttTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA41D65C243EF51A0052F4A1 /* FBPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBPageViewController.swift; sourceTree = "<group>"; };
@@ -163,13 +166,6 @@
 		EA475F9A23C48CC1000867FE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		EA475F9C23C48CC3000867FE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EA479EB32431F27C008A0D99 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
-
-		EA61C22B25AFD8F500C382B4 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		EA61C22F25AFF16100C382B4 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
-		EA61C23325B010FF00C382B4 /* AppearanceModeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceModeViewController.swift; sourceTree = "<group>"; };
-		EA61C23725B0200A00C382B4 /* NotificationName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
-		EA61C23B25B0230E00C382B4 /* LicenseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseViewController.swift; sourceTree = "<group>"; };
-		EA62540D242DAAF600E977FE /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 
 		EA78E0C024050EB000309694 /* StyleKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleKit.swift; sourceTree = "<group>"; };
 		EA9DE10E2563A82200AEFC19 /* FullscreenSwipeBack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullscreenSwipeBack.swift; sourceTree = "<group>"; };
@@ -530,10 +526,8 @@
 				EA475F7623C4834C000867FE /* SceneDelegate.swift */,
 				EA9DE10E2563A82200AEFC19 /* FullscreenSwipeBack.swift */,
 				EA78E0C024050EB000309694 /* StyleKit.swift */,
-
-				EA61C22F25AFF16100C382B4 /* UserDefaultsManager.swift */,
-				EA61C23725B0200A00C382B4 /* NotificationName.swift */,
-
+				CD767B5025B0B79B0050E12A /* NotificationName.swift */,
+				CD767B4F25B0B79B0050E12A /* UserDefaultsManager.swift */,
 				EA475F7D23C4834C000867FE /* Assets.xcassets */,
 				EA475F7F23C4834C000867FE /* LaunchScreen.storyboard */,
 				EA475F9B23C48CC1000867FE /* Localizable.strings */,
@@ -554,26 +548,6 @@
 			path = PttTests;
 			sourceTree = "<group>";
 		};
-
-		EAF6F68D25AFD87800F5DDC1 /* SettingsFlow */ = {
-			isa = PBXGroup;
-			children = (
-				EAF6F68E25AFD88600F5DDC1 /* Controllers */,
-			);
-			path = SettingsFlow;
-			sourceTree = "<group>";
-		};
-		EAF6F68E25AFD88600F5DDC1 /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				EA61C22B25AFD8F500C382B4 /* SettingsViewController.swift */,
-				EA61C23325B010FF00C382B4 /* AppearanceModeViewController.swift */,
-				EA61C23B25B0230E00C382B4 /* LicenseViewController.swift */,
-			);
-			path = Controllers;
-			sourceTree = "<group>";
-		};
-
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -750,12 +724,9 @@
 				3E29388125596BA900240C0F /* URLSessionProtocol.swift in Sources */,
 				EA479EB42431F27C008A0D99 /* PostViewController.swift in Sources */,
 				9B564C3D256AA0EB00787FD7 /* Router.swift in Sources */,
-
 				CD6C141825AB0C660043E7EC /* PopularBoardsViewModel.swift in Sources */,
-				CD694CF325A74F0400428DC9 /* PopularBoardsSceneFactoryProtocol.swift in Sources */,
-
 				EA41D65D243EF51A0052F4A1 /* FBPageViewController.swift in Sources */,
-
+				CD694CF325A74F0400428DC9 /* PopularBoardsSceneFactoryProtocol.swift in Sources */,
 				9B564C65256AA83100787FD7 /* TabBarView.swift in Sources */,
 				3E655288255960910026290B /* FullPost.swift in Sources */,
 				CD6C141125A9E8F40043E7EC /* PopularBoardsTableViewCell.swift in Sources */,
@@ -764,20 +735,16 @@
 				3E8D8C83258A511600346690 /* LoginToken.swift in Sources */,
 				3E65527125595F0D0026290B /* BoardInfo.swift in Sources */,
 				9B564C28256A9D7800787FD7 /* Coordinatorable.swift in Sources */,
-
 				CD731CDB25BC8945008C43DA /* FavoriteStruct.swift in Sources */,
 				CD694CF825A7608E00428DC9 /* PopularBoardsViewController.swift in Sources */,
-
-				EA61C23425B010FF00C382B4 /* AppearanceModeViewController.swift in Sources */,
-
 				9B564C2F256A9EAC00787FD7 /* Presentable.swift in Sources */,
 				3E65528C255960AE0026290B /* Comment.swift in Sources */,
 				9B564C71256AAF8000787FD7 /* TabBarCoordinator.swift in Sources */,
 				EA78E0C124050EB100309694 /* StyleKit.swift in Sources */,
-
 				CD767B5625B0B8010050E12A /* TabBarPage.swift in Sources */,
+				CD767B7825B0B9980050E12A /* AppearanceModeViewController.swift in Sources */,
+				CD767B7925B0B9980050E12A /* LicenseViewController.swift in Sources */,
 				9BEE1CB42584F644002A9D95 /* FBPageSceneFactoryProtocol.swift in Sources */,
-
 				9BEE1C972584E773002A9D95 /* BaseView.swift in Sources */,
 				3E65527D25595FD30026290B /* Board.swift in Sources */,
 				9BEE1CA22584E82E002A9D95 /* FavoriteSceneFactoryProtocol.swift in Sources */,
@@ -790,15 +757,10 @@
 				EA475F7923C4834C000867FE /* FavoriteViewController.swift in Sources */,
 				CD694CED25A74D3100428DC9 /* PopularBoardsCoordinator.swift in Sources */,
 				9B564C57256AA69500787FD7 /* CoordinatorFactory.swift in Sources */,
-
-				EA61C23025AFF16100C382B4 /* UserDefaultsManager.swift in Sources */,
-				EA62540E242DAAF600E977FE /* Extension.swift in Sources */,
+				CD767B5225B0B79B0050E12A /* NotificationName.swift in Sources */,
 				EA475F7523C4834C000867FE /* AppDelegate.swift in Sources */,
 				9B564C33256A9F3500787FD7 /* Routerable.swift in Sources */,
 				9BEE1C9E2584E7E1002A9D95 /* FavoriteCoordinator.swift in Sources */,
-				9B7D371C25A98E2E0058758E /* TabBarPage.swift in Sources */,
-				EA61C23825B0200A00C382B4 /* NotificationName.swift in Sources */,
-
 				EA475F7723C4834C000867FE /* SceneDelegate.swift in Sources */,
 				CD731CDA25BC8945008C43DA /* ResultsTableController.swift in Sources */,
 				9B564C6B256AA8C800787FD7 /* BaseCoordinator.swift in Sources */,
