@@ -30,9 +30,10 @@ final class AppearanceModeViewController: UITableViewController, FullscreenSwipe
 
         title = NSLocalizedString("Appearance Mode", comment: "")
         navigationController?.navigationBar.prefersLargeTitles = true
-        enableFullscreenSwipeBack()
-
+        view.backgroundColor = GlobalAppearance.backgroundColor
         tableView.register(SettingsTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
+
+        enableFullscreenSwipeBack()
     }
 
     // MARK: - UITableViewDataSource
@@ -78,6 +79,7 @@ final class AppearanceModeViewController: UITableViewController, FullscreenSwipe
             case .system:
                 cell.textLabel?.text = NSLocalizedString("Use System Default", comment: "")
                 let switchControl = UISwitch()
+                switchControl.onTintColor = GlobalAppearance.tintColor
                 switchControl.isOn = (UserDefaultsManager.appearanceMode() == .system)
                 switchControl.addTarget(self, action: #selector(useSystemDefault), for: .valueChanged)
                 cell.accessoryView = switchControl
@@ -91,15 +93,29 @@ final class AppearanceModeViewController: UITableViewController, FullscreenSwipe
                 if UserDefaultsManager.appearanceMode() == .light {
                     cell.accessoryType = .checkmark
                 }
+                updateColor(of: cell, for: .light)
             case .dark:
                 cell.textLabel?.text = NSLocalizedString("Dark", comment: "")
                 if UserDefaultsManager.appearanceMode() == .dark {
                     cell.accessoryType = .checkmark
                 }
+                updateColor(of: cell, for: .dark)
             }
         }
 
         return cell
+    }
+
+    /// Special cell customization for visual recognition
+    private func updateColor(of cell: UITableViewCell, for type: AppearanceModeCustomizationRow) {
+        switch type {
+        case .light:
+            cell.textLabel?.textColor = .darkText
+            cell.backgroundColor = UIColor(red: 0.89, green: 0.89, blue: 0.88, alpha: 1.00) // #E3E3E0, blackColor-28-28-31 light
+        case .dark:
+            cell.textLabel?.textColor = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
+            cell.backgroundColor = UIColor(red: 0.11, green: 0.11, blue: 0.12, alpha: 1.00) // #1C1C1F, blackColor-28-28-31 dark
+        }
     }
 
     // MARK: - UITableViewDelegate
