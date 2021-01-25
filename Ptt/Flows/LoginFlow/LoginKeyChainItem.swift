@@ -9,22 +9,20 @@
 import Foundation
 class LoginKeyChainItem: NSObject {
     
-    static let shared: LoginKeyChainItem = LoginKeyChainItem(service: "service", group: "group")
+    static let shared: LoginKeyChainItem = LoginKeyChainItem(service: "service")
     
     private var service = ""
-    private var group = ""
    
-    init(service: String, group: String) {
+    init(service: String) {
         super.init()
         self.service = service
-        self.group = group
     }
 
     func saveToken(_ token: String) -> Bool {
 
         let tokenData = token.data(using: String.Encoding.utf8)!
         let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
-                                    //kSecAttrAccount as String: account,
+                                    kSecAttrService as String: self.service,
                                     kSecValueData as String: tokenData]
         
         if readToken() != nil {
@@ -44,7 +42,8 @@ class LoginKeyChainItem: NSObject {
     }
     
     func removeToken() -> Bool {
-        let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,]
+        let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
+                                    kSecAttrService as String: self.service]
         let status = SecItemDelete(query as CFDictionary)
         if status == errSecSuccess {
             return true
@@ -56,7 +55,7 @@ class LoginKeyChainItem: NSObject {
         
     func readToken() -> String? {
         let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
-                                    //kSecAttrAccount as String: account,
+                                    kSecAttrService as String: self.service,
                                     kSecMatchLimit as String: kSecMatchLimitOne,
                                     kSecReturnData as String: kCFBooleanTrue!]
         
