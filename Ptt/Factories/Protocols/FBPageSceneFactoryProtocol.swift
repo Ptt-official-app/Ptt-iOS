@@ -1,5 +1,5 @@
 //
-//  HotTopicSceneFactoryProtocol.swift
+//  FBPageSceneFactoryProtocol.swift
 //  Ptt
 //
 //  Created by 賴彥宇 on 2020/12/12.
@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol HotTopicSceneFactoryProtocol {
-    func makeHotTopicView() -> HotTopicView
+protocol FBPageSceneFactoryProtocol {
+    func makeFBPageView() -> FBPageView
 }

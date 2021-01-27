@@ -9,22 +9,23 @@
 import Foundation
 
 final class SceneFactory: FavoriteSceneFactoryProtocol,
-                          HotTopicSceneFactoryProtocol,
-                          LoginSceneFactoryProtocol{
+                          FBPageSceneFactoryProtocol,
+                          LoginSceneFactoryProtocol
+                           {
     
     func makeLoginView() -> LoginView {
         let loginViewController = LoginViewController()
         return loginViewController
     }
-    
+
     func makeFavoriteView() -> FavoriteView {
         let favoriteViewController = FavoriteViewController()
         return favoriteViewController
     }
     
-    func makeHotTopicView() -> HotTopicView {
-        let hotTopicViewController = HotTopicViewController()
-        return hotTopicViewController
+    func makeFBPageView() -> FBPageView {
+        let fbPageViewController = FBPageViewController()
+        return fbPageViewController
     }
         
     func makeBoardView(withBoardName boardName: String) -> BoardView {

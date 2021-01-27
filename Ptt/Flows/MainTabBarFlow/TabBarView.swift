@@ -9,7 +9,7 @@
 import UIKit
 
 protocol TabBarView: class {
-    var onViewDidLoad: ((UINavigationController) -> Void)? { get set }
-    var onFavoriteFlowSelect: ((UINavigationController) -> Void)? { get set }
-    var onHotTopicFlowSelect: ((UINavigationController) -> Void)? { get set }
+    var selectedIndex: Int { get set }
+    
+    func setViewControllers(_ viewControllers: [UIViewController]?, animated: Bool)
 }

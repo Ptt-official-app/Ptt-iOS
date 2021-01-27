@@ -50,9 +50,10 @@ extension UINavigationController {
     /// Only required for iOS 12 or earlier
     override open var preferredStatusBarStyle: UIStatusBarStyle {
         if #available(iOS 13.0, *) {
-            // TODO: user preference for UserInterfaceStyle
             // For forward compatibility
-//            return .darkContent
+            if traitCollection.userInterfaceStyle == .light {
+                return .darkContent
+            }
         }
         return .lightContent
     }
@@ -77,13 +78,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = UINavigationController()
-        // TODO: user preference for UserInterfaceStyle
-        window.overrideUserInterfaceStyle = .dark
+        UserDefaultsManager.registerDefaultValues()
+        switch UserDefaultsManager.appearanceMode() {
+        case .system:
+            window.overrideUserInterfaceStyle = .unspecified
+        case .light:
+            window.overrideUserInterfaceStyle = .light
+        case .dark:
+            window.overrideUserInterfaceStyle = .dark
+        }
         GlobalAppearance.apply(to: window)
         self.window = window
         applicationCoordinator.start()
         window.makeKeyAndVisible()
-        
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

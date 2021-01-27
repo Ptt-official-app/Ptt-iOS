@@ -1,5 +1,5 @@
 //
-//  HotTopicViewController.swift
+//  FBPageViewController.swift
 //  Ptt
 //
 //  Created by denkeni on 2020/4/9.
@@ -9,9 +9,9 @@
 import UIKit
 import WebKit
 
-protocol HotTopicView: BaseView {}
+protocol FBPageView: BaseView {}
 
-final class HotTopicViewController: UIViewController, HotTopicView {
+final class FBPageViewController: UIViewController, FBPageView {
 
     private let webView = WKWebView()
     private let webProgressView = UIProgressView(progressViewStyle: .bar)
@@ -127,7 +127,7 @@ final class HotTopicViewController: UIViewController, HotTopicView {
     }
 }
 
-extension HotTopicViewController : WKNavigationDelegate {
+extension FBPageViewController : WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let url = navigationAction.request.url else { return }
