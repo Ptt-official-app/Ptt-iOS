@@ -54,7 +54,7 @@ class PopularBoardsTableViewCell: BoardsTableViewCell {
     func setConstraints() {
         contentView.ptt_add(subviews: [nuserLabel, nuserUIImageView])
 
-        NSLayoutConstraint(item: nuserLabel, attribute: .trailing, relatedBy: .equal, toItem: contentView, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: nuserLabel, attribute: .trailing, relatedBy: .equal, toItem: contentView, attribute: .trailing, multiplier: 1.0, constant: -20).isActive = true
         NSLayoutConstraint(item: nuserLabel, attribute: .top, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1.0, constant: 10).isActive = true
         NSLayoutConstraint(item: nuserLabel, attribute: .leading, relatedBy: .equal, toItem: nuserUIImageView, attribute: .trailing, multiplier: 1.0, constant: 4).isActive = true
 

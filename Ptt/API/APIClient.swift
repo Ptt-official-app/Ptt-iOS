@@ -200,7 +200,7 @@ extension APIClient: APIClientProtocol {
         task.resume()
     }
     
-    func getBoardListV3(subPath: String, token: String, querys: Dictionary<String, Any>=[:], completion: @escaping (BoardListResultV2) -> Void) {
+    func getPopularBoards(subPath: String, token: String, querys: Dictionary<String, Any>=[:], completion: @escaping (BoardListResultV2) -> Void) {
         var urlComponent = tempURLComponents
         urlComponent.path = "/api/"+subPath
 

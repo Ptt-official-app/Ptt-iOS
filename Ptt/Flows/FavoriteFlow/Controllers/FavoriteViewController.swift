@@ -141,12 +141,24 @@ extension FavoriteViewController: UISearchControllerDelegate {
 
 extension FavoriteViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        if boardListDict != nil {
+        resultsTableController.activityIndicator.startAnimating()
+        DispatchQueue.main.async {
+            self.resultsTableController.activityIndicator.stopAnimating()
+            // Update UI for current typed search text
+            if let searchText = searchBar.text, searchText.count > 0 && self.resultsTableController.filteredBoards.count == 0 {
+                self.updateSearchResults(for: self.searchController)
+            }
+        }
+    }
+}
+
+extension FavoriteViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text else {
             return
         }
         resultsTableController.activityIndicator.startAnimating()
-        
-        APIClient.shared.getBoardListV3(subPath: "boards", token: "") { [weak self] (result) in
+        APIClient.shared.getBoardListV2(token: "", keyword: searchText) { [weak self] (result) in
             guard let weakSelf = self else { return }
             switch result {
                 case .failure(error: let error):
@@ -159,33 +171,13 @@ extension FavoriteViewController: UISearchBarDelegate {
                         weakSelf.present(alert, animated: true, completion: nil)
                     }
                 case .success(data: let data):
-                    weakSelf.boardListDict = data.list
                     
+                    weakSelf.resultsTableController.filteredBoards = data.list
                     DispatchQueue.main.async {
+                        // Only update UI for the matching result
                         weakSelf.resultsTableController.activityIndicator.stopAnimating()
-                        // Update UI for current typed search text
-                        if let searchText = searchBar.text, searchText.count > 0 && weakSelf.resultsTableController.filteredBoards.count == 0 {
-                            weakSelf.updateSearchResults(for: weakSelf.searchController)
-                        }
+                        weakSelf.resultsTableController.tableView.reloadData()
                     }
-            }
-        }
-    }
-}
-
-extension FavoriteViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text, let boardListDict = self.boardListDict else {
-            return
-        }
-        resultsTableController.activityIndicator.startAnimating()
-        let filteredBoards = boardListDict.filter { $0.brdname.localizedCaseInsensitiveContains(searchText) }
-        self.resultsTableController.filteredBoards = filteredBoards
-        DispatchQueue.main.async {
-            // Only update UI for the matching result
-            if searchText == searchController.searchBar.text {
-                self.resultsTableController.activityIndicator.stopAnimating()
-                self.resultsTableController.tableView.reloadData()
             }
         }
     }

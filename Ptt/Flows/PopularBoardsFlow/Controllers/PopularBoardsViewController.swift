@@ -52,11 +52,6 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
         return searchController
     }()
     
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-        tableview.setEditing(editing, animated: animated)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
@@ -104,15 +99,8 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
         view.addSubview(tableview)
         NSLayoutConstraint(item: tableview, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: tableview, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
-        
-        if #available(iOS 11.0, *) {
-            NSLayoutConstraint(item: tableview, attribute: .bottom, relatedBy: .equal, toItem: view.safeAreaLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
-            NSLayoutConstraint(item: tableview, attribute: .top, relatedBy: .equal, toItem: view.safeAreaLayoutGuide, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
-        }
-        else {
-            NSLayoutConstraint(item: tableview, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
-            NSLayoutConstraint(item: tableview, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
-        }
+        NSLayoutConstraint(item: tableview, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: tableview, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -152,12 +140,24 @@ extension PopularBoardsViewController: PopularBoardsViewModelDelegate {
 
 extension PopularBoardsViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        if boardListDict != nil {
+        resultsTableController.activityIndicator.startAnimating()
+        DispatchQueue.main.async {
+            self.resultsTableController.activityIndicator.stopAnimating()
+            // Update UI for current typed search text
+            if let searchText = searchBar.text, searchText.count > 0 && self.resultsTableController.filteredBoards.count == 0 {
+                self.updateSearchResults(for: self.searchController)
+            }
+        }
+    }
+}
+
+extension PopularBoardsViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text else {
             return
         }
         resultsTableController.activityIndicator.startAnimating()
-        
-        APIClient.shared.getBoardListV3(subPath: "boards", token: "") { [weak self] (result) in
+        APIClient.shared.getBoardListV2(token: "", keyword: searchText) { [weak self] (result) in
             guard let weakSelf = self else { return }
             switch result {
                 case .failure(error: let error):
@@ -170,33 +170,13 @@ extension PopularBoardsViewController: UISearchBarDelegate {
                         weakSelf.present(alert, animated: true, completion: nil)
                     }
                 case .success(data: let data):
-                    weakSelf.boardListDict = data.list
                     
+                    weakSelf.resultsTableController.filteredBoards = data.list
                     DispatchQueue.main.async {
+                        // Only update UI for the matching result
                         weakSelf.resultsTableController.activityIndicator.stopAnimating()
-                        // Update UI for current typed search text
-                        if let searchText = searchBar.text, searchText.count > 0 && weakSelf.resultsTableController.filteredBoards.count == 0 {
-                            weakSelf.updateSearchResults(for: weakSelf.searchController)
-                        }
+                        weakSelf.resultsTableController.tableView.reloadData()
                     }
-            }
-        }
-    }
-}
-
-extension PopularBoardsViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text, let boardListDict = self.boardListDict else {
-            return
-        }
-        resultsTableController.activityIndicator.startAnimating()
-        let filteredBoards = boardListDict.filter { $0.brdname.localizedCaseInsensitiveContains(searchText) }
-        self.resultsTableController.filteredBoards = filteredBoards
-        DispatchQueue.main.async {
-            // Only update UI for the matching result
-            if searchText == searchController.searchBar.text {
-                self.resultsTableController.activityIndicator.stopAnimating()
-                self.resultsTableController.tableView.reloadData()
             }
         }
     }

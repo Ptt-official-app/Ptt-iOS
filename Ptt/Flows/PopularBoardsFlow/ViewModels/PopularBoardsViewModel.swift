@@ -28,7 +28,7 @@ class PopularBoardsViewModel {
     }
     
     func start() {
-        APIClient.shared.getBoardListV3(subPath: subPath, token: token) { [weak self] (result) in
+        APIClient.shared.getPopularBoards(subPath: subPath, token: token) { [weak self] (result) in
             guard let weakSelf = self else { return }
             switch result {
                 case .failure(error: let apiError):

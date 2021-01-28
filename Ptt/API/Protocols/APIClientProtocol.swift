@@ -29,5 +29,5 @@ protocol APIClientProtocol: class {
     ///   - completion: the list of board information
     func getBoardListV2(token: String, keyword: String, startIdx: String, max: Int, completion: @escaping (BoardListResultV2) -> Void)
     
-    func getBoardListV3(subPath: String, token: String, querys: Dictionary<String, Any>, completion: @escaping (BoardListResultV2) -> Void)
+    func getPopularBoards(subPath: String, token: String, querys: Dictionary<String, Any>, completion: @escaping (BoardListResultV2) -> Void)
 }
