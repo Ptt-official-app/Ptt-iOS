@@ -51,7 +51,6 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
 
         searchController.delegate = self
         searchController.searchResultsUpdater = self
-        searchController.searchBar.delegate = self
         definesPresentationContext = true
         if #available(iOS 13.0, *) {
             searchController.searchBar.searchTextField.textColor = UIColor(named: "textColor-240-240-247")
@@ -139,24 +138,9 @@ extension FavoriteViewController: UISearchControllerDelegate {
 
 }
 
-extension FavoriteViewController: UISearchBarDelegate {
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        resultsTableController.activityIndicator.startAnimating()
-        DispatchQueue.main.async {
-            self.resultsTableController.activityIndicator.stopAnimating()
-            // Update UI for current typed search text
-            if let searchText = searchBar.text, searchText.count > 0 && self.resultsTableController.filteredBoards.count == 0 {
-                self.updateSearchResults(for: self.searchController)
-            }
-        }
-    }
-}
-
 extension FavoriteViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text else {
-            return
-        }
+        guard let searchText = searchController.searchBar.text, searchText.count > 0  else { return }
         resultsTableController.activityIndicator.startAnimating()
         APIClient.shared.getBoardListV2(token: "", keyword: searchText) { [weak self] (result) in
             guard let weakSelf = self else { return }

@@ -48,7 +48,6 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
         // For if #available(iOS 11.0, *), no need to set searchController as property (local variable is fine).
         let searchController = UISearchController(searchResultsController: resultsTableController)
         searchController.searchResultsUpdater = self
-        searchController.searchBar.delegate = self
         return searchController
     }()
     
@@ -138,24 +137,9 @@ extension PopularBoardsViewController: PopularBoardsViewModelDelegate {
     }
 }
 
-extension PopularBoardsViewController: UISearchBarDelegate {
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        resultsTableController.activityIndicator.startAnimating()
-        DispatchQueue.main.async {
-            self.resultsTableController.activityIndicator.stopAnimating()
-            // Update UI for current typed search text
-            if let searchText = searchBar.text, searchText.count > 0 && self.resultsTableController.filteredBoards.count == 0 {
-                self.updateSearchResults(for: self.searchController)
-            }
-        }
-    }
-}
-
 extension PopularBoardsViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text else {
-            return
-        }
+        guard let searchText = searchController.searchBar.text, searchText.count > 0  else { return }
         resultsTableController.activityIndicator.startAnimating()
         APIClient.shared.getBoardListV2(token: "", keyword: searchText) { [weak self] (result) in
             guard let weakSelf = self else { return }

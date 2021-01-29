@@ -12,7 +12,13 @@ class PopularBoardsTableViewCell: BoardsTableViewCell {
 
     lazy var nuserLabel: UILabel = {
         let nuserLabel = UILabel()
-        nuserLabel.font = UIFont.systemFont(ofSize: 12)
+        nuserLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
+        
+        if #available(iOS 11.0, *) {
+            nuserLabel.textColor = UIColor(named: "textColor-240-240-247")!
+        } else {
+            nuserLabel.textColor = UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0)
+        }
         return nuserLabel
     }()
 
