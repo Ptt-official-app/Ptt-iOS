@@ -27,8 +27,10 @@ class APIClient {
     private var tempURLComponents : URLComponents {
         var urlComponent = URLComponents()
         urlComponent.scheme = "https"
-        urlComponent.host = "api.devptt.site"
-        urlComponent.port = 3457
+        if let address = URL(string: UserDefaultsManager.address()) {
+            urlComponent.host = address.host
+            urlComponent.port = address.port
+        }
         return urlComponent
     }
     
