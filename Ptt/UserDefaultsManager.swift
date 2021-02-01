@@ -11,7 +11,9 @@ import Foundation
 struct UserDefaultsManager {
 
     static func registerDefaultValues() {
-        UserDefaults.standard.register(defaults: [appearanceModeKey: appearanceModeDefault.rawValue])
+        UserDefaults.standard.register(defaults: [appearanceModeKey: appearanceModeDefault.rawValue,
+                                                  addressKey: addressDefault
+                                                  ])
     }
 }
 
@@ -35,5 +37,50 @@ extension UserDefaultsManager {
 
     static func setAppearanceMode(mode: AppearanceMode) {
         UserDefaults.standard.setValue(mode.rawValue, forKey: appearanceModeKey)
+    }
+}
+
+// MARK: - Site Address
+
+extension UserDefaultsManager {
+
+    private static let addressKey = "address"
+    private static let addressDefault = "https://api.devptt.site:3457"
+
+    private static func displayString(of address: String) -> String {
+        guard let url = URL(string: address), let host = url.host else {
+            return ""
+        }
+        if let port = url.port {
+            return "\(host):\(port)"
+        }
+        return "\(host)"
+    }
+
+    static var addressForDisplay : String {
+        return displayString(of: address())
+    }
+
+    static var addressDefaultForDisplay : String {
+        return displayString(of: addressDefault)
+    }
+
+    static func address() -> String {
+        guard let address = UserDefaults.standard.string(forKey: addressKey) else {
+            return addressDefault
+        }
+        return address
+    }
+
+    static func set(address: String) -> Bool {
+        var urlString = address
+        if !urlString.hasPrefix("https://") {
+            urlString.insert(contentsOf: "https://", at: urlString.startIndex)
+        }
+        guard let url = URL(string: urlString) else {
+            return false
+        }
+        UserDefaults.standard.setValue(url.absoluteString, forKey: addressKey)
+        return true
     }
 }

@@ -19,6 +19,10 @@
 "Light" = "Light";
 "Dark" = "Dark";
 "Customization Mode" = "Customization Mode";
+"Site Address" = "Site Address";
+"Change Site Address" = "Change Site Address";
+"Leave it blank for default value" = "Leave it blank for default value";
+"Wrong Format" = "Wrong Format";
 "Clear Cache" = "Clear Cache";
 "Are you sure to clear cache?" = "Are you sure to clear cache?";
 "Clear" = "Clear";

@@ -19,6 +19,10 @@
 "Light" = "淺色";
 "Dark" = "深色";
 "Customization Mode" = "自訂模式";
+"Site Address" = "站台位址";
+"Change Site Address" = "更改站台位址";
+"Leave it blank for default value" = "留空來回復預設值";
+"Wrong Format" = "格式錯誤";
 "Clear Cache" = "清除快取";
 "Are you sure to clear cache?" = "你確定要清除快取？";
 "Clear" = "清除";
