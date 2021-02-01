@@ -9,6 +9,7 @@
 import Foundation
 
 final class SceneFactory: FavoriteSceneFactoryProtocol,
+                          PopularBoardsSceneFactoryProtocol,
                           FBPageSceneFactoryProtocol {
     
     func makeFavoriteView() -> FavoriteView {
@@ -19,6 +20,11 @@ final class SceneFactory: FavoriteSceneFactoryProtocol,
     func makeFBPageView() -> FBPageView {
         let fbPageViewController = FBPageViewController()
         return fbPageViewController
+    }
+    
+    func makePopularBoardsView() -> PopularBoardsView {
+        let popularBoardsViewController = PopularBoardsViewController()
+        return popularBoardsViewController
     }
         
     func makeBoardView(withBoardName boardName: String) -> BoardView {

@@ -164,14 +164,14 @@ extension APIClient: APIClientProtocol {
     ///   - startIdx: starting idx, '' if fetch from the beginning.
     ///   - max: max number of the returned list, requiring <= 300
     ///   - completion: the list of board information
-    func getBoardListV2(token: String, keyword: String="", startIdx: String="", max: Int=300, completion: @escaping (BoardListResultV2) -> Void) {
+    func getBoardListV2(token: String, keyword: String="", startIdx: String="", max: Int=200, completion: @escaping (BoardListResultV2) -> Void) {
         var urlComponent = tempURLComponents
         urlComponent.path = "/api/boards"
         // Percent encoding is automatically done with RFC 3986
         urlComponent.queryItems = [
-            URLQueryItem(name: "keyword", value: keyword),
-            URLQueryItem(name: "startIdx", value: startIdx),
-            URLQueryItem(name: "max", value: "\(max)")
+            URLQueryItem(name: "title", value: keyword),
+            URLQueryItem(name: "start_idx", value: startIdx),
+            URLQueryItem(name: "limit", value: "\(max)")
         ]
         guard let url = urlComponent.url else {
             assertionFailure()
@@ -182,6 +182,44 @@ extension APIClient: APIClientProtocol {
         request.httpMethod = Method.GET.rawValue
         request.setValue("bearer \(token)", forHTTPHeaderField: "Authorization")
         
+        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
+            switch result {
+            case .failure(let apiError):
+                completion(.failure(apiError))
+            case .success(let resultData):
+                do {
+                    let list = try self.decoder.decode(APIModel.BoardInfoList.self, from: resultData)
+                    completion(.success(list))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(APIError(message: message)))
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    func getPopularBoards(subPath: String, token: String, querys: Dictionary<String, Any>=[:], completion: @escaping (BoardListResultV2) -> Void) {
+        var urlComponent = tempURLComponents
+        urlComponent.path = "/api/"+subPath
+
+        urlComponent.queryItems = []
+        if (querys.count > 0) {
+            for (key, value) in querys {
+                urlComponent.queryItems?.append(URLQueryItem(name: key, value: value as? String))
+            }
+        }
+
+        guard let url = urlComponent.url else {
+            assertionFailure()
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.GET.rawValue
+//        request.setValue("bearer \(token)", forHTTPHeaderField: "Authorization")
+
         let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
             let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
             switch result {
