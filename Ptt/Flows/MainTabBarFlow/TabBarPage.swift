@@ -21,9 +21,9 @@ enum TabBarPage {
         case 1:
             self = .fbPage
         case 2:
-            self = .settings
-        case 3:
             self = .popular
+        case 3:
+            self = .settings
         default:
             return nil
         }
@@ -35,9 +35,9 @@ enum TabBarPage {
             return 0
         case .fbPage:
             return 1
-        case .settings:
-            return 2
         case .popular:
+            return 2
+        case .settings:
             return 3
         }
     }
