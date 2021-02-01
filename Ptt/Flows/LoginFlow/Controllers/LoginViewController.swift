@@ -150,12 +150,11 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         let title = NSLocalizedString("註冊", comment:"")
         
         let attr: [NSAttributedString.Key : Any] = [
-           .foregroundColor: UIColor.white,
             .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline) //UIFont(name: "HelveticaNeue-Bold", size: 16)!
         ]
         
-        button.setTitle(title, with: nil, with: self.paleGrey, for: UIControl.State.selected)
-        button.setTitle(title, with: nil, with: self.slateGrey, for: UIControl.State.normal)
+        button.setTitle(title, with: nil, with: text_color, for: UIControl.State.selected)
+        button.setTitle(title, with: nil, with: .systemGray, for: UIControl.State.normal)
         
         button.isSelected = false
         return button
@@ -167,21 +166,20 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         let title = NSLocalizedString("登入", comment:"")
 
         let attr: [NSAttributedString.Key : Any] = [
-            .foregroundColor: self.paleGrey,
            .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline) // UIFont(name: "HelveticaNeue-Bold", size: 16)!
         ]
-        button.setTitle(title, with: nil, with: self.paleGrey, for: UIControl.State.selected)
-        button.setTitle(title, with: nil, with: self.slateGrey, for: UIControl.State.normal)
+        button.setTitle(title, with: nil, with: text_color, for: UIControl.State.selected)
+        button.setTitle(title, with: nil, with: .systemGray, for: UIControl.State.normal)
 
         button.isSelected = true
         
         return button
     }()
     
-    var lbLine:ASTextNode =  {
+    lazy var lbLine:ASTextNode =  {
         let label = ASTextNode()
         let attr:[NSAttributedString.Key : Any] = [
-            .foregroundColor: UIColor.white,
+            .foregroundColor: self.text_color,
             .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline)// UIFont(name: "HelveticaNeue-Bold", size: 16)!
         ]
         
@@ -190,7 +188,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         return label
     }()
     
-    var lbTitle:ASTextNode =  {
+    lazy var lbTitle:ASTextNode =  {
         let label = ASTextNode()
         let paragraphStyle = NSMutableParagraphStyle.init()
         paragraphStyle.alignment = .left
@@ -198,7 +196,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         paragraphStyle.lineSpacing = 0
         let attributes = [
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.title1), //UIFont.boldSystemFont(ofSize: 24),
-            //NSAttributedString.Key.foregroundColor:
+            NSAttributedString.Key.foregroundColor: self.text_color,
             NSAttributedString.Key.paragraphStyle: paragraphStyle
         ]
         
@@ -210,9 +208,10 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     lazy var tfUsername = ASDisplayNode.init { () -> UIView in
         var textField:TextFieldWithPadding = TextFieldWithPadding()
         textField.background = self.backgroundImg(color: self.textfield_backgroundcolor)
+
         let title = NSLocalizedString("User Id", comment: "")
         let attr:[NSAttributedString.Key : Any] = [
-            NSAttributedString.Key.foregroundColor: self.slateGrey,
+            NSAttributedString.Key.foregroundColor: UIColor.systemGray,
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)//UIFont.systemFont(ofSize: 12)
         ]
         textField.attributedPlaceholder = NSAttributedString.init(string: title, attributes:attr)
@@ -220,6 +219,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         textField.clipsToBounds = true
         
         textField.delegate = self
+        textField.textColor = UIColor.black
         
         textField.text = "SYSOP"
         return textField
@@ -242,7 +242,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         
         let title = NSLocalizedString("Password", comment: "")
         let attr = [
-            NSAttributedString.Key.foregroundColor: self.slateGrey,
+            NSAttributedString.Key.foregroundColor: UIColor.systemGray,
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1
             )//UIFont.systemFont(ofSize: 12)
         ]
@@ -251,8 +251,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         
         textField.layer.cornerRadius = 15
         textField.clipsToBounds = true
-
-
+        textField.textColor = UIColor.black
+        
         textField.text = "123123"
         
         textField.rightViewMode = .always
@@ -303,7 +303,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     }
 
     
-    
+
     @objc func togglePassword() {
         self.btnTooglePassword.isSelected = !self.btnTooglePassword.isSelected
         if let tf = tfPassword.view as? UITextField {
@@ -388,7 +388,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1
             )// UIFont.systemFont(ofSize: 12)
         ]
-        button.backgroundColor = self.slateGrey
+        button.backgroundColor = UIColor.systemGray
         button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
         
         button.layer.cornerRadius = 15
@@ -401,7 +401,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         let button = ASButtonNode()
         let title = NSLocalizedString("Forget", comment:"")
         let attr = [
-            NSAttributedString.Key.foregroundColor: self.slateGrey,
+            NSAttributedString.Key.foregroundColor: UIColor.systemGray,
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1
             )// UIFont.systemFont(ofSize: 12)
         ]
@@ -409,22 +409,22 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         return button
     }()
     
-    var textfield_backgroundcolor : UIColor {
+    
+    
+    var text_color : UIColor {
         if #available(iOS 11.0, *) {
-            return UIColor(red: 42/255, green: 42/255, blue: 48/255, alpha: 1.0)
-            //return UIColor(named: "tintColor-42-42-48")
+            return UIColor(named: "textColor-240-240-247")!
         } else {
             return UIColor(red: 42/255, green: 42/255, blue: 48/255, alpha: 1.0)
         }
     }
     
-    // todo: add to assets
-    var slateGrey:UIColor {
-        return UIColor(red: 94/255, green: 94/255, blue: 102/255, alpha: 1.0)
-    }
-    
-    var paleGrey:UIColor {
-        return UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
+    var textfield_backgroundcolor : UIColor {
+        if #available(iOS 11.0, *) {
+            return UIColor(named: "blackColor-28-28-31")!
+        } else {
+            return UIColor(red: 28/255, green: 28/255, blue: 31/255, alpha: 1.0)
+        }
     }
 }
 
