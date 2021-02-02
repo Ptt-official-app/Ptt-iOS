@@ -100,7 +100,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         let stack = self.init_layout()
         
         self.scrollNode.automaticallyManagesSubnodes = true
-        self.scrollNode.automaticallyManagesContentSize = true
+        self.scrollNode.automaticallyManagesContentSize = false // false: can't scroll by user but keyboard
         self.scrollNode.view.showsHorizontalScrollIndicator = false
         self.scrollNode.view.showsVerticalScrollIndicator = false
         
@@ -114,7 +114,14 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         
         node.automaticallyManagesSubnodes = true
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+    }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+    }
     
     @objc func switchTypeRegister(_ button:ASButtonNode) {
         
@@ -147,7 +154,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     lazy var btnTypeRegister:ASButtonNode = {
         let button = ASButtonNode()
-        let title = NSLocalizedString("註冊", comment:"")
+        let title = NSLocalizedString("Register", comment:"")
         
         let attr: [NSAttributedString.Key : Any] = [
             .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline) //UIFont(name: "HelveticaNeue-Bold", size: 16)!
@@ -163,7 +170,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     lazy var btnTypeLogin:ASButtonNode = {
         let button = ASButtonNode()
-        let title = NSLocalizedString("登入", comment:"")
+        let title = NSLocalizedString("Login", comment:"")
 
         let attr: [NSAttributedString.Key : Any] = [
            .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline) // UIFont(name: "HelveticaNeue-Bold", size: 16)!
@@ -358,7 +365,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
                 switch (result) {
                 case .failure(let error):
                     print(error)
-                    self.showAlert(title: "Error", msg: "登入失敗")
+                    self.showAlert(title: NSLocalizedString("Error", comment: ""), msg: NSLocalizedString("Login", comment: "") + NSLocalizedString("Error", comment: ""))
                 case .success(let token):
                     print(token.access_token)
                     self.onLoginSuccess(token: token.access_token)
@@ -429,15 +436,24 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
 }
 
 extension LoginViewController: UITextFieldDelegate {
-    public func textFieldDidBeginEditing(_ textField: UITextField) {
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            let keyboardHeight = keyboardRectangle.height
+            scrollViewToFitKeyboard(Int(keyboardHeight))
+        }
+    }
+    
+    func scrollViewToFitKeyboard(_ lastKeyboardHeight:Int){
         let screenHeight = Int(self.view.bounds.height)
-        let keyboardHeight = 253+50 // todo: get keyboard height from addObserver
+        let keyboardHeight:Int = lastKeyboardHeight + Int( self.btnLogin.frame.height)
         let margin_to_keyboard = 10
         let diff = Int(btnLogin.view.frame.origin.y) - (screenHeight-keyboardHeight) + margin_to_keyboard
         
-        print("screen height=", UIScreen.main.bounds.height)
-        print("btn login pos=", btnLogin.view.frame.origin, btnLogin.view.bounds)
-        print("screen diff=", diff)
+//        print("screen height=", UIScreen.main.bounds.height)
+//        print("btn login pos=", btnLogin.view.frame.origin, btnLogin.view.bounds)
+//        print("screen diff=", diff)
         
         if ( diff > 0){
             let point = CGPoint(x: 0, y: Int(diff) )

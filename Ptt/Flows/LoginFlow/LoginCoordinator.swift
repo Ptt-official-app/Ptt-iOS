@@ -43,7 +43,7 @@ extension LoginCoordinator {
 //            addDependency(coordinator)
 //            router.setRootModule(module, hideBar: true)
 //            coordinator.start()
-            finshFlow?();
+            finshFlow?()
         }
         
         router.setRootModule(loginView, hideBar: true)

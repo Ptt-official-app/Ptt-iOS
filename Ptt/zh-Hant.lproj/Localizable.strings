@@ -34,6 +34,11 @@
 "Confirm" = "確認";
 "Cancel" = "取消";
 
+"Login" = "登入";
+"Forget" = "忘記密碼";
+"Register" = "註冊";
+
+
 /* VoiceOver */
 "In favorite" = "已加入最愛";
 "Not in favorite" = "未加入最愛";
