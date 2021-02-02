@@ -8,56 +8,6 @@
 
 import UIKit
 
-struct Board : Codable {
-
-    let name : String
-    let title : String
-}
-
-struct Favorite {
-
-    // TODO: Switch to Ptt API later
-    private static let savePath : URL? = {
-        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-            let path = dir.appendingPathComponent("favoriteBoardsData")
-            return path
-        }
-        assertionFailure()
-        return nil
-    }()
-    static var boards : [Board] = {
-        guard let url = savePath,
-            let data = try? Data(contentsOf: url),
-            let boards = try? JSONDecoder().decode([Board].self, from: data) else {
-                return [Board(name: "Gossiping", title: "【八卦】 請協助置底協尋"),
-                        Board(name: "C_Chat", title: "[希洽] 養成好習慣 看文章前先ID"),
-                        Board(name: "NBA", title: "[NBA] R.I.P. Mr. David Stern"),
-                        Board(name: "Lifeismoney", title: "[省錢] 省錢板"),
-                        Board(name: "Stock", title: "[股版]發文請先詳閱版規"),
-                        Board(name: "HatePolitics", title: "[政黑] 第三勢力先知王kusanagi02"),
-                        Board(name: "Baseball", title: "[棒球] 2020東奧六搶一在台灣"),
-                        Board(name: "Tech_Job", title: "[科技] 修機改善是設備終生職責"),
-                        Board(name: "LoL", title: "[LoL] PCS可憐哪"),
-                        Board(name: "Beauty", title: "《表特板》發文附圖")]
-        }
-        return boards
-        }() {
-        willSet {
-            guard let data = try? JSONEncoder().encode(newValue), let url = savePath else {
-                assertionFailure()
-                return
-            }
-            do {
-                try data.write(to: url)
-            } catch (let error) {
-                assertionFailure(error.localizedDescription)
-            }
-        }
-    }
-}
-
-// MARK: -
-
 protocol FavoriteView: BaseView {
     var onBoardSelect: ((String) -> Void)? { get set }
     var onLogout:(() -> Void)? { get set }
@@ -73,8 +23,8 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
         // For if #available(iOS 11.0, *), no need to set searchController as property (local variable is fine).
        return UISearchController(searchResultsController: resultsTableController)
     }()
-    private var allBoards : [String]? = nil
-    private var boardListDict : [String: Any]? = nil
+    
+    private var boardListDict : [APIModel.BoardInfoV2]? = nil
 
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
@@ -100,11 +50,10 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
         tableView.estimatedRowHeight = 80.0
         tableView.separatorStyle = .none
         tableView.keyboardDismissMode = .onDrag // to dismiss from search bar
-        tableView.register(FavoriteTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
+        tableView.register(BoardsTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
 
         searchController.delegate = self
         searchController.searchResultsUpdater = self
-        searchController.searchBar.delegate = self
         definesPresentationContext = true
         if #available(iOS 13.0, *) {
             searchController.searchBar.searchTextField.textColor = UIColor(named: "textColor-240-240-247")
@@ -157,10 +106,10 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! FavoriteTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! BoardsTableViewCell
         let index = indexPath.row
         if index < Favorite.boards.count {
-            cell.boardName = Favorite.boards[index].name
+            cell.boardName = Favorite.boards[index].brdname
             cell.boardTitle = Favorite.boards[index].title
         }
         return cell
@@ -193,7 +142,7 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
         if index < Favorite.boards.count {
-            onBoardSelect?(Favorite.boards[index].name)
+            onBoardSelect?(Favorite.boards[index].brdname)
         }
     }
     
@@ -208,258 +157,31 @@ extension FavoriteViewController: UISearchControllerDelegate {
 
 }
 
-extension FavoriteViewController: UISearchBarDelegate {
-
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        if boardListDict != nil {
-            return
-        }
+extension FavoriteViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text, searchText.count > 0  else { return }
         resultsTableController.activityIndicator.startAnimating()
-        var array = [String]()
-        APIClient.shared.getBoardList { [weak self] (result) in
+        APIClient.shared.getBoardListV2(token: "", keyword: searchText) { [weak self] (result) in
             guard let weakSelf = self else { return }
             switch result {
-            case .failure(error: let error):
-                DispatchQueue.main.async {
-                    weakSelf.resultsTableController.activityIndicator.stopAnimating()
-                    weakSelf.searchController.isActive = false
-                    let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: error.message, preferredStyle: .alert)
-                    let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
-                    alert.addAction(confirm)
-                    weakSelf.present(alert, animated: true, completion: nil)
-                }
-            case .success(data: let data):
-                if let dict = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                    for (key, _) in dict {
-                        array.append(key)
+                case .failure(error: let error):
+                    DispatchQueue.main.async {
+                        weakSelf.resultsTableController.activityIndicator.stopAnimating()
+                        weakSelf.searchController.isActive = false
+                        let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: error.message, preferredStyle: .alert)
+                        let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
+                        alert.addAction(confirm)
+                        weakSelf.present(alert, animated: true, completion: nil)
                     }
-                    weakSelf.boardListDict = dict
-                }
-                weakSelf.allBoards = array
-                DispatchQueue.main.async {
-                    weakSelf.resultsTableController.activityIndicator.stopAnimating()
-                    // Update UI for current typed search text
-                    if let searchText = searchBar.text, searchText.count > 0 && weakSelf.resultsTableController.filteredBoards.count == 0 {
-                        weakSelf.updateSearchResults(for: weakSelf.searchController)
+                case .success(data: let data):
+                    
+                    weakSelf.resultsTableController.filteredBoards = data.list
+                    DispatchQueue.main.async {
+                        // Only update UI for the matching result
+                        weakSelf.resultsTableController.activityIndicator.stopAnimating()
+                        weakSelf.resultsTableController.tableView.reloadData()
                     }
-                }
             }
         }
-    }
-}
-
-extension FavoriteViewController: UISearchResultsUpdating {
-
-    func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text, let allBoards = self.allBoards, let boardListDict = self.boardListDict else {
-            return
-        }
-        resultsTableController.activityIndicator.startAnimating()
-        // Note: Using GCD here is imperfect but elegant. We'll have Search API later.
-        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
-            guard let weakSelf = self else { return }
-            let filteredBoards = allBoards.filter { $0.localizedCaseInsensitiveContains(searchText) }
-            var result = [Board]()
-            for filteredBoard in filteredBoards {
-                if let boardDesc = boardListDict[filteredBoard] as? [String: Any], let desc = boardDesc["中文敘述"] as? String {
-                    result.append(Board(name: filteredBoard, title: desc))
-                }
-            }
-            weakSelf.resultsTableController.filteredBoards = result
-            DispatchQueue.main.async {
-                // Only update UI for the matching result
-                if searchText == searchController.searchBar.text {
-                    weakSelf.resultsTableController.activityIndicator.stopAnimating()
-                    weakSelf.resultsTableController.tableView.reloadData()
-                }
-            }
-        }
-    }
-}
-
-// MARK: -
-
-private final class ResultsTableController : UITableViewController, FavoriteView {
-
-    var onLogout: (() -> Void)?
-    var onBoardSelect: ((String) -> Void)?
-    var filteredBoards = [Board]()
-    let activityIndicator = UIActivityIndicatorView()
-
-    private let cellReuseIdentifier = "FavoriteCell"
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        view.backgroundColor = GlobalAppearance.backgroundColor
-        if #available(iOS 13.0, *) {
-        } else {
-            tableView.indicatorStyle = .white
-        }
-        tableView.estimatedRowHeight = 80.0
-        tableView.separatorStyle = .none
-        tableView.keyboardDismissMode = .onDrag // to dismiss from search bar
-        tableView.register(FavoriteTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
-
-        activityIndicator.color = .lightGray
-        tableView.ptt_add(subviews: [activityIndicator])
-        NSLayoutConstraint.activate([
-            activityIndicator.topAnchor.constraint(equalTo: tableView.topAnchor, constant: 20.0),
-            activityIndicator.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
-        ])
-    }
-
-    @objc private func addToFavorite(sender: FavoriteButton) {
-        switch sender.isSelected {
-        case false:
-            sender.isSelected = true
-            if let boardToAdded = sender.board {
-                Favorite.boards.append(boardToAdded)
-            }
-        case true:
-            sender.isSelected = false
-            if let boardToRemoved = sender.board,
-                let indexToRemoved = Favorite.boards.firstIndex(where: {$0.name == boardToRemoved.name}) {
-                Favorite.boards.remove(at: indexToRemoved)
-            }
-        }
-        NotificationCenter.default.post(name: NSNotification.Name("didUpdateFavoriteBoards"), object: nil)
-    }
-
-    // MARK: UITableViewDataSource
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredBoards.count
-    }
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! FavoriteTableViewCell
-        cell.favoriteButton.addTarget(self, action: #selector(addToFavorite), for: .touchUpInside)
-        let index = indexPath.row
-        if index < filteredBoards.count {
-            cell.boardName = filteredBoards[index].name
-            cell.boardTitle = filteredBoards[index].title
-            cell.favoriteButton.board = filteredBoards[index]
-        }
-        return cell
-    }
-
-    // MARK: UITableViewDelegate
-
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let index = indexPath.row
-        if index < filteredBoards.count {
-            onBoardSelect?(filteredBoards[index].name)
-        }
-    }
-}
-
-// MARK: -
-
-private final class FavoriteTableViewCell: UITableViewCell {
-
-    var boardName : String? {
-        didSet {
-            boardNameLabel.text = boardName
-        }
-    }
-    var boardTitle : String? {
-        didSet {
-            boardTitleLabel.text = boardTitle
-        }
-    }
-    lazy var favoriteButton : FavoriteButton = {
-        let button = FavoriteButton()
-        contentView.ptt_add(subviews: [button])
-        NSLayoutConstraint.activate([
-            button.topAnchor.constraint(equalTo: contentView.topAnchor),
-            button.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            button.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            button.widthAnchor.constraint(equalTo: button.heightAnchor)
-        ])
-        return button
-    }()
-    private let boardNameLabel = UILabel()
-    private let boardTitleLabel = UILabel()
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
-
-        backgroundColor = GlobalAppearance.backgroundColor
-        boardNameLabel.font = UIFont.preferredFont(forTextStyle: .title2)
-        boardTitleLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
-        if #available(iOS 11.0, *) {
-            boardNameLabel.textColor = UIColor(named: "textColor-240-240-247")
-            boardTitleLabel.textColor = UIColor(named: "textColorGray")
-        } else {
-            boardNameLabel.textColor = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
-            boardTitleLabel.textColor = .systemGray
-        }
-
-        contentView.ptt_add(subviews: [boardNameLabel, boardTitleLabel])
-        let viewsDict = ["boardNameLabel": boardNameLabel, "boardTitleLabel": boardTitleLabel]
-        let metrics = ["hp": 20, "vp": 10, "vps": 4]
-        var constraints = [NSLayoutConstraint]()
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(hp)-[boardNameLabel]-|",
-                                                      options: [], metrics: metrics, views: viewsDict)
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(hp)-[boardTitleLabel]-|",
-                                                      options: [], metrics: metrics, views: viewsDict)
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|-(vp)-[boardNameLabel]-(vps)-[boardTitleLabel]-(vp)-|",
-                                                      options: [], metrics: metrics, views: viewsDict)
-        NSLayoutConstraint.activate(constraints)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-// MARK: -
-
-private final class FavoriteButton : UIButton {
-
-    var board : Board? = nil {
-        didSet {
-            if let board = self.board, Favorite.boards.contains(where: { $0.name == board.name }) {
-                isSelected = true
-            } else {
-                isSelected = false
-            }
-        }
-    }
-    override var isSelected : Bool {
-        didSet {
-            if isSelected {
-                imageView?.tintColor = GlobalAppearance.tintColor
-                if let boardName = board?.name {
-                    accessibilityLabel = boardName + NSLocalizedString("In favorite", comment: "")
-                    accessibilityHint = NSLocalizedString("Removes", comment: "") + boardName + NSLocalizedString("from favorite.", comment: "")
-                }
-            } else {
-                imageView?.tintColor = UIColor(hue: 0.667, saturation: 0.079, brightness: 0.4, alpha: 1)
-                if let boardName = board?.name {
-                    accessibilityLabel = boardName + NSLocalizedString("Not in favorite", comment: "")
-                    accessibilityHint = NSLocalizedString("Adds", comment: "") + boardName + NSLocalizedString("to favorite.", comment: "")
-                }
-            }
-        }
-    }
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-
-        let image = StyleKit.imageOfFavorite()
-        setImage(image.withRenderingMode(.alwaysTemplate), for: .normal)
-        isSelected = false
-        showsTouchWhenHighlighted = true    // comment me for easier view hierarchy debugging
-        if #available(iOS 11.0, *) {
-            adjustsImageSizeForAccessibilityContentSizeCategory = true
-        } else {
-            // Sorry, iOS 10.
-        }
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

@@ -14,7 +14,7 @@ private enum SettingsSection : Int, CaseIterable {
 }
 
 private enum SettingsMainRow : Int, CaseIterable {
-    case appearance, cache
+    case appearance, address, cache
 }
 
 private enum SettingsAboutRow : Int, CaseIterable {
@@ -111,6 +111,10 @@ final class SettingsViewController: UITableViewController {
                 case .dark:
                     cell.detailTextLabel?.text = NSLocalizedString("Dark", comment: "")
                 }
+            case .address:
+                cell.textLabel?.text = NSLocalizedString("Site Address", comment: "")
+                cell.detailTextLabel?.text = UserDefaultsManager.addressForDisplay
+                cell.type = .disclosure
             case .cache:
                 cell.textLabel?.text = NSLocalizedString("Clear Cache", comment: "")
                 cell.type = .action
@@ -150,6 +154,36 @@ final class SettingsViewController: UITableViewController {
                     alert.addAction(confirm)
                     present(alert, animated: true, completion: nil)
                 }
+            case .address:
+                tableView.deselectRow(at: indexPath, animated: true)
+                let prompt = UIAlertController(title: NSLocalizedString("Change Site Address", comment: ""),
+                                              message: NSLocalizedString("Leave it blank for default value", comment: ""),
+                                              preferredStyle: .alert)
+                prompt.addTextField { (textField) in
+                    textField.placeholder = UserDefaultsManager.addressDefaultForDisplay
+                }
+                let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default) { (action) in
+                    guard var text = prompt.textFields?.first?.text else { return }
+                    if text == "" {
+                        text = UserDefaultsManager.addressDefaultForDisplay
+                    }
+                    let success = UserDefaultsManager.set(address: text)
+                    if !success {
+                        let alert = UIAlertController(title: NSLocalizedString("Wrong Format", comment: ""), message: nil, preferredStyle: .alert)
+                        let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
+                        alert.addAction(confirm)
+                        self.present(alert, animated: true, completion: nil)
+                        return
+                    }
+                    let indexPath = IndexPath(row: SettingsMainRow.address.rawValue,
+                                              section: SettingsSection.main.rawValue)
+                    tableView.reloadRows(at: [indexPath], with: .automatic)
+                }
+                let cancel = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil)
+                prompt.addAction(confirm)
+                prompt.addAction(cancel)
+                present(prompt, animated: true, completion: nil)
+                break
             case .cache:
                 tableView.deselectRow(at: indexPath, animated: true)
                 let alert = UIAlertController(title: NSLocalizedString("Are you sure to clear cache?", comment: ""), message: nil, preferredStyle: .alert)

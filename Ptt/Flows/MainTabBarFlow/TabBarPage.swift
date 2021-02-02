@@ -12,6 +12,7 @@ enum TabBarPage {
     case favorite
     case fbPage
     case settings
+    case popular
     
     init?(index: Int) {
         switch index {
@@ -20,6 +21,8 @@ enum TabBarPage {
         case 1:
             self = .fbPage
         case 2:
+            self = .popular
+        case 3:
             self = .settings
         default:
             return nil
@@ -32,8 +35,10 @@ enum TabBarPage {
             return 0
         case .fbPage:
             return 1
-        case .settings:
+        case .popular:
             return 2
+        case .settings:
+            return 3
         }
     }
     
@@ -46,6 +51,8 @@ enum TabBarPage {
             return "FB Page"
         case .settings:
             return "Settings"
+        case .popular:
+            return "Popular Boards"
         }
     }
     
@@ -63,6 +70,8 @@ enum TabBarPage {
                 }
             }
             return UIImage()
+        case .popular:
+            return StyleKit.imageOfPopularBoard()
         }
     }
     // Add tab icon selected / deselected color

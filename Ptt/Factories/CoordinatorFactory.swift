@@ -30,21 +30,19 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
         return coordinator
     }
     
-
-    func makeLoginCoordinator_old(navigationController: UINavigationController?) -> Coordinatorable {
-        let coordinator = LoginCoordinator(router: router(navigationController),
+    func makePopularBoardsCoordinator(navigationController: UINavigationController?) -> Coordinatorable {
+        let coordinator = PopularBoardsCoordinator(router: router(navigationController),
                                               factory: SceneFactory(),
                                               coordinatoryFactory: CoordinatorFactory())
         return coordinator
     }
-    
+
     func makeLoginCoordinator(router:Router) -> Coordinatorable {
         let coordinator = LoginCoordinator(router: router,
                                               factory: SceneFactory(),
                                               coordinatoryFactory: CoordinatorFactory())
         return coordinator
     }
-    
 }
 
 private extension CoordinatorFactory {
