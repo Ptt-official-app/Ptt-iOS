@@ -123,11 +123,18 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
     }
     
+    
+    func gotoRegisterWebview() {
+        let vc = RegisterViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     @objc func switchTypeRegister(_ button:ASButtonNode) {
         
         if button == btnTypeRegister {
-            btnTypeRegister.isSelected = true
-            btnTypeLogin.isSelected = false
+            //btnTypeRegister.isSelected = true
+            //btnTypeLogin.isSelected = false
+            gotoRegisterWebview()
         }
         else if button == btnTypeLogin {
             btnTypeRegister.isSelected = false
@@ -320,7 +327,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     func showAlert(title:String, msg:String) {
         let controller = UIAlertController(title: title, message: msg, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        let okAction = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
         controller.addAction(okAction)
         present(controller, animated: true, completion: nil)
     }
