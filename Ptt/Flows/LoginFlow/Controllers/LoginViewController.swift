@@ -454,7 +454,9 @@ extension LoginViewController: UITextFieldDelegate {
     
     func scrollViewToFitKeyboard(_ lastKeyboardHeight:Int){
         let screenHeight = Int(self.view.bounds.height)
-        let keyboardHeight:Int = lastKeyboardHeight + Int( self.btnLogin.frame.height)
+        
+        let keyboardHeight:Int = lastKeyboardHeight + Int(self.btnForget.frame.height + self.btnLogin.frame.height + 31) // 31 = login~forget height
+        
         let margin_to_keyboard = 10
         let diff = Int(btnLogin.view.frame.origin.y) - (screenHeight-keyboardHeight) + margin_to_keyboard
         
