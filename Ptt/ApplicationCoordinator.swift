@@ -88,12 +88,12 @@ final class ApplicationCoordinator: BaseCoordinator {
         addDependency(coordinator)
         
         (coordinator as? TabBarCoordinator)?.finshFlow = { [unowned self] () in
-            print("finish flow in TabBarCoordinator ")
+            print("finish flow in TabBarCoordinator for logout")
             removeDependency(self)
             isAutorized = false
             start()
         }
-        router.setRootModule(module, hideBar: true)
+        router.setRootModule(module, hideBar: true, animated: true)
         coordinator.start()
     }
 }

@@ -355,9 +355,10 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     @objc func loginPress() {
         print("login press")
+        self.btnLogin.isEnabled = false
+        self.hideKeyboard()
         
         if self.isLoginInputOK() {
-            
             var account:String = ""
             var passwd:String = ""
             if let tf = self.tfUsername.view as? UITextField {
@@ -372,12 +373,18 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
                 switch (result) {
                 case .failure(let error):
                     print(error)
-                    self.showAlert(title: NSLocalizedString("Error", comment: ""), msg: NSLocalizedString("Login", comment: "") + NSLocalizedString("Error", comment: ""))
+                    DispatchQueue.main.async {
+                        self.showAlert(title: NSLocalizedString("Error", comment: ""), msg: NSLocalizedString("Login", comment: "") + NSLocalizedString("Error", comment: "") + error.message)
+                    }
                 case .success(let token):
                     print(token.access_token)
                     self.onLoginSuccess(token: token.access_token)
                 }
+                self.btnLogin.isEnabled = true
             }
+        }
+        else {
+            self.btnLogin.isEnabled = true
         }
     }
     

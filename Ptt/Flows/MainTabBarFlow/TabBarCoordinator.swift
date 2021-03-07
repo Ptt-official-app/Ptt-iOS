@@ -76,7 +76,7 @@ private extension TabBarCoordinator {
             (favoriteCoordinator as? FavoriteCoordinator)?.finshFlow = { [unowned self] () in
                 print("temp logout flow in FavoriteCoordinator")
                 removeDependency(self)
-                self.finshFlow?()
+                self.finshFlow?() // tab bar's finish flow
             }
             
             favoriteCoordinator.start()

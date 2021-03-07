@@ -46,7 +46,7 @@ extension LoginCoordinator {
             finshFlow?()
         }
         
-        router.setRootModule(loginView, hideBar: true)
+        router.setRootModule(loginView, hideBar: true, animated: true) ;
     }
 }
 
