@@ -235,7 +235,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         textField.delegate = self
         textField.textColor = UIColor.black
         
-        textField.text = "SYSOP"
+        textField.text = ""
         return textField
     }
     
@@ -267,7 +267,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         textField.clipsToBounds = true
         textField.textColor = UIColor.black
         
-        textField.text = "123123"
+        textField.text = ""
         
         textField.rightViewMode = .always
         textField.rightView = self.btnTooglePassword
