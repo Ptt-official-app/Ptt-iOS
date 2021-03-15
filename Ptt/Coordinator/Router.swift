@@ -89,6 +89,13 @@ final class Router: NSObject, Routerable {
         rootController?.isNavigationBarHidden = hideBar
     }
     
+    func setRootModule(_ module: Presentable?, hideBar: Bool, animated: Bool) {
+        guard let controller = module?.toPresent() else { return }
+        rootController?.setViewControllers([controller], animated: animated)
+        rootController?.isNavigationBarHidden = hideBar
+    }
+    
+    
     func popToRootModule(animated: Bool) {
         if let controllers = rootController?.popToRootViewController(animated: animated) {
             controllers.forEach { controller in

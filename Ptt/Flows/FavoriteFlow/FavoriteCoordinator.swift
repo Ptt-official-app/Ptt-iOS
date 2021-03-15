@@ -36,6 +36,11 @@ private extension FavoriteCoordinator {
             self.runBoardFlow(withBoardName: boardName)
         }
         
+        favoriteView.onLogout = { [unowned self] () in
+            self.removeDependency(self)
+            self.finshFlow?()
+        }
+        
         router.setRootModule(favoriteView)
     }
     

@@ -36,6 +36,13 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
                                               coordinatoryFactory: CoordinatorFactory())
         return coordinator
     }
+
+    func makeLoginCoordinator(router:Router) -> Coordinatorable {
+        let coordinator = LoginCoordinator(router: router,
+                                              factory: SceneFactory(),
+                                              coordinatoryFactory: CoordinatorFactory())
+        return coordinator
+    }
 }
 
 private extension CoordinatorFactory {

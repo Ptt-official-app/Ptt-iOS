@@ -9,7 +9,7 @@
 import UIKit
 
 class ResultsTableController : UITableViewController, FavoriteView {
-
+    var onLogout: (() -> Void)?
     var onBoardSelect: ((String) -> Void)?
     
     lazy var filteredBoards: [APIModel.BoardInfoV2] = {

@@ -10,11 +10,12 @@ import UIKit
 
 protocol FavoriteView: BaseView {
     var onBoardSelect: ((String) -> Void)? { get set }
+    var onLogout:(() -> Void)? { get set }
 }
 
 final class FavoriteViewController: UITableViewController, FavoriteView {
-    
     var onBoardSelect: ((String) -> Void)?
+    var onLogout: (() -> Void)?
 
     private let cellReuseIdentifier = "FavoriteCell"
     private lazy var resultsTableController = configureResultsTableController()
@@ -37,6 +38,8 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
         if #available(iOS 11.0, *) {
             navigationController?.navigationBar.prefersLargeTitles = true
         }
+        
+        
         navigationItem.setRightBarButton(editButtonItem, animated: true)
 
         view.backgroundColor = GlobalAppearance.backgroundColor
@@ -66,6 +69,22 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
         }
 
         NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name("didUpdateFavoriteBoards"), object: nil)
+        
+        
+        
+        let logoutBarItem = UIBarButtonItem(title: "Logout", style: UIBarButtonItem.Style.plain, target: self, action: #selector(debug_logout))
+        
+        navigationItem.setLeftBarButton(logoutBarItem, animated: true)
+    }
+    
+    @objc
+    func debug_logout() {
+        print("Debug logout button press")
+        
+        DispatchQueue.main.async {
+            _ = LoginKeyChainItem.shared.removeToken()
+            self.onLogout?()
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {

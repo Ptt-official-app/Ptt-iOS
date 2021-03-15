@@ -9,7 +9,7 @@
 import Foundation
 
 fileprivate var onboardingWasShown = true
-fileprivate var isAutorized = true
+fileprivate var isAutorized = false
 
 fileprivate enum LaunchInstructor {
     case main, auth, onboarding
@@ -49,14 +49,26 @@ final class ApplicationCoordinator: BaseCoordinator {
     
     private func runAuthFlow() {
         // TODO: 登入流程放這邊
-//        let coordinator = coordinatorFactory.makeAuthCoordinatorBox(router: router)
-//        coordinator.finishFlow = { [weak self, weak coordinator] in
-//            isAutorized = true
-//            self?.start()
-//            self?.removeDependency(coordinator)
-//        }
-//        addDependency(coordinator)
-//        coordinator.start()
+        // uncomment to force logout
+        // _ = LoginKeyChainItem.shared.removeToken()
+        
+        if LoginKeyChainItem.shared.readToken() != nil {
+            isAutorized = true
+            // TODO: check token Expire from internet
+            runMainFlow()
+        }
+        else {
+            isAutorized = false
+            
+            let loginCoordinator = coordinatorFactory.makeLoginCoordinator(router: self.router)
+            (loginCoordinator as? LoginCoordinator)?.finshFlow = { [unowned self] in
+                // authed
+                self.removeDependency(self)
+                start()
+            }
+            self.addDependency(loginCoordinator)
+            loginCoordinator.start()
+        }
     }
     
     private func runOnboardingFlow() {
@@ -74,7 +86,14 @@ final class ApplicationCoordinator: BaseCoordinator {
     private func runMainFlow() {
         let (coordinator, module) = coordinatorFactory.makeTabbarCoordinator()
         addDependency(coordinator)
-        router.setRootModule(module, hideBar: true)
+        
+        (coordinator as? TabBarCoordinator)?.finshFlow = { [unowned self] () in
+            print("finish flow in TabBarCoordinator for logout")
+            removeDependency(self)
+            isAutorized = false
+            start()
+        }
+        router.setRootModule(module, hideBar: true, animated: true)
         coordinator.start()
     }
 }

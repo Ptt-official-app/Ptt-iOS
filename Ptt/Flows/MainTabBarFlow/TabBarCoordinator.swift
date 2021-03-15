@@ -72,6 +72,13 @@ private extension TabBarCoordinator {
         case .favorite:
             let favoriteCoordinator = self.coordinatorFactory.makeFavoriteCoordinator(navigationController: navController)
             self.addDependency(favoriteCoordinator)
+            
+            (favoriteCoordinator as? FavoriteCoordinator)?.finshFlow = { [unowned self] () in
+                print("temp logout flow in FavoriteCoordinator")
+                removeDependency(self)
+                self.finshFlow?() // tab bar's finish flow
+            }
+            
             favoriteCoordinator.start()
         case .fbPage:
             let fbPageCoordinator = self.coordinatorFactory.makeFBPageCoordinator(navigationController: navController)
