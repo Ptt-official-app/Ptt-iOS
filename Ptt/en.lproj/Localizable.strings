@@ -38,6 +38,10 @@
 "Forget" = "Forget";
 "Register" = "Register";
 
+"NotRegisterAccount"= "Account not Register";
+"NotFinish" = "Not Finish yet";
+"WrongPassword" = "Wrong Password";
+
 /* VoiceOver */
 "In favorite" = "In favorite";
 "Not in favorite" = "Not in favorite";

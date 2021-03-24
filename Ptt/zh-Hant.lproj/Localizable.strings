@@ -38,6 +38,9 @@
 "Forget" = "忘記密碼";
 "Register" = "註冊";
 
+"NotRegisterAccount"= "此帳號尚未註冊";
+"NotFinish" = "這裡還沒完成";
+"WrongPassword" = "不是這組密碼";
 
 /* VoiceOver */
 "In favorite" = "已加入最愛";
