@@ -34,13 +34,16 @@
 "Confirm" = "Confirm";
 "Cancel" = "Cancel";
 
+"User Id" = "User Id";
+"Password" = "Password";
 "Login" = "Login";
-"Forget" = "Forget";
+"Forget" = "Forget Account / Password?";
 "Register" = "Register";
 
 "NotRegisterAccount"= "Account not Register";
 "NotFinish" = "Not Finish yet";
 "WrongPassword" = "Wrong Password";
+"AgreeWhenYouUseApp" = "AgreeWhenYouUseApp";
 
 /* VoiceOver */
 "In favorite" = "In favorite";

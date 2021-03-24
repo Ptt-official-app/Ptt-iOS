@@ -34,13 +34,16 @@
 "Confirm" = "確認";
 "Cancel" = "取消";
 
+"User Id" = "使用者帳號";
+"Password" = "密碼";
 "Login" = "登入";
-"Forget" = "忘記密碼";
+"Forget" = "忘記帳號 / 密碼？";
 "Register" = "註冊";
 
 "NotRegisterAccount"= "此帳號尚未註冊";
 "NotFinish" = "這裡還沒完成";
 "WrongPassword" = "不是這組密碼";
+"AgreeWhenYouUseApp" = "使用本服務即表示您同意使用者條款";
 
 /* VoiceOver */
 "In favorite" = "已加入最愛";

@@ -28,7 +28,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     let global_width = 265
     
     func init_layout() -> ASLayoutSpec {
-        let forgetCenterLayout = ASCenterLayoutSpec(centeringOptions: .X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: btnForget)
+//        let forgetCenterLayout = ASCenterLayoutSpec(centeringOptions: .X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: btnForget)
         
         let funcStackSpec = ASStackLayoutSpec(direction: .horizontal,
                                                    spacing: 5,
@@ -40,26 +40,36 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         
         let usernameInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0), child: tfUsername)
         let passwordInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 56, right: 0), child: tfPassword)
+        let agreeInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0), child: btnUserAgreement)
+        let loginInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 25, right: 0), child: btnLogin)
         
-        let loginInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 31, right: 0), child: btnLogin)
+        let forgetInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 30, left: 0, bottom: 0, right: 0), child: btnForget)
+        
         contentStackSpec = ASStackLayoutSpec(direction: .vertical,
                                                    spacing: 0,
                                                    justifyContent: .center,
                                                    alignItems: .center,
                                                    children: [lbTitle, funcStackSpec, usernameInset,
-                                                              passwordInset, loginInset, forgetCenterLayout])
+                                                              passwordInset, loginInset, agreeInset,
+                                                              vLine, forgetInset])
         
         lbTitle.style.preferredSize = CGSize(width: global_width, height: 58+63)
         tfUsername.style.preferredSize = CGSize(width: global_width, height: 30)
         tfPassword.style.preferredSize = CGSize(width: global_width, height: 30)
         btnLogin.style.preferredSize = CGSize(width: global_width, height: 30)
-        btnForget.style.preferredSize = CGSize(width: 100, height: 30)
+        btnForget.style.preferredSize = CGSize(width: global_width, height: 30)
+        btnUserAgreement.style.preferredSize = CGSize(width: global_width, height: 30)
+        vLine.style.preferredSize = CGSize(width: CGFloat(global_width), height: 0.5)
         
         self.scrollNode.addSubnode(self.lbTitle)
         self.scrollNode.addSubnode(self.tfUsername)
         self.scrollNode.addSubnode(self.tfPassword)
         self.scrollNode.addSubnode(self.btnTypeLogin)
         self.scrollNode.addSubnode(self.btnTypeRegister)
+        self.scrollNode.addSubnode(self.btnUserAgreement)
+        self.scrollNode.addSubnode(self.vLine)
+        self.scrollNode.addSubnode(self.btnForget)
+        
         
         node.addSubnode(self.scrollNode) ;
         
@@ -85,6 +95,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         self.node.view.addGestureRecognizer(tap)
         
         self.btnLogin.addTarget(self, action: #selector(loginPress), forControlEvents: ASControlNodeEvent.touchDown)
+        self.btnUserAgreement.addTarget(self, action: #selector(userAgreementPress), forControlEvents: ASControlNodeEvent.touchDown)
         self.btnForget.addTarget(self, action: #selector(forgetPress), forControlEvents: ASControlNodeEvent.touchDown)
     }
     
@@ -145,6 +156,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         btnForget.isHidden = btnTypeRegister.isSelected
         tfUsername.isHidden = btnTypeRegister.isSelected
         tfPassword.isHidden = btnTypeRegister.isSelected
+        btnUserAgreement.isHidden = btnTypeRegister.isSelected
         
         if btnTypeRegister.isSelected {
         }
@@ -221,7 +233,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     lazy var tfUsername = ASDisplayNode.init { () -> UIView in
         var textField:TextFieldWithPadding = TextFieldWithPadding()
-        textField.background = self.backgroundImg(color: self.text_color)
+        textField.background = self.backgroundImg(color: self.lightGray)
 
         let title = NSLocalizedString("User Id", comment: "")
         let attr:[NSAttributedString.Key : Any] = [
@@ -238,6 +250,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         
         textField.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
         
+        textField.keyboardType = .asciiCapable
+        
         textField.addSubview(self.lbUsernameResponse)
         textField.text = ""
         return textField
@@ -247,13 +261,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     lazy var lbUsernameResponse:UILabel = {
         var label = UILabel()
         label.textColor = self.tint_color
-        let attr = [
-            NSAttributedString.Key.foregroundColor: UIColor.systemGray,
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
-        ]
-        
-        label.attributedText = NSAttributedString.init(string: "", attributes:attr )
-        
+        label.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
         label.frame = CGRect(x: 0, y:0, width:global_width-16, height:30)
         label.textAlignment = .right
         label.isUserInteractionEnabled = false
@@ -263,13 +271,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     lazy var lbPasswordResponse:UILabel = {
         var label = UILabel()
         label.textColor = self.tint_color
-        
-        let attr = [
-            NSAttributedString.Key.foregroundColor: UIColor.systemGray,
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
-        ]
-        
-        label.attributedText = NSAttributedString.init(string: "", attributes:attr )
+        label.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
         label.frame = CGRect(x: 0, y:0, width:global_width-44, height:30)
         label.textAlignment = .right
         label.isUserInteractionEnabled = false
@@ -289,7 +291,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     lazy var tfPassword = ASDisplayNode.init { () -> UIView in
         var textField:TextFieldWithPadding = TextFieldWithPadding()
         
-        textField.background = self.backgroundImg(color: self.text_color)
+        textField.background = self.backgroundImg(color: self.lightGray)
         
         let title = NSLocalizedString("Password", comment: "")
         let attr = [
@@ -448,6 +450,10 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         }
     }
     
+    @objc func userAgreementPress() {
+        print("user agreement press")
+    }
+    
     @objc func forgetPress() {
         print("forget press")
     }
@@ -477,8 +483,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         button.layer.borderColor = self.tint_color.cgColor
         button.clipsToBounds = true
         
-    
-        
         return button
     }()
     
@@ -495,15 +499,42 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         }
     }
 
+    lazy var btnUserAgreement:ASButtonNode = {
+        let button = ASButtonNode()
+        let title = NSLocalizedString("AgreeWhenYouUseApp", comment:"")
+        
+        let attr = [
+            NSAttributedString.Key.foregroundColor: UIColor.systemGray,
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
+            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
+        ] as [NSAttributedString.Key : Any]
+        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+        
+        return button
+    }()
+    
+    lazy var vLine:ASDisplayNode = {
+        let line = ASDisplayNode()
+        line.backgroundColor = UIColor.systemGray
+        return line
+    }()
+    
     lazy var btnForget:ASButtonNode = {
         let button = ASButtonNode()
         let title = NSLocalizedString("Forget", comment:"")
         let attr = [
-            NSAttributedString.Key.foregroundColor: UIColor.systemGray,
+            NSAttributedString.Key.foregroundColor: self.textfield_backgroundcolor,
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1
             )// UIFont.systemFont(ofSize: 12)
         ]
+        button.contentEdgeInsets = UIEdgeInsets(top: 7, left: 7, bottom: 7, right: 7)
+
+        button.backgroundColor = UIColor.systemGray
         button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+        
+        button.layer.cornerRadius = 15
+        button.clipsToBounds = true
+        
         return button
     }()
     
@@ -515,6 +546,10 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         } else {
             return UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
         }
+    }
+    
+    var lightGray : UIColor {
+        return UIColor(red: 42/255, green: 42/255, blue: 48/255, alpha: 1.0)
     }
     
     var textfield_backgroundcolor : UIColor {
