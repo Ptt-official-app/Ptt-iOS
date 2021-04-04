@@ -281,6 +281,9 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     lazy var btnTooglePassword:UIButton = {
         var btn = UIButton()
         btn.frame = CGRect(x:0, y:0, width:44, height:44)
+        if #available(iOS 12.0, *) {
+            btn.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 8)
+        }
         btn.setImage(StyleKit.imageOfPasswdVisibilitySelected(), for: UIControl.State.selected)
         btn.setImage(StyleKit.imageOfPasswdVisibility(), for: UIControl.State.normal)
 
@@ -336,15 +339,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         override func editingRect(forBounds bounds: CGRect) -> CGRect {
             let rect = super.editingRect(forBounds: bounds)
             return rect.inset(by: textPadding)
-        }
-        
-        override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
-            var rightRect:CGRect = super.rightViewRect(forBounds: bounds)
-            rightRect.origin.x -= 16
-            rightRect.origin.y -= 10
-            rightRect.size.width += 10
-            rightRect.size.height += 20
-            return rightRect
         }
     }
     
