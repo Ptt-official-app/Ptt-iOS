@@ -167,8 +167,23 @@ extension APIClient: APIClientProtocol {
     ///   - max: max number of the returned list, requiring <= 300
     ///   - completion: the list of board information
     func getBoardListV2(token: String, keyword: String="", startIdx: String="", max: Int=200, completion: @escaping (BoardListResultV2) -> Void) {
+        
         var urlComponent = tempURLComponents
-        urlComponent.path = "/api/boards"
+        let pureEnglishPattern = "^[a-zA-Z]+$"
+        let pureChinesePattern = "^[\\u4e00-\\u9fa5]+$"
+        let matcherEnglish = MyRegex(pureEnglishPattern)
+        let matcherChinese = MyRegex(pureChinesePattern)
+        if matcherEnglish.match(input: keyword) {
+            urlComponent.path = "/api/boards/autocomplete"
+        }
+        
+        if matcherChinese.match(input: keyword) {
+            urlComponent.path = "/api/boards/byclass"
+        }else{
+            urlComponent.path = "/api/boards"
+        }
+        
+        
         // Percent encoding is automatically done with RFC 3986
         urlComponent.queryItems = [
             URLQueryItem(name: "title", value: keyword),
@@ -285,5 +300,20 @@ extension APIClient {
         
         return message
     }
+    
+    struct MyRegex {
+        let regex: NSRegularExpression?
+        init(_ pattern: String) {
+            regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive)
+        }
 
+        func match(input: String) -> Bool {
+            if let matches = regex?.matches(in: input, options: [],
+                                            range: NSMakeRange(0, (input as NSString).length)) {
+                return matches.count > 0
+            }else {
+                return false
+            }
+        }
+    }
 }
