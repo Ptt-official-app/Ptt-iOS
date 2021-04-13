@@ -168,25 +168,18 @@ extension APIClient: APIClientProtocol {
     ///   - completion: the list of board information
     func getBoardListV2(token: String, keyword: String="", startIdx: String="", max: Int=200, completion: @escaping (BoardListResultV2) -> Void) {
         
+        let matcherEnglish = MyRegex("^[a-zA-Z]+$")
+        let matcherChinese = MyRegex("^[\\u4e00-\\u9fa5]+$")
         var urlComponent = tempURLComponents
-        let pureEnglishPattern = "^[a-zA-Z]+$"
-        let pureChinesePattern = "^[\\u4e00-\\u9fa5]+$"
-        let matcherEnglish = MyRegex(pureEnglishPattern)
-        let matcherChinese = MyRegex(pureChinesePattern)
-        if matcherEnglish.match(input: keyword) {
-            urlComponent.path = "/api/boards/autocomplete"
-        }
         
-        if matcherChinese.match(input: keyword) {
-            urlComponent.path = "/api/boards/byclass"
-        }else{
-            urlComponent.path = "/api/boards"
-        }
+        urlComponent.path = matcherEnglish.match(input: keyword) ?
+                    "/api/boards/autocomplete" : matcherChinese.match(input: keyword) ?
+                    "/api/boards/byclass" : "/api/boards"
         
-        
+        let keywordQueryItemName = matcherEnglish.match(input: keyword) ? "brdname" : "keyword"
         // Percent encoding is automatically done with RFC 3986
         urlComponent.queryItems = [
-            URLQueryItem(name: "title", value: keyword),
+            URLQueryItem(name: keywordQueryItemName, value: keyword),
             URLQueryItem(name: "start_idx", value: startIdx),
             URLQueryItem(name: "limit", value: "\(max)")
         ]
