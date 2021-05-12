@@ -36,6 +36,10 @@ private extension BoardCoordinator {
             self?.showPostView(withBoardPost: boardPost)
         }
         
+        boardView.composeArticle = { [weak self] () in
+            self?.showComposeArticleView(withBoardName: boardName)
+        }
+        
         router.push(boardView, animated: true, hideBottomBar: true) { [weak self] in
             self?.finshFlow?()
         }
@@ -44,5 +48,10 @@ private extension BoardCoordinator {
     func showPostView(withBoardPost boardPost: BoardPost) {
         let postView = factory.makePostView(withBoardPost: boardPost)
         router.push(postView)
+    }
+    
+    func showComposeArticleView(withBoardName boardName: String) {
+        let composeArticleView = factory.makeComposeArticleView(withBoardName: boardName)
+        router.push(composeArticleView)
     }
 }

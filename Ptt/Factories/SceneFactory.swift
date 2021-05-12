@@ -40,4 +40,8 @@ final class SceneFactory: FavoriteSceneFactoryProtocol,
     func makePostView(withBoardPost boardPost: BoardPost) -> PostView {
         return PostViewController(post: boardPost.post, boardName: boardPost.boardName)
     }
+    
+    func makeComposeArticleView(withBoardName boardName: String) -> ComposeArticleView {
+        return ComposeArticleViewController(boardName: boardName)
+    }
 }

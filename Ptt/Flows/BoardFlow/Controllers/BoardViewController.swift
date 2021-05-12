@@ -17,11 +17,13 @@ struct BoardPost {
 
 protocol BoardView: BaseView {
     var onPostSelect: ((BoardPost) -> Void)? { get set }
+    var composeArticle: (() -> Void)? {get set}
 }
 
 final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSwipeable, BoardView {
     
     var onPostSelect: ((BoardPost) -> Void)?
+    var composeArticle: (() -> Void)?
 
     private let boardNode = BoardNode()
     private var tableNode : ASTableNode {
@@ -183,6 +185,7 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
     }
 
     @objc private func compose() {
+        composeArticle?()
     }
 
     @objc private func more() {
