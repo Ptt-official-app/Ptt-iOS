@@ -16,28 +16,47 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
     private let apiClient: APIClientProtocol
     private var boardName : String
     
-    lazy var actionButton: UIButton = {
-        let actionButton = UIButton()
-        actionButton.translatesAutoresizingMaskIntoConstraints = false
-        actionButton.setTitle("分類選擇", for: .normal)
-        actionButton.setTitleColor(UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0), for: .normal)
-        actionButton.titleLabel?.font = actionButton.titleLabel?.font.withSize(16)
-        actionButton.addTarget(self, action: #selector(classSelect), for: .touchUpInside)
-        
-        return actionButton
+    lazy var classSelectButton: UIButton = {
+        let classSelectButton = UIButton()
+        classSelectButton.translatesAutoresizingMaskIntoConstraints = false
+        classSelectButton.setTitle("分類選擇", for: .normal)
+        classSelectButton.setTitleColor(UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0), for: .normal)
+        classSelectButton.titleLabel?.font = classSelectButton.titleLabel?.font.withSize(16)
+        classSelectButton.addTarget(self, action: #selector(classSelect), for: .touchUpInside)
+        classSelectButton.contentHorizontalAlignment = .left
+//        classSelectButton.backgroundColor = .black
+        view.addSubview(classSelectButton)
+        return classSelectButton
     }()
     
-//    lazy var articleTitle: UITextField = {
-//        var articleTitle = UITextField()
-//        articleTitle.translatesAutoresizingMaskIntoConstraints = false
-//        articleTitle.autocorrectionType = .no
-//        articleTitle.delegate = self
-//        articleTitle = UIFont.tableContent
-//        articleTitle = UIColor.steel
-//        articleTitle.addTarget(self, action: #selector(didTextfieldValueChanged(_:)), for: .editingChanged)
-////        self.addSubview(self.textField)
-//        return articleTitle
-//    }()
+    lazy var articleTitle: UITextField = {
+        var articleTitle = UITextField()
+        articleTitle.translatesAutoresizingMaskIntoConstraints = false
+        articleTitle.attributedPlaceholder = NSAttributedString(string:"請輸入文章標題", attributes:[NSAttributedString.Key.foregroundColor: UIColor(red:56/255, green:56/255, blue:61/255, alpha:1.0), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 24)])
+//        articleTitle.backgroundColor = .black
+        view.addSubview(articleTitle)
+        return articleTitle
+    }()
+    
+    lazy var contentView: UITextView = {
+        let contentView = UITextView()
+        contentView.font = UIFont.systemFont(ofSize: 18)
+//        textView.autocorrectionType = UITextAutocorrectionType.no
+//        textView.keyboardType = .default
+//        textView.returnKeyType = UIReturnKeyType.done
+        contentView.delegate = self
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+//        textView.textAlignment = NSTextAlignment.justified
+        contentView.textAlignment = .left
+        contentView.backgroundColor = .black
+        contentView.text = placeholderText
+        contentView.textColor = UIColor(red:56/255, green:56/255, blue:61/255, alpha:1.0)
+        contentView.backgroundColor = UIColor(red:23/255, green:23/255, blue:23/255, alpha:1.0)
+        view.addSubview(contentView)
+        return contentView
+    }()
+    
+    let placeholderText = "請輸入文章內容"
     
     init(boardName: String, apiClient: APIClientProtocol=APIClient.shared) {
         self.apiClient = apiClient
@@ -57,14 +76,17 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         setConstraint()
     }
     
+    override func viewDidLayoutSubviews() {
+        articleTitle.setBottomBorder()
+    }
+    
     func initView() {
-//        title = NSLocalizedString("分類選擇", comment: "")
+        title = NSLocalizedString("編輯文章", comment: "")
         if #available(iOS 11.0, *) {
             navigationController?.navigationBar.prefersLargeTitles = true
         }
-
         view.backgroundColor = GlobalAppearance.backgroundColor
-        definesPresentationContext = true
+        navigationController?.navigationBar.isTranslucent = false
     }
     
     @objc private func classSelect() {
@@ -72,11 +94,38 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
     }
     
     func setConstraint() {
-        view.addSubview(actionButton)
-        NSLayoutConstraint(item: actionButton, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
-        NSLayoutConstraint(item: actionButton, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
-        NSLayoutConstraint(item: actionButton, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
-        NSLayoutConstraint(item: actionButton, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: classSelectButton, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: classSelectButton, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: classSelectButton, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: classSelectButton, attribute: .height, relatedBy: .equal,
+            toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 54).isActive = true
+        
+        NSLayoutConstraint(item: articleTitle, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: articleTitle, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: articleTitle, attribute: .top, relatedBy: .equal, toItem: classSelectButton, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: articleTitle, attribute: .height, relatedBy: .equal,
+            toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 29).isActive = true
+        
+        NSLayoutConstraint(item: contentView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: contentView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: contentView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: contentView, attribute: .top, relatedBy: .equal, toItem: articleTitle, attribute: .bottom, multiplier: 1.0, constant: 29).isActive = true
+    }
+}
+
+extension ComposeArticleViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if contentView.text == placeholderText {
+            contentView.text = ""
+            contentView.textColor = .white
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if contentView.text.isEmpty {
+            contentView.text = placeholderText
+            contentView.textColor = UIColor(red:56/255, green:56/255, blue:61/255, alpha:1.0)
+        }
     }
 }
 

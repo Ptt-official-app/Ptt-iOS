@@ -64,3 +64,14 @@ extension UIImageView {
     self.tintColor = color
   }
 }
+
+extension UITextField {
+    func setBottomBorder() {
+        let layer = CALayer()
+        layer.backgroundColor = UIColor(red:56/255, green:56/255, blue:61/255, alpha:1.0).cgColor
+        layer.frame = CGRect(x: 0.0, y: self.frame.size.height - 1.0, width: self.frame.size.width, height: 1.0)
+        self.clipsToBounds = true
+        self.layer.addSublayer(layer)
+        self.setNeedsDisplay()
+    }
+}
