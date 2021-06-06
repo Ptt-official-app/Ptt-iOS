@@ -7,14 +7,17 @@
 //
 
 import UIKit
+import AsyncDisplayKit
 
 protocol ComposeArticleView: BaseView {
 }
 
-class ComposeArticleViewController: UIViewController, ComposeArticleView {
+class ComposeArticleViewController: ASDKViewController<ASDisplayNode>, FullscreenSwipeable, ComposeArticleView {
     
     private let apiClient: APIClientProtocol
     private var boardName : String
+    
+//    let toolBar = UIToolbar()
     
     lazy var classSelectButton: UIButton = {
         let classSelectButton = UIButton()
@@ -56,12 +59,45 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         return contentView
     }()
     
+    lazy var toolBar: UIToolbar = {
+        let toolBar = UIToolbar()
+        var items = [UIBarButtonItem]()
+        
+        items.append(
+            UIBarButtonItem.menuButton(self, action: #selector(classSelect), imageName: "delete")
+        )
+        items.append(
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        )
+        items.append(
+            UIBarButtonItem.menuButton(self, action: #selector(classSelect), imageName: "draft")
+        )
+        items.append(
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        )
+        items.append(
+            UIBarButtonItem.menuButton(self, action: #selector(classSelect), imageName: "save")
+        )
+        items.append(
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        )
+        items.append(
+            UIBarButtonItem.menuButton(self, action: #selector(classSelect), imageName: "send")
+        )
+        toolBar.setItems(items, animated: true)
+//        toolBar.tintColor = .red
+        toolBar.barTintColor = GlobalAppearance.backgroundColor
+        toolBar.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(toolBar)
+        return toolBar
+    }()
+    
     let placeholderText = "請輸入文章內容"
     
     init(boardName: String, apiClient: APIClientProtocol=APIClient.shared) {
         self.apiClient = apiClient
         self.boardName = boardName
-        super.init(nibName: nil, bundle: nil)
+        super.init()
         hidesBottomBarWhenPushed = true
     }
     
@@ -110,6 +146,19 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         NSLayoutConstraint(item: contentView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: contentView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: contentView, attribute: .top, relatedBy: .equal, toItem: articleTitle, attribute: .bottom, multiplier: 1.0, constant: 29).isActive = true
+        
+        if #available(iOS 11.0, *) {
+            let guide = self.view.safeAreaLayoutGuide
+            toolBar.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
+            toolBar.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
+            toolBar.bottomAnchor.constraint(equalTo: guide.bottomAnchor).isActive = true
+        }
+        else {
+            NSLayoutConstraint(item: toolBar, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
+            NSLayoutConstraint(item: toolBar, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
+            NSLayoutConstraint(item: toolBar, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
+        }
+        toolBar.heightAnchor.constraint(equalToConstant: 49).isActive = true
     }
 }
 
@@ -128,43 +177,3 @@ extension ComposeArticleViewController: UITextViewDelegate {
         }
     }
 }
-
-//extension PopularBoardsViewController: PopularBoardsViewModelDelegate {
-//    func showErrorAlert(errorMessage: String) {
-//        Dispatch.DispatchQueue.main.async {
-//            let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: errorMessage, preferredStyle: .alert)
-//            let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
-//            alert.addAction(confirm)
-//            self.present(alert, animated: true, completion: nil)
-//        }
-//    }
-//}
-
-//extension PopularBoardsViewController: UISearchResultsUpdating {
-//    func updateSearchResults(for searchController: UISearchController) {
-//        guard let searchText = searchController.searchBar.text, searchText.count > 0  else { return }
-//        resultsTableController.activityIndicator.startAnimating()
-//        APIClient.shared.getBoardListV2(token: "", keyword: searchText) { [weak self] (result) in
-//            guard let weakSelf = self else { return }
-//            switch result {
-//                case .failure(error: let error):
-//                    DispatchQueue.main.async {
-//                        weakSelf.resultsTableController.activityIndicator.stopAnimating()
-//                        weakSelf.searchController.isActive = false
-//                        let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: error.message, preferredStyle: .alert)
-//                        let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
-//                        alert.addAction(confirm)
-//                        weakSelf.present(alert, animated: true, completion: nil)
-//                    }
-//                case .success(data: let data):
-//
-//                    weakSelf.resultsTableController.filteredBoards = data.list
-//                    DispatchQueue.main.async {
-//                        // Only update UI for the matching result
-//                        weakSelf.resultsTableController.activityIndicator.stopAnimating()
-//                        weakSelf.resultsTableController.tableView.reloadData()
-//                    }
-//            }
-//        }
-//    }
-//}

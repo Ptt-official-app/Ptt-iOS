@@ -75,3 +75,21 @@ extension UITextField {
         self.setNeedsDisplay()
     }
 }
+
+extension UIBarButtonItem {
+    static func menuButton(_ target: Any?, action: Selector, imageName: String) -> UIBarButtonItem {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: imageName), for: .normal)
+        button.addTarget(target, action: action, for: .touchUpInside)
+        button.imageView?.contentMode = .scaleAspectFit
+        
+//        button.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
+//        button.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysTemplate), for: .highlighted)
+
+        let menuBarItem = UIBarButtonItem(customView: button)
+        menuBarItem.customView?.translatesAutoresizingMaskIntoConstraints = false
+        menuBarItem.customView?.heightAnchor.constraint(equalToConstant: 49).isActive = true
+        menuBarItem.customView?.widthAnchor.constraint(equalToConstant: 76).isActive = true
+        return menuBarItem
+    }
+}
