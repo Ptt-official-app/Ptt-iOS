@@ -1,16 +1,8 @@
-# Goals
-
-1. Make fluent user interface: built on [Texture](https://texturegroup.org)
-2. Make compact main repository and app size
-   - No other third party library unless there are strong reasons
-   - Use [PaintCode Plugin for Sketch](https://www.paintcodeapp.com/sketch) for vector image assets
-   - With Swift ABI Stability, app size is minimized since iOS 12.2 or later
-3. Support iOS 9 or later, Dynamic Type, VoiceOver
-
 # Coding Guidelines
 
-- Please follow [commit message guidelines](https://chris.beams.io/posts/git-commit/).
+- How to join the project? Check out [our documentation](https://hackmd.io/bNV8xhVwQxOYnLt9NTRdFw).
 - We don’t have Swift style guide yet. Follow UIKit style for now.
+- We're using [PaintCode Plugin for Sketch](https://www.paintcodeapp.com/sketch) for vector image assets.
 
 # License
 
