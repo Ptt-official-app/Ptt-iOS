@@ -1,5 +1,5 @@
 //
-//  Post.swift
+//  Article.swift
 //  Ptt
 //
 //  Created by Anson on 2020/11/9.
@@ -8,17 +8,17 @@
 
 import Foundation
 
-protocol Post : Codable {
+protocol Article : Codable {
+    var title : String { get }
+    var date : String { get }
+    var author : String { get }
+
+    // implemented in protocol extension below
     var category : String { get }
     var titleWithoutCategory : String { get }
-
-    var title : String { get }
-    var href : String { get }
-    var author : String { get }
-    var date : String { get }
 }
 
-extension Post {
+extension Article {
     var category : String {
         if let leftBracket = title.firstIndex(of: "["), let rightBracket = title.firstIndex(of: "]") {
             let nextLeftBracket = title.index(after: leftBracket)

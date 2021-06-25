@@ -8,7 +8,7 @@
 
 import Foundation
 extension APIModel {
-    struct FullPost : Post {
+    struct FullArticle : Article {
         let title : String
         let href : String
         let author : String
