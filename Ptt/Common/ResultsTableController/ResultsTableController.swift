@@ -12,8 +12,8 @@ class ResultsTableController : UITableViewController, FavoriteView {
     var onLogout: (() -> Void)?
     var onBoardSelect: ((String) -> Void)?
     
-    lazy var filteredBoards: [APIModel.BoardInfoV2] = {
-        return [APIModel.BoardInfoV2]()
+    lazy var filteredBoards: [APIModel.BoardInfo] = {
+        return [APIModel.BoardInfo]()
     }()
     
     let activityIndicator = UIActivityIndicatorView()

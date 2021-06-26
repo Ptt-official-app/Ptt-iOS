@@ -8,5 +8,5 @@
 
 protocol BoardSceneFactoryProtocol {
     func makeBoardView(withBoardName boardName: String) -> BoardView
-    func makePostView(withBoardPost boardPost: BoardPost) -> PostView
+    func makeArticleView(withBoardArticle boardArticle: BoardArticle) -> ArticleView
 }

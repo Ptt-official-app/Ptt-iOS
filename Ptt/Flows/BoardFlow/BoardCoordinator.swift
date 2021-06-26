@@ -32,8 +32,8 @@ private extension BoardCoordinator {
     func showBoardView(withBoardName boardName: String) {
         let boardView = factory.makeBoardView(withBoardName: boardName)
         
-        boardView.onPostSelect = { [weak self] (boardPost) in
-            self?.showPostView(withBoardPost: boardPost)
+        boardView.onArticleSelect = { [weak self] (boardArticle) in
+            self?.showArticleView(withBoardArticle: boardArticle)
         }
         
         router.push(boardView, animated: true, hideBottomBar: true) { [weak self] in
@@ -41,8 +41,8 @@ private extension BoardCoordinator {
         }
     }
     
-    func showPostView(withBoardPost boardPost: BoardPost) {
-        let postView = factory.makePostView(withBoardPost: boardPost)
-        router.push(postView)
+    func showArticleView(withBoardArticle boardArticle: BoardArticle) {
+        let articleView = factory.makeArticleView(withBoardArticle: boardArticle)
+        router.push(articleView)
     }
 }

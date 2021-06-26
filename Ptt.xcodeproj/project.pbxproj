@@ -10,16 +10,15 @@
 		3E0101A325669DDB00D39FAD /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0101A225669DDB00D39FAD /* MockURLSession.swift */; };
 		3E0101A925669DEE00D39FAD /* MockURLSessionDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0101A825669DEE00D39FAD /* MockURLSessionDataTask.swift */; };
 		3E0101AE25669F5A00D39FAD /* APIClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0101AD25669F5A00D39FAD /* APIClientTest.swift */; };
-		3E0101B52566A9C500D39FAD /* NewPostlist.json in Resources */ = {isa = PBXBuildFile; fileRef = 3E0101B42566A9C500D39FAD /* NewPostlist.json */; };
-		3E0101BD2566AD1400D39FAD /* GetPost.json in Resources */ = {isa = PBXBuildFile; fileRef = 3E0101BC2566AD1400D39FAD /* GetPost.json */; };
+		3E0101B52566A9C500D39FAD /* BoardArticles.json in Resources */ = {isa = PBXBuildFile; fileRef = 3E0101B42566A9C500D39FAD /* BoardArticles.json */; };
+		3E0101BD2566AD1400D39FAD /* Article.json in Resources */ = {isa = PBXBuildFile; fileRef = 3E0101BC2566AD1400D39FAD /* Article.json */; };
 		3E29388125596BA900240C0F /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E29388025596BA900240C0F /* URLSessionProtocol.swift */; };
-		3E65526D25595EE60026290B /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65526C25595EE60026290B /* Post.swift */; };
+		3E65526D25595EE60026290B /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65526C25595EE60026290B /* Article.swift */; };
 		3E65527125595F0D0026290B /* BoardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65527025595F0D0026290B /* BoardInfo.swift */; };
-		3E65527525595F9E0026290B /* BoardPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65527425595F9E0026290B /* BoardPost.swift */; };
-		3E65527925595FBE0026290B /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65527825595FBE0026290B /* Message.swift */; };
+		3E65527525595F9E0026290B /* BoardArticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65527425595F9E0026290B /* BoardArticle.swift */; };
 		3E65527D25595FD30026290B /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65527C25595FD30026290B /* Board.swift */; };
 		3E6552822559604C0026290B /* APIClientProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6552812559604C0026290B /* APIClientProtocol.swift */; };
-		3E655288255960910026290B /* FullPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E655287255960910026290B /* FullPost.swift */; };
+		3E655288255960910026290B /* FullArticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E655287255960910026290B /* FullArticle.swift */; };
 		3E65528C255960AE0026290B /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65528B255960AE0026290B /* Comment.swift */; };
 		3E655290255960CF0026290B /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65528F255960CF0026290B /* APIError.swift */; };
 		3E65529A255962DA0026290B /* APIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E655299255962DA0026290B /* APIModel.swift */; };
@@ -98,16 +97,15 @@
 		3E0101A225669DDB00D39FAD /* MockURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLSession.swift; sourceTree = "<group>"; };
 		3E0101A825669DEE00D39FAD /* MockURLSessionDataTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLSessionDataTask.swift; sourceTree = "<group>"; };
 		3E0101AD25669F5A00D39FAD /* APIClientTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTest.swift; sourceTree = "<group>"; };
-		3E0101B42566A9C500D39FAD /* NewPostlist.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = NewPostlist.json; sourceTree = "<group>"; };
-		3E0101BC2566AD1400D39FAD /* GetPost.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetPost.json; sourceTree = "<group>"; };
+		3E0101B42566A9C500D39FAD /* BoardArticles.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BoardArticles.json; sourceTree = "<group>"; };
+		3E0101BC2566AD1400D39FAD /* Article.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Article.json; sourceTree = "<group>"; };
 		3E29388025596BA900240C0F /* URLSessionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionProtocol.swift; sourceTree = "<group>"; };
-		3E65526C25595EE60026290B /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		3E65526C25595EE60026290B /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 		3E65527025595F0D0026290B /* BoardInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardInfo.swift; sourceTree = "<group>"; };
-		3E65527425595F9E0026290B /* BoardPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPost.swift; sourceTree = "<group>"; };
-		3E65527825595FBE0026290B /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		3E65527425595F9E0026290B /* BoardArticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardArticle.swift; sourceTree = "<group>"; };
 		3E65527C25595FD30026290B /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 		3E6552812559604C0026290B /* APIClientProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientProtocol.swift; sourceTree = "<group>"; };
-		3E655287255960910026290B /* FullPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullPost.swift; sourceTree = "<group>"; };
+		3E655287255960910026290B /* FullArticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullArticle.swift; sourceTree = "<group>"; };
 		3E65528B255960AE0026290B /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		3E65528F255960CF0026290B /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		3E655299255962DA0026290B /* APIModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIModel.swift; sourceTree = "<group>"; };
@@ -221,8 +219,8 @@
 		3E0101B32566A9A200D39FAD /* FakeData */ = {
 			isa = PBXGroup;
 			children = (
-				3E0101B42566A9C500D39FAD /* NewPostlist.json */,
-				3E0101BC2566AD1400D39FAD /* GetPost.json */,
+				3E0101B42566A9C500D39FAD /* BoardArticles.json */,
+				3E0101BC2566AD1400D39FAD /* Article.json */,
 				3E8D8C86258A519F00346690 /* Login.json */,
 				3E9A6283258A5D9A00C9DC18 /* BoardList.json */,
 			);
@@ -253,14 +251,13 @@
 			children = (
 				3E65528F255960CF0026290B /* APIError.swift */,
 				3E655299255962DA0026290B /* APIModel.swift */,
+				3E65526C25595EE60026290B /* Article.swift */,
 				3E65527C25595FD30026290B /* Board.swift */,
+				3E65527425595F9E0026290B /* BoardArticle.swift */,
 				3E65527025595F0D0026290B /* BoardInfo.swift */,
-				3E65527425595F9E0026290B /* BoardPost.swift */,
 				3E65528B255960AE0026290B /* Comment.swift */,
-				3E655287255960910026290B /* FullPost.swift */,
+				3E655287255960910026290B /* FullArticle.swift */,
 				3E8D8C82258A511600346690 /* LoginToken.swift */,
-				3E65527825595FBE0026290B /* Message.swift */,
-				3E65526C25595EE60026290B /* Post.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -672,9 +669,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				3E8D8C87258A519F00346690 /* Login.json in Resources */,
-				3E0101BD2566AD1400D39FAD /* GetPost.json in Resources */,
+				3E0101BD2566AD1400D39FAD /* Article.json in Resources */,
 				3E9A6284258A5D9A00C9DC18 /* BoardList.json in Resources */,
-				3E0101B52566A9C500D39FAD /* NewPostlist.json in Resources */,
+				3E0101B52566A9C500D39FAD /* BoardArticles.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -756,7 +753,7 @@
 				EA41D65D243EF51A0052F4A1 /* FBPageViewController.swift in Sources */,
 				CD694CF325A74F0400428DC9 /* PopularBoardsSceneFactoryProtocol.swift in Sources */,
 				9B564C65256AA83100787FD7 /* TabBarView.swift in Sources */,
-				3E655288255960910026290B /* FullPost.swift in Sources */,
+				3E655288255960910026290B /* FullArticle.swift in Sources */,
 				CD6C141125A9E8F40043E7EC /* PopularBoardsTableViewCell.swift in Sources */,
 				3E6552822559604C0026290B /* APIClientProtocol.swift in Sources */,
 				3E8D8C83258A511600346690 /* LoginToken.swift in Sources */,
@@ -777,7 +774,7 @@
 				3E65527D25595FD30026290B /* Board.swift in Sources */,
 				9BEE1CA22584E82E002A9D95 /* FavoriteSceneFactoryProtocol.swift in Sources */,
 				9BEE1CB02584F60B002A9D95 /* FBPageCoordinator.swift in Sources */,
-				3E65527525595F9E0026290B /* BoardPost.swift in Sources */,
+				3E65527525595F9E0026290B /* BoardArticle.swift in Sources */,
 				9BEE1C592584B2C0002A9D95 /* ApplicationCoordinator.swift in Sources */,
 				9BEE1CC42585DA6B002A9D95 /* BoardSceneFactoryProtocol.swift in Sources */,
 				9B564C5C256AA74100787FD7 /* TabBarController.swift in Sources */,
@@ -793,7 +790,6 @@
 				CD731CDA25BC8945008C43DA /* ResultsTableController.swift in Sources */,
 				9B564C6B256AA8C800787FD7 /* BaseCoordinator.swift in Sources */,
 				9BEE1CC02585D8E8002A9D95 /* BoardCoordinator.swift in Sources */,
-				3E65527925595FBE0026290B /* Message.swift in Sources */,
 				94EB641A25AD2FF800BF69AB /* LoginKeyChainItem.swift in Sources */,
 				CD767B5125B0B79B0050E12A /* UserDefaultsManager.swift in Sources */,
 				CD731CD925BC8945008C43DA /* BoardsTableViewCell.swift in Sources */,
@@ -804,7 +800,7 @@
 				EAA4F6F123C72B01005ABCE3 /* BoardViewController.swift in Sources */,
 				9BEE1CA62584EA13002A9D95 /* SceneFactory.swift in Sources */,
 				9B564C41256AA1F400787FD7 /* CoordinatorFactoryProtocol.swift in Sources */,
-				3E65526D25595EE60026290B /* Post.swift in Sources */,
+				3E65526D25595EE60026290B /* Article.swift in Sources */,
 				9411EDA625A0AEC30005ADCB /* LoginCoordinator.swift in Sources */,
 				3E65529A255962DA0026290B /* APIModel.swift in Sources */,
 				94EB641225AC183F00BF69AB /* LoginViewController.swift in Sources */,

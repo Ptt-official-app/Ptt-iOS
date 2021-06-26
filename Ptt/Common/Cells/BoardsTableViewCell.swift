@@ -69,7 +69,7 @@ class BoardsTableViewCell: UITableViewCell {
 
 class FavoriteButton: UIButton {
 
-    var board : APIModel.BoardInfoV2? = nil {
+    var board : APIModel.BoardInfo? = nil {
         didSet {
             if let board = self.board, Favorite.boards.contains(where: { $0.brdname == board.brdname }) {
                 isSelected = true
