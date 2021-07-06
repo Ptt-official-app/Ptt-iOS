@@ -13,7 +13,10 @@
       ],
       "reason": "",
       "read": false,
-      "total": 0
+      "total": 0,
+      "last_post_time": 0,
+      "stat_attr": 0,
+      "level_idx": ""
     },
     {
       "bid": "11_EditExp",
@@ -28,7 +31,10 @@
       ],
       "reason": "",
       "read": false,
-      "total": 0
+      "total": 0,
+      "last_post_time": 0,
+      "stat_attr": 0,
+      "level_idx": ""
     },
     {
       "bid": "8_Note",
@@ -43,7 +49,10 @@
       ],
       "reason": "",
       "read": false,
-      "total": 0
+      "total": 0,
+      "last_post_time": 0,
+      "stat_attr": 0,
+      "level_idx": ""
     },
     {
       "bid": "9_Record",
@@ -58,7 +67,10 @@
       ],
       "reason": "",
       "read": false,
-      "total": 1
+      "total": 1,
+      "last_post_time": 0,
+      "stat_attr": 0,
+      "level_idx": ""
     },
     {
       "bid": "1_SYSOP",
@@ -73,7 +85,10 @@
       ],
       "reason": "",
       "read": false,
-      "total": 0
+      "total": 0,
+      "last_post_time": 0,
+      "stat_attr": 0,
+      "level_idx": ""
     },
     {
       "bid": "10_WhoAmI",
@@ -88,7 +103,10 @@
       ],
       "reason": "",
       "read": true,
-      "total": 3
+      "total": 3,
+      "last_post_time": 0,
+      "stat_attr": 0,
+      "level_idx": ""
     }
   ],
   "next_idx": ""

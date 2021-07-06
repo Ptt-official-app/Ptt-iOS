@@ -10,18 +10,18 @@ import UIKit
 import SafariServices
 import AsyncDisplayKit
 
-struct BoardPost {
-    let post: APIModel.BoardPost
+struct BoardArticle {
+    let article: APIModel.BoardArticle
     let boardName: String
 }
 
 protocol BoardView: BaseView {
-    var onPostSelect: ((BoardPost) -> Void)? { get set }
+    var onArticleSelect: ((BoardArticle) -> Void)? { get set }
 }
 
 final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSwipeable, BoardView {
     
-    var onPostSelect: ((BoardPost) -> Void)?
+    var onArticleSelect: ((BoardArticle) -> Void)?
 
     private let boardNode = BoardNode()
     private var tableNode : ASTableNode {
@@ -40,10 +40,10 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
     private let apiClient: APIClientProtocol
 
     private var boardName : String
-    private var board : APIModel.Board? = nil
+    private var board : APIModel.BoardModel? = nil
     private var isRequesting = false
     private var receivedPage : Int = 0
-    private let cellReuseIdentifier = "BoardPostCell"
+    private let cellReuseIdentifier = "BoardArticleCell"
 
     init(boardName: String, apiClient: APIClientProtocol=APIClient.shared) {
         self.apiClient = apiClient
@@ -95,13 +95,13 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
         }
     }
 
-    private func requestNewPost(page: Int, context: ASBatchContext) {
+    private func requestArticles(page: Int, context: ASBatchContext) {
         if self.isRequesting {
             return
         }
         self.isRequesting = true
         context.beginBatchFetching()
-        self.apiClient.getNewPostlist(board: boardName, page: page) { (result) in
+        self.apiClient.getBoardArticles(of: .legacy(boardName: boardName, page: page)) { (result) in
             switch result {
             case .failure(error: let apiError):
                 context.cancelBatchFetching()
@@ -125,7 +125,7 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
                     self.receivedPage = page
                     self.board = board
                     var indexPaths = [IndexPath]()
-                    for (index, _) in board.postList.enumerated() {
+                    for (index, _) in board.articleList.enumerated() {
                         indexPaths.append(IndexPath(row: index, section: 0))
                     }
                     DispatchQueue.main.async {
@@ -137,12 +137,12 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
                     if page == self.receivedPage + 1 {
                         self.receivedPage = page
                         var indexPaths = [IndexPath]()
-                        if let oldCount = self.board?.postList.count {
-                            for (index, _) in board.postList.enumerated() {
+                        if let oldCount = self.board?.articleList.count {
+                            for (index, _) in board.articleList.enumerated() {
                                 indexPaths.append(IndexPath(row: index + oldCount, section: 0))
                             }
                         }
-                        self.board?.postList += board.postList
+                        self.board?.articleList += board.articleList
                         DispatchQueue.main.async {
                             self.tableNode.insertRows(at: indexPaths, with: .none)
                             context.completeBatchFetching(true)
@@ -197,20 +197,20 @@ extension BoardViewController: ASTableDataSource {
         guard let board = self.board else {
             return 0
         }
-        return board.postList.count
+        return board.articleList.count
     }
 
     func tableNode(_ tableNode: ASTableNode, nodeBlockForRowAt indexPath: IndexPath) -> ASCellNodeBlock {
         let row = indexPath.row
-        guard let board = self.board, row < board.postList.count else {
+        guard let board = self.board, row < board.articleList.count else {
             let nodeBlock: ASCellNodeBlock = {
                 return ASCellNode()
             }
             return nodeBlock
         }
-        let post = board.postList[row]
+        let article = board.articleList[row]
         let nodeBlock: ASCellNodeBlock = {
-            let cell = BoardCellNode(post: post)
+            let cell = BoardCellNode(article: article)
             if row % 2 == 0 {
                 if #available(iOS 11.0, *) {
                     cell.backgroundColor = UIColor(named: "blackColor-28-28-31")
@@ -235,16 +235,16 @@ extension BoardViewController: ASTableDelegate {
     }
 
     func tableNode(_ tableNode: ASTableNode, willBeginBatchFetchWith context: ASBatchContext) {
-        requestNewPost(page: receivedPage + 1, context: context)
+        requestArticles(page: receivedPage + 1, context: context)
     }
 
     func tableNode(_ tableNode: ASTableNode, didSelectRowAt indexPath: IndexPath) {
         let row = indexPath.row
-        guard let board = self.board, row < board.postList.count else {
+        guard let board = self.board, row < board.articleList.count else {
             return
         }
-        let post = board.postList[row]
-        onPostSelect?(BoardPost(post: post, boardName: boardName))
+        let article = board.articleList[row]
+        onArticleSelect?(BoardArticle(article: article, boardName: boardName))
     }
 }
 
@@ -376,15 +376,15 @@ private class BoardCellNode: ASCellNode {
     private let titleNode = ASTextNode()
     private let moreButtonNode = ASButtonNode()
 
-    init(post: APIModel.BoardPost) {
+    init(article: APIModel.BoardArticle) {
         super.init()
 
         automaticallyManagesSubnodes = true
 
-        categoryNode.attributedText = NSAttributedString(string: post.category, attributes: metadataAttributes)
-        dateNode.attributedText = NSAttributedString(string: post.date, attributes: metadataAttributes)
-        authorNameNode.attributedText = NSAttributedString(string: post.author, attributes: metadataAttributes)
-        titleNode.attributedText = NSAttributedString(string: post.titleWithoutCategory, attributes: titleAttributes)
+        categoryNode.attributedText = NSAttributedString(string: article.category, attributes: metadataAttributes)
+        dateNode.attributedText = NSAttributedString(string: article.date, attributes: metadataAttributes)
+        authorNameNode.attributedText = NSAttributedString(string: article.author, attributes: metadataAttributes)
+        titleNode.attributedText = NSAttributedString(string: article.titleWithoutCategory, attributes: titleAttributes)
 
         categoryImageNode.image = StyleKit.imageOfCategory()
         clockImageNode.image = StyleKit.imageOfClock()

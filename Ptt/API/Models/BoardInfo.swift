@@ -9,21 +9,13 @@
 import Foundation
 
 extension APIModel {
-    struct BoardInfo : Codable {
-        let name : String
-        let nuser : String
-        let `class` : String
-        let title : String
-        let href : String
-        let maxSize : Int
-    }
     
     struct BoardInfoList: Codable {
-        let list: [BoardInfoV2]
+        let list: [BoardInfo]
         var next_idx: String? = nil
     }
     
-    struct BoardInfoV2: Codable {
+    struct BoardInfo: Codable {
         let bid: String
         let brdname: String
         let title: String
