@@ -76,10 +76,21 @@ extension UITextField {
     }
 }
 
+extension UILabel {
+    func setBottomBorder() {
+        let layer = CALayer()
+        layer.backgroundColor = UIColor(red:56/255, green:56/255, blue:61/255, alpha:1.0).cgColor
+        layer.frame = CGRect(x: 0.0, y: self.frame.size.height - 1.0, width: self.frame.size.width, height: 1.0)
+        self.clipsToBounds = true
+        self.layer.addSublayer(layer)
+        self.setNeedsDisplay()
+    }
+}
+
 extension UIBarButtonItem {
     static func menuButton(_ target: Any?, action: Selector, imageName: String) -> UIBarButtonItem {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(named: imageName), for: .normal)
+        button.setImage(UIImage(systemName: imageName), for: .normal)
         button.addTarget(target, action: action, for: .touchUpInside)
         button.imageView?.contentMode = .scaleAspectFit
         

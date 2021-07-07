@@ -16,13 +16,12 @@ class ComposeArticleViewController: ASDKViewController<ASDisplayNode>, Fullscree
     
     private let apiClient: APIClientProtocol
     private var boardName : String
-    
-//    let toolBar = UIToolbar()
+    var classButtonLabelText = "分類選擇"
     
     lazy var classSelectButton: UIButton = {
         let classSelectButton = UIButton()
         classSelectButton.translatesAutoresizingMaskIntoConstraints = false
-        classSelectButton.setTitle("分類選擇", for: .normal)
+        classSelectButton.setTitle(classButtonLabelText, for: .normal)
         classSelectButton.setTitleColor(UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0), for: .normal)
         classSelectButton.titleLabel?.font = classSelectButton.titleLabel?.font.withSize(16)
         classSelectButton.addTarget(self, action: #selector(classSelect), for: .touchUpInside)
@@ -54,9 +53,27 @@ class ComposeArticleViewController: ASDKViewController<ASDisplayNode>, Fullscree
         contentView.backgroundColor = .black
         contentView.text = placeholderText
         contentView.textColor = UIColor(red:56/255, green:56/255, blue:61/255, alpha:1.0)
-        contentView.backgroundColor = UIColor(red:23/255, green:23/255, blue:23/255, alpha:1.0)
+        contentView.backgroundColor = UIColor(named: "blackColor-23-23-23")
         view.addSubview(contentView)
         return contentView
+    }()
+    
+    lazy var articleClassContentView: UIView = {
+        let articleClassContentView = UIView()
+        articleClassContentView.backgroundColor = UIColor(named: "blackColor-23-23-23")
+        articleClassContentView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(articleClassContentView)
+        articleClassContentView.isHidden = true
+        return articleClassContentView
+    }()
+    
+    lazy var articleClassTableView: ArticleClassTableView =  {
+        let articleClassTableView = ArticleClassTableView()
+        articleClassTableView.translatesAutoresizingMaskIntoConstraints = false
+        articleClassTableView.articleClassTableViewDelegate = self
+        articleClassContentView.addSubview(articleClassTableView)
+//        articleClassTableView.isHidden = true
+        return articleClassTableView
     }()
     
     lazy var toolBar: UIToolbar = {
@@ -64,25 +81,25 @@ class ComposeArticleViewController: ASDKViewController<ASDisplayNode>, Fullscree
         var items = [UIBarButtonItem]()
         
         items.append(
-            UIBarButtonItem.menuButton(self, action: #selector(classSelect), imageName: "delete")
+            UIBarButtonItem.menuButton(self, action: #selector(classSelect), imageName: "trash.fill")
         )
         items.append(
             UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         )
         items.append(
-            UIBarButtonItem.menuButton(self, action: #selector(classSelect), imageName: "draft")
+            UIBarButtonItem.menuButton(self, action: #selector(classSelect), imageName: "square.and.pencil")
         )
         items.append(
             UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         )
         items.append(
-            UIBarButtonItem.menuButton(self, action: #selector(classSelect), imageName: "save")
+            UIBarButtonItem.menuButton(self, action: #selector(classSelect), imageName: "square.and.arrow.down.fill")
         )
         items.append(
             UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         )
         items.append(
-            UIBarButtonItem.menuButton(self, action: #selector(classSelect), imageName: "send")
+            UIBarButtonItem.menuButton(self, action: #selector(classSelect), imageName: "paperplane.fill")
         )
         toolBar.setItems(items, animated: true)
 //        toolBar.tintColor = .red
@@ -92,6 +109,25 @@ class ComposeArticleViewController: ASDKViewController<ASDisplayNode>, Fullscree
         return toolBar
     }()
     
+    lazy var leftBarButton: UIButton = {
+        let leftBarButton = UIButton()
+        leftBarButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        leftBarButton.imageView?.layer.transform = CATransform3DMakeScale(1.3 , 1.3 , 1.3)
+        leftBarButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: -12, bottom: 0, right: 0)
+        
+        leftBarButton.setTitle("編輯文章", for: .normal)
+//        leftBarButton.sizeToFit()
+        leftBarButton.addTarget(self, action: #selector(back), for: .touchUpInside)
+//        leftBarButton.frame.size = CGSize(width: 100, height: 30)
+        return leftBarButton
+        
+//        var chatImage: UIImage  = UIImage(systemName: "chevron.left")
+//        var rightButton : UIButton = UIButton(type: UIButtonType.custom)
+//        rightButton.setBackgroundImage(rightImage, for: .normal)
+//        rightButton.setTitle(title, for: .normal)
+//        rightButton.frame.size = CGSize(width: 100, height: 30)
+    }()
+    
     let placeholderText = "請輸入文章內容"
     
     init(boardName: String, apiClient: APIClientProtocol=APIClient.shared) {
@@ -99,6 +135,7 @@ class ComposeArticleViewController: ASDKViewController<ASDisplayNode>, Fullscree
         self.boardName = boardName
         super.init()
         hidesBottomBarWhenPushed = true
+        
     }
     
     required init?(coder: NSCoder) {
@@ -117,16 +154,26 @@ class ComposeArticleViewController: ASDKViewController<ASDisplayNode>, Fullscree
     }
     
     func initView() {
-        title = NSLocalizedString("編輯文章", comment: "")
-        if #available(iOS 11.0, *) {
-            navigationController?.navigationBar.prefersLargeTitles = true
-        }
+//        title = NSLocalizedString("編輯文章", comment: "")
+//        if #available(iOS 11.0, *) {
+//            navigationController?.navigationBar.prefersLargeTitles = true
+//        }
         view.backgroundColor = GlobalAppearance.backgroundColor
         navigationController?.navigationBar.isTranslucent = false
+        
+        if #available(iOS 11.0, *) {
+            navigationItem.largeTitleDisplayMode = .never
+        }
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButton)
+    }
+    
+    @objc private func back() {
+        navigationController?.popViewController(animated: true)
     }
     
     @objc private func classSelect() {
-        print("XXXXXXXX");
+        articleClassContentView.isHidden = false
     }
     
     func setConstraint() {
@@ -159,6 +206,16 @@ class ComposeArticleViewController: ASDKViewController<ASDisplayNode>, Fullscree
             NSLayoutConstraint(item: toolBar, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
         }
         toolBar.heightAnchor.constraint(equalToConstant: 49).isActive = true
+        
+        NSLayoutConstraint(item: articleClassContentView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: articleClassContentView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: articleClassContentView, attribute: .bottom, relatedBy: .equal, toItem: toolBar, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: articleClassContentView, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
+        
+        NSLayoutConstraint(item: articleClassTableView, attribute: .centerX, relatedBy: .equal, toItem: articleClassContentView, attribute: .centerX, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: articleClassTableView, attribute: .leading, relatedBy: .equal, toItem: articleClassContentView, attribute: .leading, multiplier: 1.0, constant: 55).isActive = true
+        NSLayoutConstraint(item: articleClassTableView, attribute: .bottom, relatedBy: .equal, toItem: articleClassContentView, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: articleClassTableView, attribute: .top, relatedBy: .equal, toItem: articleClassContentView, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
     }
 }
 
@@ -175,5 +232,18 @@ extension ComposeArticleViewController: UITextViewDelegate {
             contentView.text = placeholderText
             contentView.textColor = UIColor(red:56/255, green:56/255, blue:61/255, alpha:1.0)
         }
+    }
+}
+
+extension ComposeArticleViewController: ArticleClassTableViewDelegate {
+    func setArticleClass(classText: String) {
+        
+//        classSelectButton.setTitle(classText, for: .normal)
+        classButtonLabelText = classText
+        print("TTTTTTTTT    ", classButtonLabelText)
+        
+        
+//        classSelectButton.setTitle(classText, for: .normal)
+//        classSelectButton.setTitleColor(GlobalAppearance.tintColor, for: .normal)
     }
 }
