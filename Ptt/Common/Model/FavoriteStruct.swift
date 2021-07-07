@@ -19,20 +19,20 @@ struct Favorite {
         assertionFailure()
         return nil
     }()
-    static var boards : [APIModel.BoardInfoV2] = {
+    static var boards : [APIModel.BoardInfo] = {
         guard let url = savePath,
             let data = try? Data(contentsOf: url),
-            let boards = try? JSONDecoder().decode([APIModel.BoardInfoV2].self, from: data) else {
-                return [APIModel.BoardInfoV2(brdname: "Gossiping", title: "【八卦】 請協助置底協尋"),
-                        APIModel.BoardInfoV2(brdname: "C_Chat", title: "[希洽] 養成好習慣 看文章前先ID"),
-                        APIModel.BoardInfoV2(brdname: "NBA", title: "[NBA] R.I.P. Mr. David Stern"),
-                        APIModel.BoardInfoV2(brdname: "Lifeismoney", title: "[省錢] 省錢板"),
-                        APIModel.BoardInfoV2(brdname: "Stock", title: "[股版]發文請先詳閱版規"),
-                        APIModel.BoardInfoV2(brdname: "HatePolitics", title: "[政黑] 第三勢力先知王kusanagi02"),
-                        APIModel.BoardInfoV2(brdname: "Baseball", title: "[棒球] 2020東奧六搶一在台灣"),
-                        APIModel.BoardInfoV2(brdname: "Tech_Job", title: "[科技] 修機改善是設備終生職責"),
-                        APIModel.BoardInfoV2(brdname: "LoL", title: "[LoL] PCS可憐哪"),
-                        APIModel.BoardInfoV2(brdname: "Beauty", title: "《表特板》發文附圖")]
+            let boards = try? JSONDecoder().decode([APIModel.BoardInfo].self, from: data) else {
+                return [APIModel.BoardInfo(brdname: "Gossiping", title: "【八卦】 請協助置底協尋"),
+                        APIModel.BoardInfo(brdname: "C_Chat", title: "[希洽] 養成好習慣 看文章前先ID"),
+                        APIModel.BoardInfo(brdname: "NBA", title: "[NBA] R.I.P. Mr. David Stern"),
+                        APIModel.BoardInfo(brdname: "Lifeismoney", title: "[省錢] 省錢板"),
+                        APIModel.BoardInfo(brdname: "Stock", title: "[股版]發文請先詳閱版規"),
+                        APIModel.BoardInfo(brdname: "HatePolitics", title: "[政黑] 第三勢力先知王kusanagi02"),
+                        APIModel.BoardInfo(brdname: "Baseball", title: "[棒球] 2020東奧六搶一在台灣"),
+                        APIModel.BoardInfo(brdname: "Tech_Job", title: "[科技] 修機改善是設備終生職責"),
+                        APIModel.BoardInfo(brdname: "LoL", title: "[LoL] PCS可憐哪"),
+                        APIModel.BoardInfo(brdname: "Beauty", title: "《表特板》發文附圖")]
         }
         return boards
         }() {
