@@ -12,21 +12,17 @@ import AsyncDisplayKit
 protocol ComposeArticleView: BaseView {
 }
 
-class ComposeArticleViewController: ASDKViewController<ASDisplayNode>, FullscreenSwipeable, ComposeArticleView {
-    
-    private let apiClient: APIClientProtocol
-    private var boardName : String
+class ComposeArticleViewController: UIViewController, ComposeArticleView {
     var classButtonLabelText = "分類選擇"
     
     lazy var classSelectButton: UIButton = {
-        let classSelectButton = UIButton()
+        var classSelectButton = UIButton()
         classSelectButton.translatesAutoresizingMaskIntoConstraints = false
         classSelectButton.setTitle(classButtonLabelText, for: .normal)
         classSelectButton.setTitleColor(UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0), for: .normal)
         classSelectButton.titleLabel?.font = classSelectButton.titleLabel?.font.withSize(16)
         classSelectButton.addTarget(self, action: #selector(classSelect), for: .touchUpInside)
         classSelectButton.contentHorizontalAlignment = .left
-//        classSelectButton.backgroundColor = .black
         view.addSubview(classSelectButton)
         return classSelectButton
     }()
@@ -35,7 +31,6 @@ class ComposeArticleViewController: ASDKViewController<ASDisplayNode>, Fullscree
         var articleTitle = UITextField()
         articleTitle.translatesAutoresizingMaskIntoConstraints = false
         articleTitle.attributedPlaceholder = NSAttributedString(string:"請輸入文章標題", attributes:[NSAttributedString.Key.foregroundColor: UIColor(red:56/255, green:56/255, blue:61/255, alpha:1.0), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 24)])
-//        articleTitle.backgroundColor = .black
         view.addSubview(articleTitle)
         return articleTitle
     }()
@@ -72,41 +67,71 @@ class ComposeArticleViewController: ASDKViewController<ASDisplayNode>, Fullscree
         articleClassTableView.translatesAutoresizingMaskIntoConstraints = false
         articleClassTableView.articleClassTableViewDelegate = self
         articleClassContentView.addSubview(articleClassTableView)
-//        articleClassTableView.isHidden = true
         return articleClassTableView
     }()
     
-    lazy var toolBar: UIToolbar = {
-        let toolBar = UIToolbar()
-        var items = [UIBarButtonItem]()
+    lazy var confirmComposeAlertViewController: UIAlertController = {
+        let confirmComposeAlertViewController = UIAlertController(title: "確認發佈文章？", message: "", preferredStyle: UIAlertController.Style.alert)
         
-        items.append(
-            UIBarButtonItem.menuButton(self, action: #selector(classSelect), imageName: "trash.fill")
-        )
-        items.append(
-            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        )
-        items.append(
-            UIBarButtonItem.menuButton(self, action: #selector(classSelect), imageName: "square.and.pencil")
-        )
-        items.append(
-            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        )
-        items.append(
-            UIBarButtonItem.menuButton(self, action: #selector(classSelect), imageName: "square.and.arrow.down.fill")
-        )
-        items.append(
-            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        )
-        items.append(
-            UIBarButtonItem.menuButton(self, action: #selector(classSelect), imageName: "paperplane.fill")
-        )
-        toolBar.setItems(items, animated: true)
-//        toolBar.tintColor = .red
-        toolBar.barTintColor = GlobalAppearance.backgroundColor
-        toolBar.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(toolBar)
-        return toolBar
+        confirmComposeAlertViewController.addAction(UIAlertAction(title: "發佈", style: UIAlertAction.Style.default, handler: {action in
+            
+            //test
+            var contentPropertyArray: [APIModel.ContentProperty] = []
+            var contentPropertyOutSideArray: [[APIModel.ContentProperty]] = []
+                
+            let contentProperty = APIModel.ContentProperty(text: "text123")
+            contentPropertyOutSideArray.append(contentPropertyArray)
+            
+            
+            let createArticle = APIModel.CreateArticle(className: "gg", title: "987aa", content: contentPropertyOutSideArray)
+            
+            APIClient.shared.createArticle(boardId: "baseball", article: createArticle) { (result) in
+                print(" result", result)
+                switch (result) {
+                case .failure(let error):
+                    print(error)
+//                    DispatchQueue.main.async {
+//                        self.showAlert(title: NSLocalizedString("Error", comment: ""), msg: NSLocalizedString("Login", comment: "") + NSLocalizedString("Error", comment: "") + error.message)
+//                    }
+                case .success(let response):
+                    print(response)
+                }
+            }
+            
+//            APIClient.shared.createArticle(boardId: <#T##String#>, article: <#T##APIModel.CreateArticle#>) { [weak self] (result) in
+//                guard let weakSelf = self else { return }
+//                switch result {
+//                    case .failure(error: let apiError):
+//                        print("ErrorMessage " + apiError.message)
+//                        weakSelf.delegate?.showErrorAlert(errorMessage: apiError.message)
+//                        return
+//                    case .success(data: let data):
+//                        var tempList: [APIModel.BoardInfo] = []
+//
+//                        for item in data.list {
+//                            tempList.append(item)
+//                        }
+//                        weakSelf.initViewModel()
+//                        weakSelf.popularBoards.value = tempList
+//                        return
+//                }
+//            }
+            
+        }))
+        
+        confirmComposeAlertViewController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
+        return confirmComposeAlertViewController
+    }()
+    
+    lazy var deleteComposeAlertViewController: UIAlertController = {
+        let deleteComposeAlertViewController = UIAlertController(title: "確認放棄文章？", message: "", preferredStyle: UIAlertController.Style.alert)
+        
+        deleteComposeAlertViewController.addAction(UIAlertAction(title: "確定", style: UIAlertAction.Style.default, handler: {action in
+            print("TTTTT")
+        }))
+        
+        deleteComposeAlertViewController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
+        return deleteComposeAlertViewController
     }()
     
     lazy var leftBarButton: UIButton = {
@@ -116,37 +141,49 @@ class ComposeArticleViewController: ASDKViewController<ASDisplayNode>, Fullscree
         leftBarButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: -12, bottom: 0, right: 0)
         
         leftBarButton.setTitle("編輯文章", for: .normal)
-//        leftBarButton.sizeToFit()
         leftBarButton.addTarget(self, action: #selector(back), for: .touchUpInside)
-//        leftBarButton.frame.size = CGSize(width: 100, height: 30)
         return leftBarButton
-        
-//        var chatImage: UIImage  = UIImage(systemName: "chevron.left")
-//        var rightButton : UIButton = UIButton(type: UIButtonType.custom)
-//        rightButton.setBackgroundImage(rightImage, for: .normal)
-//        rightButton.setTitle(title, for: .normal)
-//        rightButton.frame.size = CGSize(width: 100, height: 30)
     }()
     
     let placeholderText = "請輸入文章內容"
     
-    init(boardName: String, apiClient: APIClientProtocol=APIClient.shared) {
-        self.apiClient = apiClient
-        self.boardName = boardName
-        super.init()
-        hidesBottomBarWhenPushed = true
-        
+//    init(boardName: String, apiClient: APIClientProtocol=APIClient.shared) {
+//        self.apiClient = apiClient
+//        self.boardName = boardName
+//        super.init()
+//        hidesBottomBarWhenPushed = true
+//
+//    }
+//
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+    
+    @objc private func deleteCompose() {
+        print("deleteCompose")
+        present(deleteComposeAlertViewController, animated: true)
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    @objc private func loadDraft() {
+        print("loadDraft")
+    }
+    
+    @objc private func saveDraft() {
+        print("saveDraft")
+    }
+    
+    @objc private func sendCompose() {
+        print("sendCompose")
+        present(confirmComposeAlertViewController, animated: true)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
+        initToolBar()
 //        initBinding()
         setConstraint()
+//        print("XXXXXXXX   "+boardName)
     }
     
     override func viewDidLayoutSubviews() {
@@ -168,7 +205,32 @@ class ComposeArticleViewController: ASDKViewController<ASDisplayNode>, Fullscree
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButton)
     }
     
+    func initToolBar() {
+        navigationController?.isToolbarHidden = false
+
+        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+        let deleteComposeButton =  UIBarButtonItem(image: UIImage(systemName: "trash.fill"),
+                   style: .plain, target:self,
+                   action: #selector(deleteCompose))
+        
+        let loadDraftButton = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"),
+           style: .plain, target:self,
+           action: #selector(loadDraft))
+
+        let saveDraftButton = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.down.fill"),
+           style: .plain, target:self,
+           action: #selector(saveDraft))
+
+        let sendComposeButton = UIBarButtonItem(image:UIImage(systemName: "paperplane.fill"),
+           style: .plain, target:self,
+           action: #selector(sendCompose))
+        
+        
+        self.toolbarItems = [space, deleteComposeButton, space, loadDraftButton, space, saveDraftButton, space, sendComposeButton, space]
+    }
+    
     @objc private func back() {
+        navigationController?.isToolbarHidden = true
         navigationController?.popViewController(animated: true)
     }
     
@@ -182,40 +244,53 @@ class ComposeArticleViewController: ASDKViewController<ASDisplayNode>, Fullscree
         NSLayoutConstraint(item: classSelectButton, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: classSelectButton, attribute: .height, relatedBy: .equal,
             toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 54).isActive = true
-        
+
         NSLayoutConstraint(item: articleTitle, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: articleTitle, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: articleTitle, attribute: .top, relatedBy: .equal, toItem: classSelectButton, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: articleTitle, attribute: .height, relatedBy: .equal,
             toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 29).isActive = true
-        
+
         NSLayoutConstraint(item: contentView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: contentView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: contentView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: contentView, attribute: .top, relatedBy: .equal, toItem: articleTitle, attribute: .bottom, multiplier: 1.0, constant: 29).isActive = true
         
-        if #available(iOS 11.0, *) {
-            let guide = self.view.safeAreaLayoutGuide
-            toolBar.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
-            toolBar.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
-            toolBar.bottomAnchor.constraint(equalTo: guide.bottomAnchor).isActive = true
-        }
-        else {
-            NSLayoutConstraint(item: toolBar, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
-            NSLayoutConstraint(item: toolBar, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
-            NSLayoutConstraint(item: toolBar, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
-        }
-        toolBar.heightAnchor.constraint(equalToConstant: 49).isActive = true
-        
+//        if #available(iOS 11.0, *) {
+//            NSLayoutConstraint(item: toolBarView, attribute: .bottom, relatedBy: .equal, toItem: self.view.safeAreaLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
+//        } else {
+//            NSLayoutConstraint(item: toolBarView, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
+//        }
+//        
+//        NSLayoutConstraint(item: toolBarView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
+//        NSLayoutConstraint(item: toolBarView, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0).isActive = true
+//        NSLayoutConstraint(item: toolBarView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 49).isActive = true
+
         NSLayoutConstraint(item: articleClassContentView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: articleClassContentView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
-        NSLayoutConstraint(item: articleClassContentView, attribute: .bottom, relatedBy: .equal, toItem: toolBar, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(item: articleClassContentView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: articleClassContentView, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
-        
+
         NSLayoutConstraint(item: articleClassTableView, attribute: .centerX, relatedBy: .equal, toItem: articleClassContentView, attribute: .centerX, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: articleClassTableView, attribute: .leading, relatedBy: .equal, toItem: articleClassContentView, attribute: .leading, multiplier: 1.0, constant: 55).isActive = true
         NSLayoutConstraint(item: articleClassTableView, attribute: .bottom, relatedBy: .equal, toItem: articleClassContentView, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: articleClassTableView, attribute: .top, relatedBy: .equal, toItem: articleClassContentView, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
+        
+//        if #available(iOS 11.0, *) {
+//            let guide = self.view.safeAreaLayoutGuide
+//            toolBar.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
+//            toolBar.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
+//            toolBar.bottomAnchor.constraint(equalTo: guide.bottomAnchor).isActive = true
+//            toolBar.heightAnchor.constraint(equalToConstant: 44).isActive = true
+//
+//        }
+//        else {
+//            NSLayoutConstraint(item: toolBar, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
+//            NSLayoutConstraint(item: toolBar, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
+//            NSLayoutConstraint(item: toolBar, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
+//
+//            toolBar.heightAnchor.constraint(equalToConstant: 44).isActive = true
+//        }
     }
 }
 
@@ -237,13 +312,34 @@ extension ComposeArticleViewController: UITextViewDelegate {
 
 extension ComposeArticleViewController: ArticleClassTableViewDelegate {
     func setArticleClass(classText: String) {
-        
-//        classSelectButton.setTitle(classText, for: .normal)
-        classButtonLabelText = classText
-        print("TTTTTTTTT    ", classButtonLabelText)
-        
-        
-//        classSelectButton.setTitle(classText, for: .normal)
-//        classSelectButton.setTitleColor(GlobalAppearance.tintColor, for: .normal)
+        if (classText != "無" && classText != "取消") {
+            classSelectButton.setTitle(classText, for: .normal)
+            classSelectButton.setTitleColor(GlobalAppearance.tintColor, for: .normal)
+            articleTitle.text = "[" + classText + "] "
+        }
+        articleClassContentView.isHidden = true
     }
 }
+
+//extension ComposeArticleViewController: ComposeToolBarViewDelegate {
+//    func deleteCompose() {
+//
+//    }
+//
+//    func loadDraft() {
+//
+//    }
+//
+//    func saveDraft() {
+//
+//    }
+//
+//    func sendCompose() {
+//        print("KKKKKKKKKKKKKK")
+//        DispatchQueue.main.async(execute: {
+//            self.present(self.confirmComposeAlertViewController, animated: true)
+//        })
+//    }
+//
+//
+//}

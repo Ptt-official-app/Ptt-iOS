@@ -77,7 +77,6 @@ extension ArticleClassTableView: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("@@@@@@@@@@@@@   ", classList[indexPath.row])
         articleClassTableViewDelegate?.setArticleClass(classText: classList[indexPath.row])
     }
     

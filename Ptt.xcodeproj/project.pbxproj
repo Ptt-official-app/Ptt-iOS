@@ -57,6 +57,8 @@
 		CD694CF825A7608E00428DC9 /* PopularBoardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD694CF725A7608E00428DC9 /* PopularBoardsViewController.swift */; };
 		CD6C141125A9E8F40043E7EC /* PopularBoardsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6C141025A9E8F40043E7EC /* PopularBoardsTableViewCell.swift */; };
 		CD6C141825AB0C660043E7EC /* PopularBoardsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6C141725AB0C660043E7EC /* PopularBoardsViewModel.swift */; };
+		CD6C1C0C26A8F43E00EBFEA9 /* ComposeToolBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6C1C0B26A8F43E00EBFEA9 /* ComposeToolBarView.swift */; };
+		CD6C1C1926AD783100EBFEA9 /* CreateArticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6C1C1826AD783100EBFEA9 /* CreateArticle.swift */; };
 		CD731CD925BC8945008C43DA /* BoardsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD731CD425BC8945008C43DA /* BoardsTableViewCell.swift */; };
 		CD731CDA25BC8945008C43DA /* ResultsTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD731CD625BC8945008C43DA /* ResultsTableController.swift */; };
 		CD731CDB25BC8945008C43DA /* FavoriteStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD731CD825BC8945008C43DA /* FavoriteStruct.swift */; };
@@ -149,6 +151,8 @@
 		CD694CF725A7608E00428DC9 /* PopularBoardsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularBoardsViewController.swift; sourceTree = "<group>"; };
 		CD6C141025A9E8F40043E7EC /* PopularBoardsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularBoardsTableViewCell.swift; sourceTree = "<group>"; };
 		CD6C141725AB0C660043E7EC /* PopularBoardsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularBoardsViewModel.swift; sourceTree = "<group>"; };
+		CD6C1C0B26A8F43E00EBFEA9 /* ComposeToolBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeToolBarView.swift; sourceTree = "<group>"; };
+		CD6C1C1826AD783100EBFEA9 /* CreateArticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateArticle.swift; sourceTree = "<group>"; };
 		CD731CD425BC8945008C43DA /* BoardsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardsTableViewCell.swift; sourceTree = "<group>"; };
 		CD731CD625BC8945008C43DA /* ResultsTableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultsTableController.swift; sourceTree = "<group>"; };
 		CD731CD825BC8945008C43DA /* FavoriteStruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteStruct.swift; sourceTree = "<group>"; };
@@ -264,6 +268,7 @@
 				3E65528B255960AE0026290B /* Comment.swift */,
 				3E655287255960910026290B /* FullArticle.swift */,
 				3E8D8C82258A511600346690 /* LoginToken.swift */,
+				CD6C1C1826AD783100EBFEA9 /* CreateArticle.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -528,6 +533,7 @@
 			children = (
 				CD7550C8264AC33C00F87395 /* ComposeArticleViewController.swift */,
 				CD072A81266D3F5400279419 /* ArticleClassTableView.swift */,
+				CD6C1C0B26A8F43E00EBFEA9 /* ComposeToolBarView.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -785,6 +791,7 @@
 				CD6C141825AB0C660043E7EC /* PopularBoardsViewModel.swift in Sources */,
 				EA41D65D243EF51A0052F4A1 /* FBPageViewController.swift in Sources */,
 				CD694CF325A74F0400428DC9 /* PopularBoardsSceneFactoryProtocol.swift in Sources */,
+				CD6C1C1926AD783100EBFEA9 /* CreateArticle.swift in Sources */,
 				9B564C65256AA83100787FD7 /* TabBarView.swift in Sources */,
 				3E655288255960910026290B /* FullArticle.swift in Sources */,
 				CD6C141125A9E8F40043E7EC /* PopularBoardsTableViewCell.swift in Sources */,
@@ -813,6 +820,7 @@
 				9B564C5C256AA74100787FD7 /* TabBarController.swift in Sources */,
 				CD7550C9264AC33C00F87395 /* ComposeArticleViewController.swift in Sources */,
 				EA9DE10F2563A82200AEFC19 /* FullscreenSwipeBack.swift in Sources */,
+				CD6C1C0C26A8F43E00EBFEA9 /* ComposeToolBarView.swift in Sources */,
 				EA475F7923C4834C000867FE /* FavoriteViewController.swift in Sources */,
 				CD694CED25A74D3100428DC9 /* PopularBoardsCoordinator.swift in Sources */,
 				9B564C57256AA69500787FD7 /* CoordinatorFactory.swift in Sources */,
