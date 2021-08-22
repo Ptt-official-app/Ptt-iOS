@@ -42,6 +42,6 @@ final class SceneFactory: FavoriteSceneFactoryProtocol,
     }
     
     func makeComposeArticleView(withBoardName boardName: String) -> ComposeArticleView {
-        return ComposeArticleViewController()
+        return ComposeArticleViewController(boardName: boardName)
     }
 }

@@ -50,19 +50,16 @@ extension APIModel {
     }
     
     struct CreateArticleResponse: Codable {
-        let aid: String
         let bid: String
+        let aid: String
         let deleted: Bool
-        let filename: String
         let create_time: Int
         let modified: Int
         let recommend: Int
         let n_comments: Int
         let owner: String
-        let date: String
         let title: String
         let money: Int
-        let type: String
         let `class`: String
         let mode: Int
         let url: String

@@ -29,12 +29,22 @@ extension APIModel {
         let owner : String
 
         let brdname : String
-//        let content : [GoPttBBSArticleContent]
+        let content : [[ContentProperty]]
         let url : String
+        let `class`: String
 
         static func adapter(model: GoPttBBSArticle) -> FullArticle {
-            // TODO:
-            return FullArticle(title: model.title, date: "\(model.create_time)", author: model.owner, board: model.brdname, nickname: "", content: "", comments: [APIModel.Comment](), url: model.url)
+            var arrangeContent = ""
+            for item in model.content.dropFirst(3) {
+                print("CCCCCCCCC    ", item)
+                for subItem in item {
+                    print("BBBBBBBBBB    ", subItem.text)
+                    arrangeContent += subItem.text + "\r\n"
+                }
+            }
+            
+            let fullArticle = FullArticle(title: "[" + model.`class` + "]" + model.title, date: Date(timeIntervalSince1970: model.create_time).toDateString(), author: model.owner, board: model.brdname, nickname: "", content: arrangeContent, comments: [APIModel.Comment](), url: model.url)
+            return fullArticle
         }
     }
 

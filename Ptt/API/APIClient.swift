@@ -286,11 +286,11 @@ extension APIClient: APIClientProtocol {
     }
     
     func createArticle(boardId: String, article: APIModel.CreateArticle, completion: @escaping (createArticleResult) -> Void) {
-        
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/board/" + boardId + "/article"
+        
         guard let url = urlComponent.url,
-              let jsonBody = try? JSONSerialization.data(withJSONObject: article) else {
+              let jsonBody = try? JSONEncoder().encode(article) else {
             assertionFailure()
             return
         }
@@ -298,19 +298,10 @@ extension APIClient: APIClientProtocol {
         var request = URLRequest(url: url)
         request.httpMethod = Method.POST.rawValue
         request.httpBody = jsonBody
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue( "Bearer \(LoginKeyChainItem.shared.readToken()!)", forHTTPHeaderField: "Authorization")
 
-//        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
-//            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
-//            switch result {
-//            case .failure(let apiError):
-//                print("TTTTTTTTTTT    ", apiError)
-//                break
-////                completion(.failure(apiError))
-//            case .success(let resultData):
-//                print("ppppppppppp    ", resultData)
-//                break
-//            }
-//        }
         let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
             let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
             switch result {
@@ -328,7 +319,6 @@ extension APIClient: APIClientProtocol {
         }
         task.resume()
     }
-    
 }
 
 // MARK: Private helper function

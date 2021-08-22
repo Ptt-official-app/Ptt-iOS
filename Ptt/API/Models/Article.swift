@@ -31,9 +31,9 @@ extension Article {
     var titleWithoutCategory : String {
         if let leftBracket = title.firstIndex(of: "["), let rightBracket = title.firstIndex(of: "]") {
             var _title = title
-            let nextRightBracket = _title.index(after: rightBracket)
-            let range = leftBracket...nextRightBracket
-            _title.removeSubrange(range)
+//            let nextRightBracket = _title.index(after: rightBracket)
+//            let range = leftBracket...nextRightBracket
+//            _title.removeSubrange(range)
             return _title
         }
         return title

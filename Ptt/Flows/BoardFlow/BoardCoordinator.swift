@@ -36,7 +36,7 @@ private extension BoardCoordinator {
             self?.showArticleView(withBoardArticle: boardArticle)
         }
         
-        boardView.composeArticle = { [weak self] () in
+        boardView.composeArticle = { [weak self] (boardName) in
             self?.showComposeArticleView(withBoardName: boardName)
         }
         

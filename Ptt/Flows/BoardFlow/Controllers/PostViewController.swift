@@ -145,7 +145,6 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         if #available(iOS 11.0, *) {
             navigationItem.largeTitleDisplayMode = .never
         }
@@ -227,7 +226,8 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
         } else {
             activityIndicator.startAnimating()
         }
-        self.apiClient.getArticle(of: .legacy(boardName: boardName, filename: filename)) { (result) in
+//        self.apiClient.getArticle(of: .legacy(boardName: boardName, filename: filename)) { (result) in
+        self.apiClient.getArticle(of: .go_pttbbs(bid: boardName, aid: filename)) { (result) in
             DispatchQueue.main.async {
                 self.activityIndicator.stopAnimating()
                 if #available(iOS 10.0, *) {

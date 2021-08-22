@@ -86,3 +86,11 @@ extension UILabel {
         self.setNeedsDisplay()
     }
 }
+
+extension Date {
+    func toDateString() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEE MMM dd HH:mm:ss yyyy" //Specify your format that you want
+        return dateFormatter.string(from: self as Date)
+    }
+}
