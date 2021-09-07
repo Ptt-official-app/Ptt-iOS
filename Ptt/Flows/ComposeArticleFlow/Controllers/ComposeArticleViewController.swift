@@ -87,14 +87,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         
         confirmComposeAlertViewController.addAction(UIAlertAction(title: "發佈", style: UIAlertAction.Style.default, handler: {action in
             
-            var contentPropertyArray: [APIModel.ContentProperty] = []
-            var contentPropertyOutSideArray: [[APIModel.ContentProperty]] = []
-            print("HHHHHHHHHHHHHHH      ", self.contentView.text)
-            let contentProperty = APIModel.ContentProperty(text: self.contentView.text)
-            contentPropertyArray.append(contentProperty)
-            contentPropertyOutSideArray.append(contentPropertyArray)
-            
-            let createArticle = APIModel.CreateArticle(className: self.classText, title: self.articleTitle.text ?? "", content: contentPropertyOutSideArray)
+            let createArticle = APIModel.CreateArticle(className: self.classText, title: self.articleTitle.text ?? "", content: self.viewModel.getContentPropertyOutSideArray())
             
             self.loadingView.isHidden = false
             self.navigationController?.isToolbarHidden = true
@@ -152,6 +145,10 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         return leftBarButton
     }()
     
+    let barSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+    
+    let viewModel = ComposeArticleViewModel()
+    
     @objc private func deleteCompose() {
         print("deleteCompose")
         present(deleteComposeAlertViewController, animated: true)
@@ -188,6 +185,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         super.viewDidLoad()
         initView()
         initToolBar()
+        initKeyboardToolBar()
         setConstraint()
     }
     
@@ -208,8 +206,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
     
     func initToolBar() {
         navigationController?.isToolbarHidden = false
-
-        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+        
         let deleteComposeButton =  UIBarButtonItem(image: UIImage(systemName: "trash.fill"),
                    style: .plain, target:self,
                    action: #selector(deleteCompose))
@@ -226,8 +223,37 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
            style: .plain, target:self,
            action: #selector(sendCompose))
         
+        deleteComposeButton.tintColor = .lightGray
+        loadDraftButton.tintColor = .lightGray
+        saveDraftButton.tintColor = .lightGray
+        sendComposeButton.tintColor = .lightGray
         
-        self.toolbarItems = [space, deleteComposeButton, space, loadDraftButton, space, saveDraftButton, space, sendComposeButton, space]
+        self.toolbarItems = [barSpace, deleteComposeButton, barSpace, loadDraftButton, barSpace, saveDraftButton, barSpace, sendComposeButton, barSpace]
+    }
+    
+    func initKeyboardToolBar() {
+        let bar = UIToolbar(frame:CGRect(x:0, y:0, width:100, height:100))
+        let photo = UIBarButtonItem(image: UIImage(systemName: "photo.fill"),
+            style: .plain, target:self,
+            action: #selector(saveDraft))
+
+        let paintpalette = UIBarButtonItem(image: UIImage(systemName: "paintpalette.fill"),
+            style: .plain, target:self,
+            action: #selector(saveDraft))
+
+        let paperplane = UIBarButtonItem(image:UIImage(systemName: "paperplane.fill"),
+           style: .plain, target:self,
+           action: #selector(sendCompose))
+
+        photo.tintColor = .lightGray
+        paintpalette.tintColor = .lightGray
+        paperplane.tintColor = .lightGray
+
+        bar.items = [barSpace, photo, barSpace, paintpalette, barSpace, paperplane, barSpace]
+        bar.sizeToFit()
+        
+        articleTitle.inputAccessoryView = bar
+        contentView.inputAccessoryView = bar
     }
     
     @objc private func back() {
@@ -287,6 +313,11 @@ extension ComposeArticleViewController: UITextViewDelegate {
             contentView.text = placeholderText
             contentView.textColor = UIColor(red:56/255, green:56/255, blue:61/255, alpha:1.0)
         }
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        viewModel.insertContent(text)
+        return true
     }
 }
 

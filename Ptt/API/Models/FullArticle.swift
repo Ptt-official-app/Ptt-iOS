@@ -35,12 +35,15 @@ extension APIModel {
 
         static func adapter(model: GoPttBBSArticle) -> FullArticle {
             var arrangeContent = ""
-            for item in model.content.dropFirst(3) {
+            for item in model.content {
                 print("CCCCCCCCC    ", item)
-                for subItem in item {
-                    print("BBBBBBBBBB    ", subItem.text)
-                    arrangeContent += subItem.text + "\r\n"
+                if (!item.isEmpty) {
+                    for subItem in item {
+                        print("BBBBBBBBBB    ", subItem.text)
+                        arrangeContent += subItem.text
+                    }
                 }
+                arrangeContent += "\r\n"
             }
             
             let fullArticle = FullArticle(title: "[" + model.`class` + "]" + model.title, date: Date(timeIntervalSince1970: model.create_time).toDateString(), author: model.owner, board: model.brdname, nickname: "", content: arrangeContent, comments: [APIModel.Comment](), url: model.url)
