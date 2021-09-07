@@ -162,6 +162,14 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         print("saveDraft")
     }
     
+    @objc private func photoUpload() {
+        
+    }
+    
+    @objc private func openPaintpalette() {
+        
+    }
+    
     @objc private func sendCompose() {
         if (self.contentView.text == "" || self.classText == "" || self.articleTitle.text == "") {
             noticeAlertViewController.title = (self.classText == "") ? "請選擇分類" : "請輸入標題或內容"
@@ -235,11 +243,11 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         let bar = UIToolbar(frame:CGRect(x:0, y:0, width:100, height:100))
         let photo = UIBarButtonItem(image: UIImage(systemName: "photo.fill"),
             style: .plain, target:self,
-            action: #selector(saveDraft))
+            action: #selector(photoUpload))
 
         let paintpalette = UIBarButtonItem(image: UIImage(systemName: "paintpalette.fill"),
             style: .plain, target:self,
-            action: #selector(saveDraft))
+            action: #selector(openPaintpalette))
 
         let paperplane = UIBarButtonItem(image:UIImage(systemName: "paperplane.fill"),
            style: .plain, target:self,
