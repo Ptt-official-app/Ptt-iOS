@@ -42,12 +42,8 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
     lazy var contentView: UITextView = {
         let contentView = UITextView()
         contentView.font = UIFont.systemFont(ofSize: 18)
-//        textView.autocorrectionType = UITextAutocorrectionType.no
-//        textView.keyboardType = .default
-//        textView.returnKeyType = UIReturnKeyType.done
         contentView.delegate = self
         contentView.translatesAutoresizingMaskIntoConstraints = false
-//        textView.textAlignment = NSTextAlignment.justified
         contentView.textAlignment = .left
         contentView.backgroundColor = .black
         contentView.text = placeholderText

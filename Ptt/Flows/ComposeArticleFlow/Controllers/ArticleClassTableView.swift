@@ -36,8 +36,6 @@ class ArticleClassTableView: UITableView {
         showsVerticalScrollIndicator = false
         tableFooterView = UIView()
         initTableHeaderView()
-//        separatorStyle = .singleLine
-//        self.estimatedRowHeight = 47.0
         separatorInset = UIEdgeInsets.zero
         register(ArticleClassTableViewCell.self, forCellReuseIdentifier: ArticleClassTableViewCell.cellIdentifier())
     }

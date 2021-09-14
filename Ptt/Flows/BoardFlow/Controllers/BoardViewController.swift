@@ -101,7 +101,7 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
         }
         self.isRequesting = true
         context.beginBatchFetching()
-//        self.apiClient.getBoardArticles(of: .legacy(boardName: boardName, page: page)) { (result) in
+        
         self.apiClient.getBoardArticles(of: .go_pttbbs(bid: boardName, startIdx: "")) { (result) in
             switch result {
             case .failure(error: let apiError):

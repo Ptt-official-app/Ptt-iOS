@@ -42,7 +42,7 @@ class ComposeArticleViewModel {
         else if (text == "") {
             if (currentText.isEmpty) {
                 if (!contentPropertyOutSideArray.isEmpty) {
-                    currentText = contentPropertyOutSideArray[0][0].text
+                    currentText = contentPropertyOutSideArray.last?.last?.text ?? ""
                     contentPropertyOutSideArray.removeLast()
                 }
             }

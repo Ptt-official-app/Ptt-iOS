@@ -226,7 +226,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
         } else {
             activityIndicator.startAnimating()
         }
-//        self.apiClient.getArticle(of: .legacy(boardName: boardName, filename: filename)) { (result) in
+        
         self.apiClient.getArticle(of: .go_pttbbs(bid: boardName, aid: filename)) { (result) in
             DispatchQueue.main.async {
                 self.activityIndicator.stopAnimating()

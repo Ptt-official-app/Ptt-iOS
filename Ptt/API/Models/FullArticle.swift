@@ -36,10 +36,8 @@ extension APIModel {
         static func adapter(model: GoPttBBSArticle) -> FullArticle {
             var arrangeContent = ""
             for item in model.content {
-                print("CCCCCCCCC    ", item)
                 if (!item.isEmpty) {
                     for subItem in item {
-                        print("BBBBBBBBBB    ", subItem.text)
                         arrangeContent += subItem.text
                     }
                 }
