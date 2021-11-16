@@ -44,7 +44,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
                     // See: https://developer.apple.com/videos/play/wwdc2017/244/?time=2130
                     let attributedText = NSMutableAttributedString()
                     // Header
-//                    attributedText.append(self.headerAttributedString(of: article))
+                    attributedText.append(self.headerAttributedString(of: article))
                     // Content
                     let contentParagraphStyle = NSMutableParagraphStyle()
                     let hPadding : CGFloat = {

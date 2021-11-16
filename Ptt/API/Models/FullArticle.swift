@@ -40,8 +40,8 @@ extension APIModel {
                     for subItem in item {
                         arrangeContent += subItem.text
                     }
+                    arrangeContent += "\r\n"
                 }
-                arrangeContent += "\r\n"
             }
             
             let fullArticle = FullArticle(title: "[" + model.`class` + "]" + model.title, date: Date(timeIntervalSince1970: model.create_time).toDateString(), author: model.owner, board: model.brdname, nickname: "", content: arrangeContent, comments: [APIModel.Comment](), url: model.url)

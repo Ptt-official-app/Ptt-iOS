@@ -85,6 +85,7 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
         toolbarNode.searchNode.addTarget(self, action: #selector(search), forControlEvents: .touchUpInside)
         toolbarNode.composeNode.addTarget(self, action: #selector(compose), forControlEvents: .touchUpInside)
         toolbarNode.moreNode.addTarget(self, action: #selector(more), forControlEvents: .touchUpInside)
+        refresh()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -92,7 +93,6 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
         if let selectedRow = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectedRow, animated: true)
         }
-        refresh()
     }
 
     private func requestArticles(page: Int, context: ASBatchContext) {
