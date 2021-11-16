@@ -123,6 +123,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
                     }
                 case .success(let response):
                     DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: NSNotification.Name("didPostNewArticle"), object: nil)
                         self.navigationController?.popViewController(animated: false)
                     }
                 }
@@ -161,7 +162,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         return leftBarButton
     }()
     
-    var keyboardPosY: CGFloat = 0
+//    var keyboardPosY: CGFloat = 0
     var currentTextviewCursorPosY: CGFloat = 0
     var scrollViewMoveStep: CGFloat = 0
     
@@ -191,6 +192,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
     }
     
     @objc private func sendCompose() {
+        self.view.endEditing(true)
         if (articleContentView.text == "" || classText == "" || articleTitle.text == "") {
             noticeAlertViewController.title = (classText == "") ? "請選擇分類" : "請輸入標題或內容"
             present(noticeAlertViewController, animated: true)
@@ -302,7 +304,6 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
     }
     
     func setConstraint() {
-//        scrollView
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -363,18 +364,10 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
 
 private extension ComposeArticleViewController {
     @objc func keyboardWillShow(notification: NSNotification) {
-//        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
-//        else {
-//            // if keyboard size is not available for some reason, dont do anything
-//            return
-//        }
-        
-        guard let keyboardSize = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
-        keyboardPosY = keyboardSize.minY
-        
+//        guard let keyboardSize = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+//        keyboardPosY = keyboardSize.minY
         
 //        let contentInsets = UIEdgeInsets(top: -keyboardSize.height, left: 0.0, bottom: 0.0 , right: 0.0)
-//        print("aaaabbbbccc   ", keyboardSize.minY, keyboardSize.maxY)
 //        scrollView.contentInset = contentInsets
 //        scrollView.scrollIndicatorInsets = contentInsets
     }
@@ -394,40 +387,12 @@ private extension ComposeArticleViewController {
 extension ComposeArticleViewController: UITextViewDelegate {
 
     func textViewDidChange(_ textView: UITextView) {
-//        if let selectedRange = articleContentView.selectedTextRange {
-//
-//            let cursorPosition = articleContentView.offset(from: articleContentView.beginningOfDocument, to: selectedRange.start)
-//
-//            print("\(cursorPosition)")
+//        if let cursorPosition = textView.selectedTextRange?.end {
+//            DispatchQueue.main.async{ [weak self] in
+//                let caretPositionRect = textView.caretRect(for: cursorPosition)
+//                let pointsuperview = textView.convert(caretPositionRect, to: self?.scrollView)
+//            }
 //        }
-        if let cursorPosition = textView.selectedTextRange?.end {
-            DispatchQueue.main.async{ [weak self] in
-                let caretPositionRect = textView.caretRect(for: cursorPosition)
-                
-                let pointsuperview = textView.convert(caretPositionRect, to: self?.scrollView)
-                print("pointsuperview  ", pointsuperview.maxY, pointsuperview.minY)
-                print("keyboardPosY  ", self!.keyboardPosY)
-                
-//                if (self!.keyboardPosY + (50 * self!.scrollViewMoveStep) - pointsuperview.maxY <= 50) {print("YYYYYy")
-//                    self?.scrollViewMoveStep += 1
-//                }
-                
-//                if (self!.keyboardPosY + (50 * self!.scrollViewMoveStep) - pointsuperview.minY <= 50) {
-//                    if (pointsuperview.minY > self!.currentTextviewCursorPosY) {
-//                        self?.scrollViewMoveStep += 1
-//                    }
-//                    self?.currentTextviewCursorPosY = pointsuperview.minY
-//                }
-//                else if (pointsuperview.minY < self!.currentTextviewCursorPosY && self!.scrollViewMoveStep > 0) {
-//                    self?.currentTextviewCursorPosY = pointsuperview.minY
-//                    self?.scrollViewMoveStep -= 1
-//                }
-                
-//                let contentInsets = UIEdgeInsets(top: (-50 * self!.scrollViewMoveStep), left: 0.0, bottom: 0.0 , right: 0.0)
-//                self?.scrollView.contentInset = contentInsets
-//                self?.scrollView.scrollIndicatorInsets = contentInsets
-            }
-        }
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
@@ -435,9 +400,6 @@ extension ComposeArticleViewController: UITextViewDelegate {
             articleContentView.text = ""
             articleContentView.textColor = .white
         }
-        
-//        let scrollPoint : CGPoint = CGPoint.init(x:0, y:textView.frame.origin.y)
-//        scrollView.setContentOffset(scrollPoint, animated: true)
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -445,7 +407,6 @@ extension ComposeArticleViewController: UITextViewDelegate {
             articleContentView.text = placeholderText
             articleContentView.textColor = UIColor(red:56/255, green:56/255, blue:61/255, alpha:1.0)
         }
-        scrollView.setContentOffset(.zero, animated: true)
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {

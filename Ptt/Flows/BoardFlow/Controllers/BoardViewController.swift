@@ -85,6 +85,9 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
         toolbarNode.searchNode.addTarget(self, action: #selector(search), forControlEvents: .touchUpInside)
         toolbarNode.composeNode.addTarget(self, action: #selector(compose), forControlEvents: .touchUpInside)
         toolbarNode.moreNode.addTarget(self, action: #selector(more), forControlEvents: .touchUpInside)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name("didPostNewArticle"), object: nil)
+        
         refresh()
     }
     
