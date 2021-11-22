@@ -22,7 +22,6 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         var scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
-        scrollView.isScrollEnabled = false
         scrollView.backgroundColor = .orange
         return scrollView
     }()
@@ -124,7 +123,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
                 case .success(let response):
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: NSNotification.Name("didPostNewArticle"), object: nil)
-                        self.navigationController?.popViewController(animated: false)
+                        self.back()
                     }
                 }
             }
@@ -162,8 +161,8 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         return leftBarButton
     }()
     
-//    var keyboardPosY: CGFloat = 0
-    var currentTextviewCursorPosY: CGFloat = 0
+    var keyboardY: CGFloat = 0
+    var currentTextviewCursorPosMaxY: CGFloat = 0
     var scrollViewMoveStep: CGFloat = 0
     
     let barSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
@@ -211,6 +210,16 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
@@ -220,9 +229,6 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ComposeArticleViewController.backgroundTap))
         contentView.addGestureRecognizer(tapGestureRecognizer)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(ComposeArticleViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ComposeArticleViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewDidLayoutSubviews() {
@@ -231,8 +237,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
     
     func initView() {
         view.backgroundColor = GlobalAppearance.backgroundColor
-        navigationController?.navigationBar.isTranslucent = false
-        
+
         if #available(iOS 11.0, *) {
             navigationItem.largeTitleDisplayMode = .never
         }
@@ -293,8 +298,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
     }
     
     @objc private func back() {
-        navigationController?.isToolbarHidden = true
-        navigationController?.popViewController(animated: true)
+        navigationController?.dismiss(animated: true)
     }
     
     @objc private func classSelect() {
@@ -364,17 +368,14 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
 
 private extension ComposeArticleViewController {
     @objc func keyboardWillShow(notification: NSNotification) {
-//        guard let keyboardSize = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
-//        keyboardPosY = keyboardSize.minY
+        guard let keyboardSize = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
         
-//        let contentInsets = UIEdgeInsets(top: -keyboardSize.height, left: 0.0, bottom: 0.0 , right: 0.0)
-//        scrollView.contentInset = contentInsets
-//        scrollView.scrollIndicatorInsets = contentInsets
+        keyboardY = keyboardSize.minY
     }
-
+    
     @objc func keyboardWillHide(notification: NSNotification) {
-//        scrollView.contentInset = .zero
-//        scrollView.scrollIndicatorInsets = .zero
+        scrollView.contentInset = .zero
+        scrollView.scrollIndicatorInsets = .zero
     }
     
     @objc func backgroundTap(_ sender: UITapGestureRecognizer) {
@@ -387,12 +388,30 @@ private extension ComposeArticleViewController {
 extension ComposeArticleViewController: UITextViewDelegate {
 
     func textViewDidChange(_ textView: UITextView) {
-//        if let cursorPosition = textView.selectedTextRange?.end {
-//            DispatchQueue.main.async{ [weak self] in
-//                let caretPositionRect = textView.caretRect(for: cursorPosition)
-//                let pointsuperview = textView.convert(caretPositionRect, to: self?.scrollView)
-//            }
-//        }
+        if let cursorPosition = textView.selectedTextRange?.end {
+            DispatchQueue.main.async{ [weak self] in
+                let caretPositionRect = textView.caretRect(for: cursorPosition)
+                let pointsuperview = textView.convert(caretPositionRect, to: self?.scrollView)
+                var scrollviewState: CGFloat = -1
+                
+                var contentInsets = UIEdgeInsets(top: (50 * self!.scrollViewMoveStep * scrollviewState), left: 0.0, bottom: 0.0 , right: 0.0)
+                if (self!.keyboardY + (50 * self!.scrollViewMoveStep) - pointsuperview.maxY <= 50) {
+                    self?.scrollViewMoveStep += 1
+                    contentInsets = UIEdgeInsets(top: (-50 * self!.scrollViewMoveStep * scrollviewState), left: 0.0, bottom: 0.0 , right: 0.0)
+                }
+                
+                if pointsuperview.maxY < self!.currentTextviewCursorPosMaxY {
+                    self?.scrollViewMoveStep -= 1
+//                    scrollviewState = 1
+                    contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: (50 * self!.scrollViewMoveStep ) , right: 0.0)
+                }
+                
+                self?.scrollView.contentInset = contentInsets
+                self?.scrollView.scrollIndicatorInsets = contentInsets
+                
+                self!.currentTextviewCursorPosMaxY = pointsuperview.maxY
+            }
+        }
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
@@ -407,6 +426,8 @@ extension ComposeArticleViewController: UITextViewDelegate {
             articleContentView.text = placeholderText
             articleContentView.textColor = UIColor(red:56/255, green:56/255, blue:61/255, alpha:1.0)
         }
+        
+        scrollView.setContentOffset(.zero, animated: true)
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {

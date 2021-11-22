@@ -52,6 +52,7 @@ private extension BoardCoordinator {
     
     func showComposeArticleView(withBoardName boardName: String) {
         let composeArticleView = factory.makeComposeArticleView(withBoardName: boardName)
-        router.push(composeArticleView)
+        let nav = UINavigationController(rootViewController: composeArticleView)
+        router.present(nav)
     }
 }
