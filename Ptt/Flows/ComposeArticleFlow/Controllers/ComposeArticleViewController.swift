@@ -22,7 +22,6 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         var scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
-        scrollView.backgroundColor = .orange
         return scrollView
     }()
     
@@ -30,7 +29,6 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         var contentView = UIView()
         contentView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(contentView)
-        contentView.backgroundColor = .red
         return contentView
     }()
     
