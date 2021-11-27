@@ -6,7 +6,7 @@ target 'Ptt' do
   use_frameworks!
 
   # Pods for Ptt
-  pod "Texture", '3.0.0'
+  pod "Texture", '~> 3.0'
 
   target 'PttTests' do
     inherit! :search_paths

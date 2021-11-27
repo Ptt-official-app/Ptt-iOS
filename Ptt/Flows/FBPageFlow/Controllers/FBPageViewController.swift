@@ -117,7 +117,7 @@ final class FBPageViewController: UIViewController, FBPageView {
 
     @objc private func refresh() {
         if webView.url == nil {
-            if let url = URL(string: "https://www.facebook.com/pg/PttTW/posts/") {
+            if let url = URL(string: "https://www.facebook.com/PttTW/") {
                 let urlRequest = URLRequest(url: url)
                 webView.load(urlRequest)
             }
