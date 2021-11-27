@@ -60,6 +60,7 @@ struct APIClient {
 
 // MARK: Public api function
 extension APIClient: APIClientProtocol {
+    
     func login(account: String, password: String, completion: @escaping (LoginResult) -> Void) {
         let bodyDic = ["client_id": "test_client_id",
                        "client_secret": "test_client_secret",
@@ -275,6 +276,41 @@ extension APIClient: APIClientProtocol {
                 do {
                     let list = try self.decoder.decode(APIModel.BoardInfoList.self, from: resultData)
                     completion(.success(list))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(APIError(message: message)))
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    func createArticle(boardId: String, article: APIModel.CreateArticle, completion: @escaping (createArticleResult) -> Void) {
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/board/" + boardId + "/article"
+        
+        guard let url = urlComponent.url,
+              let jsonBody = try? JSONEncoder().encode(article) else {
+            assertionFailure()
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.POST.rawValue
+        request.httpBody = jsonBody
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue( "Bearer \(LoginKeyChainItem.shared.readToken()!)", forHTTPHeaderField: "Authorization")
+
+        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
+            switch result {
+            case .failure(let apiError):
+                completion(.failure(apiError))
+            case .success(let resultData):
+                do {
+                    let response = try self.decoder.decode(APIModel.CreateArticleResponse.self, from: resultData)
+                    completion(.success(response))
                 } catch (let decodingError) {
                     let message = self.message(of: decodingError)
                     completion(.failure(APIError(message: message)))

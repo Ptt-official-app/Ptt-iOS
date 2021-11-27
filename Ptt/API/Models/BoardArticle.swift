@@ -25,10 +25,11 @@ extension APIModel {
         let owner : String
         let bid : String
         let aid : String
+        let `class` : String
 
         static func adapter(model: GoPttBBSBrdArticle) -> BoardArticle {
             // TODO:
-            return BoardArticle(title: model.title, date: "\(model.create_time)", author: model.owner, boardID: model.bid, articleID: model.aid)
+            return BoardArticle(title: "[" + model.`class` + "]" + model.title, date: "\(model.create_time)", author: model.owner, boardID: model.bid, articleID: model.aid)
         }
     }
 
@@ -53,12 +54,12 @@ extension APIModel {
 
         static func adapter(model: LegacyBrdArticle) -> BoardArticle? {
             let (boardName, filename) = Utility.info(from: model.href)
-            guard let boardName = boardName, let filename = filename else { return nil }
+//            guard let boardName = boardName, let filename = filename else { return nil }
             let boardArticle = BoardArticle(title: model.title,
                                          date: model.date,
                                          author: model.author,
-                                         boardID: boardName,
-                                         articleID: filename)
+                                         boardID: boardName!,
+                                         articleID: filename!)
             return boardArticle
         }
     }

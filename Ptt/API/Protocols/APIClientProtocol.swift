@@ -26,6 +26,7 @@ protocol APIClientProtocol {
     typealias GetArticleResult = Result<Article, APIError>
     typealias BoardListResult = Result<APIModel.BoardInfoList, APIError>
     typealias ProcessResult = Result<Data, APIError>
+    typealias createArticleResult = Result<APIModel.CreateArticleResponse, APIError>
     
     func login(account: String, password: String, completion: @escaping (LoginResult) -> Void)
 
@@ -42,4 +43,6 @@ protocol APIClientProtocol {
     func getBoardList(token: String, keyword: String, startIdx: String, max: Int, completion: @escaping (BoardListResult) -> Void)
     
     func getPopularBoards(subPath: String, token: String, querys: Dictionary<String, Any>, completion: @escaping (BoardListResult) -> Void)
+    
+    func createArticle(boardId: String, article: APIModel.CreateArticle, completion: @escaping (createArticleResult) -> Void)
 }

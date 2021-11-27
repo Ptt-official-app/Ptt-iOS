@@ -36,6 +36,10 @@ private extension BoardCoordinator {
             self?.showArticleView(withBoardArticle: boardArticle)
         }
         
+        boardView.composeArticle = { [weak self] (boardName) in
+            self?.showComposeArticleView(withBoardName: boardName)
+        }
+        
         router.push(boardView, animated: true, hideBottomBar: true) { [weak self] in
             self?.finshFlow?()
         }
@@ -44,5 +48,11 @@ private extension BoardCoordinator {
     func showArticleView(withBoardArticle boardArticle: BoardArticle) {
         let articleView = factory.makeArticleView(withBoardArticle: boardArticle)
         router.push(articleView)
+    }
+    
+    func showComposeArticleView(withBoardName boardName: String) {
+        let composeArticleView = factory.makeComposeArticleView(withBoardName: boardName)
+        let nav = UINavigationController(rootViewController: composeArticleView)
+        router.present(nav)
     }
 }

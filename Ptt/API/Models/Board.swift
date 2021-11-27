@@ -21,8 +21,12 @@ extension APIModel {
         let next_idx : String
 
         static func adapter(model: GoPttBBSBoard) -> BoardModel {
-            // TODO:
-            return BoardModel(page: nil, next: nil, articleList: [APIModel.BoardArticle]())
+            var articleList = [BoardArticle]()
+            for item in model.list {
+                let article = GoPttBBSBrdArticle.adapter(model: item)
+                articleList.append(article)
+            }
+            return BoardModel(page: nil, next: nil, articleList: articleList)
         }
     }
 

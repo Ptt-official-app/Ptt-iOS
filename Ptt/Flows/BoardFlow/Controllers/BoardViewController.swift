@@ -17,11 +17,13 @@ struct BoardArticle {
 
 protocol BoardView: BaseView {
     var onArticleSelect: ((BoardArticle) -> Void)? { get set }
+    var composeArticle: ((String) -> Void)? {get set}
 }
 
 final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSwipeable, BoardView {
     
     var onArticleSelect: ((BoardArticle) -> Void)?
+    var composeArticle: ((String) -> Void)?
 
     private let boardNode = BoardNode()
     private var tableNode : ASTableNode {
@@ -83,13 +85,14 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
         toolbarNode.searchNode.addTarget(self, action: #selector(search), forControlEvents: .touchUpInside)
         toolbarNode.composeNode.addTarget(self, action: #selector(compose), forControlEvents: .touchUpInside)
         toolbarNode.moreNode.addTarget(self, action: #selector(more), forControlEvents: .touchUpInside)
-
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name("didPostNewArticle"), object: nil)
+        
         refresh()
     }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         if let selectedRow = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectedRow, animated: true)
         }
@@ -101,7 +104,8 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
         }
         self.isRequesting = true
         context.beginBatchFetching()
-        self.apiClient.getBoardArticles(of: .legacy(boardName: boardName, page: page)) { (result) in
+        
+        self.apiClient.getBoardArticles(of: .go_pttbbs(bid: boardName, startIdx: "")) { (result) in
             switch result {
             case .failure(error: let apiError):
                 context.cancelBatchFetching()
@@ -183,6 +187,7 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
     }
 
     @objc private func compose() {
+        composeArticle?(boardName)
     }
 
     @objc private func more() {
