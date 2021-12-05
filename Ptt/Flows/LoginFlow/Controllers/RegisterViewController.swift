@@ -12,6 +12,8 @@ final class RegisterViewController: UIViewController, RegisterView {
 
     override func loadView() {
         webView.navigationDelegate = self
+        webView.isOpaque = false
+        webView.backgroundColor = .black
         view = webView
     }
     
