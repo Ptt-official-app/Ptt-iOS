@@ -9,7 +9,7 @@
 import Foundation
 
 extension String {
-    var withCategory : String {
+    var withoutCategory: String {
         if let leftBracket = self.firstIndex(of: "["),
             let rightBracket = self.firstIndex(of: "]") {
             var _title = self
@@ -18,5 +18,14 @@ extension String {
             return _title
         }
         return self
+    }
+
+    func getBorderName() -> String {
+        // Sample url
+        // "http://localhost/bbs/test/M.1234567900.A.125"
+        let urlSplits = self.split(separator: "/")
+        guard urlSplits.count == 5 else { return "" }
+        let boardName = String(urlSplits[3])
+        return boardName
     }
 }

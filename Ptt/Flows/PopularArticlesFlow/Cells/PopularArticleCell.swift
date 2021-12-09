@@ -39,22 +39,20 @@ final class PopularArticleCell: UITableViewCell {
         self.hasPreviewImage(has: false)
     }
 
-    func config(by info: APIModel.ArticleInfo) {
+    func config(by info: APIModel.GoPttBBSBrdArticle) {
         self.categoryLabel.text = self.assembleCategoryText(info: info)
         self.metadataLabel.text = self.assembleMetadataText(info: info)
-        self.titleLabel.text = info.title.withCategory
+        self.titleLabel.text = info.title.withoutCategory
         self.setupVote(recommend: info.recommend)
         self.commentLabel.text = info.n_comments.easyRead
     }
 
-    private func assembleCategoryText(info: APIModel.ArticleInfo) -> String {
-        let urlSplits = info.url.split(separator: "/")
-        guard urlSplits.count == 5 else { return "" }
-        let category = String(urlSplits[3])
-        return info.class.isEmpty ? category: "\(category)/\(info.class)"
+    private func assembleCategoryText(info: APIModel.GoPttBBSBrdArticle) -> String {
+        let boardName = info.url.getBorderName()
+        return info.class.isEmpty ? boardName: "\(boardName)/\(info.class)"
     }
 
-    private func assembleMetadataText(info: APIModel.ArticleInfo) -> String {
+    private func assembleMetadataText(info: APIModel.GoPttBBSBrdArticle) -> String {
         "\(info.owner)∙\(info.create_time)"
     }
 

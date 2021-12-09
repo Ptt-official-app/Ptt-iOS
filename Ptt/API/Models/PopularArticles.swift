@@ -9,11 +9,11 @@
 import Foundation
 extension APIModel {
     struct PopularArticleList: Codable {
-        let list: [ArticleInfo]
+        let list: [GoPttBBSBrdArticle]
         let next_idx: String
     }
 
-    struct ArticleInfo: Codable {
+    struct ArticleInfoaaaa: Codable {
         let bid: String
         let aid: String
         let deleted: Bool

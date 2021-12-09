@@ -9,7 +9,7 @@
 import Foundation
 
 protocol PopularArticlesVMProtocol {
-    var data: [APIModel.ArticleInfo] { get }
+    var data: [APIModel.GoPttBBSBrdArticle] { get }
 
     func fetchData(isPullDownToRefresh: Bool)
     func shouldFetchData(isPullDownToRefresh: Bool) -> Bool
@@ -20,8 +20,8 @@ final class PopularArticlesViewModel: PopularArticlesVMProtocol {
     private var pageIndex: String = ""
     private var paginationLimit: Int = 200
     private var isDescending = true
-    private(set) var data: [APIModel.ArticleInfo] = []
     private weak var uiDelegate: PopularArticlesView?
+    private(set) var data: [APIModel.GoPttBBSBrdArticle] = []
 
     init(apiClient: APIClientProtocol, uiDelegate: PopularArticlesView) {
         self.apiClient = apiClient

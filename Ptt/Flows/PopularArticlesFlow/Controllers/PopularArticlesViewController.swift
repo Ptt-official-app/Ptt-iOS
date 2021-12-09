@@ -15,6 +15,8 @@ protocol PopularArticlesView: BaseView {
     func show(error: Error)
     func reloadTable()
     func insert(rows: [IndexPath])
+
+    func setup(onArticleSelected: @escaping ((BoardArticle) -> Void))
 }
 
 enum ArticleTypes {
@@ -29,6 +31,7 @@ enum ArticleTypes {
 
 final class PopularArticlesViewController: UITableViewController {
 
+    private var onArticleSelected: ((BoardArticle) -> Void)?
     private var viewModel: PopularArticlesVMProtocol!
 
     override func viewDidLoad() {
@@ -79,6 +82,10 @@ final class PopularArticlesViewController: UITableViewController {
 }
 
 extension PopularArticlesViewController: PopularArticlesView {
+    func setup(onArticleSelected: @escaping ((BoardArticle) -> Void)) {
+        self.onArticleSelected = onArticleSelected
+    }
+
     func startSpinning(isPullDownToRefresh: Bool) {
         if isPullDownToRefresh {
             self.refreshControl?.beginRefreshing()
@@ -147,6 +154,14 @@ extension PopularArticlesViewController {
         let info = self.viewModel.data[indexPath.row]
         cell.config(by: info)
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let info = self.viewModel.data[indexPath.row]
+        let article = info.adapter()
+        onArticleSelected?(BoardArticle(article: article,
+                                        boardName: info.url.getBorderName()))
     }
 }
 

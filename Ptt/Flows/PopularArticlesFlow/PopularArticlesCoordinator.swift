@@ -27,6 +27,15 @@ final class PopularArticlesCoordinator: BaseCoordinator {
 private extension PopularArticlesCoordinator {
     func showPopularArticlesView() {
         let popularArticlesView = factory.makePopularArticlesView()
+        popularArticlesView.setup { [weak self] boardArticle in
+            self?.showArticleView(withBoardArticle: boardArticle)
+        }
+
         router.setRootModule(popularArticlesView)
+    }
+
+    func showArticleView(withBoardArticle boardArticle: BoardArticle) {
+        let articleView = factory.makeArticleView(withBoardArticle: boardArticle)
+        router.push(articleView)
     }
 }
