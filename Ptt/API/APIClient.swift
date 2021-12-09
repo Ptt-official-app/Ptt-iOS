@@ -347,7 +347,7 @@ extension APIClient: APIClientProtocol {
                 completion(.failure(apiError))
             case .success(let resultData):
                 do {
-                    let result = try self.decoder.decode(APIModel.PopularArticleList.self, from: resultData)
+                    let result = try self.decoder.decode(APIModel.GoPttBBSBoard.self, from: resultData)
                     completion(.success(result))
                 } catch (let decodingError) {
                     let message = self.message(of: decodingError)

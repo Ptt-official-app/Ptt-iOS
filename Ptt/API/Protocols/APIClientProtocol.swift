@@ -27,7 +27,7 @@ protocol APIClientProtocol {
     typealias BoardListResult = Result<APIModel.BoardInfoList, APIError>
     typealias ProcessResult = Result<Data, APIError>
     typealias createArticleResult = Result<APIModel.CreateArticleResponse, APIError>
-    typealias PopularArticlesResult = Result<APIModel.PopularArticleList, APIError>
+    typealias PopularArticlesResult = Result<APIModel.GoPttBBSBoard, APIError>
     
     func login(account: String, password: String, completion: @escaping (LoginResult) -> Void)
 

@@ -35,7 +35,6 @@
 		3E9FE306275D01C5002E144F /* PopularArticlesSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9FE305275D01C5002E144F /* PopularArticlesSceneFactoryProtocol.swift */; };
 		3E9FE309275D0240002E144F /* PopularArticlesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9FE308275D0240002E144F /* PopularArticlesViewController.swift */; };
 		3E9FE30B275D0F16002E144F /* PopularArticlesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9FE30A275D0F16002E144F /* PopularArticlesViewModel.swift */; };
-		3E9FE30D275D124F002E144F /* PopularArticles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9FE30C275D124F002E144F /* PopularArticles.swift */; };
 		3ECAD05D2762766A00F50A91 /* NumberExtensionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ECAD05C2762766A00F50A91 /* NumberExtensionTest.swift */; };
 		3ECAD060276277FF00F50A91 /* PopularArticles.json in Resources */ = {isa = PBXBuildFile; fileRef = 3ECAD05F276277FF00F50A91 /* PopularArticles.json */; };
 		3ED16B3E25713D64004A33E0 /* APITestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED16B3D25713D64004A33E0 /* APITestClient.swift */; };
@@ -142,7 +141,6 @@
 		3E9FE305275D01C5002E144F /* PopularArticlesSceneFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularArticlesSceneFactoryProtocol.swift; sourceTree = "<group>"; };
 		3E9FE308275D0240002E144F /* PopularArticlesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularArticlesViewController.swift; sourceTree = "<group>"; };
 		3E9FE30A275D0F16002E144F /* PopularArticlesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularArticlesViewModel.swift; sourceTree = "<group>"; };
-		3E9FE30C275D124F002E144F /* PopularArticles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularArticles.swift; sourceTree = "<group>"; };
 		3ECAD05C2762766A00F50A91 /* NumberExtensionTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberExtensionTest.swift; sourceTree = "<group>"; };
 		3ECAD05F276277FF00F50A91 /* PopularArticles.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PopularArticles.json; sourceTree = "<group>"; };
 		3ED16B3D25713D64004A33E0 /* APITestClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITestClient.swift; sourceTree = "<group>"; };
@@ -309,7 +307,6 @@
 				3E655287255960910026290B /* FullArticle.swift */,
 				3E8D8C82258A511600346690 /* LoginToken.swift */,
 				CD6C1C1826AD783100EBFEA9 /* CreateArticle.swift */,
-				3E9FE30C275D124F002E144F /* PopularArticles.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -966,7 +963,6 @@
 				9411EDA625A0AEC30005ADCB /* LoginCoordinator.swift in Sources */,
 				CD072A82266D3F5400279419 /* ArticleClassTableView.swift in Sources */,
 				3E65529A255962DA0026290B /* APIModel.swift in Sources */,
-				3E9FE30D275D124F002E144F /* PopularArticles.swift in Sources */,
 				3EDE670B276106530063D6DF /* StringExtension.swift in Sources */,
 				94EB641225AC183F00BF69AB /* LoginViewController.swift in Sources */,
 				CD6C1C1E26B779A500EBFEA9 /* LoadingView.swift in Sources */,
