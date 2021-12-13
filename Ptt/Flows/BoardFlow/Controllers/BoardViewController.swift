@@ -386,7 +386,9 @@ private class BoardCellNode: ASCellNode {
 
         automaticallyManagesSubnodes = true
 
-        categoryNode.attributedText = NSAttributedString(string: article.category, attributes: metadataAttributes)
+        if let category = article.category {
+            categoryNode.attributedText = NSAttributedString(string: category, attributes: metadataAttributes)
+        }
         dateNode.attributedText = NSAttributedString(string: article.date, attributes: metadataAttributes)
         authorNameNode.attributedText = NSAttributedString(string: article.author, attributes: metadataAttributes)
         titleNode.attributedText = NSAttributedString(string: article.titleWithoutCategory, attributes: titleAttributes)
