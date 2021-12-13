@@ -33,10 +33,6 @@ final class LicenseViewController: ASDKViewController<ASTableNode>, FullscreenSw
 
         tableNode.backgroundColor = GlobalAppearance.backgroundColor
         tableNode.dataSource = self
-        if #available(iOS 13.0, *) {
-        } else {
-            tableView.indicatorStyle = .white
-        }
         tableView.separatorStyle = .none
     }
 }
@@ -69,11 +65,7 @@ private class LicenseCellNode: ASCellNode {
         automaticallyManagesSubnodes = true
 
         let textColor : UIColor
-        if #available(iOS 11.0, *) {
-            textColor = UIColor(named: "textColor-240-240-247")!
-        } else {
-            textColor = UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0)
-        }
+        textColor = UIColor(named: "textColor-240-240-247")!
         let attributes = [NSAttributedString.Key.foregroundColor: textColor]
         textNode.attributedText = NSAttributedString(string: LicenseViewController.textureLicense, attributes: attributes)
     }

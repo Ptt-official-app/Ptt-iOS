@@ -32,11 +32,6 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
         tableview.dataSource = self
         tableview.delegate = self
         tableview.backgroundColor = GlobalAppearance.backgroundColor
-        
-        if #available(iOS 13.0, *) {
-        } else {
-            tableview.indicatorStyle = .white
-        }
         tableview.estimatedRowHeight = 80.0
         tableview.separatorStyle = .none
         tableview.keyboardDismissMode = .onDrag // to dismiss from search bar
@@ -65,25 +60,15 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
     
     func initView() {
         title = NSLocalizedString("Popular Boards", comment: "")
-        if #available(iOS 11.0, *) {
-            navigationController?.navigationBar.prefersLargeTitles = true
-        }
-
+        navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = GlobalAppearance.backgroundColor
         definesPresentationContext = true
-        
-        if #available(iOS 13.0, *) {
-            searchController.searchBar.searchTextField.textColor = UIColor(named: "textColor-240-240-247")
-            // otherwise covered in GlobalAppearance
-        }
-        if #available(iOS 11.0, *) {
-            navigationItem.searchController = searchController
-            navigationItem.hidesSearchBarWhenScrolling = false
-        } else {
-            tableview.tableHeaderView = searchController.searchBar
-            searchController.searchBar.barStyle = .black
-            tableview.backgroundView = UIView() // See: https://stackoverflow.com/questions/31463381/background-color-for-uisearchcontroller-in-uitableview
-        }
+
+        searchController.searchBar.searchTextField.textColor = UIColor(named: "textColor-240-240-247")
+        // otherwise covered in GlobalAppearance
+
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
     }
     
     func initBinding() {

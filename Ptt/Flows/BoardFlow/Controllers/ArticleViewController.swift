@@ -71,11 +71,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
                         } else if contentElement.hasPrefix(": ") {
                             contentAttributes[.foregroundColor] = UIColor(red: 0.00, green: 0.60, blue: 0.60, alpha: 1.00)
                         } else {
-                            if #available(iOS 11.0, *) {
-                                contentAttributes[.foregroundColor] = UIColor(named: "textColor-240-240-247")
-                            } else {
-                                contentAttributes[.foregroundColor] = UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0)
-                            }
+                            contentAttributes[.foregroundColor] = UIColor(named: "textColor-240-240-247")
                         }
                         attributedText.append(NSAttributedString(string: contentElement + separator, attributes: contentAttributes))
                     }
@@ -98,11 +94,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
                         .font: UIFont.preferredFont(forTextStyle: .body),
                         .paragraphStyle: contentParagraphStyle
                     ]
-                    if #available(iOS 11.0, *) {
-                        commentDateAttributes[.foregroundColor] = UIColor(named: "textColorGray")
-                    } else {
-                        commentDateAttributes[.foregroundColor] = UIColor.systemGray
-                    }
+                    commentDateAttributes[.foregroundColor] = UIColor(named: "textColorGray")
                     for comment in article.comments {
                         commentsAttributedString.append(NSAttributedString(string: comment.userid, attributes: commentAuthorAttributes))
                         commentsAttributedString.append(NSAttributedString(string: comment.content, attributes: commentContentAttributes))
@@ -145,19 +137,11 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if #available(iOS 11.0, *) {
-            navigationItem.largeTitleDisplayMode = .never
-        }
+        navigationItem.largeTitleDisplayMode = .never
         enableFullscreenSwipeBack()
 
         textView.backgroundColor = GlobalAppearance.backgroundColor
-        if #available(iOS 10.0, *) {
-            textView.adjustsFontForContentSizeCategory = true
-        }
-        if #available(iOS 13.0, *) {
-        } else {
-            textView.indicatorStyle = .white
-        }
+        textView.adjustsFontForContentSizeCategory = true
         // For UITextView, noncontinuous layout is turned on by default, and requires scrolling to be enabled.
         // See: https://developer.apple.com/videos/play/wwdc2018/221/?time=1863
         textView.isEditable = false
@@ -178,12 +162,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
 
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        if #available(iOS 10.0, *) {
-            textView.refreshControl = refreshControl
-        } else {
-            let refreshItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(refresh))
-            navigationItem.rightBarButtonItem = refreshItem
-        }
+        textView.refreshControl = refreshControl
 
         activityIndicator.color = .lightGray
         textView.ptt_add(subviews: [activityIndicator])
@@ -217,22 +196,16 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
             self.present(alert, animated: true, completion: nil)
             return
         }
-        if #available(iOS 10.0, *) {
-            if let refreshControl = textView.refreshControl {
-                if !refreshControl.isRefreshing {
-                    activityIndicator.startAnimating()
-                }
+        if let refreshControl = textView.refreshControl {
+            if !refreshControl.isRefreshing {
+                activityIndicator.startAnimating()
             }
-        } else {
-            activityIndicator.startAnimating()
         }
         
         self.apiClient.getArticle(of: .go_pttbbs(bid: boardName, aid: filename)) { (result) in
             DispatchQueue.main.async {
                 self.activityIndicator.stopAnimating()
-                if #available(iOS 10.0, *) {
-                    self.textView.refreshControl?.endRefreshing()
-                }
+                self.textView.refreshControl?.endRefreshing()
             }
             switch result {
             case .failure(error: let apiError):
@@ -275,27 +248,14 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
             .font: UIFont.preferredFont(forTextStyle: .headline),
             .paragraphStyle: headParagraphStyle
         ]
-        if #available(iOS 11.0, *) {
-            headAttributes[.foregroundColor] = UIColor(named: "textColorGray")
-        } else {
-            headAttributes[.foregroundColor] = UIColor.systemGray
-        }
+        headAttributes[.foregroundColor] = UIColor(named: "textColorGray")
         let headerAttributedString = NSMutableAttributedString()
         let categoryAttachment : NSTextAttachment
         let authorAttachment : NSTextAttachment
         let dateAttachment : NSTextAttachment
-        if #available(iOS 13.0, *) {
-            categoryAttachment = NSTextAttachment(image: StyleKit.imageOfBoardCategory())
-            authorAttachment = NSTextAttachment(image: StyleKit.imageOfAuthor())
-            dateAttachment = NSTextAttachment(image: StyleKit.imageOfClock())
-        } else {
-            categoryAttachment = NSTextAttachment()
-            categoryAttachment.image = StyleKit.imageOfBoardCategory()
-            authorAttachment = NSTextAttachment()
-            authorAttachment.image = StyleKit.imageOfAuthor()
-            dateAttachment = NSTextAttachment()
-            dateAttachment.image = StyleKit.imageOfClock()
-        }
+        categoryAttachment = NSTextAttachment(image: StyleKit.imageOfBoardCategory())
+        authorAttachment = NSTextAttachment(image: StyleKit.imageOfAuthor())
+        dateAttachment = NSTextAttachment(image: StyleKit.imageOfClock())
         headerAttributedString.append(NSAttributedString(attachment: categoryAttachment))
         // Workaround: We cannot vertically center align attachments easily, so use tab to align text.
         if let _article = article as? APIModel.BoardArticle, let boardName = self.boardName {
@@ -342,16 +302,8 @@ extension ArticleViewController : UITextViewDelegate {
         }
         if URL.scheme == "http" || URL.scheme == "https" {
             let safariViewController = SFSafariViewController(url: URL)
-            if #available(iOS 10.0, *) {
-                safariViewController.preferredControlTintColor = GlobalAppearance.tintColor
-            }
-            if #available(iOS 13.0, *) {
-            } else if #available(iOS 10.0, *) {
-                safariViewController.preferredBarTintColor = GlobalAppearance.backgroundColor
-            }
-            if #available(iOS 11.0, *) {
-                safariViewController.dismissButtonStyle = .close
-            }
+            safariViewController.preferredControlTintColor = GlobalAppearance.tintColor
+            safariViewController.dismissButtonStyle = .close
             present(safariViewController, animated: true, completion: nil)
             return false
         }

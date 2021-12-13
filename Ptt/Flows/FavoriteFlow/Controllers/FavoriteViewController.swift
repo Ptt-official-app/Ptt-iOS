@@ -35,18 +35,10 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
         super.viewDidLoad()
 
         title = NSLocalizedString("Favorite Boards", comment: "")
-        if #available(iOS 11.0, *) {
-            navigationController?.navigationBar.prefersLargeTitles = true
-        }
-        
-        
+        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.setRightBarButton(editButtonItem, animated: true)
 
         view.backgroundColor = GlobalAppearance.backgroundColor
-        if #available(iOS 13.0, *) {
-        } else {
-            tableView.indicatorStyle = .white
-        }
         tableView.estimatedRowHeight = 80.0
         tableView.separatorStyle = .none
         tableView.keyboardDismissMode = .onDrag // to dismiss from search bar
@@ -55,18 +47,11 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
         searchController.delegate = self
         searchController.searchResultsUpdater = self
         definesPresentationContext = true
-        if #available(iOS 13.0, *) {
-            searchController.searchBar.searchTextField.textColor = UIColor(named: "textColor-240-240-247")
-            // otherwise covered in GlobalAppearance
-        }
-        if #available(iOS 11.0, *) {
-            navigationItem.searchController = searchController
-            navigationItem.hidesSearchBarWhenScrolling = false
-        } else {
-            tableView.tableHeaderView = searchController.searchBar
-            searchController.searchBar.barStyle = .black
-            tableView.backgroundView = UIView() // See: https://stackoverflow.com/questions/31463381/background-color-for-uisearchcontroller-in-uitableview
-        }
+        searchController.searchBar.searchTextField.textColor = UIColor(named: "textColor-240-240-247")
+        // otherwise covered in GlobalAppearance
+
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
 
         NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name("didUpdateFavoriteBoards"), object: nil)
         

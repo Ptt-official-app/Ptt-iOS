@@ -64,10 +64,8 @@ enum TabBarPage {
             return StyleKit.imageOfFBPage()
         case .settings:
             // TODO: update design from Zeplin
-            if #available(iOS 13.0, *) {
-                if let gearImage = UIImage(systemName: "gear") {
-                    return gearImage
-                }
+            if let gearImage = UIImage(systemName: "gear") {
+                return gearImage
             }
             return UIImage()
         case .popular:

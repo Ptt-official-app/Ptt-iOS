@@ -18,24 +18,10 @@ final class FBPageViewController: UIViewController, FBPageView {
     private var webViewProgressObservation : NSKeyValueObservation!
 
     private lazy var backItem : UIBarButtonItem = {
-        if #available(iOS 13.0, *) {
-            return UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(back))
-        } else {
-            if let systemItem = UIBarButtonItem.SystemItem(rawValue: 101) {
-                return UIBarButtonItem(barButtonSystemItem: systemItem, target: self, action: #selector(back))
-            }
-            return UIBarButtonItem(title: "←", style: .plain, target: self, action: #selector(back))
-        }
+        return UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(back))
     }()
     private lazy var forwardItem : UIBarButtonItem = {
-        if #available(iOS 13.0, *) {
-            return UIBarButtonItem(image: UIImage(systemName: "chevron.right"), style: .plain, target: self, action: #selector(forward))
-        } else {
-            if let systemItem = UIBarButtonItem.SystemItem(rawValue: 102) {
-                return UIBarButtonItem(barButtonSystemItem: systemItem, target: self, action: #selector(forward))
-            }
-            return UIBarButtonItem(title: "→", style: .plain, target: self, action: #selector(forward))
-        }
+        return UIBarButtonItem(image: UIImage(systemName: "chevron.right"), style: .plain, target: self, action: #selector(forward))
     }()
 
     override func loadView() {
@@ -47,13 +33,7 @@ final class FBPageViewController: UIViewController, FBPageView {
         super.viewDidLoad()
 
         self.navigationItem.title = NSLocalizedString("PTT FB Page", comment: "");
-        if #available(iOS 11.0, *) {
-            // will change contentInset later
-            webView.scrollView.contentInsetAdjustmentBehavior = .never
-        } else {
-            automaticallyAdjustsScrollViewInsets = true
-            webView.scrollView.decelerationRate = .normal
-        }
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
         navigationController?.navigationBar.ptt_add(subviews: [webProgressView])
         var constraints = [NSLayoutConstraint]()
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[webProgressView]-0-|", options: [], metrics: nil, views: ["webProgressView": webProgressView])
@@ -96,15 +76,8 @@ final class FBPageViewController: UIViewController, FBPageView {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
-        if #available(iOS 11.0, *) {
-            let insects = UIEdgeInsets(top: view.safeAreaInsets.top, left: 0, bottom: view.safeAreaInsets.bottom, right: 0)
-            webView.scrollView.contentInset = insects
-            if #available(iOS 12.0, *) {
-            } else {
-                webView.scrollView.scrollIndicatorInsets = insects
-            }
-        }
+        let insects = UIEdgeInsets(top: view.safeAreaInsets.top, left: 0, bottom: view.safeAreaInsets.bottom, right: 0)
+        webView.scrollView.contentInset = insects
     }
 
     @objc private func back() {

@@ -66,20 +66,14 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
 
         tableNode.dataSource = self
         tableNode.delegate = self
-        if #available(iOS 13.0, *) {
-        } else {
-            tableView.indicatorStyle = .white
-        }
         tableView.separatorStyle = .none
         let edgeInsetsForToolbar = UIEdgeInsets(top: 0, left: 0, bottom: toolbarNode.toolbarHeight, right: 0)
         tableView.contentInset = edgeInsetsForToolbar
         tableView.scrollIndicatorInsets = edgeInsetsForToolbar
 
-        if #available(iOS 10.0, *) {
-            let refreshControl = UIRefreshControl()
-            refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
-            tableView.refreshControl = refreshControl
-        }
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        tableView.refreshControl = refreshControl
 
         toolbarNode.refreshNode.addTarget(self, action: #selector(refresh), forControlEvents: .touchUpInside)
         toolbarNode.searchNode.addTarget(self, action: #selector(search), forControlEvents: .touchUpInside)
@@ -115,10 +109,8 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
                     alert.addAction(confirm)
                     self.present(alert, animated: true, completion: {
                         self.activityIndicator.stopAnimating()
-                        if #available(iOS 10.0, *) {
-                            if let refreshControl = self.tableView.refreshControl, refreshControl.isRefreshing {
-                                refreshControl.endRefreshing()
-                            }
+                        if let refreshControl = self.tableView.refreshControl, refreshControl.isRefreshing {
+                            refreshControl.endRefreshing()
                         }
                     })
                     self.isRequesting = false
@@ -156,10 +148,8 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
                 self.isRequesting = false
                 DispatchQueue.main.async {
                     self.activityIndicator.stopAnimating()
-                    if #available(iOS 10.0, *) {
-                        if let refreshControl = self.tableView.refreshControl, refreshControl.isRefreshing {
-                            refreshControl.endRefreshing()
-                        }
+                    if let refreshControl = self.tableView.refreshControl, refreshControl.isRefreshing {
+                        refreshControl.endRefreshing()
                     }
                 }
             }
@@ -172,14 +162,10 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
         self.board = nil
         self.receivedPage = 0
         tableNode.reloadData()
-        if #available(iOS 10.0, *) {
-            if let refreshControl = tableView.refreshControl {
-                if !refreshControl.isRefreshing {
-                    activityIndicator.startAnimating()
-                }
+        if let refreshControl = tableView.refreshControl {
+            if !refreshControl.isRefreshing {
+                activityIndicator.startAnimating()
             }
-        } else {
-            activityIndicator.startAnimating()
         }
     }
 
@@ -217,11 +203,7 @@ extension BoardViewController: ASTableDataSource {
         let nodeBlock: ASCellNodeBlock = {
             let cell = BoardCellNode(article: article)
             if row % 2 == 0 {
-                if #available(iOS 11.0, *) {
-                    cell.backgroundColor = UIColor(named: "blackColor-28-28-31")
-                } else {
-                    cell.backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 31/255, alpha: 1.0)
-                }
+                cell.backgroundColor = UIColor(named: "blackColor-28-28-31")
             } else {
                 cell.backgroundColor = GlobalAppearance.backgroundColor
             }
@@ -349,11 +331,7 @@ private class BoardCellNode: ASCellNode {
 
     private var titleAttributes : [NSAttributedString.Key : Any] {
         let textColor : UIColor
-        if #available(iOS 11.0, *) {
-            textColor = UIColor(named: "textColor-240-240-247")!
-        } else {
-            textColor = UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0)
-        }
+        textColor = UIColor(named: "textColor-240-240-247")!
         let attrs : [NSAttributedString.Key : Any] =
             [.font: UIFont.preferredFont(forTextStyle: .title3),
              .foregroundColor: textColor]
@@ -361,11 +339,7 @@ private class BoardCellNode: ASCellNode {
     }
     private var metadataAttributes : [NSAttributedString.Key : Any] {
         let textColor : UIColor
-        if #available(iOS 11.0, *) {
-            textColor = UIColor(named: "textColorGray")!
-        } else {
-            textColor = .systemGray
-        }
+        textColor = UIColor(named: "textColorGray")!
         let attrs : [NSAttributedString.Key : Any] =
             [.font: UIFont.preferredFont(forTextStyle: .footnote),
              .foregroundColor: textColor]

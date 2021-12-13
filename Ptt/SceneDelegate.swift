@@ -12,36 +12,14 @@ struct GlobalAppearance {
 
     static func apply(to window: UIWindow) {
         window.tintColor = tintColor
-        if #available(iOS 13.0, *) {
-        } else {
-            let attrs = [NSAttributedString.Key.foregroundColor: UIColor.white]
-            UINavigationBar.appearance().titleTextAttributes = attrs
-            if #available(iOS 11.0, *) {
-                UINavigationBar.appearance().barTintColor = UIColor(named: "blackColor-23-23-23")
-                UITabBar.appearance().barTintColor = UIColor(named: "blackColor-23-23-23")
-                UINavigationBar.appearance().largeTitleTextAttributes = attrs
-            } else {
-                UINavigationBar.appearance().barTintColor = UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0)
-                UITabBar.appearance().barTintColor = UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0)
-            }
-            UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        }
     }
 
     static var tintColor : UIColor? {
-        if #available(iOS 11.0, *) {
-            return UIColor(named: "tintColor-255-159-10")
-        } else {
-            return UIColor(red: 255/255, green: 159/255, blue: 10/255, alpha: 1.0)
-        }
+        return UIColor(named: "tintColor-255-159-10")
     }
 
     static var backgroundColor : UIColor? {
-        if #available(iOS 11.0, *) {
-            return UIColor(named: "blackColor-23-23-23")
-        } else {
-            return UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0)
-        }
+        return UIColor(named: "blackColor-23-23-23")
     }
 }
 
@@ -49,13 +27,8 @@ extension UINavigationController {
 
     /// Only required for iOS 12 or earlier
     override open var preferredStatusBarStyle: UIStatusBarStyle {
-        if #available(iOS 13.0, *) {
-            // For forward compatibility
-            if traitCollection.userInterfaceStyle == .light {
-                return .darkContent
-            }
-        }
-        return .lightContent
+        // For forward compatibility
+        return traitCollection.userInterfaceStyle == .light ? .darkContent: .lightContent
     }
 }
 

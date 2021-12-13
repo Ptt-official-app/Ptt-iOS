@@ -433,19 +433,11 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     
     var text_color : UIColor {
-        if #available(iOS 11.0, *) {
-            return UIColor(named: "textColor-240-240-247")!
-        } else {
-            return UIColor(red: 42/255, green: 42/255, blue: 48/255, alpha: 1.0)
-        }
+        return UIColor(named: "textColor-240-240-247")!
     }
     
     var textfield_backgroundcolor : UIColor {
-        if #available(iOS 11.0, *) {
-            return UIColor(named: "blackColor-28-28-31")!
-        } else {
-            return UIColor(red: 28/255, green: 28/255, blue: 31/255, alpha: 1.0)
-        }
+        return UIColor(named: "blackColor-28-28-31")!
     }
 }
 

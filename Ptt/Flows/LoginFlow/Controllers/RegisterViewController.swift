@@ -19,13 +19,7 @@ final class RegisterViewController: UIViewController, RegisterView {
         super.viewDidLoad()
         
         self.navigationItem.title = NSLocalizedString("Register", comment: "");
-        if #available(iOS 11.0, *) {
-            // will change contentInset later
-            webView.scrollView.contentInsetAdjustmentBehavior = .never
-        } else {
-            automaticallyAdjustsScrollViewInsets = true
-            webView.scrollView.decelerationRate = .normal
-        }
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
         
         navigationController?.navigationBar.ptt_add(subviews: [webProgressView])
         var constraints = [NSLayoutConstraint]()
@@ -68,15 +62,8 @@ final class RegisterViewController: UIViewController, RegisterView {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
-        if #available(iOS 11.0, *) {
-            let insects = UIEdgeInsets(top: view.safeAreaInsets.top, left: 0, bottom: view.safeAreaInsets.bottom, right: 0)
-            webView.scrollView.contentInset = insects
-            if #available(iOS 12.0, *) {
-            } else {
-                webView.scrollView.scrollIndicatorInsets = insects
-            }
-        }
+        let insects = UIEdgeInsets(top: view.safeAreaInsets.top, left: 0, bottom: view.safeAreaInsets.bottom, right: 0)
+        webView.scrollView.contentInset = insects
     }
 
     @objc private func back() {

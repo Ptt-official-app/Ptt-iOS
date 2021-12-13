@@ -86,11 +86,7 @@ private extension TabBarCoordinator {
             fbPageCoordinator.start()
         case .settings:
             let settingsViewController : SettingsViewController
-            if #available(iOS 13.0, *) {
-                settingsViewController = SettingsViewController(style: .insetGrouped)
-            } else {
-                settingsViewController = SettingsViewController(style: .grouped)
-            }
+            settingsViewController = SettingsViewController(style: .insetGrouped)
             navController.setViewControllers([settingsViewController], animated: false)
         case .popular:
             let popularCoordinator = self.coordinatorFactory.makePopularBoardsCoordinator(navigationController: navController)

@@ -235,11 +235,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
     
     func initView() {
         view.backgroundColor = GlobalAppearance.backgroundColor
-
-        if #available(iOS 11.0, *) {
-            navigationItem.largeTitleDisplayMode = .never
-        }
-        
+        navigationItem.largeTitleDisplayMode = .never
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButton)
     }
     

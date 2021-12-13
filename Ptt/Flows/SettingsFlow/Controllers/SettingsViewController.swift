@@ -29,15 +29,9 @@ final class SettingsViewController: UITableViewController {
         super.viewDidLoad()
 
         title = NSLocalizedString("Settings", comment: "")
-        if #available(iOS 11.0, *) {
-            navigationController?.navigationBar.prefersLargeTitles = true
-        }
+        navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = GlobalAppearance.backgroundColor
 
-        if #available(iOS 13.0, *) {
-        } else {
-            tableView.separatorStyle = .none
-        }
         tableView.register(SettingsTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
 
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeAppearanceMode), name: NotificationName.value(of: .didChangeAppearanceMode), object: nil)
@@ -96,12 +90,7 @@ final class SettingsViewController: UITableViewController {
             switch rowType {
             case .appearance:
                 var text = NSLocalizedString("Appearance Mode", comment: "")
-                if #available(iOS 13.0, *) {
-                    cell.type = .disclosure
-                } else {
-                    text += " (iOS 13)"
-                    cell.type = .plain
-                }
+                cell.type = .disclosure
                 cell.textLabel?.text = text
                 switch UserDefaultsManager.appearanceMode() {
                 case .system:
@@ -145,15 +134,8 @@ final class SettingsViewController: UITableViewController {
             guard let rowType = SettingsMainRow(rawValue: indexPath.row) else { return }
             switch rowType {
             case .appearance:
-                if #available(iOS 13.0, *) {
-                    let appearanceModeViewController = AppearanceModeViewController(style: .insetGrouped)
-                    show(appearanceModeViewController, sender: self)
-                } else {
-                    let alert = UIAlertController(title: nil, message: NSLocalizedString("Changing this value requires iOS 13 or later.", comment: ""), preferredStyle: .alert)
-                    let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
-                    alert.addAction(confirm)
-                    present(alert, animated: true, completion: nil)
-                }
+                let appearanceModeViewController = AppearanceModeViewController(style: .insetGrouped)
+                show(appearanceModeViewController, sender: self)
             case .address:
                 tableView.deselectRow(at: indexPath, animated: true)
                 let prompt = UIAlertController(title: NSLocalizedString("Change Site Address", comment: ""),
@@ -250,12 +232,7 @@ final class SettingsTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .value1, reuseIdentifier: reuseIdentifier)
-
-        if #available(iOS 11.0, *) {
-            backgroundColor = UIColor(named: "blackColor-28-28-31")
-        } else {
-            backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 31/255, alpha: 1.0)
-        }
+        backgroundColor = UIColor(named: "blackColor-28-28-31")
         self.type = .plain
     }
 
@@ -265,13 +242,8 @@ final class SettingsTableViewCell: UITableViewCell {
             textLabel?.textColor = GlobalAppearance.tintColor
             detailTextLabel?.textColor = .clear
         case false:
-            if #available(iOS 11.0, *) {
-                textLabel?.textColor = UIColor(named: "textColor-240-240-247")
-                detailTextLabel?.textColor = UIColor(named: "textColorGray")
-            } else {
-                textLabel?.textColor = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
-                detailTextLabel?.textColor = .systemGray
-            }
+            textLabel?.textColor = UIColor(named: "textColor-240-240-247")
+            detailTextLabel?.textColor = UIColor(named: "textColorGray")
         }
     }
 

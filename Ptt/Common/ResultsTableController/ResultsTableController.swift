@@ -22,10 +22,6 @@ class ResultsTableController : UITableViewController, FavoriteView {
         super.viewDidLoad()
 
         view.backgroundColor = GlobalAppearance.backgroundColor
-        if #available(iOS 13.0, *) {
-        } else {
-            tableView.indicatorStyle = .white
-        }
         tableView.estimatedRowHeight = 80.0
         tableView.separatorStyle = .none
         tableView.keyboardDismissMode = .onDrag // to dismiss from search bar

@@ -16,9 +16,7 @@ final class TabBarController: UITabBarController, UITabBarControllerDelegate, Ta
         super.viewDidLoad()
         delegate = self
         if let controller = customizableViewControllers?.first as? UINavigationController {
-            if #available(iOS 11.0, *) {
-                controller.navigationBar.prefersLargeTitles = true
-            }
+            controller.navigationBar.prefersLargeTitles = true
         }
     }
 }
