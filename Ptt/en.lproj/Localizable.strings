@@ -12,6 +12,7 @@
 "FB Page" = "FB Page";
 "Settings" = "Settings";
 "Popular Boards" = "Popular Boards";
+"Popular Articles" = "Popular Articles";
 "Appearance Mode" = "Appearance Mode";
 "Changing this value requires iOS 13 or later." = "Changing this value requires iOS 13 or later.";
 "Use System Default" = "Use System Default";
@@ -29,6 +30,7 @@
 "About This Software" = "About This Software";
 "Third Party License" = "Third Party License";
 "Version" = "Version";
+"ALL" = "ALL";
 
 "Error" = "Error";
 "Confirm" = "Confirm";

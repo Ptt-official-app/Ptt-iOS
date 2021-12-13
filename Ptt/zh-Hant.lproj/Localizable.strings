@@ -12,6 +12,7 @@
 "FB Page" = "粉絲專頁";
 "Settings" = "設定";
 "Popular Boards" = "熱門看板";
+"Popular Articles" = "熱門文章";
 "Appearance Mode" = "外觀模式";
 "Changing this value requires iOS 13 or later." = "需要 iOS 13 或以上版本，才能更改此設定。";
 "Use System Default" = "使用系統預設";
@@ -29,6 +30,7 @@
 "About This Software" = "關於本軟體";
 "Third Party License" = "第三方軟體授權";
 "Version" = "版本";
+"ALL" = "全部";
 
 "Error" = "錯誤";
 "Confirm" = "確認";
