@@ -28,18 +28,15 @@ extension Article {
         }
         return nil
     }
+
     var titleWithoutCategory : String {
-        if let leftBracket = title.firstIndex(of: "["), let rightBracket = title.firstIndex(of: "]") {
+        if let leftBracket = title.firstIndex(of: "["),
+            let rightBracket = title.firstIndex(of: "]") {
             var _title = title
-            let spaceAfterRightBracket = _title.index(after: rightBracket)
-            let range: ClosedRange<String.Index>
-            if _title[spaceAfterRightBracket] == " " {
-                range = leftBracket...spaceAfterRightBracket
-            } else {
-                range = leftBracket...rightBracket
-            }
-            _title.removeSubrange(range)
-            return _title
+            let categoryRange = leftBracket...rightBracket
+            _title.removeSubrange(categoryRange)
+            let _titleWithBothEndsTrimmed = _title.trimmingCharacters(in: .whitespacesAndNewlines)
+            return _titleWithBothEndsTrimmed
         }
         return title
     }

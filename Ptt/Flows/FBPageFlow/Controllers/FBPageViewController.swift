@@ -148,7 +148,7 @@ extension FBPageViewController : WKNavigationDelegate {
         default:
             resultUrl = url
         }
-        if let resultUrl = resultUrl, Utility.isPttArticle(url: resultUrl) {
+        if let resultUrl = resultUrl, APIModel.FullArticle.isPttArticle(url: resultUrl) {
             let articleViewController = ArticleViewController(url: resultUrl)
             show(articleViewController, sender: self)
             decisionHandler(.cancel)
