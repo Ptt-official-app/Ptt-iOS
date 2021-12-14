@@ -1,5 +1,5 @@
 //
-//  PostViewController.swift
+//  ArticleViewController.swift
 //  Ptt
 //
 //  Created by denkeni on 2020/3/30.
@@ -9,9 +9,9 @@
 import UIKit
 import SafariServices
 
-protocol PostView: BaseView {}
+protocol ArticleView: BaseView {}
 
-final class PostViewController: UIViewController, FullscreenSwipeable, PostView {
+final class ArticleViewController: UIViewController, FullscreenSwipeable, ArticleView {
 
     private let apiClient: APIClientProtocol
     private var boardName : String?
@@ -30,21 +30,21 @@ final class PostViewController: UIViewController, FullscreenSwipeable, PostView 
     private let textView = UITextView()
     private let activityIndicator = UIActivityIndicatorView()
 
-    private var post : Post? = nil {
+    private var article : Article? = nil {
         didSet {
-            if post != nil {
-                guard let post = self.post as? APIModel.FullPost else {
+            if article != nil {
+                guard let article = self.article as? APIModel.FullArticle else {
                     return
                 }
                 let separator = "\r\n"
-                let contentArray = post.content.components(separatedBy: separator)
+                let contentArray = article.content.components(separatedBy: separator)
                 DispatchQueue.main.async {
-                    self.title = post.titleWithoutCategory
+                    self.title = article.titleWithoutCategory
                     // lower level tip for NSAttributedString
                     // See: https://developer.apple.com/videos/play/wwdc2017/244/?time=2130
                     let attributedText = NSMutableAttributedString()
                     // Header
-                    attributedText.append(self.headerAttributedString(of: post))
+                    attributedText.append(self.headerAttributedString(of: article))
                     // Content
                     let contentParagraphStyle = NSMutableParagraphStyle()
                     let hPadding : CGFloat = {
@@ -103,7 +103,7 @@ final class PostViewController: UIViewController, FullscreenSwipeable, PostView 
                     } else {
                         commentDateAttributes[.foregroundColor] = UIColor.systemGray
                     }
-                    for comment in post.comments {
+                    for comment in article.comments {
                         commentsAttributedString.append(NSAttributedString(string: comment.userid, attributes: commentAuthorAttributes))
                         commentsAttributedString.append(NSAttributedString(string: comment.content, attributes: commentContentAttributes))
                         commentsAttributedString.append(NSAttributedString(string: " " + comment.iPdatetime, attributes: commentDateAttributes))
@@ -116,18 +116,18 @@ final class PostViewController: UIViewController, FullscreenSwipeable, PostView 
     }
     private let cellReuseIdentifier = "CommentCell"
 
-    init(post: Post, boardName: String, apiClient: APIClientProtocol=APIClient.shared) {
-        self.post = post
+    init(article: APIModel.BoardArticle, boardName: String, apiClient: APIClientProtocol=APIClient.shared) {
+        self.article = article
         self.boardName = boardName
         self.apiClient = apiClient
-        let (_, filename) = Utility.info(from: post.href)
-        self.filename = filename
+        // TODO: only supporting legacy model
+        self.filename = article.articleID
         super.init(nibName: nil, bundle: nil)
-        self.title = post.titleWithoutCategory
+        self.title = article.titleWithoutCategory
         hidesBottomBarWhenPushed = true
 
-        // Because self.post didSet will not be called in initializer
-        textView.attributedText = headerAttributedString(of: post)
+        // Because self.article didSet will not be called in initializer
+        textView.attributedText = headerAttributedString(of: article)
     }
 
     init(url: URL, apiClient: APIClientProtocol=APIClient.shared) {
@@ -145,7 +145,6 @@ final class PostViewController: UIViewController, FullscreenSwipeable, PostView 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         if #available(iOS 11.0, *) {
             navigationItem.largeTitleDisplayMode = .never
         }
@@ -227,7 +226,8 @@ final class PostViewController: UIViewController, FullscreenSwipeable, PostView 
         } else {
             activityIndicator.startAnimating()
         }
-        self.apiClient.getPost(board: boardName, filename: filename) { (result) in
+        
+        self.apiClient.getArticle(of: .go_pttbbs(bid: boardName, aid: filename)) { (result) in
             DispatchQueue.main.async {
                 self.activityIndicator.stopAnimating()
                 if #available(iOS 10.0, *) {
@@ -242,16 +242,16 @@ final class PostViewController: UIViewController, FullscreenSwipeable, PostView 
                     alert.addAction(confirm)
                     self.present(alert, animated: true, completion: nil)
                 }
-            case .success(post: let post):
-                self.post = post
+            case .success(article: let article):
+                self.article = article
             }
         }
     }
 
     @objc private func share(sender: UIBarButtonItem) {
         var shareUrl : URL? = nil
-        if let post = post as? APIModel.FullPost {
-            shareUrl = URL(string: post.href)
+        if let article = article as? APIModel.FullArticle {
+            shareUrl = URL(string: article.url)
         } else {
             shareUrl = url
         }
@@ -262,7 +262,7 @@ final class PostViewController: UIViewController, FullscreenSwipeable, PostView 
         }
     }
 
-    private func headerAttributedString(of post: Post) -> NSAttributedString {
+    private func headerAttributedString(of article: Article) -> NSAttributedString {
         let headParagraphStyle = NSMutableParagraphStyle()
         let hPadding : CGFloat = 26.0
         headParagraphStyle.firstLineHeadIndent = hPadding
@@ -298,22 +298,22 @@ final class PostViewController: UIViewController, FullscreenSwipeable, PostView 
         }
         headerAttributedString.append(NSAttributedString(attachment: categoryAttachment))
         // Workaround: We cannot vertically center align attachments easily, so use tab to align text.
-        if let _post = post as? APIModel.BoardPost, let boardName = self.boardName {
-            headerAttributedString.append(NSAttributedString(string: "\t\(boardName) / \(_post.category)\n"))
-        } else if let _post = post as? APIModel.FullPost {
-            headerAttributedString.append(NSAttributedString(string: "\t\(_post.board) / \(_post.category)\n"))
+        if let _article = article as? APIModel.BoardArticle, let boardName = self.boardName {
+            headerAttributedString.append(NSAttributedString(string: "\t\(boardName) / \(_article.category)\n"))
+        } else if let _article = article as? APIModel.FullArticle {
+            headerAttributedString.append(NSAttributedString(string: "\t\(_article.board) / \(_article.category)\n"))
         }
         headerAttributedString.append(NSAttributedString(attachment: authorAttachment))
-        if let _post = post as? APIModel.FullPost {
-            headerAttributedString.append(NSAttributedString(string: "\t\(post.author) (\(_post.nickname))\n"))
+        if let _article = article as? APIModel.FullArticle {
+            headerAttributedString.append(NSAttributedString(string: "\t\(article.author) (\(_article.nickname))\n"))
         } else {
-            headerAttributedString.append(NSAttributedString(string: "\t\(post.author)\n"))
+            headerAttributedString.append(NSAttributedString(string: "\t\(article.author)\n"))
         }
         headerAttributedString.append(NSAttributedString(attachment: dateAttachment))
-        if let _ = post as? APIModel.BoardPost {
-            headerAttributedString.append(NSAttributedString(string: "\t\(post.date)\n\n"))
+        if let _ = article as? APIModel.BoardArticle {
+            headerAttributedString.append(NSAttributedString(string: "\t\(article.date)\n\n"))
         } else {
-            headerAttributedString.append(NSAttributedString(string: "\t\(post.date)\n\n"))
+            headerAttributedString.append(NSAttributedString(string: "\t\(article.date)\n\n"))
         }
         headerAttributedString.addAttributes(headAttributes, range: NSRange(location: 0, length: headerAttributedString.length))
         return headerAttributedString
@@ -322,7 +322,7 @@ final class PostViewController: UIViewController, FullscreenSwipeable, PostView 
 
 // MARK: - UITextViewDelegate
 
-extension PostViewController : UITextViewDelegate {
+extension ArticleViewController : UITextViewDelegate {
 
     /// Legacy method for pre-iOS 10
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
@@ -336,8 +336,8 @@ extension PostViewController : UITextViewDelegate {
 
     private func shouldInteractWith(URL: URL) -> Bool {
         if Utility.isPttArticle(url: URL) {
-            let postViewController = PostViewController(url: URL)
-            show(postViewController, sender: self)
+            let articleViewController = ArticleViewController(url: URL)
+            show(articleViewController, sender: self)
             return false
         }
         if URL.scheme == "http" || URL.scheme == "https" {

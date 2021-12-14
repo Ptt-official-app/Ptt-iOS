@@ -13,7 +13,7 @@ protocol PopularBoardsViewModelDelegate {
 }
 
 class PopularBoardsViewModel {
-    var popularBoards = Observable<[APIModel.BoardInfoV2]>(value: [])
+    var popularBoards = Observable<[APIModel.BoardInfo]>(value: [])
     var delegate: PopularBoardsViewModelDelegate?
     
     let subPath = "boards/popular"
@@ -36,7 +36,7 @@ class PopularBoardsViewModel {
                     weakSelf.delegate?.showErrorAlert(errorMessage: apiError.message)
                     return
                 case .success(data: let data):
-                    var tempList: [APIModel.BoardInfoV2] = []
+                    var tempList: [APIModel.BoardInfo] = []
                     
                     for item in data.list {
                         tempList.append(item)

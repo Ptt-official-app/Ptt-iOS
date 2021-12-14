@@ -117,7 +117,7 @@ final class FBPageViewController: UIViewController, FBPageView {
 
     @objc private func refresh() {
         if webView.url == nil {
-            if let url = URL(string: "https://www.facebook.com/pg/PttTW/posts/") {
+            if let url = URL(string: "https://www.facebook.com/PttTW/") {
                 let urlRequest = URLRequest(url: url)
                 webView.load(urlRequest)
             }
@@ -149,8 +149,8 @@ extension FBPageViewController : WKNavigationDelegate {
             resultUrl = url
         }
         if let resultUrl = resultUrl, Utility.isPttArticle(url: resultUrl) {
-            let postViewController = PostViewController(url: resultUrl)
-            show(postViewController, sender: self)
+            let articleViewController = ArticleViewController(url: resultUrl)
+            show(articleViewController, sender: self)
             decisionHandler(.cancel)
             return
         }

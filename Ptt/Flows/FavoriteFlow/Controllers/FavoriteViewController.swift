@@ -24,7 +24,7 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
        return UISearchController(searchResultsController: resultsTableController)
     }()
     
-    private var boardListDict : [APIModel.BoardInfoV2]? = nil
+    private var boardListDict : [APIModel.BoardInfo]? = nil
 
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
@@ -161,7 +161,7 @@ extension FavoriteViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text, searchText.count > 0  else { return }
         resultsTableController.activityIndicator.startAnimating()
-        APIClient.shared.getBoardListV2(token: "", keyword: searchText) { [weak self] (result) in
+        APIClient.shared.getBoardList(token: "", keyword: searchText) { [weak self] (result) in
             guard let weakSelf = self else { return }
             switch result {
                 case .failure(error: let error):

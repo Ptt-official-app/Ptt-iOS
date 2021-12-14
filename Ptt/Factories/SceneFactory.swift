@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 final class SceneFactory: FavoriteSceneFactoryProtocol,
                           LoginSceneFactoryProtocol,
@@ -37,7 +38,11 @@ final class SceneFactory: FavoriteSceneFactoryProtocol,
         return BoardViewController(boardName: boardName)
     }
     
-    func makePostView(withBoardPost boardPost: BoardPost) -> PostView {
-        return PostViewController(post: boardPost.post, boardName: boardPost.boardName)
+    func makeArticleView(withBoardArticle boardArticle: BoardArticle) -> ArticleView {
+        return ArticleViewController(article: boardArticle.article, boardName: boardArticle.boardName)
+    }
+    
+    func makeComposeArticleView(withBoardName boardName: String) -> UIViewController {
+        return ComposeArticleViewController(boardName: boardName)
     }
 }

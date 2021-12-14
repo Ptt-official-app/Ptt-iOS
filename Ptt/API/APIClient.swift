@@ -8,7 +8,7 @@
 
 import Foundation
 
-class APIClient {
+struct APIClient {
     private enum Method: String {
         case GET = "GET"
         case POST = "POST"
@@ -16,28 +16,36 @@ class APIClient {
         case PUT = "PUT"
     }
     static let shared: APIClient = APIClient()
-    
-    private var rootURLComponents : URLComponents {
+
+    private var legacyURLComponents : URLComponents {
         var urlComponent = URLComponents()
         urlComponent.scheme = "https"
         urlComponent.host = "webptt.azurewebsites.net"
         return urlComponent
     }
+
+    private var go_pttbbs_URLComponents : URLComponents {
+        var urlComponent = URLComponents()
+        urlComponent.scheme = "https"
+        urlComponent.host = "api.devptt.site"
+        urlComponent.port = 3457
+        return urlComponent
+    }
+
+    private var go_bbs_URLComponents : URLComponents {
+        var urlComponent = URLComponents()
+        urlComponent.scheme = "https"
+        urlComponent.host = "pttapp.cc"
+        return urlComponent
+    }
     
-    private var tempURLComponents : URLComponents {
+    private var rootURLComponents : URLComponents {
         var urlComponent = URLComponents()
         urlComponent.scheme = "https"
         if let address = URL(string: UserDefaultsManager.address()) {
             urlComponent.host = address.host
             urlComponent.port = address.port
         }
-        return urlComponent
-    }
-    
-    private var pttURLComponents : URLComponents {
-        var urlComponent = URLComponents()
-        urlComponent.scheme = "https"
-        urlComponent.host = "www.ptt.cc"
         return urlComponent
     }
 
@@ -52,13 +60,14 @@ class APIClient {
 
 // MARK: Public api function
 extension APIClient: APIClientProtocol {
+    
     func login(account: String, password: String, completion: @escaping (LoginResult) -> Void) {
         let bodyDic = ["client_id": "test_client_id",
                        "client_secret": "test_client_secret",
                        "username": account,
                        "password": password]
         
-        var urlComponent = tempURLComponents
+        var urlComponent = rootURLComponents
         urlComponent.path = "/api/account/login"
         guard let url = urlComponent.url,
               let jsonBody = try? JSONSerialization.data(withJSONObject: bodyDic) else {
@@ -88,13 +97,26 @@ extension APIClient: APIClientProtocol {
         task.resume()
     }
     
-    func getNewPostlist(board: String, page: Int, completion: @escaping (GetNewPostlistResult) -> Void) {
-        var urlComponent = rootURLComponents
-        urlComponent.path = "/api/Article/\(board)"
-        // Percent encoding is automatically done with RFC 3986
-        urlComponent.queryItems = [
-            URLQueryItem(name: "page", value: "\(page)")
-        ]
+    func getBoardArticles(of params: BoardArticlesParams, completion: @escaping (getBoardArticlesResult) -> Void) {
+        var urlComponent : URLComponents
+        switch params {
+        case .go_pttbbs(bid: let bid, startIdx: let startIdx):
+            urlComponent = go_pttbbs_URLComponents
+            urlComponent.path = "/api/board/\(bid)/articles"
+            // Percent encoding is automatically done with RFC 3986
+            urlComponent.queryItems = [
+                URLQueryItem(name: "start_idx", value: startIdx)
+            ]
+        case .go_bbs(boardID: let boardID):
+            urlComponent = go_bbs_URLComponents
+            urlComponent.path = "/v1/boards/\(boardID)/articles"
+        case .legacy(boardName: let boardName, page: let page):
+            urlComponent = legacyURLComponents
+            urlComponent.path = "/api/Article/\(boardName)"
+            urlComponent.queryItems = [
+                URLQueryItem(name: "page", value: "\(page)")
+            ]
+        }
         guard let url = urlComponent.url else {
             assertionFailure()
             return
@@ -106,7 +128,18 @@ extension APIClient: APIClientProtocol {
                 completion(.failure(apiError))
             case .success(let resultData):
                 do {
-                    let board = try self.decoder.decode(APIModel.Board.self, from: resultData)
+                    let board : APIModel.BoardModel
+                    switch params {
+                    case .go_pttbbs(bid: _, startIdx: _):
+                        let _board = try self.decoder.decode(APIModel.GoPttBBSBoard.self, from: resultData)
+                        board = APIModel.GoPttBBSBoard.adapter(model: _board)
+                    case .go_bbs(boardID: _):
+                        let _board = try self.decoder.decode(APIModel.GoBBSBoard.self, from: resultData)
+                        board = APIModel.GoBBSBoard.adapter(model: _board)
+                    case .legacy(boardName: _, page: _):
+                        let _board = try self.decoder.decode(APIModel.LegacyBoard.self, from: resultData)
+                        board = APIModel.LegacyBoard.adapter(model: _board)
+                    }
                     completion(.success(board))
                 } catch (let decodingError) {
                     let message = self.message(of: decodingError)
@@ -117,9 +150,19 @@ extension APIClient: APIClientProtocol {
         task.resume()
     }
 
-    func getPost(board: String, filename: String, completion: @escaping (GetPostResult) -> Void) {
-        var urlComponent = rootURLComponents
-        urlComponent.path = "/api/Article/\(board)/\(filename)"
+    func getArticle(of params: ArticleParams, completion: @escaping (GetArticleResult) -> Void) {
+        var urlComponent : URLComponents
+        switch params {
+        case .go_pttbbs(bid: let bid, aid: let aid):
+            urlComponent = go_pttbbs_URLComponents
+            urlComponent.path = "/api/board/\(bid)/article/\(aid)"
+        case .go_bbs(boardID: let boardID, articleID: let articleID):
+            urlComponent = go_bbs_URLComponents
+            urlComponent.path = "/v1/boards/\(boardID)/articles/\(articleID)"
+        case .legacy(boardName: let boardName, filename: let filename):
+            urlComponent = legacyURLComponents
+            urlComponent.path = "/api/Article/\(boardName)/\(filename)"
+        }
         guard let url = urlComponent.url else {
             assertionFailure()
             return
@@ -131,8 +174,19 @@ extension APIClient: APIClientProtocol {
                 completion(.failure(apiError))
             case .success(let resultData):
                 do {
-                    let post = try self.decoder.decode(APIModel.FullPost.self, from: resultData)
-                    completion(.success(post))
+                    let article : APIModel.FullArticle
+                    switch params {
+                    case .go_pttbbs(bid: _, aid: _):
+                        let _article = try self.decoder.decode(APIModel.GoPttBBSArticle.self, from: resultData)
+                        article = APIModel.GoPttBBSArticle.adapter(model: _article)
+                    case .go_bbs(boardID: _, articleID: _):
+                        let _article = try self.decoder.decode(APIModel.GoBBSArticle.self, from: resultData)
+                        article = APIModel.GoBBSArticle.adapter(model: _article)
+                    case .legacy(boardName: _, filename: _):
+                        let _article = try self.decoder.decode(APIModel.LegacyArticle.self, from: resultData)
+                        article = APIModel.LegacyArticle.adapter(model: _article)
+                    }
+                    completion(.success(article))
                 } catch (let decodingError) {
                     let message = self.message(of: decodingError)
                     completion(.failure(APIError(message: message)))
@@ -141,23 +195,6 @@ extension APIClient: APIClientProtocol {
         }
         task.resume()
     }
-
-    func getBoardList(completion: @escaping (BoardListResult) -> Void) {
-        // Raw file is 13.3 MB but with HTTP compression by default,
-        // network data usage should be actually around 750 KB.
-        let url = URL(string: "https://raw.githubusercontent.com/PttCodingMan/PTTBots/master/PttApp/BoardList.json")!
-        let task = self.session.dataTask(with: url) { (data, urlResponse, error) in
-            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
-            switch result {
-            case .failure(error: let apiError):
-                completion(.failure(apiError))
-            case .success(data: let resultData):
-                completion(.success(resultData))
-            }
-        }
-        task.resume()
-    }
-    
     
     /// Get board list
     /// - Parameters:
@@ -166,12 +203,20 @@ extension APIClient: APIClientProtocol {
     ///   - startIdx: starting idx, '' if fetch from the beginning.
     ///   - max: max number of the returned list, requiring <= 300
     ///   - completion: the list of board information
-    func getBoardListV2(token: String, keyword: String="", startIdx: String="", max: Int=200, completion: @escaping (BoardListResultV2) -> Void) {
-        var urlComponent = tempURLComponents
-        urlComponent.path = "/api/boards"
+    func getBoardList(token: String, keyword: String="", startIdx: String="", max: Int=200, completion: @escaping (BoardListResult) -> Void) {
+        
+        let matcherEnglish = MyRegex("^[a-zA-Z]+$")
+        let matcherChinese = MyRegex("^[\\u4e00-\\u9fa5]+$")
+        var urlComponent = rootURLComponents
+        
+        urlComponent.path = matcherEnglish.match(input: keyword) ?
+                    "/api/boards/autocomplete" : matcherChinese.match(input: keyword) ?
+                    "/api/boards/byclass" : "/api/boards"
+        
+        let keywordQueryItemName = matcherEnglish.match(input: keyword) ? "brdname" : "keyword"
         // Percent encoding is automatically done with RFC 3986
         urlComponent.queryItems = [
-            URLQueryItem(name: "title", value: keyword),
+            URLQueryItem(name: keywordQueryItemName, value: keyword),
             URLQueryItem(name: "start_idx", value: startIdx),
             URLQueryItem(name: "limit", value: "\(max)")
         ]
@@ -202,8 +247,8 @@ extension APIClient: APIClientProtocol {
         task.resume()
     }
     
-    func getPopularBoards(subPath: String, token: String, querys: Dictionary<String, Any>=[:], completion: @escaping (BoardListResultV2) -> Void) {
-        var urlComponent = tempURLComponents
+    func getPopularBoards(subPath: String, token: String, querys: Dictionary<String, Any>=[:], completion: @escaping (BoardListResult) -> Void) {
+        var urlComponent = rootURLComponents
         urlComponent.path = "/api/"+subPath
 
         urlComponent.queryItems = []
@@ -231,6 +276,41 @@ extension APIClient: APIClientProtocol {
                 do {
                     let list = try self.decoder.decode(APIModel.BoardInfoList.self, from: resultData)
                     completion(.success(list))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(APIError(message: message)))
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    func createArticle(boardId: String, article: APIModel.CreateArticle, completion: @escaping (createArticleResult) -> Void) {
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/board/" + boardId + "/article"
+        
+        guard let url = urlComponent.url,
+              let jsonBody = try? JSONEncoder().encode(article) else {
+            assertionFailure()
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.POST.rawValue
+        request.httpBody = jsonBody
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue( "Bearer \(LoginKeyChainItem.shared.readToken()!)", forHTTPHeaderField: "Authorization")
+
+        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
+            switch result {
+            case .failure(let apiError):
+                completion(.failure(apiError))
+            case .success(let resultData):
+                do {
+                    let response = try self.decoder.decode(APIModel.CreateArticleResponse.self, from: resultData)
+                    completion(.success(response))
                 } catch (let decodingError) {
                     let message = self.message(of: decodingError)
                     completion(.failure(APIError(message: message)))
@@ -285,5 +365,20 @@ extension APIClient {
         
         return message
     }
+    
+    struct MyRegex {
+        let regex: NSRegularExpression?
+        init(_ pattern: String) {
+            regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive)
+        }
 
+        func match(input: String) -> Bool {
+            if let matches = regex?.matches(in: input, options: [],
+                                            range: NSMakeRange(0, (input as NSString).length)) {
+                return matches.count > 0
+            }else {
+                return false
+            }
+        }
+    }
 }

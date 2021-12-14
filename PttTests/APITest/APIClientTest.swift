@@ -19,7 +19,7 @@ final class APIClientTest: XCTestCase {
         let session = MockURLSession(mockDataTask: dataTask, fakeData: nil, error: unknowError)
         let client = APIClient(session: session)
         
-        client.getNewPostlist(board: "abc", page: 1) { (result) in
+        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { (result) in
             switch (result) {
             case .failure(let error):
                 XCTAssertTrue(error.message == "Network error")
@@ -35,7 +35,7 @@ final class APIClientTest: XCTestCase {
         let session = MockURLSession(mockDataTask: dataTask, fakeData: Data(), error: nil, statusCode: statusCode)
         let client = APIClient(session: session)
         
-        client.getNewPostlist(board: "abc", page: 1) { (result) in
+        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { (result) in
             switch (result) {
             case .failure(let error):
                 let msg = "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"
@@ -51,7 +51,7 @@ final class APIClientTest: XCTestCase {
         let session = MockURLSession(mockDataTask: dataTask, fakeData: nil, error: nil)
         let client = APIClient(session: session)
         
-        client.getNewPostlist(board: "abc", page: 1) { (result) in
+        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { (result) in
             switch (result) {
             case .failure(let error):
                 XCTAssert(error.message == "No data")
@@ -74,40 +74,39 @@ final class APIClientTest: XCTestCase {
         }
     }
     
-    func testNewPostlistSuccess() {
-        let client = manager.newPostClient()
+    func testGetBoardArticlesSuccess() {
+        let client = manager.newArticleClient()
         
-        client.getNewPostlist(board:"MyBoard", page: 1) { (result) in
+        client.getBoardArticles(of: .legacy(boardName: "MyBoard", page: 1)) { (result) in
             switch (result) {
             case .failure(_):
                 XCTAssert(false)
             case .success(let board):
                 XCTAssert(board.page == 1)
-                XCTAssert(board.boardInfo.name == "MyBoard")
-                XCTAssert(board.boardInfo.nuser == "21471")
-                XCTAssert(board.postList.count == 2)
-                XCTAssert(board.postList[0].title == "Re: [問卦] 這是測試嗎")
+//                XCTAssert(board.boardInfo.name == "MyBoard")
+//                XCTAssert(board.boardInfo.nuser == "21471")
+                XCTAssert(board.articleList.count == 2)
+                XCTAssert(board.articleList[0].title == "Re: [問卦] 這是測試嗎")
             }
         }
     }
     
-    func testGetPostSuccess() {
-        let client = manager.getPostClient()
-        
-        client.getPost(board: "MyBoard", filename: "M.392837.A.F25") { (result) in
+    func testGetArticleSuccess() {
+        let client = manager.getArticleClient()
+        client.getArticle(of: .legacy(boardName: "MyBoard", filename: "M.392837.A.F25")) { (result) in
             switch (result) {
                 case .failure(_):
                     XCTAssert(false)
-                case .success(let post):
-                    guard let fullPost = post as? APIModel.FullPost else {
+                case .success(let article):
+                    guard let fullArticle = article as? APIModel.FullArticle else {
                         fatalError()
                     }
-                    XCTAssert(post.author == "user3")
-                    XCTAssert(post.date == "Thu Nov 19 21:20:42 2020")
-                    XCTAssert(post.category == "問卦")
-                    XCTAssert(post.titleWithoutCategory == "有沒有問卦的八卦")
-                    XCTAssert(fullPost.comments.count == 2)
-                    XCTAssert(fullPost.comments[1].content == ": 叫學長啦")
+                    XCTAssert(article.author == "user3")
+                    XCTAssert(article.date == "Thu Nov 19 21:20:42 2020")
+                    XCTAssert(article.category == "問卦")
+                    XCTAssert(article.titleWithoutCategory == "有沒有問卦的八卦")
+                    XCTAssert(fullArticle.comments.count == 2)
+                    XCTAssert(fullArticle.comments[1].content == ": 叫學長啦")
             }
         }
     }
@@ -115,7 +114,7 @@ final class APIClientTest: XCTestCase {
     func testBoardListSuccess() {
         let client = manager.getBoardList()
         
-        client.getBoardListV2(token: "eyJhbGc....", keyword: "", startIdx: "", max: 300) { (result) in
+        client.getBoardList(token: "eyJhbGc....", keyword: "", startIdx: "", max: 300) { (result) in
             switch (result) {
                 case .failure(_):
                     XCTAssert(false)
