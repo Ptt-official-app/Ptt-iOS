@@ -12,6 +12,8 @@ final class RegisterViewController: UIViewController, RegisterView {
 
     override func loadView() {
         webView.navigationDelegate = self
+        webView.isOpaque = false
+        webView.backgroundColor = .black
         view = webView
     }
     
@@ -19,6 +21,7 @@ final class RegisterViewController: UIViewController, RegisterView {
         super.viewDidLoad()
         
         self.navigationItem.title = NSLocalizedString("Register", comment: "");
+        self.navigationController?.fixBarColor()
         if #available(iOS 11.0, *) {
             // will change contentInset later
             webView.scrollView.contentInsetAdjustmentBehavior = .never
