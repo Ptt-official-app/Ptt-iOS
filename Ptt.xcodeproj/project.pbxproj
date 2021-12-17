@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -35,6 +35,9 @@
 		3E9FE306275D01C5002E144F /* PopularArticlesSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9FE305275D01C5002E144F /* PopularArticlesSceneFactoryProtocol.swift */; };
 		3E9FE309275D0240002E144F /* PopularArticlesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9FE308275D0240002E144F /* PopularArticlesViewController.swift */; };
 		3E9FE30B275D0F16002E144F /* PopularArticlesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9FE30A275D0F16002E144F /* PopularArticlesViewModel.swift */; };
+		3EAED61C276CD1F3005AC13A /* SwiftGenCLI in Frameworks */ = {isa = PBXBuildFile; productRef = 3EAED61B276CD1F3005AC13A /* SwiftGenCLI */; };
+		3EAED61E276CD1F3005AC13A /* SwiftGenKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3EAED61D276CD1F3005AC13A /* SwiftGenKit */; };
+		3EAED620276CD1F3005AC13A /* swiftgen in Frameworks */ = {isa = PBXBuildFile; productRef = 3EAED61F276CD1F3005AC13A /* swiftgen */; };
 		3ECAD05D2762766A00F50A91 /* NumberExtensionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ECAD05C2762766A00F50A91 /* NumberExtensionTest.swift */; };
 		3ECAD060276277FF00F50A91 /* PopularArticles.json in Resources */ = {isa = PBXBuildFile; fileRef = 3ECAD05F276277FF00F50A91 /* PopularArticles.json */; };
 		3ED16B3E25713D64004A33E0 /* APITestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED16B3D25713D64004A33E0 /* APITestClient.swift */; };
@@ -225,7 +228,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3EAED61C276CD1F3005AC13A /* SwiftGenCLI in Frameworks */,
+				3EAED61E276CD1F3005AC13A /* SwiftGenKit in Frameworks */,
 				FFC18D2A87D55C733ABEBA14 /* Pods_Ptt.framework in Frameworks */,
+				3EAED620276CD1F3005AC13A /* swiftgen in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -744,12 +750,18 @@
 				EA475F6E23C4834C000867FE /* Frameworks */,
 				EA475F6F23C4834C000867FE /* Resources */,
 				C6B1DC1C85F6FDA381BEBEA9 /* [CP] Embed Pods Frameworks */,
+				3EAED621276CD2F1005AC13A /* SwiftGen */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = Ptt;
+			packageProductDependencies = (
+				3EAED61B276CD1F3005AC13A /* SwiftGenCLI */,
+				3EAED61D276CD1F3005AC13A /* SwiftGenKit */,
+				3EAED61F276CD1F3005AC13A /* swiftgen */,
+			);
 			productName = Ptt;
 			productReference = EA475F7123C4834C000867FE /* Ptt.app */;
 			productType = "com.apple.product-type.application";
@@ -802,6 +814,9 @@
 				"zh-Hant",
 			);
 			mainGroup = EA475F6823C4834C000867FE;
+			packageReferences = (
+				3EAED61A276CD1F3005AC13A /* XCRemoteSwiftPackageReference "SwiftGen" */,
+			);
 			productRefGroup = EA475F7223C4834C000867FE /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -839,6 +854,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		3EAED621276CD2F1005AC13A /* SwiftGen */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftGen;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n";
+		};
 		912D926E93907D87D492B266 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1267,6 +1300,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3EAED61A276CD1F3005AC13A /* XCRemoteSwiftPackageReference "SwiftGen" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftGen/SwiftGen";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3EAED61B276CD1F3005AC13A /* SwiftGenCLI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3EAED61A276CD1F3005AC13A /* XCRemoteSwiftPackageReference "SwiftGen" */;
+			productName = SwiftGenCLI;
+		};
+		3EAED61D276CD1F3005AC13A /* SwiftGenKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3EAED61A276CD1F3005AC13A /* XCRemoteSwiftPackageReference "SwiftGen" */;
+			productName = SwiftGenKit;
+		};
+		3EAED61F276CD1F3005AC13A /* swiftgen */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3EAED61A276CD1F3005AC13A /* XCRemoteSwiftPackageReference "SwiftGen" */;
+			productName = swiftgen;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EA475F6923C4834C000867FE /* Project object */;
 }
