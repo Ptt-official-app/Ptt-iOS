@@ -26,6 +26,7 @@
 		3E8D8C87258A519F00346690 /* Login.json in Resources */ = {isa = PBXBuildFile; fileRef = 3E8D8C86258A519F00346690 /* Login.json */; };
 		3E9A6284258A5D9A00C9DC18 /* BoardList.json in Resources */ = {isa = PBXBuildFile; fileRef = 3E9A6283258A5D9A00C9DC18 /* BoardList.json */; };
 		3ED16B3E25713D64004A33E0 /* APITestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED16B3D25713D64004A33E0 /* APITestClient.swift */; };
+		3EE7034B2767A12000FFF965 /* NavigationControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE7034A2767A12000FFF965 /* NavigationControllerExtension.swift */; };
 		9411EDA625A0AEC30005ADCB /* LoginCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9411EDA525A0AEC30005ADCB /* LoginCoordinator.swift */; };
 		9411EDAA25A0B03C0005ADCB /* LoginSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9411EDA925A0B03C0005ADCB /* LoginSceneFactoryProtocol.swift */; };
 		94BBA52025CF89D800FFFF0F /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BBA51F25CF89D700FFFF0F /* RegisterViewController.swift */; };
@@ -119,6 +120,7 @@
 		3E8D8C86258A519F00346690 /* Login.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Login.json; sourceTree = "<group>"; };
 		3E9A6283258A5D9A00C9DC18 /* BoardList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BoardList.json; sourceTree = "<group>"; };
 		3ED16B3D25713D64004A33E0 /* APITestClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITestClient.swift; sourceTree = "<group>"; };
+		3EE7034A2767A12000FFF965 /* NavigationControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerExtension.swift; sourceTree = "<group>"; };
 		46B9993AD4E3522178E28D0D /* Pods-Ptt.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ptt.debug.xcconfig"; path = "Target Support Files/Pods-Ptt/Pods-Ptt.debug.xcconfig"; sourceTree = "<group>"; };
 		80D0972759B39673EF30B8DB /* Pods-Ptt.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ptt.release.xcconfig"; path = "Target Support Files/Pods-Ptt/Pods-Ptt.release.xcconfig"; sourceTree = "<group>"; };
 		8A0F49F3FB80A16A715149ED /* Pods-PttTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PttTests.release.xcconfig"; path = "Target Support Files/Pods-PttTests/Pods-PttTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -388,6 +390,7 @@
 			isa = PBXGroup;
 			children = (
 				CD767B4125B0B6690050E12A /* Extension.swift */,
+				3EE7034A2767A12000FFF965 /* NavigationControllerExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -847,6 +850,7 @@
 				CD73E139268616A5009D3EF5 /* ArticleClassTableViewCell.swift in Sources */,
 				EA475F7523C4834C000867FE /* AppDelegate.swift in Sources */,
 				9B564C33256A9F3500787FD7 /* Routerable.swift in Sources */,
+				3EE7034B2767A12000FFF965 /* NavigationControllerExtension.swift in Sources */,
 				9BEE1C9E2584E7E1002A9D95 /* FavoriteCoordinator.swift in Sources */,
 				EA475F7723C4834C000867FE /* SceneDelegate.swift in Sources */,
 				CD731CDA25BC8945008C43DA /* ResultsTableController.swift in Sources */,

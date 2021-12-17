@@ -47,6 +47,7 @@ final class FBPageViewController: UIViewController, FBPageView {
         super.viewDidLoad()
 
         self.navigationItem.title = NSLocalizedString("PTT FB Page", comment: "");
+        self.navigationController?.fixBarColor()
         if #available(iOS 11.0, *) {
             // will change contentInset later
             webView.scrollView.contentInsetAdjustmentBehavior = .never
