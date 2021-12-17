@@ -14,27 +14,29 @@ protocol Article : Codable {
     var author : String { get }
 
     // implemented in protocol extension below
-    var category : String { get }
+    var category : String? { get }
     var titleWithoutCategory : String { get }
 }
 
 extension Article {
-    var category : String {
+    var category : String? {
         if let leftBracket = title.firstIndex(of: "["), let rightBracket = title.firstIndex(of: "]") {
             let nextLeftBracket = title.index(after: leftBracket)
             let range = nextLeftBracket..<rightBracket
             let category = title[range]
             return String(category)
         }
-        return "　　"
+        return nil
     }
+
     var titleWithoutCategory : String {
-        if let leftBracket = title.firstIndex(of: "["), let rightBracket = title.firstIndex(of: "]") {
+        if let leftBracket = title.firstIndex(of: "["),
+            let rightBracket = title.firstIndex(of: "]") {
             var _title = title
-//            let nextRightBracket = _title.index(after: rightBracket)
-            let range = leftBracket...rightBracket
-            _title.removeSubrange(range)
-            return _title
+            let categoryRange = leftBracket...rightBracket
+            _title.removeSubrange(categoryRange)
+            let _titleWithBothEndsTrimmed = _title.trimmingCharacters(in: .whitespacesAndNewlines)
+            return _titleWithBothEndsTrimmed
         }
         return title
     }

@@ -131,7 +131,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
     }
 
     init(url: URL, apiClient: APIClientProtocol=APIClient.shared) {
-        let (boardName, filename) = Utility.info(from: url.path)
+        let (boardName, filename) = APIModel.FullArticle.info(from: url)
         self.boardName = boardName
         self.filename = filename
         self.apiClient = apiClient
@@ -335,7 +335,7 @@ extension ArticleViewController : UITextViewDelegate {
     }
 
     private func shouldInteractWith(URL: URL) -> Bool {
-        if Utility.isPttArticle(url: URL) {
+        if APIModel.FullArticle.isPttArticle(url: URL) {
             let articleViewController = ArticleViewController(url: URL)
             show(articleViewController, sender: self)
             return false

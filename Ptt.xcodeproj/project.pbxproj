@@ -99,6 +99,7 @@
 		EA9DE10F2563A82200AEFC19 /* FullscreenSwipeBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9DE10E2563A82200AEFC19 /* FullscreenSwipeBack.swift */; };
 		EAA4F6F123C72B01005ABCE3 /* BoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA4F6F023C72B01005ABCE3 /* BoardViewController.swift */; };
 		EAA4F6F323C72F95005ABCE3 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA4F6F223C72F95005ABCE3 /* APIClient.swift */; };
+		EAE0839D27686657009DE954 /* ArticleTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE0839C27686657009DE954 /* ArticleTest.swift */; };
 		FFC18D2A87D55C733ABEBA14 /* Pods_Ptt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBDA47B1E79A476E2E89A118 /* Pods_Ptt.framework */; };
 /* End PBXBuildFile section */
 
@@ -216,6 +217,7 @@
 		EA9DE10E2563A82200AEFC19 /* FullscreenSwipeBack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullscreenSwipeBack.swift; sourceTree = "<group>"; };
 		EAA4F6F023C72B01005ABCE3 /* BoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardViewController.swift; sourceTree = "<group>"; };
 		EAA4F6F223C72F95005ABCE3 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		EAE0839C27686657009DE954 /* ArticleTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -714,11 +716,20 @@
 				3E6205182762721800CC8236 /* ExtensionTest */,
 				3E0101B32566A9A200D39FAD /* FakeData */,
 				3E0101AC25669F3B00D39FAD /* APITest */,
+				EAE0839B2768663E009DE954 /* Model */,
 				3E0101A125669DBF00D39FAD /* MockClass */,
 				EA475F8B23C4834C000867FE /* PttTests.swift */,
 				EA475F8D23C4834C000867FE /* Info.plist */,
 			);
 			path = PttTests;
+			sourceTree = "<group>";
+		};
+		EAE0839B2768663E009DE954 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				EAE0839C27686657009DE954 /* ArticleTest.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -981,6 +992,7 @@
 				3E0101A925669DEE00D39FAD /* MockURLSessionDataTask.swift in Sources */,
 				3E0101A325669DDB00D39FAD /* MockURLSession.swift in Sources */,
 				EA475F8C23C4834C000867FE /* PttTests.swift in Sources */,
+				EAE0839D27686657009DE954 /* ArticleTest.swift in Sources */,
 				3E0101AE25669F5A00D39FAD /* APIClientTest.swift in Sources */,
 				3ECAD05D2762766A00F50A91 /* NumberExtensionTest.swift in Sources */,
 				3E62051A2762723500CC8236 /* StringExtensionTest.swift in Sources */,

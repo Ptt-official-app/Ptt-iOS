@@ -62,13 +62,16 @@ extension APIModel {
         let date : String
 
         static func adapter(model: LegacyBrdArticle) -> BoardArticle? {
-            let (boardName, filename) = Utility.info(from: model.href)
-//            guard let boardName = boardName, let filename = filename else { return nil }
+            guard let url = URL(string: "https://www.ptt.cc\(model.href)") else {
+                return nil
+            }
+            let (boardName, filename) = APIModel.FullArticle.info(from: url)
+            guard let boardName = boardName, let filename = filename else { return nil }
             let boardArticle = BoardArticle(title: model.title,
                                          date: model.date,
                                          author: model.author,
-                                         boardID: boardName!,
-                                         articleID: filename!)
+                                         boardID: boardName,
+                                         articleID: filename)
             return boardArticle
         }
     }
