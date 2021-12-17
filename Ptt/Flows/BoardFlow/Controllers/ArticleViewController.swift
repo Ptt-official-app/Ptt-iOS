@@ -13,6 +13,7 @@ protocol ArticleView: BaseView {}
 
 final class ArticleViewController: UIViewController, FullscreenSwipeable, ArticleView {
 
+    private var useLegacyAPI: Bool = false
     private let apiClient: APIClientProtocol
     private var boardName : String?
     private var filename : String?
@@ -119,9 +120,8 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
     init(article: APIModel.BoardArticle, boardName: String, apiClient: APIClientProtocol=APIClient.shared) {
         self.article = article
         self.boardName = boardName
-        self.apiClient = apiClient
-        // TODO: only supporting legacy model
         self.filename = article.articleID
+        self.apiClient = apiClient
         super.init(nibName: nil, bundle: nil)
         self.title = article.titleWithoutCategory
         hidesBottomBarWhenPushed = true
@@ -135,6 +135,9 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
         self.boardName = boardName
         self.filename = filename
         self.apiClient = apiClient
+        if url.host == "www.ptt.cc" {
+            self.useLegacyAPI = true
+        }
         super.init(nibName: nil, bundle: nil)
         hidesBottomBarWhenPushed = true
     }
@@ -227,7 +230,13 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
             activityIndicator.startAnimating()
         }
         
-        self.apiClient.getArticle(of: .go_pttbbs(bid: boardName, aid: filename)) { (result) in
+        let articleParams: ArticleParams
+        if useLegacyAPI {
+            articleParams = .legacy(boardName: boardName, filename: filename)
+        } else {
+            articleParams = .go_pttbbs(bid: boardName, aid: filename)
+        }
+        self.apiClient.getArticle(of: articleParams) { (result) in
             DispatchQueue.main.async {
                 self.activityIndicator.stopAnimating()
                 if #available(iOS 10.0, *) {
