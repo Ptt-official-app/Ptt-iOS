@@ -234,6 +234,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         
         textField.delegate = self
         textField.textColor = UIColor.black
+        textField.autocapitalizationType = .none
         
         textField.text = ""
         return textField
