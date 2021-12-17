@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -35,14 +35,12 @@
 		3E9FE306275D01C5002E144F /* PopularArticlesSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9FE305275D01C5002E144F /* PopularArticlesSceneFactoryProtocol.swift */; };
 		3E9FE309275D0240002E144F /* PopularArticlesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9FE308275D0240002E144F /* PopularArticlesViewController.swift */; };
 		3E9FE30B275D0F16002E144F /* PopularArticlesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9FE30A275D0F16002E144F /* PopularArticlesViewModel.swift */; };
-		3EAED61C276CD1F3005AC13A /* SwiftGenCLI in Frameworks */ = {isa = PBXBuildFile; productRef = 3EAED61B276CD1F3005AC13A /* SwiftGenCLI */; };
-		3EAED61E276CD1F3005AC13A /* SwiftGenKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3EAED61D276CD1F3005AC13A /* SwiftGenKit */; };
-		3EAED620276CD1F3005AC13A /* swiftgen in Frameworks */ = {isa = PBXBuildFile; productRef = 3EAED61F276CD1F3005AC13A /* swiftgen */; };
 		3ECAD05D2762766A00F50A91 /* NumberExtensionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ECAD05C2762766A00F50A91 /* NumberExtensionTest.swift */; };
 		3ECAD060276277FF00F50A91 /* PopularArticles.json in Resources */ = {isa = PBXBuildFile; fileRef = 3ECAD05F276277FF00F50A91 /* PopularArticles.json */; };
 		3ED16B3E25713D64004A33E0 /* APITestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED16B3D25713D64004A33E0 /* APITestClient.swift */; };
 		3EDE670B276106530063D6DF /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDE670A276106530063D6DF /* StringExtension.swift */; };
 		3EE7034B2767A12000FFF965 /* NavigationControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE7034A2767A12000FFF965 /* NavigationControllerExtension.swift */; };
+		3EF1A9C8276CE4CE0058EF2C /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF1A9C7276CE4CE0058EF2C /* Localization.swift */; };
 		9411EDA625A0AEC30005ADCB /* LoginCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9411EDA525A0AEC30005ADCB /* LoginCoordinator.swift */; };
 		9411EDAA25A0B03C0005ADCB /* LoginSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9411EDA925A0B03C0005ADCB /* LoginSceneFactoryProtocol.swift */; };
 		94BBA52025CF89D800FFFF0F /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BBA51F25CF89D700FFFF0F /* RegisterViewController.swift */; };
@@ -151,6 +149,7 @@
 		3ED16B3D25713D64004A33E0 /* APITestClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITestClient.swift; sourceTree = "<group>"; };
 		3EDE670A276106530063D6DF /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		3EE7034A2767A12000FFF965 /* NavigationControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerExtension.swift; sourceTree = "<group>"; };
+		3EF1A9C7276CE4CE0058EF2C /* Localization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		46B9993AD4E3522178E28D0D /* Pods-Ptt.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ptt.debug.xcconfig"; path = "Target Support Files/Pods-Ptt/Pods-Ptt.debug.xcconfig"; sourceTree = "<group>"; };
 		80D0972759B39673EF30B8DB /* Pods-Ptt.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ptt.release.xcconfig"; path = "Target Support Files/Pods-Ptt/Pods-Ptt.release.xcconfig"; sourceTree = "<group>"; };
 		8A0F49F3FB80A16A715149ED /* Pods-PttTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PttTests.release.xcconfig"; path = "Target Support Files/Pods-PttTests/Pods-PttTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -228,10 +227,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3EAED61C276CD1F3005AC13A /* SwiftGenCLI in Frameworks */,
-				3EAED61E276CD1F3005AC13A /* SwiftGenKit in Frameworks */,
 				FFC18D2A87D55C733ABEBA14 /* Pods_Ptt.framework in Frameworks */,
-				3EAED620276CD1F3005AC13A /* swiftgen in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,6 +342,14 @@
 				3E9FE308275D0240002E144F /* PopularArticlesViewController.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		3EC1A4C8276CE257006ECCAC /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				3EF1A9C7276CE4CE0058EF2C /* Localization.swift */,
+			);
+			path = Generated;
 			sourceTree = "<group>";
 		};
 		3ECAD05E2762776B00F50A91 /* ViewModels */ = {
@@ -699,6 +703,7 @@
 				3E65526A25595EB90026290B /* API */,
 				CD731CD225BC8945008C43DA /* Common */,
 				9B564C5A256AA72C00787FD7 /* Flows */,
+				3EC1A4C8276CE257006ECCAC /* Generated */,
 				9BEE1C6D2584BCA5002A9D95 /* Extensions */,
 				9BEE1C582584B2C0002A9D95 /* ApplicationCoordinator.swift */,
 				EA475F7423C4834C000867FE /* AppDelegate.swift */,
@@ -758,9 +763,6 @@
 			);
 			name = Ptt;
 			packageProductDependencies = (
-				3EAED61B276CD1F3005AC13A /* SwiftGenCLI */,
-				3EAED61D276CD1F3005AC13A /* SwiftGenKit */,
-				3EAED61F276CD1F3005AC13A /* swiftgen */,
 			);
 			productName = Ptt;
 			productReference = EA475F7123C4834C000867FE /* Ptt.app */;
@@ -815,7 +817,6 @@
 			);
 			mainGroup = EA475F6823C4834C000867FE;
 			packageReferences = (
-				3EAED61A276CD1F3005AC13A /* XCRemoteSwiftPackageReference "SwiftGen" */,
 			);
 			productRefGroup = EA475F7223C4834C000867FE /* Products */;
 			projectDirPath = "";
@@ -862,15 +863,17 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Ptt/en.lproj/Localizable.strings",
 			);
 			name = SwiftGen;
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Ptt/Grenerated/Location.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n";
+			shellScript = "cd BuildTools\nSDKROOT=(xcrun --sdk macosx --show-sdk-path)\n#swift package update #Uncomment this line temporarily to update the version used to the latest matching your BuildTools/Package.swift file\nswift run -c release swiftgen config run\n";
 		};
 		912D926E93907D87D492B266 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -978,6 +981,7 @@
 				3E65527525595F9E0026290B /* BoardArticle.swift in Sources */,
 				9BEE1C592584B2C0002A9D95 /* ApplicationCoordinator.swift in Sources */,
 				9BEE1CC42585DA6B002A9D95 /* BoardSceneFactoryProtocol.swift in Sources */,
+				3EF1A9C8276CE4CE0058EF2C /* Localization.swift in Sources */,
 				9B564C5C256AA74100787FD7 /* TabBarController.swift in Sources */,
 				CD7550C9264AC33C00F87395 /* ComposeArticleViewController.swift in Sources */,
 				EA9DE10F2563A82200AEFC19 /* FullscreenSwipeBack.swift in Sources */,
@@ -1300,35 +1304,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		3EAED61A276CD1F3005AC13A /* XCRemoteSwiftPackageReference "SwiftGen" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SwiftGen/SwiftGen";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		3EAED61B276CD1F3005AC13A /* SwiftGenCLI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3EAED61A276CD1F3005AC13A /* XCRemoteSwiftPackageReference "SwiftGen" */;
-			productName = SwiftGenCLI;
-		};
-		3EAED61D276CD1F3005AC13A /* SwiftGenKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3EAED61A276CD1F3005AC13A /* XCRemoteSwiftPackageReference "SwiftGen" */;
-			productName = SwiftGenKit;
-		};
-		3EAED61F276CD1F3005AC13A /* swiftgen */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3EAED61A276CD1F3005AC13A /* XCRemoteSwiftPackageReference "SwiftGen" */;
-			productName = swiftgen;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EA475F6923C4834C000867FE /* Project object */;
 }
