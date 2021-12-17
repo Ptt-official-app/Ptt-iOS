@@ -12,5 +12,6 @@ protocol CoordinatorFactoryProtocol {
     func makeTabbarCoordinator() -> (coordinator: Coordinatorable, toPresent: Presentable?)
     func makeFavoriteCoordinator(navigationController: UINavigationController?) -> Coordinatorable
     func makePopularBoardsCoordinator(navigationController: UINavigationController?) -> Coordinatorable
+    func makePopularArticleCoordinator(navigationController: UINavigationController?) -> Coordinatorable
     func makeFBPageCoordinator(navigationController: UINavigationController?) -> Coordinatorable
 }
