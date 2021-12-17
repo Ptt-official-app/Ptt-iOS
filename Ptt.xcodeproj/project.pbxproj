@@ -877,7 +877,8 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Ptt/Grenerated/Location.swift",
+				"$(SRCROOT)/Ptt/Grenerated/Location.swift",
+				"$(SRCROOT)/Ptt/Grenerated/PttColors.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
