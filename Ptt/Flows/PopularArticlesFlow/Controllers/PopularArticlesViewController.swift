@@ -61,7 +61,7 @@ final class PopularArticlesViewController: UITableViewController {
     private func setupTableView() {
         self.tableView.dataSource = self
         self.tableView.delegate = self
-        self.tableView.backgroundColor = UIColor(named: "blackColor-23-23-23")
+        self.tableView.backgroundColor = PttColors.codGray.color
         self.tableView.separatorStyle = .none
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.estimatedRowHeight = 113

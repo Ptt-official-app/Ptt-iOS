@@ -15,7 +15,7 @@ class PopularBoardsTableViewCell: BoardsTableViewCell {
         nuserLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
         
         if #available(iOS 11.0, *) {
-            nuserLabel.textColor = UIColor(named: "textColor-240-240-247")!
+            nuserLabel.textColor = PttColors.paleGrey.color
         } else {
             nuserLabel.textColor = UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0)
         }

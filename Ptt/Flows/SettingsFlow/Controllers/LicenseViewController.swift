@@ -70,7 +70,7 @@ private class LicenseCellNode: ASCellNode {
 
         let textColor : UIColor
         if #available(iOS 11.0, *) {
-            textColor = UIColor(named: "textColor-240-240-247")!
+            textColor = PttColors.paleGrey.color
         } else {
             textColor = UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0)
         }

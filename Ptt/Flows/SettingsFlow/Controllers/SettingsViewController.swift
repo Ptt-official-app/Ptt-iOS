@@ -252,7 +252,7 @@ final class SettingsTableViewCell: UITableViewCell {
         super.init(style: .value1, reuseIdentifier: reuseIdentifier)
 
         if #available(iOS 11.0, *) {
-            backgroundColor = UIColor(named: "blackColor-28-28-31")
+            backgroundColor = PttColors.shark.color
         } else {
             backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 31/255, alpha: 1.0)
         }
@@ -266,8 +266,8 @@ final class SettingsTableViewCell: UITableViewCell {
             detailTextLabel?.textColor = .clear
         case false:
             if #available(iOS 11.0, *) {
-                textLabel?.textColor = UIColor(named: "textColor-240-240-247")
-                detailTextLabel?.textColor = UIColor(named: "textColorGray")
+                textLabel?.textColor = PttColors.paleGrey.color
+                detailTextLabel?.textColor = .systemGray
             } else {
                 textLabel?.textColor = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
                 detailTextLabel?.textColor = .systemGray

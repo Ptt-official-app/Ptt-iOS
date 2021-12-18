@@ -62,7 +62,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         articleContentView.textAlignment = .left
         articleContentView.text = placeholderText
         articleContentView.textColor = UIColor(red:56/255, green:56/255, blue:61/255, alpha:1.0)
-        articleContentView.backgroundColor = UIColor(named: "blackColor-23-23-23")
+        articleContentView.backgroundColor = PttColors.codGray.color
         articleContentView.alwaysBounceVertical = true
         articleContentView.keyboardDismissMode = .interactive
         articleContentView.autocorrectionType = .no
@@ -72,7 +72,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
 
     lazy var articleClassContentView: UIView = {
         let articleClassContentView = UIView()
-        articleClassContentView.backgroundColor = UIColor(named: "blackColor-23-23-23")
+        articleClassContentView.backgroundColor = PttColors.codGray.color
         articleClassContentView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(articleClassContentView)
         articleClassContentView.isHidden = true
@@ -390,7 +390,7 @@ extension ComposeArticleViewController: UITextViewDelegate {
             DispatchQueue.main.async{ [weak self] in
                 let caretPositionRect = textView.caretRect(for: cursorPosition)
                 let pointsuperview = textView.convert(caretPositionRect, to: self?.scrollView)
-                var scrollviewState: CGFloat = -1
+                let scrollviewState: CGFloat = -1
                 
                 var contentInsets = UIEdgeInsets(top: (50 * self!.scrollViewMoveStep * scrollviewState), left: 0.0, bottom: 0.0 , right: 0.0)
                 if (self!.keyboardY + (50 * self!.scrollViewMoveStep) - pointsuperview.maxY <= 50) {

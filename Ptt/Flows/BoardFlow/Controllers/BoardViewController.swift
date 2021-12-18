@@ -218,7 +218,7 @@ extension BoardViewController: ASTableDataSource {
             let cell = BoardCellNode(article: article)
             if row % 2 == 0 {
                 if #available(iOS 11.0, *) {
-                    cell.backgroundColor = UIColor(named: "blackColor-28-28-31")
+                    cell.backgroundColor = PttColors.shark.color
                 } else {
                     cell.backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 31/255, alpha: 1.0)
                 }
@@ -350,7 +350,7 @@ private class BoardCellNode: ASCellNode {
     private var titleAttributes : [NSAttributedString.Key : Any] {
         let textColor : UIColor
         if #available(iOS 11.0, *) {
-            textColor = UIColor(named: "textColor-240-240-247")!
+            textColor = PttColors.paleGrey.color
         } else {
             textColor = UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0)
         }
@@ -360,12 +360,7 @@ private class BoardCellNode: ASCellNode {
         return attrs
     }
     private var metadataAttributes : [NSAttributedString.Key : Any] {
-        let textColor : UIColor
-        if #available(iOS 11.0, *) {
-            textColor = UIColor(named: "textColorGray")!
-        } else {
-            textColor = .systemGray
-        }
+        let textColor : UIColor = .systemGray
         let attrs : [NSAttributedString.Key : Any] =
             [.font: UIFont.preferredFont(forTextStyle: .footnote),
              .foregroundColor: textColor]

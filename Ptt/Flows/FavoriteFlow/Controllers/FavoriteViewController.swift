@@ -56,7 +56,7 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
         searchController.searchResultsUpdater = self
         definesPresentationContext = true
         if #available(iOS 13.0, *) {
-            searchController.searchBar.searchTextField.textColor = UIColor(named: "textColor-240-240-247")
+            searchController.searchBar.searchTextField.textColor = PttColors.paleGrey.color
             // otherwise covered in GlobalAppearance
         }
         if #available(iOS 11.0, *) {

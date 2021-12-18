@@ -51,7 +51,7 @@ class ArticleClassTableView: UITableView {
     func initTableHeaderView() {
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 74.5))
         label.textAlignment = .center
-        label.textColor = UIColor(named: "textColor-240-240-247")
+        label.textColor = PttColors.paleGrey.color
         label.text = "分類選擇"
         label.backgroundColor = UIColor(red:34/255, green:34/255, blue:36/255, alpha:1.0)
         label.setBottomBorder()
