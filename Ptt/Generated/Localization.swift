@@ -62,6 +62,8 @@ enum L10n {
   static let moreActions = L10n.tr("Localizable", "More actions")
   /// Not in favorite
   static let notInFavorite = L10n.tr("Localizable", "Not in favorite")
+  /// Password
+  static let password = L10n.tr("Localizable", "Password")
   /// Popular Articles
   static let popularArticles = L10n.tr("Localizable", "Popular Articles")
   /// Popular Boards

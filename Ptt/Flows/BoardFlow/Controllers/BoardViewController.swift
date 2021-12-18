@@ -110,8 +110,8 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
             case .failure(error: let apiError):
                 context.cancelBatchFetching()
                 DispatchQueue.main.async {
-                    let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: apiError.message, preferredStyle: .alert)
-                    let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
+                    let alert = UIAlertController(title: L10n.error, message: apiError.message, preferredStyle: .alert)
+                    let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
                     alert.addAction(confirm)
                     self.present(alert, animated: true, completion: {
                         self.activityIndicator.stopAnimating()
@@ -324,16 +324,16 @@ private class ToolbarNode: ASDisplayNode {
 
         refreshNode.setImage(StyleKit.imageOfRefresh().withRenderingMode(.alwaysOriginal), for: .normal)
         refreshNode.setImage(StyleKit.imageOfRefresh().withRenderingMode(.alwaysTemplate), for: .highlighted)
-        refreshNode.accessibilityLabel = NSLocalizedString("Refresh", comment: "")
+        refreshNode.accessibilityLabel = L10n.refresh
         searchNode.setImage(StyleKit.imageOfSearch().withRenderingMode(.alwaysOriginal), for: .normal)
         searchNode.setImage(StyleKit.imageOfSearch().withRenderingMode(.alwaysTemplate), for: .highlighted)
-        searchNode.accessibilityLabel = NSLocalizedString("Search", comment: "")
+        searchNode.accessibilityLabel = L10n.search
         composeNode.setImage(StyleKit.imageOfCompose().withRenderingMode(.alwaysOriginal), for: .normal)
         composeNode.setImage(StyleKit.imageOfCompose().withRenderingMode(.alwaysTemplate), for: .highlighted)
-        composeNode.accessibilityLabel = NSLocalizedString("Compose", comment: "")
+        composeNode.accessibilityLabel = L10n.compose
         moreNode.setImage(StyleKit.imageOfMoreH().withRenderingMode(.alwaysOriginal), for: .normal)
         moreNode.setImage(StyleKit.imageOfMoreH().withRenderingMode(.alwaysTemplate), for: .highlighted)
-        moreNode.accessibilityLabel = NSLocalizedString("More actions", comment: "")
+        moreNode.accessibilityLabel = L10n.moreActions
         for buttonNode in [refreshNode, searchNode, composeNode, moreNode] {
             buttonNode.style.width = ASDimensionMake(toolbarHeight + 30)
             buttonNode.style.height = ASDimensionMake(toolbarHeight)
@@ -393,7 +393,7 @@ private class BoardCellNode: ASCellNode {
         authorImageNode.image = StyleKit.imageOfAuthor()
 
         moreButtonNode.setImage(StyleKit.imageOfMoreV(), for: .normal)
-        moreButtonNode.accessibilityLabel = NSLocalizedString("More actions", comment: "")
+        moreButtonNode.accessibilityLabel = L10n.moreActions
     }
 
     override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {

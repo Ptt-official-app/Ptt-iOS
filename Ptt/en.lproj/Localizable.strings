@@ -39,6 +39,7 @@
 "Login" = "Login";
 "Forget" = "Forget";
 "Register" = "Register";
+"Password" = "Password";
 
 /* VoiceOver */
 "In favorite" = "In favorite";
@@ -52,3 +53,4 @@
 "Search" = "Search";
 "Compose" = "Compose";
 "More actions" = "More actions";
+

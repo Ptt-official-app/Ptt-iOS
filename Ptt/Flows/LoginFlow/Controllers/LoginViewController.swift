@@ -161,7 +161,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     lazy var btnTypeRegister:ASButtonNode = {
         let button = ASButtonNode()
-        let title = NSLocalizedString("Register", comment:"")
+        let title = L10n.register
         
         let attr: [NSAttributedString.Key : Any] = [
             .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline) //UIFont(name: "HelveticaNeue-Bold", size: 16)!
@@ -177,7 +177,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     lazy var btnTypeLogin:ASButtonNode = {
         let button = ASButtonNode()
-        let title = NSLocalizedString("Login", comment:"")
+        let title = L10n.login
 
         let attr: [NSAttributedString.Key : Any] = [
            .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline) // UIFont(name: "HelveticaNeue-Bold", size: 16)!
@@ -255,7 +255,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         
         textField.background = self.backgroundImg(color: self.textfield_backgroundcolor)
         
-        let title = NSLocalizedString("Password", comment: "")
+        let title = L10n.password
         let attr = [
             NSAttributedString.Key.foregroundColor: UIColor.systemGray,
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1
@@ -328,7 +328,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     func showAlert(title:String, msg:String) {
         let controller = UIAlertController(title: title, message: msg, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
+        let okAction = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
         controller.addAction(okAction)
         present(controller, animated: true, completion: nil)
     }
@@ -375,7 +375,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
                 case .failure(let error):
                     print(error)
                     DispatchQueue.main.async {
-                        self.showAlert(title: NSLocalizedString("Error", comment: ""), msg: NSLocalizedString("Login", comment: "") + NSLocalizedString("Error", comment: "") + error.message)
+                        self.showAlert(title: L10n.error, msg: L10n.login + L10n.error + error.message)
                     }
                 case .success(let token):
                     print(token.access_token)
@@ -404,7 +404,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     lazy var btnLogin:ASButtonNode = {
         let button = ASButtonNode()
-        let title = NSLocalizedString("Login", comment:"")
+        let title = L10n.login
         let attr : [NSAttributedString.Key : Any] = [
             NSAttributedString.Key.foregroundColor: self.textfield_backgroundcolor,
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1
@@ -421,7 +421,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
 
     lazy var btnForget:ASButtonNode = {
         let button = ASButtonNode()
-        let title = NSLocalizedString("Forget", comment:"")
+        let title = L10n.forget
         let attr = [
             NSAttributedString.Key.foregroundColor: UIColor.systemGray,
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1

@@ -113,8 +113,8 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
                 case .failure(let error):
                     DispatchQueue.main.async {
                         self.navigationController?.isToolbarHidden = false
-                        let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: error.message, preferredStyle: .alert)
-                        let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
+                        let alert = UIAlertController(title: L10n.error, message: error.message, preferredStyle: .alert)
+                        let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
                         alert.addAction(confirm)
                         self.present(alert, animated: true, completion: nil)
                     }

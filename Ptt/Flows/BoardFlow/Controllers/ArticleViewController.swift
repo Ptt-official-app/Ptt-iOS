@@ -210,8 +210,8 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
 
     @objc private func refresh() {
         guard let boardName = boardName, let filename = filename else {
-            let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: "wrong parameters", preferredStyle: .alert)
-            let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
+            let alert = UIAlertController(title: L10n.error, message: "wrong parameters", preferredStyle: .alert)
+            let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
             alert.addAction(confirm)
             self.present(alert, animated: true, completion: nil)
             return
@@ -242,8 +242,8 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
             switch result {
             case .failure(error: let apiError):
                 DispatchQueue.main.async {
-                    let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: apiError.message, preferredStyle: .alert)
-                    let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
+                    let alert = UIAlertController(title: L10n.error, message: apiError.message, preferredStyle: .alert)
+                    let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
                     alert.addAction(confirm)
                     self.present(alert, animated: true, completion: nil)
                 }

@@ -46,7 +46,7 @@ final class FBPageViewController: UIViewController, FBPageView {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.navigationItem.title = NSLocalizedString("PTT FB Page", comment: "");
+        self.navigationItem.title = L10n.pttfbPage
         self.navigationController?.fixBarColor()
         if #available(iOS 11.0, *) {
             // will change contentInset later
@@ -164,8 +164,8 @@ extension FBPageViewController : WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: error.localizedDescription, preferredStyle: .alert)
-        let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
+        let alert = UIAlertController(title: L10n.error, message: error.localizedDescription, preferredStyle: .alert)
+        let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
         alert.addAction(confirm)
         self.present(alert, animated: true, completion: nil)
     }
