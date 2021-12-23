@@ -90,6 +90,8 @@ enum L10n {
   static let toFavorite = L10n.tr("Localizable", "to favorite.")
   /// Use System Default
   static let useSystemDefault = L10n.tr("Localizable", "Use System Default")
+  /// Username
+  static let username = L10n.tr("Localizable", "Username")
   /// Version
   static let version = L10n.tr("Localizable", "Version")
   /// Wrong Format

@@ -39,6 +39,7 @@
 "Login" = "Login";
 "Forget" = "Forget";
 "Register" = "Register";
+"Username" = "Username";
 "Password" = "Password";
 
 /* VoiceOver */

@@ -28,8 +28,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     func init_layout() -> ASLayoutSpec {
         
         let global_width = 265
-        let forgetCenterLayout = ASCenterLayoutSpec(centeringOptions: .X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: btnForget)
-        
         let funcStackSpec = ASStackLayoutSpec(direction: .horizontal,
                                                    spacing: 5,
                                                    justifyContent: .start,
@@ -42,6 +40,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         let passwordInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 56, right: 0), child: tfPassword)
         
         let loginInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 31, right: 0), child: btnLogin)
+        let forgetCenterLayout = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0), child: btnForget)
         contentStackSpec = ASStackLayoutSpec(direction: .vertical,
                                                    spacing: 0,
                                                    justifyContent: .center,
@@ -53,7 +52,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         tfUsername.style.preferredSize = CGSize(width: global_width, height: 30)
         tfPassword.style.preferredSize = CGSize(width: global_width, height: 30)
         btnLogin.style.preferredSize = CGSize(width: global_width, height: 30)
-        btnForget.style.preferredSize = CGSize(width: 100, height: 30)
+        btnForget.style.preferredSize = CGSize(width: global_width, height: 30)
         
         self.scrollNode.addSubnode(self.lbTitle)
         self.scrollNode.addSubnode(self.tfUsername)
@@ -84,8 +83,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         let tap = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         self.node.view.addGestureRecognizer(tap)
         
-        self.btnLogin.addTarget(self, action: #selector(loginPress), forControlEvents: ASControlNodeEvent.touchDown)
-        self.btnForget.addTarget(self, action: #selector(forgetPress), forControlEvents: ASControlNodeEvent.touchDown)
+        self.btnLogin.addTarget(self, action: #selector(loginPress), forControlEvents: ASControlNodeEvent.touchUpInside)
+        self.btnForget.addTarget(self, action: #selector(forgetPress), forControlEvents: ASControlNodeEvent.touchUpInside)
     }
     
     override func viewDidLoad() {
@@ -221,9 +220,9 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     lazy var tfUsername = ASDisplayNode.init { () -> UIView in
         var textField:TextFieldWithPadding = TextFieldWithPadding()
-        textField.background = self.backgroundImg(color: self.textfield_backgroundcolor)
+        textField.background = UIImage.backgroundImg(from: self.textfield_backgroundcolor)
 
-        let title = NSLocalizedString("User Id", comment: "")
+        let title = L10n.username
         let attr:[NSAttributedString.Key : Any] = [
             NSAttributedString.Key.foregroundColor: UIColor.systemGray,
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)//UIFont.systemFont(ofSize: 12)
@@ -233,10 +232,13 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         textField.clipsToBounds = true
         
         textField.delegate = self
-        textField.textColor = UIColor.black
+        textField.textColor = PttColors.paleGrey.color
         textField.autocapitalizationType = .none
+        textField.autocorrectionType = .no
+        textField.returnKeyType = .next
         
         textField.text = ""
+        textField.addTarget(self, action: #selector(self.textFieldDidChange(textField:)), for: .editingChanged)
         return textField
     }
     
@@ -253,7 +255,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     lazy var tfPassword = ASDisplayNode.init { () -> UIView in
         var textField:TextFieldWithPadding = TextFieldWithPadding()
         
-        textField.background = self.backgroundImg(color: self.textfield_backgroundcolor)
+        textField.background = UIImage.backgroundImg(from: self.textfield_backgroundcolor)
         
         let title = L10n.password
         let attr = [
@@ -262,11 +264,12 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             )//UIFont.systemFont(ofSize: 12)
         ]
         textField.isSecureTextEntry = true
+        textField.returnKeyType = .send
         textField.attributedPlaceholder = NSAttributedString.init(string: title, attributes:attr )
         
         textField.layer.cornerRadius = 15
         textField.clipsToBounds = true
-        textField.textColor = UIColor.black
+        textField.textColor = PttColors.paleGrey.color
         
         textField.text = ""
         
@@ -274,6 +277,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         textField.rightView = self.btnTooglePassword
         
         textField.delegate = self
+        textField.addTarget(self, action: #selector(self.textFieldDidChange(textField:)), for: .editingChanged)
         return textField
     }
     
@@ -305,20 +309,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         }
     }
     
-    func backgroundImg(color:UIColor) -> UIImage {
-        let size: CGSize = CGSize(width: 1, height: 1)
-        let rect = CGRect(origin: .zero, size: size)
-        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
-        color.setFill()
-        UIRectFill(rect)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return image!
-    }
-
-    
-
     @objc func togglePassword() {
         self.btnTooglePassword.isSelected = !self.btnTooglePassword.isSelected
         if let tf = tfPassword.view as? UITextField {
@@ -333,59 +323,35 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         present(controller, animated: true, completion: nil)
     }
     
-    func isLoginInputOK() -> Bool{
-        if let tf = self.tfUsername.view as? UITextField {
-            if let t = tf.text {
-                if t.count == 0 {
-                    showAlert(title: "Warning", msg: "請輸入帳號")
-                    return false ;
-                }
-            }
-        }
-        if let tf = self.tfPassword.view as? UITextField {
-            if let t = tf.text {
-                if t.count == 0 {
-                    showAlert(title: "Warning", msg: "請輸入密碼")
-                    return false ;
-                }
-            }
-        }
-        
-        return true
-    }
-    
     @objc func loginPress() {
         print("login press")
-        self.btnLogin.isEnabled = false
         self.hideKeyboard()
-        
-        if self.isLoginInputOK() {
-            var account:String = ""
-            var passwd:String = ""
-            if let tf = self.tfUsername.view as? UITextField {
-                account = tf.text!
-            }
-            if let tf = self.tfPassword.view as? UITextField {
-                passwd = tf.text!
-            }
 
-            APIClient.shared.login(account: account, password: passwd) { (result) in
-                print("login using", account, " result", result)
-                switch (result) {
-                case .failure(let error):
-                    print(error)
-                    DispatchQueue.main.async {
-                        self.showAlert(title: L10n.error, msg: L10n.login + L10n.error + error.message)
-                    }
-                case .success(let token):
-                    print(token.access_token)
-                    self.onLoginSuccess(token: token.access_token)
-                }
+        var account = ""
+        var passwd = ""
+        if let tf = self.tfUsername.view as? UITextField, let tfText = tf.text {
+            account = tfText
+        }
+        if let tf = self.tfPassword.view as? UITextField, let tfText = tf.text {
+            passwd = tfText
+        }
+
+        self.btnLogin.isEnabled = false
+        APIClient.shared.login(account: account, password: passwd) { (result) in
+            DispatchQueue.main.async {
                 self.btnLogin.isEnabled = true
             }
-        }
-        else {
-            self.btnLogin.isEnabled = true
+            print("login using", account, " result", result)
+            switch (result) {
+            case .failure(let error):
+                print(error)
+                DispatchQueue.main.async {
+                    self.showAlert(title: L10n.error, msg: L10n.login + L10n.error + error.message)
+                }
+            case .success(let token):
+                print(token.access_token)
+                self.onLoginSuccess(token: token.access_token)
+            }
         }
     }
     
@@ -402,32 +368,16 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         print("forget press")
     }
     
-    lazy var btnLogin:ASButtonNode = {
-        let button = ASButtonNode()
-        let title = L10n.login
-        let attr : [NSAttributedString.Key : Any] = [
-            NSAttributedString.Key.foregroundColor: self.textfield_backgroundcolor,
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1
-            )// UIFont.systemFont(ofSize: 12)
-        ]
-        button.backgroundColor = UIColor.systemGray
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
-        
-        button.layer.cornerRadius = 15
-        button.clipsToBounds = true
-        
+    lazy var btnLogin: ASButtonNode = {
+        let button = ButtonNode(type: .primary)
+        button.title = L10n.login
+        button.isEnabled = false
         return button
     }()
 
-    lazy var btnForget:ASButtonNode = {
-        let button = ASButtonNode()
-        let title = L10n.forget
-        let attr = [
-            NSAttributedString.Key.foregroundColor: UIColor.systemGray,
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1
-            )// UIFont.systemFont(ofSize: 12)
-        ]
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+    lazy var btnForget: ASButtonNode = {
+        let button = ButtonNode(type: .secondary)
+        button.title = L10n.forget
         return button
     }()
     
@@ -477,10 +427,36 @@ extension LoginViewController: UITextFieldDelegate {
             self.scrollNode.view.setContentOffset(point, animated: true)
         }
     }
-    
-    public func textFieldDidEndEditing(_ textField: UITextField) {
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        switch textField {
+        case tfUsername.view:
+            tfPassword.becomeFirstResponder()
+        case tfPassword.view:
+            loginPress()
+        default:
+            break
+        }
+        return true
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
         let point = CGPoint(x: 0, y: 0)
         self.scrollNode.view.setContentOffset(point, animated: true)
     }
 }
 
+extension LoginViewController {
+
+    @objc func textFieldDidChange(textField: UITextField) {
+        if let usernameTextField = tfUsername.view as? UITextField,
+           let passwordTextField = tfPassword.view as? UITextField,
+           let username = usernameTextField.text,
+           let password = passwordTextField.text,
+           !username.isEmpty && !password.isEmpty {
+            btnLogin.isEnabled = true
+        } else {
+            btnLogin.isEnabled = false
+        }
+    }
+}

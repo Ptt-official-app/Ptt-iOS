@@ -89,6 +89,7 @@
 		CD767B7925B0B9980050E12A /* LicenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD767B7625B0B9980050E12A /* LicenseViewController.swift */; };
 		CD767B7A25B0B9980050E12A /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD767B7725B0B9980050E12A /* SettingsViewController.swift */; };
 		CD84529E26E4B51D00673450 /* ComposeArticleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD84529D26E4B51D00673450 /* ComposeArticleViewModel.swift */; };
+		EA05B18B277312D5004C13A8 /* ButtonNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA05B18A277312D5004C13A8 /* ButtonNode.swift */; };
 		EA41D65D243EF51A0052F4A1 /* FBPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA41D65C243EF51A0052F4A1 /* FBPageViewController.swift */; };
 		EA475F7523C4834C000867FE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F7423C4834C000867FE /* AppDelegate.swift */; };
 		EA475F7723C4834C000867FE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F7623C4834C000867FE /* SceneDelegate.swift */; };
@@ -204,6 +205,7 @@
 		CD84529D26E4B51D00673450 /* ComposeArticleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeArticleViewModel.swift; sourceTree = "<group>"; };
 		DBDA47B1E79A476E2E89A118 /* Pods_Ptt.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Ptt.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E84C05B084821F8B5031D3BD /* Pods_PttTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PttTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA05B18A277312D5004C13A8 /* ButtonNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonNode.swift; sourceTree = "<group>"; };
 		EA41D65C243EF51A0052F4A1 /* FBPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBPageViewController.swift; sourceTree = "<group>"; };
 		EA475F7123C4834C000867FE /* Ptt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ptt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA475F7423C4834C000867FE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -587,6 +589,7 @@
 		CD6C1C1C26B7756700EBFEA9 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				EA05B18A277312D5004C13A8 /* ButtonNode.swift */,
 				CD6C1C1D26B779A500EBFEA9 /* LoadingView.swift */,
 			);
 			path = Views;
@@ -1029,6 +1032,7 @@
 				94EB641225AC183F00BF69AB /* LoginViewController.swift in Sources */,
 				CD6C1C1E26B779A500EBFEA9 /* LoadingView.swift in Sources */,
 				3E655290255960CF0026290B /* APIError.swift in Sources */,
+				EA05B18B277312D5004C13A8 /* ButtonNode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
