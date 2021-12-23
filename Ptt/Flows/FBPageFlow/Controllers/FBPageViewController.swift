@@ -48,6 +48,14 @@ final class FBPageViewController: UIViewController, FBPageView {
 
         self.navigationItem.title = L10n.pttfbPage
         self.navigationController?.fixBarColor()
+        if #available(iOS 15, *) {
+            // Fix tab bar color when scrolling to bottom
+            // Do not override with UITabBarAppearance, so we can still enjoy the default design benefits of iOS 15 SDK in other tabs.
+            // Ex. For similar reason: https://github.com/Ptt-official-app/Ptt-iOS/pull/39#pullrequestreview-830323041
+            webView.backgroundColor = PttColors.codGray.color
+            webView.isOpaque = false
+        }
+
         if #available(iOS 11.0, *) {
             // will change contentInset later
             webView.scrollView.contentInsetAdjustmentBehavior = .never
