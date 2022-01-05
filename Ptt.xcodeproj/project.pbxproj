@@ -28,6 +28,8 @@
 		3ED16B3E25713D64004A33E0 /* APITestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED16B3D25713D64004A33E0 /* APITestClient.swift */; };
 		9411EDA625A0AEC30005ADCB /* LoginCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9411EDA525A0AEC30005ADCB /* LoginCoordinator.swift */; };
 		9411EDAA25A0B03C0005ADCB /* LoginSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9411EDA925A0B03C0005ADCB /* LoginSceneFactoryProtocol.swift */; };
+		944527C02769844F00B6B54F /* AttemptRegister.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944527BF2769844E00B6B54F /* AttemptRegister.swift */; };
+		949478FE2769E3C00004A982 /* RegisterSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949478FD2769E3C00004A982 /* RegisterSubView.swift */; };
 		94BBA52025CF89D800FFFF0F /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BBA51F25CF89D700FFFF0F /* RegisterViewController.swift */; };
 		94EB641225AC183F00BF69AB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EB641125AC183F00BF69AB /* LoginViewController.swift */; };
 		94EB641A25AD2FF800BF69AB /* LoginKeyChainItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EB641925AD2FF800BF69AB /* LoginKeyChainItem.swift */; };
@@ -124,6 +126,8 @@
 		8A0F49F3FB80A16A715149ED /* Pods-PttTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PttTests.release.xcconfig"; path = "Target Support Files/Pods-PttTests/Pods-PttTests.release.xcconfig"; sourceTree = "<group>"; };
 		9411EDA525A0AEC30005ADCB /* LoginCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCoordinator.swift; sourceTree = "<group>"; };
 		9411EDA925A0B03C0005ADCB /* LoginSceneFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSceneFactoryProtocol.swift; sourceTree = "<group>"; };
+		944527BF2769844E00B6B54F /* AttemptRegister.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttemptRegister.swift; sourceTree = "<group>"; };
+		949478FD2769E3C00004A982 /* RegisterSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterSubView.swift; sourceTree = "<group>"; };
 		94BBA51F25CF89D700FFFF0F /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		94EB641125AC183F00BF69AB /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		94EB641925AD2FF800BF69AB /* LoginKeyChainItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginKeyChainItem.swift; sourceTree = "<group>"; };
@@ -270,6 +274,7 @@
 				3E65528B255960AE0026290B /* Comment.swift */,
 				3E655287255960910026290B /* FullArticle.swift */,
 				3E8D8C82258A511600346690 /* LoginToken.swift */,
+				944527BF2769844E00B6B54F /* AttemptRegister.swift */,
 				CD6C1C1826AD783100EBFEA9 /* CreateArticle.swift */,
 			);
 			path = Models;
@@ -310,6 +315,7 @@
 			children = (
 				94EB641125AC183F00BF69AB /* LoginViewController.swift */,
 				94BBA51F25CF89D700FFFF0F /* RegisterViewController.swift */,
+				949478FD2769E3C00004A982 /* RegisterSubView.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -807,6 +813,7 @@
 				3E29388125596BA900240C0F /* URLSessionProtocol.swift in Sources */,
 				EA479EB42431F27C008A0D99 /* ArticleViewController.swift in Sources */,
 				9B564C3D256AA0EB00787FD7 /* Router.swift in Sources */,
+				944527C02769844F00B6B54F /* AttemptRegister.swift in Sources */,
 				CD6C141825AB0C660043E7EC /* PopularBoardsViewModel.swift in Sources */,
 				EA41D65D243EF51A0052F4A1 /* FBPageViewController.swift in Sources */,
 				CD694CF325A74F0400428DC9 /* PopularBoardsSceneFactoryProtocol.swift in Sources */,
@@ -827,6 +834,7 @@
 				9B564C71256AAF8000787FD7 /* TabBarCoordinator.swift in Sources */,
 				EA78E0C124050EB100309694 /* StyleKit.swift in Sources */,
 				CD767B5625B0B8010050E12A /* TabBarPage.swift in Sources */,
+				949478FE2769E3C00004A982 /* RegisterSubView.swift in Sources */,
 				CD767B7825B0B9980050E12A /* AppearanceModeViewController.swift in Sources */,
 				CD767B7925B0B9980050E12A /* LicenseViewController.swift in Sources */,
 				9BEE1CB42584F644002A9D95 /* FBPageSceneFactoryProtocol.swift in Sources */,
@@ -1059,8 +1067,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
 				CURRENT_PROJECT_VERSION = 24;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Ptt/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
