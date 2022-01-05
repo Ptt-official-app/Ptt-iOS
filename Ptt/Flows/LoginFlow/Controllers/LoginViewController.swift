@@ -18,25 +18,46 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     var onCompleteAuth: (() -> Void)?
     
     //private let apiClient: APIClientProtocol = nil
+    
+    enum UILoginState {
+        case Login  // the default state
+        case AttemptRegister // try to register
+        case VerifyCode // wait for email code
+        case Error // display error
+        case FillInformation // register success, fill name, birthday, address, etc.
+    }
 
     private let rootNode = ASDisplayNode()
+    
+    var loginNode = ASDisplayNode()
+    var registerNode = ASDisplayNode()
+    
     var scrollNode = ASScrollNode()
 
     var contentStackSpec:ASStackLayoutSpec?
     var contentCenterLayoutSpec:ASCenterLayoutSpec?
+    var mloginStackSpec:ASStackLayoutSpec?
+    
+    var funcStackSpec:ASLayoutSpec?
+    
+    
+    var switchNode:ASDisplayNode?
     
     let global_width = 265
+    
     
     func init_layout() -> ASLayoutSpec {
 //        let forgetCenterLayout = ASCenterLayoutSpec(centeringOptions: .X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: btnForget)
         
-        let funcStackSpec = ASStackLayoutSpec(direction: .horizontal,
+        funcStackSpec = ASStackLayoutSpec(direction: .horizontal,
                                                    spacing: 5,
                                                    justifyContent: .start,
                                                    alignItems: .start,
                                                    children: [btnTypeLogin, lbLine, btnTypeRegister])
         
-        funcStackSpec.style.preferredSize = CGSize(width: global_width, height: 44+43)
+        funcStackSpec?.style.preferredSize = CGSize(width: global_width, height: 44+43)
+
+
         
         let usernameInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0), child: tfUsername)
         let passwordInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 56, right: 0), child: tfPassword)
@@ -45,14 +66,36 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         
         let forgetInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 30, left: 0, bottom: 0, right: 0), child: btnForget)
         
+        
+        
+        
+        let loginStackSpec = ASCenterLayoutSpec(centeringOptions: ASCenterLayoutSpecCenteringOptions.X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: ASStackLayoutSpec(direction: .vertical,
+                                                   spacing: 0,
+                                                   justifyContent: .center,
+                                                   alignItems: .center,
+                                                   children: [usernameInset,
+                                                              passwordInset, loginInset, agreeInset,
+                                                              vLine]))
+        
+        
+        let registerStackSpec = ASCenterLayoutSpec(centeringOptions: ASCenterLayoutSpecCenteringOptions.X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: ASStackLayoutSpec(direction: .vertical,
+                                                   spacing: 0,
+                                                   justifyContent: .center,
+                                                   alignItems: .center,
+                                                   children: [forgetInset]))
+        
+        
+        let switchLayoutSpec = ASAbsoluteLayoutSpec(children: [loginStackSpec, registerStackSpec])
+        //ASLayoutSpec(children: [loginStackSpec, registerStackSpec])
         contentStackSpec = ASStackLayoutSpec(direction: .vertical,
                                                    spacing: 0,
                                                    justifyContent: .center,
                                                    alignItems: .center,
-                                                   children: [lbTitle, funcStackSpec, usernameInset,
-                                                              passwordInset, loginInset, agreeInset,
-                                                              vLine, forgetInset])
+                                                   children: [lbTitle, funcStackSpec!, switchLayoutSpec])
         
+        
+        
+        // login
         lbTitle.style.preferredSize = CGSize(width: global_width, height: 58+63)
         tfUsername.style.preferredSize = CGSize(width: global_width, height: 30)
         tfPassword.style.preferredSize = CGSize(width: global_width, height: 30)
@@ -61,18 +104,25 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         btnUserAgreement.style.preferredSize = CGSize(width: global_width, height: 30)
         vLine.style.preferredSize = CGSize(width: CGFloat(global_width), height: 0.5)
         
+
+        // AS Login Node
         self.scrollNode.addSubnode(self.lbTitle)
-        self.scrollNode.addSubnode(self.tfUsername)
-        self.scrollNode.addSubnode(self.tfPassword)
+        self.loginNode.backgroundColor = UIColor.yellow
+        
+        self.loginNode.addSubnode(self.tfUsername)
+        self.loginNode.addSubnode(self.tfPassword)
+        self.loginNode.addSubnode(self.btnForget)
+        self.loginNode.addSubnode(self.btnUserAgreement)
+        self.loginNode.addSubnode(self.vLine)
+        self.loginNode.bounds = CGRect.init(x: 0, y: 0, width: 100, height: 100)
+        
+        self.scrollNode.addSubnode(self.loginNode)
+        
+        
         self.scrollNode.addSubnode(self.btnTypeLogin)
         self.scrollNode.addSubnode(self.btnTypeRegister)
-        self.scrollNode.addSubnode(self.btnUserAgreement)
-        self.scrollNode.addSubnode(self.vLine)
-        self.scrollNode.addSubnode(self.btnForget)
-        
-        
+
         node.addSubnode(self.scrollNode) ;
-        
         
         return contentStackSpec!
     }
@@ -99,9 +149,75 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         self.btnForget.addTarget(self, action: #selector(forgetPress), forControlEvents: ASControlNodeEvent.touchDown)
     }
     
+    
+    func updateNode(_ parentNode:ASDisplayNode){
+        DispatchQueue.main.async{
+             parentNode.transitionLayout(withAnimation: false,
+                                    shouldMeasureAsync: true,
+                                    measurementCompletion: nil)
+        }
+    }
+    func toggleState(_ state:UILoginState) {
+        switch state {
+        case .Login:
+            print("Toggle State Login")
+            tfUsername.isHidden = false
+            tfPassword.isHidden = false
+            //tfRegisterEmail.isHidden = true
+            
+            btnLogin.isHidden = false
+            btnForget.isHidden = false
+            tfUsername.isHidden = false
+            tfPassword.isHidden = false
+            btnUserAgreement.isHidden = false
+            btnForget.isHidden = true
+            updateNode(rootNode) ;
+            
+        case .AttemptRegister:
+            print("Toggle State AttemptRegister")
+            btnForget.isHidden = false ;
+            
+            tfUsername.isHidden = true
+            tfPassword.isHidden = true
+            //tfRegisterEmail.isHidden = true
+            
+            btnLogin.isHidden = true
+            tfUsername.isHidden = true
+            tfPassword.isHidden = true
+            btnUserAgreement.isHidden = true
+            
+            updateNode(rootNode) ;
+        case .VerifyCode:
+            print("Toggle State VerifyCode")
+        case .Error:
+            print("Toggle State Error")
+        case .FillInformation:
+            print("Toggle State FillInformation")
+        }
+        self.rootNode.setNeedsLayout()
+        self.rootNode.layoutIfNeeded()
+        self.loginNode.layoutIfNeeded()
+    }
+    
+    
+    func justTest(){
+        print("just test new api")
+        APIClient.shared.attemptRegister(account: "sc30", email: "scsonic+sc30@gmail.com") {result in
+            print("@@ account already exist=", type(of: result), result)
+            
+            APIClient.shared.attemptRegister(account: "scsonic", email: "scsonic@gmail.com") {result in
+                print("@@ account can be use=", type(of: result), result)
+                
+            }
+        }
+
+    }
+    
     override func viewDidLoad() {
+        justTest()
         print("login view did load") ;
         self.bind_event()
+        toggleState(.Login)
     }
 
     override init() {
@@ -143,26 +259,19 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     @objc func switchTypeRegister(_ button:ASButtonNode) {
         
         if button == btnTypeRegister {
-            //btnTypeRegister.isSelected = true
-            //btnTypeLogin.isSelected = false
-            gotoRegisterWebview()
+            btnTypeRegister.isSelected = true
+            btnTypeLogin.isSelected = false
+            //gotoRegisterWebview()
+            toggleState(.AttemptRegister);
+            
         }
         else if button == btnTypeLogin {
+            funcStackSpec?.children?.removeAll()
+            funcStackSpec?.children?.append(btnTypeRegister)
             btnTypeRegister.isSelected = false
             btnTypeLogin.isSelected = true
+            toggleState(.Login)
         }
-        
-        btnLogin.isHidden = btnTypeRegister.isSelected
-        btnForget.isHidden = btnTypeRegister.isSelected
-        tfUsername.isHidden = btnTypeRegister.isSelected
-        tfPassword.isHidden = btnTypeRegister.isSelected
-        btnUserAgreement.isHidden = btnTypeRegister.isSelected
-        
-        if btnTypeRegister.isSelected {
-        }
-        else if btnLogin.isSelected {
-        }
-        
         self.hideKeyboard()
     }
     
@@ -231,6 +340,35 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         return label
     }()
     
+    
+    lazy var tfRegisterEmail = ASDisplayNode.init { () -> UIView in
+        var textField:TextFieldWithPadding = TextFieldWithPadding()
+        textField.background = self.backgroundImg(color: self.lightGray)
+
+        let title = NSLocalizedString("User Email", comment: "")
+        let attr:[NSAttributedString.Key : Any] = [
+            NSAttributedString.Key.foregroundColor: self.text_color,
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
+        ]
+        textField.attributedPlaceholder = NSAttributedString.init(string: title, attributes:attr)
+        textField.layer.cornerRadius = 15
+        textField.layer.borderColor = self.tint_color.cgColor
+        textField.clipsToBounds = true
+        
+        textField.delegate = self
+        textField.textColor = self.text_color
+        
+        textField.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+        
+        textField.keyboardType = .asciiCapable
+        textField.autocapitalizationType = .none
+        
+        textField.addSubview(self.lbRegisterEmailResponse)
+        textField.text = ""
+        return textField
+    }
+    
+    
     lazy var tfUsername = ASDisplayNode.init { () -> UIView in
         var textField:TextFieldWithPadding = TextFieldWithPadding()
         textField.background = self.backgroundImg(color: self.lightGray)
@@ -258,6 +396,17 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     }
     
     
+    lazy var lbRegisterEmailResponse:UILabel = {
+        var label = UILabel()
+        label.textColor = self.tint_color
+        label.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
+        label.frame = CGRect(x: 0, y:0, width:global_width-16, height:30)
+        label.textAlignment = .right
+        label.isUserInteractionEnabled = false
+        return label
+    }()
+    
+    
     lazy var lbUsernameResponse:UILabel = {
         var label = UILabel()
         label.textColor = self.tint_color
@@ -277,6 +426,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         label.isUserInteractionEnabled = false
         return label
     }()
+    
     
     lazy var btnTooglePassword:UIButton = {
         var btn = UIButton()
@@ -564,6 +714,12 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
 }
 
+extension LoginViewController: ASPagerDelegate, ASPagerDataSource{
+    func numberOfPages(in pagerNode: ASPagerNode) -> Int {
+        return 5
+    }
+    
+}
 extension LoginViewController: UITextFieldDelegate {
     
     @objc func keyboardWillShow(_ notification: Notification) {
