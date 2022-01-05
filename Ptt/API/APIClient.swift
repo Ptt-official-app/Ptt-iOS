@@ -97,6 +97,48 @@ extension APIClient: APIClientProtocol {
         task.resume()
     }
     
+    /**
+     api attemptregister:
+     backend will send verify email, get number for next api: register
+     */
+    func attemptRegister(account: String, email: String, completion: @escaping (AttemptRegisterResult) -> Void) {
+        let bodyDic = ["client_id": "test_client_id",
+                       "client_secret": "test_client_secret",
+                       "username": account,
+                       "email": email]
+        
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/account/attemptregister"
+        guard let url = urlComponent.url,
+              let jsonBody = try? JSONSerialization.data(withJSONObject: bodyDic) else {
+            assertionFailure()
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.POST.rawValue
+        request.httpBody = jsonBody
+        
+        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
+            switch result {
+            case .failure(let apiError):
+                completion(.failure(apiError))
+            case .success(let resultData):
+                do {
+                    let token = try self.decoder.decode(APIModel.AttemptRegister.self, from: resultData)
+                    completion(.success(token))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(APIError(message: message)))
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    
+    
     func getBoardArticles(of params: BoardArticlesParams, completion: @escaping (getBoardArticlesResult) -> Void) {
         var urlComponent : URLComponents
         switch params {

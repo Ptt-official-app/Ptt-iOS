@@ -22,6 +22,7 @@ enum ArticleParams {
 
 protocol APIClientProtocol {
     typealias LoginResult = Result<APIModel.LoginToken, APIError>
+    typealias AttemptRegisterResult = Result<APIModel.AttemptRegister, APIError>
     typealias getBoardArticlesResult = Result<APIModel.BoardModel, APIError>
     typealias GetArticleResult = Result<Article, APIError>
     typealias BoardListResult = Result<APIModel.BoardInfoList, APIError>
