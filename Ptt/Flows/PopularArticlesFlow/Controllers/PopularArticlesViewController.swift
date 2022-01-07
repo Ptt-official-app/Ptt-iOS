@@ -24,7 +24,7 @@ enum ArticleTypes {
 
     var title: String {
         switch self {
-        case .All: return NSLocalizedString("ALL", comment: "")
+        case .All: return L10n.all
         }
     }
 }
@@ -61,7 +61,7 @@ final class PopularArticlesViewController: UITableViewController {
     private func setupTableView() {
         self.tableView.dataSource = self
         self.tableView.delegate = self
-        self.tableView.backgroundColor = UIColor(named: "blackColor-23-23-23")
+        self.tableView.backgroundColor = PttColors.codGray.color
         self.tableView.separatorStyle = .none
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.estimatedRowHeight = 113
@@ -115,8 +115,8 @@ extension PopularArticlesViewController: PopularArticlesView {
 
     func show(error: Error) {
         DispatchQueue.main.async {
-            let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: error.localizedDescription, preferredStyle: .alert)
-            let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
+            let alert = UIAlertController(title: L10n.error, message: error.localizedDescription, preferredStyle: .alert)
+            let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
             alert.addAction(confirm)
             self.present(alert, animated: true, completion: nil)
         }

@@ -73,7 +73,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
                             contentAttributes[.foregroundColor] = UIColor(red: 0.00, green: 0.60, blue: 0.60, alpha: 1.00)
                         } else {
                             if #available(iOS 11.0, *) {
-                                contentAttributes[.foregroundColor] = UIColor(named: "textColor-240-240-247")
+                                contentAttributes[.foregroundColor] = PttColors.paleGrey.color
                             } else {
                                 contentAttributes[.foregroundColor] = UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0)
                             }
@@ -95,15 +95,11 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
                     // Note: tabStops https://stackoverflow.com/a/33029957/3796488 or
                     // paragraphSpacingBefore https://stackoverflow.com/a/49427510/3796488
                     // those solutions don't work well; giving up.
-                    var commentDateAttributes : [NSAttributedString.Key : Any] = [
+                    let commentDateAttributes : [NSAttributedString.Key : Any] = [
                         .font: UIFont.preferredFont(forTextStyle: .body),
-                        .paragraphStyle: contentParagraphStyle
+                        .paragraphStyle: contentParagraphStyle,
+                        .foregroundColor: UIColor.systemGray
                     ]
-                    if #available(iOS 11.0, *) {
-                        commentDateAttributes[.foregroundColor] = UIColor(named: "textColorGray")
-                    } else {
-                        commentDateAttributes[.foregroundColor] = UIColor.systemGray
-                    }
                     for comment in article.comments {
                         commentsAttributedString.append(NSAttributedString(string: comment.userid, attributes: commentAuthorAttributes))
                         commentsAttributedString.append(NSAttributedString(string: comment.content, attributes: commentContentAttributes))
@@ -214,8 +210,8 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
 
     @objc private func refresh() {
         guard let boardName = boardName, let filename = filename else {
-            let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: "wrong parameters", preferredStyle: .alert)
-            let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
+            let alert = UIAlertController(title: L10n.error, message: "wrong parameters", preferredStyle: .alert)
+            let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
             alert.addAction(confirm)
             self.present(alert, animated: true, completion: nil)
             return
@@ -246,8 +242,8 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
             switch result {
             case .failure(error: let apiError):
                 DispatchQueue.main.async {
-                    let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: apiError.message, preferredStyle: .alert)
-                    let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
+                    let alert = UIAlertController(title: L10n.error, message: apiError.message, preferredStyle: .alert)
+                    let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
                     alert.addAction(confirm)
                     self.present(alert, animated: true, completion: nil)
                 }
@@ -280,15 +276,11 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
         headParagraphStyle.baseWritingDirection = .leftToRight
         headParagraphStyle.alignment = .left
         headParagraphStyle.lineSpacing = 4.0
-        var headAttributes : [NSAttributedString.Key : Any] = [
+        let headAttributes : [NSAttributedString.Key : Any] = [
             .font: UIFont.preferredFont(forTextStyle: .headline),
-            .paragraphStyle: headParagraphStyle
+            .paragraphStyle: headParagraphStyle,
+            .foregroundColor: UIColor.systemGray
         ]
-        if #available(iOS 11.0, *) {
-            headAttributes[.foregroundColor] = UIColor(named: "textColorGray")
-        } else {
-            headAttributes[.foregroundColor] = UIColor.systemGray
-        }
         let headerAttributedString = NSMutableAttributedString()
         let categoryAttachment : NSTextAttachment
         let authorAttachment : NSTextAttachment

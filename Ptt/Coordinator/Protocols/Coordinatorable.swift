@@ -6,6 +6,6 @@
 //  Copyright © 2020 Ptt. All rights reserved.
 //
 
-protocol Coordinatorable: class {
+protocol Coordinatorable: AnyObject {
     func start()
 }
