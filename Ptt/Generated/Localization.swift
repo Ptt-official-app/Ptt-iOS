@@ -14,6 +14,8 @@ enum L10n {
   static let aboutThisSoftware = L10n.tr("Localizable", "About This Software")
   /// Adds
   static let adds = L10n.tr("Localizable", "Adds")
+  /// ago
+  static let ago = L10n.tr("Localizable", "ago")
   /// ALL
   static let all = L10n.tr("Localizable", "ALL")
   /// Appearance Mode
@@ -52,6 +54,8 @@ enum L10n {
   static let hotTopics = L10n.tr("Localizable", "Hot Topics")
   /// In favorite
   static let inFavorite = L10n.tr("Localizable", "In favorite")
+  /// Just now
+  static let justNow = L10n.tr("Localizable", "Just now")
   /// Leave it blank for default value
   static let leaveItBlankForDefaultValue = L10n.tr("Localizable", "Leave it blank for default value")
   /// Light
