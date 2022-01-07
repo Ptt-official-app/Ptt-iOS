@@ -39,6 +39,8 @@
 		3ECAD060276277FF00F50A91 /* PopularArticles.json in Resources */ = {isa = PBXBuildFile; fileRef = 3ECAD05F276277FF00F50A91 /* PopularArticles.json */; };
 		3ED16B3E25713D64004A33E0 /* APITestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED16B3D25713D64004A33E0 /* APITestClient.swift */; };
 		3EDE670B276106530063D6DF /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDE670A276106530063D6DF /* StringExtension.swift */; };
+		3EE352E5276DDC8300C2CE67 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE352E4276DDC8300C2CE67 /* DateExtension.swift */; };
+		3EE352E7276DDF1000C2CE67 /* DateExtensionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE352E6276DDF1000C2CE67 /* DateExtensionTest.swift */; };
 		3EE7034B2767A12000FFF965 /* NavigationControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE7034A2767A12000FFF965 /* NavigationControllerExtension.swift */; };
 		3EF1A9C8276CE4CE0058EF2C /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF1A9C7276CE4CE0058EF2C /* Localization.swift */; };
 		3EF1A9CD276CEA2E0058EF2C /* ColorAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EF1A9CC276CEA2E0058EF2C /* ColorAssets.xcassets */; };
@@ -151,6 +153,8 @@
 		3ECAD05F276277FF00F50A91 /* PopularArticles.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PopularArticles.json; sourceTree = "<group>"; };
 		3ED16B3D25713D64004A33E0 /* APITestClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITestClient.swift; sourceTree = "<group>"; };
 		3EDE670A276106530063D6DF /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		3EE352E4276DDC8300C2CE67 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
+		3EE352E6276DDF1000C2CE67 /* DateExtensionTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensionTest.swift; sourceTree = "<group>"; };
 		3EE7034A2767A12000FFF965 /* NavigationControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerExtension.swift; sourceTree = "<group>"; };
 		3EF1A9C7276CE4CE0058EF2C /* Localization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		3EF1A9CC276CEA2E0058EF2C /* ColorAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColorAssets.xcassets; sourceTree = "<group>"; };
@@ -292,6 +296,7 @@
 			children = (
 				3E6205192762723500CC8236 /* StringExtensionTest.swift */,
 				3ECAD05C2762766A00F50A91 /* NumberExtensionTest.swift */,
+				3EE352E6276DDF1000C2CE67 /* DateExtensionTest.swift */,
 			);
 			path = ExtensionTest;
 			sourceTree = "<group>";
@@ -495,6 +500,7 @@
 				3E62051427624D3800CC8236 /* UIFontExtension.swift */,
 				3E620516276252D800CC8236 /* NumberExtension.swift */,
 				3EE7034A2767A12000FFF965 /* NavigationControllerExtension.swift */,
+				3EE352E4276DDC8300C2CE67 /* DateExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -960,6 +966,7 @@
 				9B564C3D256AA0EB00787FD7 /* Router.swift in Sources */,
 				CD6C141825AB0C660043E7EC /* PopularBoardsViewModel.swift in Sources */,
 				3E9FE306275D01C5002E144F /* PopularArticlesSceneFactoryProtocol.swift in Sources */,
+				3EE352E5276DDC8300C2CE67 /* DateExtension.swift in Sources */,
 				EA41D65D243EF51A0052F4A1 /* FBPageViewController.swift in Sources */,
 				CD694CF325A74F0400428DC9 /* PopularBoardsSceneFactoryProtocol.swift in Sources */,
 				CD6C1C1926AD783100EBFEA9 /* CreateArticle.swift in Sources */,
@@ -1047,6 +1054,7 @@
 				3E0101AE25669F5A00D39FAD /* APIClientTest.swift in Sources */,
 				3ECAD05D2762766A00F50A91 /* NumberExtensionTest.swift in Sources */,
 				3E62051A2762723500CC8236 /* StringExtensionTest.swift in Sources */,
+				3EE352E7276DDF1000C2CE67 /* DateExtensionTest.swift in Sources */,
 				3ED16B3E25713D64004A33E0 /* APITestClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

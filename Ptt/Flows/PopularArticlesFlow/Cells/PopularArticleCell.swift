@@ -53,7 +53,7 @@ final class PopularArticleCell: UITableViewCell {
     }
 
     private func assembleMetadataText(info: APIModel.GoPttBBSBrdArticle) -> String {
-        "\(info.owner)∙\(info.create_time)"
+        "\(info.owner)∙\(info.create_time.diff())"
     }
 
     private func setupVote(recommend: Int) {
