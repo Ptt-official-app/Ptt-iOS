@@ -42,8 +42,8 @@ class BoardsTableViewCell: UITableViewCell {
         boardNameLabel.font = UIFont.preferredFont(forTextStyle: .title2)
         boardTitleLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
         if #available(iOS 11.0, *) {
-            boardNameLabel.textColor = UIColor(named: "textColor-240-240-247")
-            boardTitleLabel.textColor = UIColor(named: "textColorGray")
+            boardNameLabel.textColor = PttColors.paleGrey.color
+            boardTitleLabel.textColor = .systemGray
         } else {
             boardNameLabel.textColor = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
             boardTitleLabel.textColor = .systemGray
@@ -83,14 +83,14 @@ class FavoriteButton: UIButton {
             if isSelected {
                 imageView?.tintColor = GlobalAppearance.tintColor
                 if let boardName = board?.brdname {
-                    accessibilityLabel = boardName + NSLocalizedString("In favorite", comment: "")
-                    accessibilityHint = NSLocalizedString("Removes", comment: "") + boardName + NSLocalizedString("from favorite.", comment: "")
+                    accessibilityLabel = boardName + L10n.inFavorite
+                    accessibilityHint = L10n.removes + boardName + L10n.fromFavorite
                 }
             } else {
                 imageView?.tintColor = UIColor(hue: 0.667, saturation: 0.079, brightness: 0.4, alpha: 1)
                 if let boardName = board?.brdname {
-                    accessibilityLabel = boardName + NSLocalizedString("Not in favorite", comment: "")
-                    accessibilityHint = NSLocalizedString("Adds", comment: "") + boardName + NSLocalizedString("to favorite.", comment: "")
+                    accessibilityLabel = boardName + L10n.notInFavorite
+                    accessibilityHint = L10n.adds + boardName + L10n.toFavorite
                 }
             }
         }

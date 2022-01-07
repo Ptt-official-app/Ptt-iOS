@@ -1,0 +1,14 @@
+input_dir: ${PROJECT_DIR}/Ptt
+output_dir: ${PROJECT_DIR}/Ptt/Generated
+strings:
+  inputs: en.lproj
+  outputs:
+    - templatePath: structured-swift5-template.stencil
+      output: Localization.swift
+xcassets:
+  - inputs: ColorAssets.xcassets
+    outputs:
+      - templatePath: color-swift5-template.stencil
+        output: PttColors.swift
+        params:
+          enumName: PttColors

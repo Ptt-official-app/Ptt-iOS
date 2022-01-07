@@ -23,7 +23,8 @@ extension APIModel {
         let url : String
 
         static func isPttArticle(url: URL) -> Bool {
-            if url.scheme == "https" && url.host == "www.ptt.cc" {
+            if (url.scheme == "https" || url.scheme == "http")
+                && url.host == "www.ptt.cc" {
                 let substrings = url.path.split(separator: "/")
                 if substrings.count == 3 &&
                     substrings[0] == "bbs" &&

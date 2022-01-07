@@ -64,7 +64,7 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func initView() {
-        title = NSLocalizedString("Popular Boards", comment: "")
+        title = L10n.popularBoards
         if #available(iOS 11.0, *) {
             navigationController?.navigationBar.prefersLargeTitles = true
         }
@@ -73,7 +73,7 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
         definesPresentationContext = true
         
         if #available(iOS 13.0, *) {
-            searchController.searchBar.searchTextField.textColor = UIColor(named: "textColor-240-240-247")
+            searchController.searchBar.searchTextField.textColor = PttColors.paleGrey.color
             // otherwise covered in GlobalAppearance
         }
         if #available(iOS 11.0, *) {
@@ -129,8 +129,8 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
 extension PopularBoardsViewController: PopularBoardsViewModelDelegate {
     func showErrorAlert(errorMessage: String) {
         Dispatch.DispatchQueue.main.async {
-            let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: errorMessage, preferredStyle: .alert)
-            let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
+            let alert = UIAlertController(title: L10n.error, message: errorMessage, preferredStyle: .alert)
+            let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
             alert.addAction(confirm)
             self.present(alert, animated: true, completion: nil)
         }
@@ -148,8 +148,8 @@ extension PopularBoardsViewController: UISearchResultsUpdating {
                     DispatchQueue.main.async {
                         weakSelf.resultsTableController.activityIndicator.stopAnimating()
                         weakSelf.searchController.isActive = false
-                        let alert = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: error.message, preferredStyle: .alert)
-                        let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
+                        let alert = UIAlertController(title: L10n.error, message: error.message, preferredStyle: .alert)
+                        let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
                         alert.addAction(confirm)
                         weakSelf.present(alert, animated: true, completion: nil)
                     }
