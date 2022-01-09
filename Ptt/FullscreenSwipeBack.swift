@@ -13,7 +13,7 @@ protocol FullscreenSwipeable : UIViewController {
     func enableFullscreenSwipeBack()
 }
 
-extension FullscreenSwipeable where Self: UIViewController {
+extension FullscreenSwipeable {
 
     func enableFullscreenSwipeBack() {
         guard let target = self.navigationController?.interactivePopGestureRecognizer?.delegate else { return }

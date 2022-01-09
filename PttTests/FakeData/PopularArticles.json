@@ -1,0 +1,62 @@
+{
+  "list": [
+    {
+      "bid": "WhoAmI",
+      "aid": "M.1234567890.A.123",
+      "deleted": false,
+      "create_time": 1234567890,
+      "modified": 1234567888,
+      "recommend": 8,
+      "n_comments": 0,
+      "owner": "okcool",
+      "title": "[問題]然後呢？～",
+      "money": 5,
+      "class": "問題",
+      "mode": 0,
+      "url": "http://localhost/bbs/test/M.1234567890.A.123",
+      "read": false,
+      "idx": "",
+      "rank": 0,
+      "subject_type": 0
+    },
+    {
+      "bid": "WhoAmI",
+      "aid": "M.1234567900.A.125",
+      "deleted": true,
+      "create_time": 1234567900,
+      "modified": 1234567898,
+      "recommend": -20,
+      "n_comments": 0,
+      "owner": "somebody",
+      "title": "再來呢？～",
+      "money": 123,
+      "class": "",
+      "mode": 0,
+      "url": "http://localhost/bbs/test/M.1234567900.A.125",
+      "read": false,
+      "idx": "",
+      "rank": 0,
+      "subject_type": 0
+    },
+    {
+      "bid": "WhoAmI",
+      "aid": "M.1234568900.A.125",
+      "deleted": false,
+      "create_time": 1234568900,
+      "modified": 1234568898,
+      "recommend": -20,
+      "n_comments": 0,
+      "owner": "somebody2",
+      "title": "還有呢？～",
+      "money": 123,
+      "class": "",
+      "mode": 0,
+      "url": "http://localhost/bbs/test/M.1234568900.A.125",
+      "read": false,
+      "idx": "",
+      "rank": 0,
+      "subject_type": 0
+    }
+  ],
+  "next_idx": "5"
+}

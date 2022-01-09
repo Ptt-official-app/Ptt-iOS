@@ -361,6 +361,44 @@ extension APIClient: APIClientProtocol {
         }
         task.resume()
     }
+
+    func getPopularArticles(startIdx: String, limit: Int, desc: Bool, completion: @escaping (PopularArticlesResult) -> Void) {
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/articles/popular"
+
+        let limit = min(200, limit)
+        let desc = desc ? "true": "false"
+        urlComponent.queryItems = [
+            URLQueryItem(name: "start_idx", value: startIdx),
+            URLQueryItem(name: "limit", value: "\(limit)"),
+            URLQueryItem(name: "desc", value: desc)
+        ]
+
+        guard let url = urlComponent.url else {
+            assertionFailure()
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.GET.rawValue
+
+        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
+            switch result {
+            case .failure(let apiError):
+                completion(.failure(apiError))
+            case .success(let resultData):
+                do {
+                    let result = try self.decoder.decode(APIModel.GoPttBBSBoard.self, from: resultData)
+                    completion(.success(result))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(APIError(message: message)))
+                }
+            }
+        }
+        task.resume()
+    }
 }
 
 // MARK: Private helper function

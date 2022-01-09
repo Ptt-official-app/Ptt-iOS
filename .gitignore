@@ -57,4 +57,7 @@ xcschememanagement.plist
 ### Gem ###
 Gemfile.lock
 
+### SwiftGen ###
+BuildTools/.build/*
+
 # End of https://www.toptal.com/developers/gitignore/api/xcode,macos,cocoapods

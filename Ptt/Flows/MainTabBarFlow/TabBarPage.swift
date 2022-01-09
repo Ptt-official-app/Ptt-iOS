@@ -11,6 +11,7 @@ import UIKit
 enum TabBarPage {
     case favorite
     case fbPage
+    case popularArticles
     case settings
     case popular
     
@@ -21,8 +22,10 @@ enum TabBarPage {
         case 1:
             self = .fbPage
         case 2:
-            self = .popular
+            self = .popularArticles
         case 3:
+            self = .popular
+        case 4:
             self = .settings
         default:
             return nil
@@ -35,10 +38,12 @@ enum TabBarPage {
             return 0
         case .fbPage:
             return 1
-        case .popular:
+        case .popularArticles:
             return 2
-        case .settings:
+        case .popular:
             return 3
+        case .settings:
+            return 4
         }
     }
     
@@ -49,6 +54,8 @@ enum TabBarPage {
             return "Favorite Boards"
         case .fbPage:
             return "FB Page"
+        case .popularArticles:
+            return "Popular Articles"
         case .settings:
             return "Settings"
         case .popular:
@@ -72,6 +79,8 @@ enum TabBarPage {
             return UIImage()
         case .popular:
             return StyleKit.imageOfPopularBoard()
+        case .popularArticles:
+            return StyleKit.imageOfHotTopic()
         }
     }
     // Add tab icon selected / deselected color
