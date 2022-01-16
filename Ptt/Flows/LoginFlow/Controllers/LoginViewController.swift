@@ -27,21 +27,23 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         case FillInformation // register success, fill name, birthday, address, etc.
     }
 
+    
     private let rootNode = ASDisplayNode()
+    
+    var scrollNode = ASScrollNode()
     
     var loginNode = ASDisplayNode()
     var registerNode = ASDisplayNode()
     
-    var scrollNode = ASScrollNode()
-
     var contentStackSpec:ASStackLayoutSpec?
     var contentCenterLayoutSpec:ASCenterLayoutSpec?
     var mloginStackSpec:ASStackLayoutSpec?
     
     var funcStackSpec:ASLayoutSpec?
     
-    
     var switchNode:ASDisplayNode?
+    
+    
     
     let global_width = 265
     
@@ -77,11 +79,15 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
                                                               vLine, forgetCenterLayout]))
         
         
+        
+        let registerEmailInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0), child: tfRegisterEmail)
+        
+        
         let registerStackSpec = ASCenterLayoutSpec(centeringOptions: ASCenterLayoutSpecCenteringOptions.X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: ASStackLayoutSpec(direction: .vertical,
                                                    spacing: 0,
                                                    justifyContent: .center,
                                                    alignItems: .center,
-                                                   children: []))
+                                                   children: [registerEmailInset]))
         
         
         let switchLayoutSpec = ASAbsoluteLayoutSpec(children: [loginStackSpec, registerStackSpec])
@@ -135,8 +141,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     }
     
     func bind_event(){
-        btnTypeLogin.addTarget(self, action: #selector(switchTypeRegister), forControlEvents: ASControlNodeEvent.touchDown)
-        btnTypeRegister.addTarget(self, action: #selector(switchTypeRegister), forControlEvents: ASControlNodeEvent.touchDown)
+        btnTypeLogin.addTarget(self, action: #selector(switchTypeRegister), forControlEvents: ASControlNodeEvent.touchUpInside)
+        btnTypeRegister.addTarget(self, action: #selector(switchTypeRegister), forControlEvents: ASControlNodeEvent.touchUpInside)
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         self.node.view.addGestureRecognizer(tap)
@@ -159,30 +165,16 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         switch state {
         case .Login:
             print("Toggle State Login")
-            tfUsername.isHidden = false
-            tfPassword.isHidden = false
+            //btnForget.isHidden = true
+            toggleLoginView(isHidden: false)
+            toggleRegisterView(isHidden: true)
             
-            btnLogin.isHidden = false
-            btnForget.isHidden = false
-            tfUsername.isHidden = false
-            tfPassword.isHidden = false
-            btnUserAgreement.isHidden = false
-            btnForget.isHidden = false
-            vLine.isHidden = false
         case .AttemptRegister:
             print("Toggle State AttemptRegister")
-            btnForget.isHidden = true ;
+            //btnForget.isHidden = false
+            toggleLoginView(isHidden: true)
+            toggleRegisterView(isHidden: false)
             
-            tfUsername.isHidden = true
-            tfPassword.isHidden = true
-            //tfRegisterEmail.isHidden = true
-            
-            btnLogin.isHidden = true
-            tfUsername.isHidden = true
-            tfPassword.isHidden = true
-            btnUserAgreement.isHidden = true
-            vLine.isHidden = true
-            //updateNode(rootNode) ;
         case .VerifyCode:
             print("Toggle State VerifyCode")
         case .Error:
@@ -190,8 +182,9 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         case .FillInformation:
             print("Toggle State FillInformation")
         }
-        self.rootNode.setNeedsLayout()
-        self.rootNode.layoutIfNeeded()
+        //self.updateNode(self.rootNode) // must be add???
+        //self.rootNode.setNeedsLayout()
+        //self.rootNode.layoutIfNeeded()
     }
     
     
@@ -207,7 +200,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     }
     
     override func viewDidLoad() {
-        justTest()
+        //justTest()
         print("login view did load") ;
         self.bind_event()
         toggleState(.Login)
@@ -277,8 +270,9 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline) //UIFont(name: "HelveticaNeue-Bold", size: 16)!
         ]
         
-        button.setTitle(title, with: nil, with: text_color, for: UIControl.State.selected)
-        button.setTitle(title, with: nil, with: .systemGray, for: UIControl.State.normal)
+        
+        button.setTitle(title, with: nil, with: PttColors.paleGrey.color, for: UIControl.State.selected)
+        button.setTitle(title, with: nil, with: PttColors.slateGrey.color, for: UIControl.State.normal)
         
         button.isSelected = false
         return button
@@ -292,8 +286,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         let attr: [NSAttributedString.Key : Any] = [
            .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline) // UIFont(name: "HelveticaNeue-Bold", size: 16)!
         ]
-        button.setTitle(title, with: nil, with: text_color, for: UIControl.State.selected)
-        button.setTitle(title, with: nil, with: .systemGray, for: UIControl.State.normal)
+        button.setTitle(title, with: nil, with: PttColors.paleGrey.color, for: UIControl.State.selected)
+        button.setTitle(title, with: nil, with: PttColors.slateGrey.color, for: UIControl.State.normal)
 
         button.isSelected = true
         
@@ -303,7 +297,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     lazy var lbLine:ASTextNode =  {
         let label = ASTextNode()
         let attr:[NSAttributedString.Key : Any] = [
-            .foregroundColor: UIColor.systemGray,
+            .foregroundColor: PttColors.paleGrey.color,
             .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline)// UIFont(name: "HelveticaNeue-Bold", size: 16)!
         ]
         
@@ -572,7 +566,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         let title = NSLocalizedString("AgreeWhenYouUseApp", comment:"")
         
         let attr = [
-            NSAttributedString.Key.foregroundColor: UIColor.systemGray,
+            NSAttributedString.Key.foregroundColor: PttColors.paleGrey.color,
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
             NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
         ] as [NSAttributedString.Key : Any]
@@ -583,7 +577,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     lazy var vLine:ASDisplayNode = {
         let line = ASDisplayNode()
-        line.backgroundColor = UIColor.systemGray
+        line.backgroundColor = PttColors.paleGrey.color
         return line
     }()
     
@@ -610,10 +604,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         } else {
             return UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
         }
-    }
-    
-    var lightGray : UIColor {
-        return UIColor(red: 42/255, green: 42/255, blue: 48/255, alpha: 1.0)
     }
     
     var textfield_backgroundcolor : UIColor {

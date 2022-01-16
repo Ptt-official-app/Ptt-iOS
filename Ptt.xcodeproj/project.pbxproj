@@ -49,7 +49,9 @@
 		9411EDAA25A0B03C0005ADCB /* LoginSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9411EDA925A0B03C0005ADCB /* LoginSceneFactoryProtocol.swift */; };
 		944527C02769844F00B6B54F /* AttemptRegister.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944527BF2769844E00B6B54F /* AttemptRegister.swift */; };
 		949478FE2769E3C00004A982 /* RegisterSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949478FD2769E3C00004A982 /* RegisterSubView.swift */; };
+		94AA091F278AE1E900AD3525 /* LoginSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94AA091E278AE1E900AD3525 /* LoginSubView.swift */; };
 		94BBA52025CF89D800FFFF0F /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BBA51F25CF89D700FFFF0F /* RegisterViewController.swift */; };
+		94D3FC2D2792726D001B61C5 /* TextFieldNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3FC2C2792726D001B61C5 /* TextFieldNode.swift */; };
 		94EB641225AC183F00BF69AB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EB641125AC183F00BF69AB /* LoginViewController.swift */; };
 		94EB641A25AD2FF800BF69AB /* LoginKeyChainItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EB641925AD2FF800BF69AB /* LoginKeyChainItem.swift */; };
 		98E73DAD0503CF0D8D585826 /* Pods_PttTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E84C05B084821F8B5031D3BD /* Pods_PttTests.framework */; };
@@ -168,7 +170,9 @@
 		9411EDA925A0B03C0005ADCB /* LoginSceneFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSceneFactoryProtocol.swift; sourceTree = "<group>"; };
 		944527BF2769844E00B6B54F /* AttemptRegister.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttemptRegister.swift; sourceTree = "<group>"; };
 		949478FD2769E3C00004A982 /* RegisterSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterSubView.swift; sourceTree = "<group>"; };
+		94AA091E278AE1E900AD3525 /* LoginSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSubView.swift; sourceTree = "<group>"; };
 		94BBA51F25CF89D700FFFF0F /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		94D3FC2C2792726D001B61C5 /* TextFieldNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldNode.swift; sourceTree = "<group>"; };
 		94EB641125AC183F00BF69AB /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		94EB641925AD2FF800BF69AB /* LoginKeyChainItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginKeyChainItem.swift; sourceTree = "<group>"; };
 		9B564C27256A9D7800787FD7 /* Coordinatorable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinatorable.swift; sourceTree = "<group>"; };
@@ -421,6 +425,8 @@
 				94EB641125AC183F00BF69AB /* LoginViewController.swift */,
 				94BBA51F25CF89D700FFFF0F /* RegisterViewController.swift */,
 				949478FD2769E3C00004A982 /* RegisterSubView.swift */,
+				94AA091E278AE1E900AD3525 /* LoginSubView.swift */,
+				94D3FC2C2792726D001B61C5 /* TextFieldNode.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -991,6 +997,7 @@
 				9B564C2F256A9EAC00787FD7 /* Presentable.swift in Sources */,
 				3E65528C255960AE0026290B /* Comment.swift in Sources */,
 				9B564C71256AAF8000787FD7 /* TabBarCoordinator.swift in Sources */,
+				94D3FC2D2792726D001B61C5 /* TextFieldNode.swift in Sources */,
 				EA78E0C124050EB100309694 /* StyleKit.swift in Sources */,
 				CD767B5625B0B8010050E12A /* TabBarPage.swift in Sources */,
 				949478FE2769E3C00004A982 /* RegisterSubView.swift in Sources */,
@@ -1004,6 +1011,7 @@
 				9BEE1CB02584F60B002A9D95 /* FBPageCoordinator.swift in Sources */,
 				3E9FE309275D0240002E144F /* PopularArticlesViewController.swift in Sources */,
 				3E1694392761260500F19B8E /* PopularArticleCell.swift in Sources */,
+				94AA091F278AE1E900AD3525 /* LoginSubView.swift in Sources */,
 				3E9FE303275CFEDC002E144F /* PopularArticlesCoordinator.swift in Sources */,
 				3E65527525595F9E0026290B /* BoardArticle.swift in Sources */,
 				9BEE1C592584B2C0002A9D95 /* ApplicationCoordinator.swift in Sources */,
