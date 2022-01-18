@@ -14,5 +14,7 @@ extension LoginViewController {
     
     func toggleRegisterView(isHidden:Bool){
         tfRegisterEmail.isHidden = isHidden
+        tfRegisterUsername.isHidden = isHidden
+        tfRegisterPassword.isHidden = isHidden
     }
 }

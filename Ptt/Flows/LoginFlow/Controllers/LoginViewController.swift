@@ -80,17 +80,18 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         
         
         
-        let registerEmailInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0), child: tfRegisterEmail)
-        
+        let registerEmailInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0), child: tfRegisterEmail)
+        let registerUsernameInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0), child: tfRegisterUsername)
+        let registerPasswordInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0), child: tfRegisterPassword)
         
         let registerStackSpec = ASCenterLayoutSpec(centeringOptions: ASCenterLayoutSpecCenteringOptions.X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: ASStackLayoutSpec(direction: .vertical,
                                                    spacing: 0,
                                                    justifyContent: .center,
                                                    alignItems: .center,
-                                                   children: [registerEmailInset]))
+                                                   children: [registerEmailInset, registerUsernameInset, registerPasswordInset]))
         
         
-        let switchLayoutSpec = ASAbsoluteLayoutSpec(children: [loginStackSpec, registerStackSpec])
+        let switchLayoutSpec = ASAbsoluteLayoutSpec(children: [registerStackSpec, loginStackSpec ])
         //ASLayoutSpec(children: [loginStackSpec, registerStackSpec])
         contentStackSpec = ASStackLayoutSpec(direction: .vertical,
                                                    spacing: 0,
@@ -108,6 +109,15 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         btnForget.style.preferredSize = CGSize(width: global_width, height: 30)
         btnUserAgreement.style.preferredSize = CGSize(width: global_width, height: 30)
         vLine.style.preferredSize = CGSize(width: CGFloat(global_width), height: 0.5)
+        
+        // type register
+        tfRegisterEmail.style.preferredSize = CGSize(width: global_width, height: 30)
+        tfRegisterUsername.style.preferredSize = CGSize(width: global_width, height: 30)
+        tfRegisterPassword.style.preferredSize = CGSize(width: global_width, height: 30)
+        self.registerNode.addSubnode(tfRegisterEmail)
+        self.registerNode.addSubnode(tfRegisterUsername)
+        self.registerNode.addSubnode(tfRegisterPassword)
+        
         
 
         // AS Login Node
@@ -138,6 +148,16 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         if let tf = tfUsername.view as? UITextField {
             tf.endEditing(true)
         }
+        if let tf = tfRegisterEmail.view as? UITextField {
+            tf.endEditing(true)
+        }
+        if let tf = tfRegisterUsername.view as? UITextField {
+            tf.endEditing(true)
+        }
+        if let tf = tfRegisterPassword.view as? UITextField {
+            tf.endEditing(true)
+        }
+        
     }
     
     func bind_event(){
@@ -270,7 +290,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline) //UIFont(name: "HelveticaNeue-Bold", size: 16)!
         ]
         
-        
         button.setTitle(title, with: nil, with: PttColors.paleGrey.color, for: UIControl.State.selected)
         button.setTitle(title, with: nil, with: PttColors.slateGrey.color, for: UIControl.State.normal)
         
@@ -325,32 +344,31 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     
     lazy var tfRegisterEmail = ASDisplayNode.init { () -> UIView in
-        var textField:TextFieldWithPadding = TextFieldWithPadding()
-        textField.background = UIImage.backgroundImg(from: self.textfield_backgroundcolor)
-
-        let title = NSLocalizedString("User Email", comment: "")
-        let attr:[NSAttributedString.Key : Any] = [
-            NSAttributedString.Key.foregroundColor: self.text_color,
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
-        ]
-        textField.attributedPlaceholder = NSAttributedString.init(string: title, attributes:attr)
-        textField.layer.cornerRadius = 15
-        textField.layer.borderColor = self.tint_color.cgColor
-        textField.clipsToBounds = true
+        var tf = LoginTextField(type: TextFieldType.Email)
+        tf.title = NSLocalizedString("User Email", comment: "")
         
-        textField.delegate = self
-        textField.textColor = self.text_color
-        
-        textField.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
-        
-        textField.keyboardType = .asciiCapable
-        textField.autocapitalizationType = .none
-        
-        textField.addSubview(self.lbRegisterEmailResponse)
-        textField.text = ""
-        return textField
+        tf.delegate = self
+        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+        return tf
     }
     
+    lazy var tfRegisterUsername = ASDisplayNode.init { () -> UIView in
+        var tf = LoginTextField(type: TextFieldType.Username)
+        tf.title = L10n.username
+        
+        tf.delegate = self
+        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+        return tf
+    }
+    
+    lazy var tfRegisterPassword = ASDisplayNode.init { () -> UIView in
+        var tf = LoginTextField(type: TextFieldType.Password)
+        tf.title = L10n.password
+        
+        tf.delegate = self
+        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+        return tf
+    }
     
     lazy var tfUsername = ASDisplayNode.init { () -> UIView in
         var textField:TextFieldWithPadding = TextFieldWithPadding()
