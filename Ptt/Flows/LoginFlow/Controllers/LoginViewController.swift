@@ -45,92 +45,47 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     
     
+    var loginStackSpec:ASCenterLayoutSpec?
+    var registerStackSpec:ASCenterLayoutSpec?
+    
     let global_width = 265
     
     
     func init_layout() -> ASLayoutSpec {
                 
-        funcStackSpec = ASStackLayoutSpec(direction: .horizontal,
+        
+        //
+        let LeftfuncStackSpec = ASStackLayoutSpec(direction: .horizontal,
                                                    spacing: 5,
                                                    justifyContent: .start,
                                                    alignItems: .start,
                                                    children: [btnTypeLogin, lbLine, btnTypeRegister])
+        LeftfuncStackSpec.style.preferredSize = CGSize(width: global_width, height: 44)
+        let RightfuncStackSpec = ASStackLayoutSpec(direction: .horizontal,
+                                                   spacing: 5,
+                                                   justifyContent: .end,
+                                                   alignItems: .start,
+                                                   children: [btnRegisterProgress])
+        RightfuncStackSpec.style.preferredSize = CGSize(width: global_width, height: 44)
         
+        funcStackSpec = ASAbsoluteLayoutSpec(children: [RightfuncStackSpec, LeftfuncStackSpec])
         funcStackSpec?.style.preferredSize = CGSize(width: global_width, height: 44+43)
 
-
+        initLoginViews() // init loginStackSpec and login views
+        initRegisterViews() // init registerStackSpec and register views
         
-        let usernameInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0), child: tfUsername)
-        let passwordInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 56, right: 0), child: tfPassword)
-        let agreeInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0), child: btnUserAgreement)
-        let loginInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 25, right: 0), child: btnLogin)
-        
-        let forgetInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 30, left: 0, bottom: 0, right: 0), child: btnForget)
-        let forgetCenterLayout = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0), child: forgetInset)
-
-        
-    
-        let loginStackSpec = ASCenterLayoutSpec(centeringOptions: ASCenterLayoutSpecCenteringOptions.X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: ASStackLayoutSpec(direction: .vertical,
-                                                   spacing: 0,
-                                                   justifyContent: .center,
-                                                   alignItems: .center,
-                                                   children: [usernameInset,
-                                                              passwordInset, loginInset, agreeInset,
-                                                              vLine, forgetCenterLayout]))
-        
-        
-        
-        let registerEmailInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0), child: tfRegisterEmail)
-        let registerUsernameInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0), child: tfRegisterUsername)
-        let registerPasswordInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0), child: tfRegisterPassword)
-        
-        let registerStackSpec = ASCenterLayoutSpec(centeringOptions: ASCenterLayoutSpecCenteringOptions.X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: ASStackLayoutSpec(direction: .vertical,
-                                                   spacing: 0,
-                                                   justifyContent: .center,
-                                                   alignItems: .center,
-                                                   children: [registerEmailInset, registerUsernameInset, registerPasswordInset]))
-        
-        
-        let switchLayoutSpec = ASAbsoluteLayoutSpec(children: [registerStackSpec, loginStackSpec ])
+        let switchLayoutSpec = ASAbsoluteLayoutSpec(children: [registerStackSpec!, loginStackSpec! ])
         //ASLayoutSpec(children: [loginStackSpec, registerStackSpec])
         contentStackSpec = ASStackLayoutSpec(direction: .vertical,
                                                    spacing: 0,
                                                    justifyContent: .center,
                                                    alignItems: .center,
                                                    children: [lbTitle, funcStackSpec!, switchLayoutSpec])
-        
-        
-        
-        // login
-        lbTitle.style.preferredSize = CGSize(width: global_width, height: 58+63)
-        tfUsername.style.preferredSize = CGSize(width: global_width, height: 30)
-        tfPassword.style.preferredSize = CGSize(width: global_width, height: 30)
-        btnLogin.style.preferredSize = CGSize(width: global_width, height: 30)
-        btnForget.style.preferredSize = CGSize(width: global_width, height: 30)
-        btnUserAgreement.style.preferredSize = CGSize(width: global_width, height: 30)
-        vLine.style.preferredSize = CGSize(width: CGFloat(global_width), height: 0.5)
-        
-        // type register
-        tfRegisterEmail.style.preferredSize = CGSize(width: global_width, height: 30)
-        tfRegisterUsername.style.preferredSize = CGSize(width: global_width, height: 30)
-        tfRegisterPassword.style.preferredSize = CGSize(width: global_width, height: 30)
-        self.registerNode.addSubnode(tfRegisterEmail)
-        self.registerNode.addSubnode(tfRegisterUsername)
-        self.registerNode.addSubnode(tfRegisterPassword)
-        
-        
 
         // AS Login Node
         self.scrollNode.addSubnode(self.lbTitle)
-        
-        self.loginNode.addSubnode(self.tfUsername)
-        self.loginNode.addSubnode(self.tfPassword)
-        self.loginNode.addSubnode(self.btnForget)
-        self.loginNode.addSubnode(self.btnUserAgreement)
-        self.loginNode.addSubnode(self.vLine)
-        self.loginNode.bounds = CGRect.init(x: 0, y: 0, width: 100, height: 100)
-        
         self.scrollNode.addSubnode(self.loginNode)
+        self.scrollNode.addSubnode(self.registerNode)
         
         
         self.scrollNode.addSubnode(self.btnTypeLogin)
@@ -173,6 +128,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     }
     
     
+    // not working
     func updateNode(_ parentNode:ASDisplayNode){
         DispatchQueue.main.async{
              parentNode.transitionLayout(withAnimation: false,
@@ -281,6 +237,20 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
       fatalError("init(coder:) has not been implemented")
     }
     
+    lazy var btnRegisterProgress:ASButtonNode = {
+        let button = ASButtonNode()
+        let title = "AA BB CC"
+        let attr: [NSAttributedString.Key : Any] = [
+            .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline) //UIFont(name: "HelveticaNeue-Bold", size: 16)!
+        ]
+        
+        button.setTitle(title, with: nil, with: PttColors.paleGrey.color, for: UIControl.State.selected)
+        button.setTitle(title, with: nil, with: PttColors.slateGrey.color, for: UIControl.State.normal)
+        
+        button.isSelected = false
+        return button
+    }()
+    
     
     lazy var btnTypeRegister:ASButtonNode = {
         let button = ASButtonNode()
@@ -369,6 +339,28 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
         return tf
     }
+    
+    lazy var btnAttemptRegister: ASButtonNode = {
+        let button = ButtonNode(type: .primary)
+        button.title = "下一步"
+        button.isEnabled = false
+        return button
+    }()
+    
+    
+    lazy var btnRegisterUserAgreement:ASButtonNode = {
+        let button = ASButtonNode()
+        let title = NSLocalizedString("AgreeWhenYouUseApp", comment:"")
+        
+        let attr = [
+            NSAttributedString.Key.foregroundColor: PttColors.paleGrey.color,
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
+            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
+        ] as [NSAttributedString.Key : Any]
+        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+        
+        return button
+    }()
     
     lazy var tfUsername = ASDisplayNode.init { () -> UIView in
         var textField:TextFieldWithPadding = TextFieldWithPadding()

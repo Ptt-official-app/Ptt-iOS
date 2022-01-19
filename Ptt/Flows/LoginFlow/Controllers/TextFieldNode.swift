@@ -80,7 +80,6 @@ class LoginTextField : UITextField {
         
         switch type {
         case .Username:
-            warning(msg: "type user")
             break
         case .Password:
             self.isSecureTextEntry = true
@@ -88,7 +87,6 @@ class LoginTextField : UITextField {
             self.btnTogglePassword = getButton()
             self.rightView = self.btnTogglePassword
         case .Email:
-            warning(msg: "type email")
             break;
         }
         
