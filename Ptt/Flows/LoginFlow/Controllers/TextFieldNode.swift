@@ -34,7 +34,7 @@ class LoginTextField : UITextField {
     
     override var frame: CGRect {
         didSet {
-            print("ltf frame did set:", frame)
+            //print("ltf frame did set:", frame)
             
             self.lbResponse?.frame = CGRect(x: 0, y:0, width: self.frame.width - 16, height:30)
         }

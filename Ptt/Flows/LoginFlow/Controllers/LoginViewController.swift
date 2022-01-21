@@ -47,6 +47,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     var loginStackSpec:ASCenterLayoutSpec?
     var registerStackSpec:ASCenterLayoutSpec?
+    var errorStackSpec:ASCenterLayoutSpec?
+    var verifyStackSpec:ASCenterLayoutSpec?
     
     let global_width = 265
     
@@ -75,10 +77,12 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         funcStackSpec = ASAbsoluteLayoutSpec(children: [RightfuncStackSpec, LeftfuncStackSpec])
         funcStackSpec?.style.preferredSize = CGSize(width: global_width, height: 44+43)
 
+        initErrorViews()
+        initVerifyCodeViews()
         initLoginViews() // init loginStackSpec and login views
         initRegisterViews() // init registerStackSpec and register views
         
-        let switchLayoutSpec = ASAbsoluteLayoutSpec(children: [registerStackSpec!, loginStackSpec! ])
+        let switchLayoutSpec = ASAbsoluteLayoutSpec(children: [registerStackSpec!, loginStackSpec!, errorStackSpec!, verifyStackSpec! ])
         //ASLayoutSpec(children: [loginStackSpec, registerStackSpec])
         contentStackSpec = ASStackLayoutSpec(direction: .vertical,
                                                    spacing: 0,
@@ -151,6 +155,9 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             toggleLoginView(isHidden: false)
             toggleRegisterView(isHidden: true)
             lbRegisterProgress.isHidden = true
+            toggleErrorView(isHidden: true)
+            toggleVerifyCodeView(isHidden: true)
+            
             
         case .AttemptRegister:
             print("Toggle State AttemptRegister")
@@ -159,13 +166,29 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             toggleRegisterView(isHidden: false)
             lbRegisterProgress.isHidden = false
             lbRegisterProgress.attributedText = getRegisterProgressText(2)
+            toggleErrorView(isHidden: true)
+            toggleVerifyCodeView(isHidden: true)
             
         case .VerifyCode:
             print("Toggle State VerifyCode")
-        case .Error:
+            toggleLoginView(isHidden: true)
+            toggleRegisterView(isHidden: true)
+            toggleErrorView(isHidden: true)
+            toggleVerifyCodeView(isHidden: false)
+            
+        case .Error: // note: register error msg
             print("Toggle State Error")
+            toggleLoginView(isHidden: true)
+            toggleRegisterView(isHidden: true)
+            toggleErrorView(isHidden: false)
+            toggleVerifyCodeView(isHidden: true)
+            
         case .FillInformation:
             print("Toggle State FillInformation")
+            toggleLoginView(isHidden: true)
+            toggleRegisterView(isHidden: true)
+            toggleErrorView(isHidden: true)
+            toggleVerifyCodeView(isHidden: true)
         }
         //self.updateNode(self.rootNode) // must be add???
         //self.rootNode.setNeedsLayout()
@@ -253,6 +276,14 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     }()
     
     
+    /**
+     Colors:
+     White, Gray, Tangerine
+     0: WGG
+     1: TWG
+     2: TTW
+     3: TTT
+     */
     func getRegisterProgressText(_ progress:Int) -> NSMutableAttributedString {
         
         // The attributed text length can't be changed -_-
@@ -275,9 +306,17 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         case 0:
             mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.paleGrey.color, range: NSRange(location:0,length:2))
         case 1:
+            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.tangerine.color, range: NSRange(location:0,length:2))
             mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.paleGrey.color, range: NSRange(location:4,length:2))
         case 2:
+            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.tangerine.color, range: NSRange(location:0,length:2))
+            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.tangerine.color, range: NSRange(location:4,length:2))
             mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.paleGrey.color, range: NSRange(location:8,length:2))
+        case 3:
+            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.tangerine.color, range: NSRange(location:0,length:2))
+            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.tangerine.color, range: NSRange(location:4,length:2))
+            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.tangerine.color, range: NSRange(location:8,length:2))
+            
         default:
             break
         }
@@ -376,8 +415,21 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     lazy var btnAttemptRegister: ASButtonNode = {
         let button = ButtonNode(type: .primary)
-        button.title = "下一步"
-        button.isEnabled = false
+        let title = "下一步"
+        
+        let attr_tint : [NSAttributedString.Key : Any] = [
+            NSAttributedString.Key.foregroundColor: PttColors.shark.color,
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1
+            )
+        ]
+
+        button.setTitle(title, with: .preferredFont(forTextStyle: .caption1),
+                 with: PttColors.tangerine.color, for: .normal)
+        button.setBackgroundImage(UIImage.backgroundImg(from: .clear), for: UIControl.State.normal)
+        
+        button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.selected)
+        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr_tint), for: UIControl.State.selected)
+
         return button
     }()
     
@@ -387,7 +439,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         let title = NSLocalizedString("AgreeWhenYouUseApp", comment:"")
         
         let attr = [
-            NSAttributedString.Key.foregroundColor: PttColors.paleGrey.color,
+            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
             NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
         ] as [NSAttributedString.Key : Any]
@@ -425,6 +477,18 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         textField.addTarget(self, action: #selector(self.textFieldDidChange(textField:)), for: .editingChanged)
         return textField
     }
+    
+    
+    lazy var lbError:ASTextNode = {
+        let label = ASTextNode()
+        let attr:[NSAttributedString.Key : Any] = [
+            .foregroundColor: PttColors.paleGrey.color,
+            .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.subheadline)
+        ]
+        var title = NSAttributedString.init(string: "Error Message 123 123 123 123 456 456 456 ASDF", attributes: attr)
+        label.attributedText = title
+        return label
+    }()
     
     
     lazy var lbRegisterEmailResponse:UILabel = {
@@ -592,10 +656,12 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     @objc func userAgreementPress() {
         print("user agreement press")
+        toggleState(.Error)
     }
     
     @objc func forgetPress() {
         print("forget press")
+        toggleState(.VerifyCode)
     }
 
     lazy var btnLogin: ASButtonNode = {
@@ -610,7 +676,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         let title = NSLocalizedString("AgreeWhenYouUseApp", comment:"")
         
         let attr = [
-            NSAttributedString.Key.foregroundColor: PttColors.paleGrey.color,
+            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
             NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
         ] as [NSAttributedString.Key : Any]
@@ -665,6 +731,92 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             return UIColor(red: 255/255, green: 159/255, blue: 10/255, alpha: 1.0)
         }
     }
+    
+    
+    
+    
+    // verify code views:
+    lazy var lbVerifyCodeTitle:ASTextNode =  {
+        let label = ASTextNode()
+        let paragraphStyle = NSMutableParagraphStyle.init()
+        paragraphStyle.alignment = .left
+        paragraphStyle.paragraphSpacing = 2
+        paragraphStyle.lineSpacing = 0
+        let attributes = [
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.subheadline), //UIFont.boldSystemFont(ofSize: 24),
+            NSAttributedString.Key.foregroundColor: self.text_color,
+            NSAttributedString.Key.paragraphStyle: paragraphStyle
+        ]
+        
+        let title = "驗證碼已經發送到你的信箱，請在五分鐘內輸入驗證碼 bala bala"
+        label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
+        return label
+    }()
+    
+    lazy var tfVerifyCode = ASDisplayNode.init { () -> UIView in
+        var tf = LoginTextField(type: TextFieldType.Username)
+        tf.title = "驗證碼"
+        
+        tf.delegate = self
+        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+        return tf
+    }
+    
+    lazy var lbVerifyCodeResponse:ASTextNode =  {
+        let label = ASTextNode()
+        let paragraphStyle = NSMutableParagraphStyle.init()
+        paragraphStyle.alignment = .center
+        paragraphStyle.paragraphSpacing = 2
+        paragraphStyle.lineSpacing = 0
+        let attributes = [
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1), //UIFont.boldSystemFont(ofSize: 24),
+            NSAttributedString.Key.foregroundColor: PttColors.tangerine.color,
+            NSAttributedString.Key.paragraphStyle: paragraphStyle
+        ]
+        
+        let title = "response Q_Q"
+        label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
+        return label
+    }()
+    
+    lazy var lbVerifyCodeTimer:ASTextNode =  {
+        let label = ASTextNode()
+        let paragraphStyle = NSMutableParagraphStyle.init()
+        paragraphStyle.alignment = .right
+        paragraphStyle.paragraphSpacing = 2
+        paragraphStyle.lineSpacing = 0
+        let attributes = [
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1), //UIFont.boldSystemFont(ofSize: 24),
+            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
+            NSAttributedString.Key.paragraphStyle: paragraphStyle
+        ]
+        
+        let title = "00:00"
+        label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
+        return label
+    }()
+    
+    
+    lazy var btnVerifyCodeBack: ASButtonNode = {
+        let button = ButtonNode(type: .secondary)
+        button.title = "回到帳密設定"
+        return button
+    }()
+    
+    lazy var btnVerifyCodeNotReceive:ASButtonNode = {
+        let button = ASButtonNode()
+        let title = "沒收到驗證碼?"
+        
+        let attr = [
+            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
+            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
+        ] as [NSAttributedString.Key : Any]
+        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+        
+        return button
+    }()
+    
     
 }
 
@@ -735,5 +887,21 @@ extension LoginViewController {
         } else {
             btnLogin.isEnabled = false
         }
+        
+        if let tfEmail = tfRegisterEmail.view as? UITextField,
+           let tfUser = tfRegisterUsername.view as? UITextField,
+           let tfPass = tfRegisterPassword.view as? UITextField,
+           let email = tfEmail.text,
+           let username = tfUser.text,
+           let password = tfPass.text,
+           !email.isEmpty && !username.isEmpty && !password.isEmpty {
+            btnAttemptRegister.isSelected = true
+            print("set att reg = isSelected", btnAttemptRegister.isSelected)
+        }
+        else {
+            btnAttemptRegister.isSelected = false
+            print("set att reg = is false", btnAttemptRegister.isSelected)
+        }
+           
     }
 }
