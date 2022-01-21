@@ -61,11 +61,15 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
                                                    alignItems: .start,
                                                    children: [btnTypeLogin, lbLine, btnTypeRegister])
         LeftfuncStackSpec.style.preferredSize = CGSize(width: global_width, height: 44)
+        
+        
+        let registerProcessInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 4, left: 0, bottom: 0, right: 8), child: lbRegisterProgress)
+        
         let RightfuncStackSpec = ASStackLayoutSpec(direction: .horizontal,
                                                    spacing: 5,
                                                    justifyContent: .end,
                                                    alignItems: .start,
-                                                   children: [btnRegisterProgress])
+                                                   children: [registerProcessInset])
         RightfuncStackSpec.style.preferredSize = CGSize(width: global_width, height: 44)
         
         funcStackSpec = ASAbsoluteLayoutSpec(children: [RightfuncStackSpec, LeftfuncStackSpec])
@@ -82,6 +86,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
                                                    alignItems: .center,
                                                    children: [lbTitle, funcStackSpec!, switchLayoutSpec])
 
+        
         // AS Login Node
         self.scrollNode.addSubnode(self.lbTitle)
         self.scrollNode.addSubnode(self.loginNode)
@@ -90,6 +95,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         
         self.scrollNode.addSubnode(self.btnTypeLogin)
         self.scrollNode.addSubnode(self.btnTypeRegister)
+        self.scrollNode.addSubnode(self.lbRegisterProgress);
 
         node.addSubnode(self.scrollNode) ;
         
@@ -144,12 +150,15 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             //btnForget.isHidden = true
             toggleLoginView(isHidden: false)
             toggleRegisterView(isHidden: true)
+            lbRegisterProgress.isHidden = true
             
         case .AttemptRegister:
             print("Toggle State AttemptRegister")
             //btnForget.isHidden = false
             toggleLoginView(isHidden: true)
             toggleRegisterView(isHidden: false)
+            lbRegisterProgress.isHidden = false
+            lbRegisterProgress.attributedText = getRegisterProgressText(2)
             
         case .VerifyCode:
             print("Toggle State VerifyCode")
@@ -237,19 +246,44 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
       fatalError("init(coder:) has not been implemented")
     }
     
-    lazy var btnRegisterProgress:ASButtonNode = {
-        let button = ASButtonNode()
-        let title = "AA BB CC"
-        let attr: [NSAttributedString.Key : Any] = [
-            .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline) //UIFont(name: "HelveticaNeue-Bold", size: 16)!
-        ]
-        
-        button.setTitle(title, with: nil, with: PttColors.paleGrey.color, for: UIControl.State.selected)
-        button.setTitle(title, with: nil, with: PttColors.slateGrey.color, for: UIControl.State.normal)
-        
-        button.isSelected = false
-        return button
+    lazy var lbRegisterProgress:ASTextNode = {
+        let label = ASTextNode()
+        label.attributedText = getRegisterProgressText(0)
+        return label
     }()
+    
+    
+    func getRegisterProgressText(_ progress:Int) -> NSMutableAttributedString {
+        
+        // The attributed text length can't be changed -_-
+        let title = "帳密  驗證  資料"
+        
+        let paragraphStyle = NSMutableParagraphStyle.init()
+        paragraphStyle.alignment = .right
+        paragraphStyle.paragraphSpacing = 2
+        paragraphStyle.lineSpacing = 0
+        let attributes = [
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.subheadline),
+            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
+            NSAttributedString.Key.paragraphStyle: paragraphStyle
+        ]
+
+        
+        let mString = NSMutableAttributedString(string: title, attributes: attributes)
+        
+        switch (progress){
+        case 0:
+            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.paleGrey.color, range: NSRange(location:0,length:2))
+        case 1:
+            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.paleGrey.color, range: NSRange(location:4,length:2))
+        case 2:
+            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.paleGrey.color, range: NSRange(location:8,length:2))
+        default:
+            break
+        }
+        
+        return mString
+    }
     
     
     lazy var btnTypeRegister:ASButtonNode = {
