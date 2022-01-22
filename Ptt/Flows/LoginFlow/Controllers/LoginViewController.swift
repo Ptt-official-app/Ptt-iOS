@@ -122,7 +122,9 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         if let tf = tfRegisterPassword.view as? UITextField {
             tf.endEditing(true)
         }
-        
+        if let tf = tfVerifyCode.view as? UITextField {
+            tf.endEditing(true)
+        }
     }
     
     func bind_event(){
@@ -135,8 +137,24 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         self.btnLogin.addTarget(self, action: #selector(loginPress), forControlEvents: ASControlNodeEvent.touchUpInside)
         self.btnUserAgreement.addTarget(self, action: #selector(userAgreementPress), forControlEvents: ASControlNodeEvent.touchUpInside)
         self.btnForget.addTarget(self, action: #selector(forgetPress), forControlEvents: ASControlNodeEvent.touchUpInside)
+        
+        
+        // for debug
+        self.lbRegisterProgress.addTarget(self, action: #selector(testFill), forControlEvents: ASControlNodeEvent.touchUpInside)
     }
-    
+                                          
+    @objc func testFill(){
+            
+            if let tf = tfRegisterEmail.view as? LoginTextField,
+               let u = tfRegisterUsername.view as? LoginTextField,
+               let p = tfRegisterPassword.view as? LoginTextField
+            {
+                tf.text = "scsonic+sc55@gmail.com"
+                u.text = "sc55"
+                p.text = "sc55"
+            }
+    }
+
     
     // not working
     func updateNode(_ parentNode:ASDisplayNode){
@@ -154,9 +172,9 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             //btnForget.isHidden = true
             toggleLoginView(isHidden: false)
             toggleRegisterView(isHidden: true)
-            lbRegisterProgress.isHidden = true
             toggleErrorView(isHidden: true)
             toggleVerifyCodeView(isHidden: true)
+            lbRegisterProgress.isHidden = true
             
             
         case .AttemptRegister:
@@ -164,10 +182,12 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             //btnForget.isHidden = false
             toggleLoginView(isHidden: true)
             toggleRegisterView(isHidden: false)
-            lbRegisterProgress.isHidden = false
-            lbRegisterProgress.attributedText = getRegisterProgressText(2)
+            
             toggleErrorView(isHidden: true)
             toggleVerifyCodeView(isHidden: true)
+            
+            lbRegisterProgress.isHidden = false
+            lbRegisterProgress.attributedText = getRegisterProgressText(0)
             
         case .VerifyCode:
             print("Toggle State VerifyCode")
@@ -175,6 +195,9 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             toggleRegisterView(isHidden: true)
             toggleErrorView(isHidden: true)
             toggleVerifyCodeView(isHidden: false)
+            
+            lbRegisterProgress.isHidden = false
+            lbRegisterProgress.attributedText = getRegisterProgressText(1)
             
         case .Error: // note: register error msg
             print("Toggle State Error")
@@ -429,6 +452,9 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         
         button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.selected)
         button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr_tint), for: UIControl.State.selected)
+
+        
+        button.addTarget(self, action: #selector(self.btnAttemptRegisterPress), forControlEvents: ASControlNodeEvent.touchUpInside)
 
         return button
     }()
@@ -757,6 +783,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         var tf = LoginTextField(type: TextFieldType.Username)
         tf.title = "驗證碼"
         
+        tf.keyboardType = .numberPad
         tf.delegate = self
         tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
         return tf
@@ -769,10 +796,11 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         paragraphStyle.paragraphSpacing = 2
         paragraphStyle.lineSpacing = 0
         let attributes = [
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1), //UIFont.boldSystemFont(ofSize: 24),
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
             NSAttributedString.Key.foregroundColor: PttColors.tangerine.color,
             NSAttributedString.Key.paragraphStyle: paragraphStyle
         ]
+        
         
         let title = "response Q_Q"
         label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
@@ -786,7 +814,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         paragraphStyle.paragraphSpacing = 2
         paragraphStyle.lineSpacing = 0
         let attributes = [
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1), //UIFont.boldSystemFont(ofSize: 24),
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
             NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
             NSAttributedString.Key.paragraphStyle: paragraphStyle
         ]
@@ -838,10 +866,6 @@ extension LoginViewController: UITextFieldDelegate {
         let margin_to_keyboard = 10
         let diff = Int(btnLogin.view.frame.origin.y) - (screenHeight-keyboardHeight) + margin_to_keyboard
         
-//        print("screen height=", UIScreen.main.bounds.height)
-//        print("btn login pos=", btnLogin.view.frame.origin, btnLogin.view.bounds)
-//        print("screen diff=", diff)
-        
         if ( diff > 0){
             let point = CGPoint(x: 0, y: Int(diff) )
             self.scrollNode.view.setContentOffset(point, animated: true)
@@ -878,6 +902,7 @@ extension LoginViewController: UITextFieldDelegate {
 extension LoginViewController {
     
     @objc func textFieldDidChange(textField: UITextField) {
+        
         if let usernameTextField = tfUsername.view as? UITextField,
            let passwordTextField = tfPassword.view as? UITextField,
            let username = usernameTextField.text,
@@ -902,6 +927,43 @@ extension LoginViewController {
             btnAttemptRegister.isSelected = false
             print("set att reg = is false", btnAttemptRegister.isSelected)
         }
-           
+        
+        
+        print("textfield is verify code:", textField, tfVerifyCode.view)
+        if textField == tfVerifyCode.view {
+            print("is same")
+            // todo: modify the text length
+            if textField.text?.count == 6 {
+                // start the register progress!!
+                print("start register !!!")
+                textField.isEnabled = false ;
+                if let user = (self.tfRegisterUsername.view as! LoginTextField).text,
+                   let email = (self.tfRegisterUsername.view as! LoginTextField).text,
+                   let password = (self.tfRegisterUsername.view as! LoginTextField).text,
+                   let token = (self.tfVerifyCode.view as! LoginTextField).text {
+                    APIClient.shared.register(account: user, email: email, password: password, token: token) { result in
+                        DispatchQueue.main.async {
+                            textField.isEnabled = true
+                            (self.tfVerifyCode.view as! LoginTextField).text = "";
+                            
+                            switch (result) {
+                            case .failure(let error):
+                                print(error)
+                                self.showAlert(title: L10n.error, msg: L10n.login + L10n.error + error.message)
+                            case .success(let result):
+                                print(result)
+                                self.onRegisterSuccess(result: result)
+                                self.showAlert(title: L10n.error, msg: "Register Success!!")
+                            }
+                        }
+                    }
+                }
+                else {
+                    showAlert(title: "ERROR", msg: "ERROR data missing-_- ")
+                }
+
+            }
+        }
+        
     }
 }

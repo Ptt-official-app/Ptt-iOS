@@ -78,6 +78,9 @@ class LoginTextField : UITextField {
     func _init() {
         lbResponse = self.responseLabel()
         
+        
+        self.keyboardType = .asciiCapable
+        
         switch type {
         case .Username:
             break
@@ -87,6 +90,7 @@ class LoginTextField : UITextField {
             self.btnTogglePassword = getButton()
             self.rightView = self.btnTogglePassword
         case .Email:
+            keyboardType = .emailAddress
             break;
         }
         
@@ -97,7 +101,7 @@ class LoginTextField : UITextField {
         self.clipsToBounds = true
         self.textColor = PttColors.paleGrey.color
         
-        self.keyboardType = .asciiCapable
+        
         self.autocapitalizationType = .none
 
         self.addSubview(self.lbResponse!)

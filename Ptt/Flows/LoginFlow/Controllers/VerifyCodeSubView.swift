@@ -24,16 +24,22 @@ extension LoginViewController {
         
         lbVerifyCodeTitle.style.preferredSize = CGSize(width: global_width, height: 66)
         tfVerifyCode.style.preferredSize = CGSize(width: global_width, height: 30)
-        lbVerifyCodeResponse.style.preferredSize = CGSize(width: global_width/4*3, height: 44)
-        lbVerifyCodeTimer.style.preferredSize = CGSize(width: global_width/4, height: 44)
+        
+        lbVerifyCodeResponse.style.preferredSize = CGSize(width: global_width, height: 44)
+        lbVerifyCodeTimer.style.preferredSize = CGSize(width: global_width, height: 44)
+        
         btnVerifyCodeBack.style.preferredSize = CGSize(width: global_width/2, height: 30)
         btnVerifyCodeNotReceive.style.preferredSize = CGSize(width: global_width/2, height: 30)
         
-        let horiLine1 = ASStackLayoutSpec(direction: .horizontal,
-                                                   spacing: 0,
-                                                    justifyContent: .center,
-                                          alignItems: .end,
-                                                   children: [lbVerifyCodeResponse, lbVerifyCodeTimer])
+        let tfVerifyCodeInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0), child: tfVerifyCode)
+        
+        let horiLine1 = ASAbsoluteLayoutSpec(children: [lbVerifyCodeResponse, lbVerifyCodeTimer])
+        horiLine1.style.preferredSize = CGSize(width: global_width, height: 44)
+//        let horiLine1 = ASAbs(direction: .horizontal,
+//                                                   spacing: 0,
+//                                                    justifyContent: .center,
+//                                          alignItems: .end,
+//                                                   children: [lbVerifyCodeResponse, lbVerifyCodeTimer])
         
         let horiLine2 = ASStackLayoutSpec(direction: .horizontal,
                                                    spacing: 0,
@@ -42,12 +48,13 @@ extension LoginViewController {
                                                    children: [btnVerifyCodeBack, btnVerifyCodeNotReceive])
         
         
+        let horiLine2Inset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 32, left: 0, bottom: 0, right: 0), child: horiLine2)
         
         let vertLine = ASStackLayoutSpec(direction: .vertical,
                                                    spacing: 0,
                                                    justifyContent: .center,
                                                    alignItems: .center,
-                                                   children: [lbVerifyCodeTitle, tfVerifyCode, horiLine1, horiLine2])
+                                                   children: [lbVerifyCodeTitle, tfVerifyCodeInset, horiLine1, horiLine2Inset])
         
         verifyStackSpec = ASCenterLayoutSpec(centeringOptions: ASCenterLayoutSpecCenteringOptions.X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: vertLine)
         
@@ -66,6 +73,11 @@ extension LoginViewController {
         lbVerifyCodeTimer.isHidden = isHidden
         btnVerifyCodeBack.isHidden = isHidden
         btnVerifyCodeNotReceive.isHidden = isHidden
+    }
+    
+    
+    func onRegisterSuccess(result:APIModel.Register){
+        
     }
 }
 
