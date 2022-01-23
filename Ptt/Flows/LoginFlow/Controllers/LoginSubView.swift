@@ -64,4 +64,11 @@ extension LoginViewController {
         btnForget.isHidden = isHidden
         vLine.isHidden = isHidden
     }
+    
+    
+    @objc func forgetPress() {
+        print("forget press")
+        //showAlert(title: "XD", msg: "NOT IMPLEMENT YET -_-")
+        toggleState(UILoginState.FillInformation)
+    }
 }

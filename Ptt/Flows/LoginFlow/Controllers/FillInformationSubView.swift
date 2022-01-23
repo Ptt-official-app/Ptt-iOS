@@ -56,6 +56,10 @@ extension LoginViewController {
         self.node.addSubnode(btnOpenAccount)
     }
     
+    @objc func openAccountPress(){
+        print("open account press")
+        showAlert(title: "NOT YET", msg: "Not Implement Yet -_-")
+    }
     
     func toggleFillInformationView(isHidden:Bool){
         lbFillTitle.isHidden = isHidden

@@ -17,8 +17,6 @@ protocol LoginView: BaseView {
 final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     var onCompleteAuth: (() -> Void)?
     
-    //private let apiClient: APIClientProtocol = nil
-    
     enum UILoginState {
         case Login  // the default state
         case AttemptRegister // try to register
@@ -37,13 +35,9 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     var contentStackSpec:ASStackLayoutSpec?
     var contentCenterLayoutSpec:ASCenterLayoutSpec?
-    var mloginStackSpec:ASStackLayoutSpec?
-    
+
     var funcStackSpec:ASLayoutSpec?
-    
     var switchNode:ASDisplayNode?
-    
-    
     
     var loginStackSpec:ASCenterLayoutSpec?
     var registerStackSpec:ASCenterLayoutSpec?
@@ -53,18 +47,13 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     let global_width = 265
     
-    
     func init_layout() -> ASLayoutSpec {
-                
-        
-        //
         let LeftfuncStackSpec = ASStackLayoutSpec(direction: .horizontal,
                                                    spacing: 5,
                                                    justifyContent: .start,
                                                    alignItems: .start,
                                                    children: [btnTypeLogin, lbLine, btnTypeRegister])
         LeftfuncStackSpec.style.preferredSize = CGSize(width: global_width, height: 44)
-        
         
         let registerProcessInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 4, left: 0, bottom: 0, right: 8), child: lbRegisterProgress)
         
@@ -92,12 +81,9 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
                                                    alignItems: .center,
                                                    children: [lbTitle, funcStackSpec!, switchLayoutSpec])
 
-        
-        // AS Login Node
         self.scrollNode.addSubnode(self.lbTitle)
         self.scrollNode.addSubnode(self.loginNode)
         self.scrollNode.addSubnode(self.registerNode)
-        
         
         self.scrollNode.addSubnode(self.btnTypeLogin)
         self.scrollNode.addSubnode(self.btnTypeRegister)
@@ -154,7 +140,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         // for debug
         self.lbRegisterProgress.addTarget(self, action: #selector(testFill), forControlEvents: ASControlNodeEvent.touchUpInside)
         
-        lbTitle.addTarget(self, action: #selector(testErrorMsg), forControlEvents: ASControlNodeEvent.touchUpInside)
+//        lbTitle.addTarget(self, action: #selector(testErrorMsg), forControlEvents: ASControlNodeEvent.touchUpInside)
     }
     
     @objc func testErrorMsg(){
@@ -169,22 +155,12 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
                let u = tfRegisterUsername.view as? LoginTextField,
                let p = tfRegisterPassword.view as? LoginTextField
             {
-                let sn = 56
+                let sn = 57
                 tf.text = "scsonic+sc\(sn)@gmail.com"
                 u.text = "sc\(sn)"
                 p.text = "sc\(sn)"
                 textFieldDidChange(textField: p)
             }
-    }
-
-    
-    // not working
-    func updateNode(_ parentNode:ASDisplayNode){
-        DispatchQueue.main.async{
-             parentNode.transitionLayout(withAnimation: false,
-                                    shouldMeasureAsync: true,
-                                    measurementCompletion: nil)
-        }
     }
 
     func toggleState(_ state:UILoginState) {
@@ -241,9 +217,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             lbRegisterProgress.isHidden = false
             lbRegisterProgress.attributedText = getRegisterProgressText(2)
         }
-        //self.updateNode(self.rootNode) // must be add???
-        //self.rootNode.setNeedsLayout()
-        //self.rootNode.layoutIfNeeded()
     }
     
     
@@ -259,7 +232,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     }
     
     override func viewDidLoad() {
-        //justTest()
         print("login view did load") ;
         self.bind_event()
         toggleState(.Login)
@@ -411,7 +383,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         let label = ASTextNode()
         let attr:[NSAttributedString.Key : Any] = [
             .foregroundColor: PttColors.paleGrey.color,
-            .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline)// UIFont(name: "HelveticaNeue-Bold", size: 16)!
+            .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline)
         ]
         
         var title = NSAttributedString.init(string: "|", attributes: attr)
@@ -432,15 +404,17 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         ]
         
         label.attributedText = NSAttributedString.init(string: "批踢踢實業坊\nPtt.cc", attributes: attributes)
-        //label.backgroundColor = GlobalAppearance.backgroundColor
+        
         return label
     }()
     
     
+    // Register views
     lazy var tfRegisterEmail = ASDisplayNode.init { () -> UIView in
         var tf = LoginTextField(type: TextFieldType.Email)
         tf.title = NSLocalizedString("User Email", comment: "")
         
+        tf.returnKeyType = .next
         tf.delegate = self
         tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
         return tf
@@ -450,6 +424,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         var tf = LoginTextField(type: TextFieldType.Username)
         tf.title = L10n.username
         
+        tf.returnKeyType = .next
         tf.delegate = self
         tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
         return tf
@@ -458,6 +433,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     lazy var tfRegisterPassword = ASDisplayNode.init { () -> UIView in
         var tf = LoginTextField(type: TextFieldType.Password)
         tf.title = L10n.password
+        
+        tf.returnKeyType = .send
         
         tf.delegate = self
         tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
@@ -473,8 +450,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1
             )
         ]
-
-        
         
         button.setTitle(title, with: .preferredFont(forTextStyle: .caption1),
                  with: PttColors.tangerine.color, for: .normal)
@@ -493,7 +468,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         return button
     }()
     
-    
     lazy var btnRegisterUserAgreement:ASButtonNode = {
         let button = ASButtonNode()
         let title = NSLocalizedString("AgreeWhenYouUseApp", comment:"")
@@ -510,143 +484,54 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         return button
     }()
     
+    
+    // Login Views
     lazy var tfUsername = ASDisplayNode.init { () -> UIView in
-        var textField:TextFieldWithPadding = TextFieldWithPadding()
-        textField.background = UIImage.backgroundImg(from: self.textfield_backgroundcolor)
-
-        let title = L10n.username
-        let attr:[NSAttributedString.Key : Any] = [
-            NSAttributedString.Key.foregroundColor: self.text_color,
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
-        ]
-        textField.attributedPlaceholder = NSAttributedString.init(string: title, attributes:attr)
-        textField.layer.cornerRadius = 15
-        textField.layer.borderColor = self.tint_color.cgColor
-        textField.clipsToBounds = true
-        
+        var textField:LoginTextField = LoginTextField(type: .Username)
+        textField.title = L10n.username
         textField.delegate = self
-        textField.textColor = PttColors.paleGrey.color
-        textField.autocapitalizationType = .none
-        textField.autocorrectionType = .no
         textField.returnKeyType = .next
-        
-        textField.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
         
         textField.keyboardType = .asciiCapable
         
-        textField.addSubview(self.lbUsernameResponse)
-        textField.text = ""
         textField.addTarget(self, action: #selector(self.textFieldDidChange(textField:)), for: .editingChanged)
         return textField
     }
     
-    
-    lazy var lbError:ASTextNode = getErrorView()
-    
-    lazy var lbRegisterEmailResponse:UILabel = {
-        var label = UILabel()
-        label.textColor = self.tint_color
-        label.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
-        label.frame = CGRect(x: 0, y:0, width:global_width-16, height:30)
-        label.textAlignment = .right
-        label.isUserInteractionEnabled = false
-        return label
-    }()
-    
-    
-    lazy var lbUsernameResponse:UILabel = {
-        var label = UILabel()
-        label.textColor = self.tint_color
-        label.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
-        label.frame = CGRect(x: 0, y:0, width:global_width-16, height:30)
-        label.textAlignment = .right
-        label.isUserInteractionEnabled = false
-        return label
-    }()
-    
-    lazy var lbPasswordResponse:UILabel = {
-        var label = UILabel()
-        label.textColor = self.tint_color
-        label.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
-        label.frame = CGRect(x: 0, y:0, width:global_width-44, height:30)
-        label.textAlignment = .right
-        label.isUserInteractionEnabled = false
-        return label
-    }()
-    
-    
-    lazy var btnTooglePassword:UIButton = {
-        var btn = UIButton()
-        btn.frame = CGRect(x:0, y:0, width:44, height:44)
-        if #available(iOS 12.0, *) {
-            btn.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 8)
-        }
-        btn.setImage(StyleKit.imageOfPasswdVisibilitySelected(), for: UIControl.State.selected)
-        btn.setImage(StyleKit.imageOfPasswdVisibility(), for: UIControl.State.normal)
-
-        btn.addTarget(self, action: #selector(self.togglePassword), for: UIControl.Event.touchDown)
-        return btn
-    }()
-    
     lazy var tfPassword = ASDisplayNode.init { () -> UIView in
-        var textField:TextFieldWithPadding = TextFieldWithPadding()
+        var textField:LoginTextField = LoginTextField(type: .Password)
 
-        textField.background = UIImage.backgroundImg(from: self.textfield_backgroundcolor)
+        textField.title = L10n.password
         
-        let title = L10n.password
-        let attr = [
-            NSAttributedString.Key.foregroundColor: self.text_color,
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1
-            )//UIFont.systemFont(ofSize: 12)
-        ]
         textField.isSecureTextEntry = true
         textField.returnKeyType = .send
-        textField.attributedPlaceholder = NSAttributedString.init(string: title, attributes:attr )
-        
-        textField.layer.cornerRadius = 15
-        textField.clipsToBounds = true
-        
-        // TODO:Fellow color
-        textField.layer.borderColor = self.tint_color.cgColor
-        textField.textColor = PttColors.paleGrey.color
-        
-        textField.text = ""
-        
-        textField.rightViewMode = .always
-        textField.rightView = self.btnTooglePassword
-        
-        textField.addSubview(self.lbPasswordResponse)
         
         textField.delegate = self
         textField.addTarget(self, action: #selector(self.textFieldDidChange(textField:)), for: .editingChanged)
         return textField
     }
     
-    class TextFieldWithPadding: UITextField {
-        var textPadding = UIEdgeInsets(
-            top: 0,
-            left: 20,
-            bottom: 0,
-            right: 20
-        )
+    // error views
+    lazy var lbError:ASTextNode = getErrorView()
 
-        override func textRect(forBounds bounds: CGRect) -> CGRect {
-            let rect = super.textRect(forBounds: bounds)
-            return rect.inset(by: textPadding)
-        }
-
-        override func editingRect(forBounds bounds: CGRect) -> CGRect {
-            let rect = super.editingRect(forBounds: bounds)
-            return rect.inset(by: textPadding)
-        }
-    }
-    
-    @objc func togglePassword() {
-        self.btnTooglePassword.isSelected = !self.btnTooglePassword.isSelected
-        if let tf = tfPassword.view as? UITextField {
-            tf.isSecureTextEntry = !tf.isSecureTextEntry
-        }
-    }
+//    class TextFieldWithPadding: UITextField {
+//        var textPadding = UIEdgeInsets(
+//            top: 0,
+//            left: 20,
+//            bottom: 0,
+//            right: 20
+//        )
+//
+//        override func textRect(forBounds bounds: CGRect) -> CGRect {
+//            let rect = super.textRect(forBounds: bounds)
+//            return rect.inset(by: textPadding)
+//        }
+//
+//        override func editingRect(forBounds bounds: CGRect) -> CGRect {
+//            let rect = super.editingRect(forBounds: bounds)
+//            return rect.inset(by: textPadding)
+//        }
+//    }
     
     func showAlert(title:String, msg:String) {
         let controller = UIAlertController(title: title, message: msg, preferredStyle: .alert)
@@ -669,17 +554,20 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         }
   
         // block by btnLogin.isEnabled
-//        if ( account.isEmpty ) {
-//            self.lbUsernameResponse.text = "NOT FINISH:" + L10n.notFinish
-//            tfUsername.layer.borderWidth = 1
-//            return
-//        }
-//
-//        if (passwd.isEmpty ){
-//            self.lbPasswordResponse.text = "NOT FINISH:" + L10n.notFinish
-//            tfPassword.layer.borderWidth = 1
-//            return ;
-//        }
+        // todo: fix
+        if ( account.isEmpty ) {
+            if let tf = self.tfUsername as? LoginTextField {
+                tf.warning(msg: L10n.notFinish)
+            }
+            return
+        }
+
+        if (passwd.isEmpty ){
+            if let tf = self.tfPassword as? LoginTextField {
+                tf.warning(msg: L10n.notFinish)
+            }
+            return ;
+        }
         
         self.btnLogin.isEnabled = false
         APIClient.shared.login(account: account, password: passwd) { (result) in
@@ -710,12 +598,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         print("user agreement press")
         showAlert(title: "XD", msg: "NOT IMPLEMENT YET -_-")
     }
-    
-    @objc func forgetPress() {
-        print("forget press")
-        //showAlert(title: "XD", msg: "NOT IMPLEMENT YET -_-")
-        toggleState(UILoginState.FillInformation)
-    }
 
     lazy var btnLogin: ASButtonNode = {
         let button = ButtonNode(type: .primary)
@@ -744,15 +626,11 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         return line
     }()
     
-    
-    
     lazy var btnForget: ASButtonNode = {
         let button = ButtonNode(type: .secondary)
         button.title = L10n.forget
         return button
     }()
-    
-    
     
     var text_color : UIColor {
         if #available(iOS 11.0, *) {
@@ -777,9 +655,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             return UIColor(red: 255/255, green: 159/255, blue: 10/255, alpha: 1.0)
         }
     }
-    
-    
-    
     
     // verify code views:
     lazy var lbVerifyCodeTitle:ASTextNode =  {
@@ -821,9 +696,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             NSAttributedString.Key.paragraphStyle: paragraphStyle
         ]
         
-        
-        let title = ""
-        label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
+        label.attributedText = NSAttributedString.init(string: "", attributes: attributes)
         return label
     }()
     
@@ -950,12 +823,10 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
         
         
-        button.addTarget(self, action: #selector(onNotReceive), forControlEvents: ASControlNodeEvent.touchUpInside)
+        button.addTarget(self, action: #selector(openAccountPress), forControlEvents: ASControlNodeEvent.touchUpInside)
         
         return button
     }()
-    
-    
 }
 
 extension LoginViewController: UITextFieldDelegate {
@@ -988,6 +859,20 @@ extension LoginViewController: UITextFieldDelegate {
             tfPassword.becomeFirstResponder()
         case tfPassword.view:
             loginPress()
+            
+        case tfRegisterEmail.view:
+            tfRegisterUsername.becomeFirstResponder()
+        case tfRegisterUsername.view:
+            tfRegisterPassword.becomeFirstResponder()
+        case tfRegisterPassword.view:
+            btnAttemptRegisterPress()
+            
+        case tfFillRealName.view:
+            tfFillBirthday.becomeFirstResponder()
+        case tfFillBirthday.view:
+            tfFillAddress.becomeFirstResponder()
+        case tfFillAddress.view:
+            openAccountPress()
         default:
             break
         }
@@ -1000,12 +885,11 @@ extension LoginViewController: UITextFieldDelegate {
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.lbPasswordResponse.text = ""
-        self.lbUsernameResponse.text = ""
-        self.tfPassword.layer.borderWidth = 0
-        self.tfUsername.layer.borderWidth = 0
         
-        let tfList = [tfRegisterUsername, tfRegisterEmail, tfRegisterPassword]
+        let tfList = [tfUsername, tfPassword,
+                      tfRegisterUsername, tfRegisterEmail, tfRegisterPassword,
+                      tfFillRealName, tfFillBirthday, tfFillAddress
+        ]
         for node in tfList {
             if let tf = node.view as? LoginTextField {
                 if tf == textField {

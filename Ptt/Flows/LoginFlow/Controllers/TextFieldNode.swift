@@ -25,7 +25,7 @@ class LoginTextField : UITextField {
             guard let title = title else { return }
             
             let attr:[NSAttributedString.Key : Any] = [
-                NSAttributedString.Key.foregroundColor: PttColors.paleGrey.color,
+                NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
                 NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
             ]
             self.attributedPlaceholder = NSAttributedString.init(string: title, attributes:attr)
@@ -78,9 +78,7 @@ class LoginTextField : UITextField {
     func _init() {
         lbResponse = self.responseLabel()
         
-        
         self.keyboardType = .asciiCapable
-        
         switch type {
         case .Username:
             break
@@ -103,6 +101,7 @@ class LoginTextField : UITextField {
         
         
         self.autocapitalizationType = .none
+        self.autocorrectionType = .no
 
         self.addSubview(self.lbResponse!)
     }
