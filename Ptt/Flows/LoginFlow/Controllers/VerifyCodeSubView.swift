@@ -14,14 +14,14 @@ extension LoginViewController {
     
     
     func initVerifyCodeViews() {
-        lbVerifyCodeTitle
-        tfVerifyCode
-        lbVerifyCodeResponse
-        lbVerifyCodeTimer
-        btnVerifyCodeBack
-        btnVerifyCodeNotReceive
-        
-        
+//        lbVerifyCodeTitle
+//        tfVerifyCode
+//        lbVerifyCodeResponse
+//        lbVerifyCodeTimer
+//        btnVerifyCodeBack
+//        btnVerifyCodeNotReceive
+//
+//
         lbVerifyCodeTitle.style.preferredSize = CGSize(width: global_width, height: 66)
         tfVerifyCode.style.preferredSize = CGSize(width: global_width, height: 30)
         
@@ -76,8 +76,48 @@ extension LoginViewController {
     }
     
     
+    func onVerifyCodeFill()
+    {
+        let tf = tfVerifyCode.view as! LoginTextField
+        tf.isEnabled = false ;
+        if let user = (self.tfRegisterUsername.view as! LoginTextField).text,
+           let email = (self.tfRegisterUsername.view as! LoginTextField).text,
+           let password = (self.tfRegisterUsername.view as! LoginTextField).text,
+           let token = (self.tfVerifyCode.view as! LoginTextField).text {
+            APIClient.shared.register(account: user, email: email, password: password, token: token) { result in
+                DispatchQueue.main.async {
+                    tf.isEnabled = true
+                    (self.tfVerifyCode.view as! LoginTextField).text = "";
+                    
+                    switch (result) {
+                    case .failure(let error):
+                        print(error)
+                        self.lbVerifyCodeResponse.attributedText = NSAttributedString.init(string: error.message, attributes: nil)
+                    case .success(let result):
+                        print(result)
+                        self.onRegisterSuccess(result: result)
+                        self.toggleState(.FillInformation)
+                    }
+                }
+            }
+        }
+        else {
+            showAlert(title: "ERROR", msg: "ERROR data missing-_- ")
+        }
+    }
+    
     func onRegisterSuccess(result:APIModel.Register){
         
+    }
+    
+    @objc func onVerifyCodeBack(){
+        print("onVerifyCodeBack")
+        toggleState(.AttemptRegister)
+    }
+    
+    @objc func onNotReceive(){
+        print("not Receive")
+        showAlert(title: "TEMP", msg: "NOT IMPLEMENT YET QQ")
     }
 }
 

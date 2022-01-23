@@ -49,6 +49,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     var registerStackSpec:ASCenterLayoutSpec?
     var errorStackSpec:ASCenterLayoutSpec?
     var verifyStackSpec:ASCenterLayoutSpec?
+    var fillInformationStackSpec:ASCenterLayoutSpec?
     
     let global_width = 265
     
@@ -81,8 +82,9 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         initVerifyCodeViews()
         initLoginViews() // init loginStackSpec and login views
         initRegisterViews() // init registerStackSpec and register views
+        initFillInformationViews()
         
-        let switchLayoutSpec = ASAbsoluteLayoutSpec(children: [registerStackSpec!, loginStackSpec!, errorStackSpec!, verifyStackSpec! ])
+        let switchLayoutSpec = ASAbsoluteLayoutSpec(children: [registerStackSpec!, loginStackSpec!, errorStackSpec!, verifyStackSpec!, fillInformationStackSpec!])
         //ASLayoutSpec(children: [loginStackSpec, registerStackSpec])
         contentStackSpec = ASStackLayoutSpec(direction: .vertical,
                                                    spacing: 0,
@@ -125,6 +127,16 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         if let tf = tfVerifyCode.view as? UITextField {
             tf.endEditing(true)
         }
+        
+        if let tf = tfFillRealName.view as? UITextField {
+            tf.endEditing(true)
+        }
+        if let tf = tfFillBirthday.view as? UITextField {
+            tf.endEditing(true)
+        }
+        if let tf = tfFillAddress.view as? UITextField {
+            tf.endEditing(true)
+        }
     }
     
     func bind_event(){
@@ -141,6 +153,14 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         
         // for debug
         self.lbRegisterProgress.addTarget(self, action: #selector(testFill), forControlEvents: ASControlNodeEvent.touchUpInside)
+        
+        lbTitle.addTarget(self, action: #selector(testErrorMsg), forControlEvents: ASControlNodeEvent.touchUpInside)
+    }
+    
+    @objc func testErrorMsg(){
+        
+        displayError(message: "TEST AAA BBC LDJ:LAKJ DD")
+        toggleState(UILoginState.Error)
     }
                                           
     @objc func testFill(){
@@ -149,9 +169,11 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
                let u = tfRegisterUsername.view as? LoginTextField,
                let p = tfRegisterPassword.view as? LoginTextField
             {
-                tf.text = "scsonic+sc55@gmail.com"
-                u.text = "sc55"
-                p.text = "sc55"
+                let sn = 56
+                tf.text = "scsonic+sc\(sn)@gmail.com"
+                u.text = "sc\(sn)"
+                p.text = "sc\(sn)"
+                textFieldDidChange(textField: p)
             }
     }
 
@@ -169,22 +191,23 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         switch state {
         case .Login:
             print("Toggle State Login")
-            //btnForget.isHidden = true
             toggleLoginView(isHidden: false)
             toggleRegisterView(isHidden: true)
             toggleErrorView(isHidden: true)
             toggleVerifyCodeView(isHidden: true)
+            toggleFillInformationView(isHidden: true)
             lbRegisterProgress.isHidden = true
             
             
         case .AttemptRegister:
             print("Toggle State AttemptRegister")
-            //btnForget.isHidden = false
             toggleLoginView(isHidden: true)
             toggleRegisterView(isHidden: false)
             
             toggleErrorView(isHidden: true)
             toggleVerifyCodeView(isHidden: true)
+            
+            toggleFillInformationView(isHidden: true)
             
             lbRegisterProgress.isHidden = false
             lbRegisterProgress.attributedText = getRegisterProgressText(0)
@@ -195,6 +218,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             toggleRegisterView(isHidden: true)
             toggleErrorView(isHidden: true)
             toggleVerifyCodeView(isHidden: false)
+            toggleFillInformationView(isHidden: true)
             
             lbRegisterProgress.isHidden = false
             lbRegisterProgress.attributedText = getRegisterProgressText(1)
@@ -205,6 +229,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             toggleRegisterView(isHidden: true)
             toggleErrorView(isHidden: false)
             toggleVerifyCodeView(isHidden: true)
+            toggleFillInformationView(isHidden: true)
             
         case .FillInformation:
             print("Toggle State FillInformation")
@@ -212,6 +237,9 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             toggleRegisterView(isHidden: true)
             toggleErrorView(isHidden: true)
             toggleVerifyCodeView(isHidden: true)
+            toggleFillInformationView(isHidden: false)
+            lbRegisterProgress.isHidden = false
+            lbRegisterProgress.attributedText = getRegisterProgressText(2)
         }
         //self.updateNode(self.rootNode) // must be add???
         //self.rootNode.setNeedsLayout()
@@ -446,6 +474,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             )
         ]
 
+        
+        
         button.setTitle(title, with: .preferredFont(forTextStyle: .caption1),
                  with: PttColors.tangerine.color, for: .normal)
         button.setBackgroundImage(UIImage.backgroundImg(from: .clear), for: UIControl.State.normal)
@@ -453,6 +483,10 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.selected)
         button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr_tint), for: UIControl.State.selected)
 
+        // override the disable state
+        button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.disabled)
+        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr_tint), for: UIControl.State.disabled)
+        
         
         button.addTarget(self, action: #selector(self.btnAttemptRegisterPress), forControlEvents: ASControlNodeEvent.touchUpInside)
 
@@ -470,6 +504,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
         ] as [NSAttributedString.Key : Any]
         button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+        
+        button.addTarget(self, action: #selector(userAgreementPress), forControlEvents: ASControlNodeEvent.touchUpInside)
         
         return button
     }()
@@ -505,17 +541,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     }
     
     
-    lazy var lbError:ASTextNode = {
-        let label = ASTextNode()
-        let attr:[NSAttributedString.Key : Any] = [
-            .foregroundColor: PttColors.paleGrey.color,
-            .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.subheadline)
-        ]
-        var title = NSAttributedString.init(string: "Error Message 123 123 123 123 456 456 456 ASDF", attributes: attr)
-        label.attributedText = title
-        return label
-    }()
-    
+    lazy var lbError:ASTextNode = getErrorView()
     
     lazy var lbRegisterEmailResponse:UILabel = {
         var label = UILabel()
@@ -682,12 +708,13 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     @objc func userAgreementPress() {
         print("user agreement press")
-        toggleState(.Error)
+        showAlert(title: "XD", msg: "NOT IMPLEMENT YET -_-")
     }
     
     @objc func forgetPress() {
         print("forget press")
-        toggleState(.VerifyCode)
+        //showAlert(title: "XD", msg: "NOT IMPLEMENT YET -_-")
+        toggleState(UILoginState.FillInformation)
     }
 
     lazy var btnLogin: ASButtonNode = {
@@ -713,7 +740,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     lazy var vLine:ASDisplayNode = {
         let line = ASDisplayNode()
-        line.backgroundColor = PttColors.paleGrey.color
+        line.backgroundColor = PttColors.slateGrey.color
         return line
     }()
     
@@ -722,13 +749,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     lazy var btnForget: ASButtonNode = {
         let button = ButtonNode(type: .secondary)
         button.title = L10n.forget
-//        button.contentEdgeInsets = UIEdgeInsets(top: 7, left: 7, bottom: 7, right: 7)
-//
-//        button.backgroundColor = UIColor.systemGray
-//        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
-//
-//        button.layer.cornerRadius = 15
-//        button.clipsToBounds = true
         return button
     }()
     
@@ -802,7 +822,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         ]
         
         
-        let title = "response Q_Q"
+        let title = ""
         label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
         return label
     }()
@@ -828,6 +848,9 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     lazy var btnVerifyCodeBack: ASButtonNode = {
         let button = ButtonNode(type: .secondary)
         button.title = "回到帳密設定"
+        
+        button.addTarget(self, action: #selector(onVerifyCodeBack), forControlEvents: ASControlNodeEvent.touchUpInside)
+        
         return button
     }()
     
@@ -841,6 +864,93 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
         ] as [NSAttributedString.Key : Any]
         button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+        
+        
+        button.addTarget(self, action: #selector(onNotReceive), forControlEvents: ASControlNodeEvent.touchUpInside)
+        
+        return button
+    }()
+    
+    
+    // Fill Information Views:
+    
+    lazy var lbFillTitle:ASTextNode =  {
+        let label = ASTextNode()
+        let paragraphStyle = NSMutableParagraphStyle.init()
+        paragraphStyle.alignment = .left
+        paragraphStyle.paragraphSpacing = 2
+        paragraphStyle.lineSpacing = 0
+        let attributes = [
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.subheadline), 
+            NSAttributedString.Key.foregroundColor: self.text_color,
+            NSAttributedString.Key.paragraphStyle: paragraphStyle
+        ]
+        
+        let title = "帳號設定成功！\n請完成以下資訊以開通帳號："
+        label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
+        return label
+    }()
+    
+    lazy var tfFillRealName = ASDisplayNode.init { () -> UIView in
+        var tf = LoginTextField(type: TextFieldType.Email)
+        tf.title = NSLocalizedString("真實姓名", comment: "")
+        
+        tf.delegate = self
+        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+        return tf
+    }
+
+    
+    lazy var tfFillBirthday = ASDisplayNode.init { () -> UIView in
+        var tf = LoginTextField(type: TextFieldType.Email)
+        tf.title = NSLocalizedString("出生年", comment: "")
+        
+        tf.delegate = self
+        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+        return tf
+    }
+
+    
+    lazy var tfFillAddress = ASDisplayNode.init { () -> UIView in
+        var tf = LoginTextField(type: TextFieldType.Email)
+        tf.title = NSLocalizedString("聯絡地址", comment: "")
+        
+        tf.delegate = self
+        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+        return tf
+    }
+
+    lazy var lbNeedReason:ASButtonNode = {
+        let button = ASButtonNode()
+        let title = "為何需要基本資料?"
+    
+        button.contentHorizontalAlignment = .left
+        let attr = [
+            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
+            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
+        ] as [NSAttributedString.Key : Any]
+        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+        
+        button.addTarget(self, action: #selector(onNotReceive), forControlEvents: ASControlNodeEvent.touchUpInside)
+        
+        return button
+    }()
+    
+    
+    lazy var btnOpenAccount:ASButtonNode = {
+        let button = ButtonNode(type: .primary)
+        let title = "開通帳號"
+        
+        let attr = [
+            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
+            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
+        ] as [NSAttributedString.Key : Any]
+        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+        
+        
+        button.addTarget(self, action: #selector(onNotReceive), forControlEvents: ASControlNodeEvent.touchUpInside)
         
         return button
     }()
@@ -894,8 +1004,16 @@ extension LoginViewController: UITextFieldDelegate {
         self.lbUsernameResponse.text = ""
         self.tfPassword.layer.borderWidth = 0
         self.tfUsername.layer.borderWidth = 0
+        
+        let tfList = [tfRegisterUsername, tfRegisterEmail, tfRegisterPassword]
+        for node in tfList {
+            if let tf = node.view as? LoginTextField {
+                if tf == textField {
+                    tf.warning(msg: nil)
+                }
+            }
+        }
     }
-    
 
 }
 
@@ -936,32 +1054,7 @@ extension LoginViewController {
             if textField.text?.count == 6 {
                 // start the register progress!!
                 print("start register !!!")
-                textField.isEnabled = false ;
-                if let user = (self.tfRegisterUsername.view as! LoginTextField).text,
-                   let email = (self.tfRegisterUsername.view as! LoginTextField).text,
-                   let password = (self.tfRegisterUsername.view as! LoginTextField).text,
-                   let token = (self.tfVerifyCode.view as! LoginTextField).text {
-                    APIClient.shared.register(account: user, email: email, password: password, token: token) { result in
-                        DispatchQueue.main.async {
-                            textField.isEnabled = true
-                            (self.tfVerifyCode.view as! LoginTextField).text = "";
-                            
-                            switch (result) {
-                            case .failure(let error):
-                                print(error)
-                                self.showAlert(title: L10n.error, msg: L10n.login + L10n.error + error.message)
-                            case .success(let result):
-                                print(result)
-                                self.onRegisterSuccess(result: result)
-                                self.showAlert(title: L10n.error, msg: "Register Success!!")
-                            }
-                        }
-                    }
-                }
-                else {
-                    showAlert(title: "ERROR", msg: "ERROR data missing-_- ")
-                }
-
+                self.onVerifyCodeFill()
             }
         }
         

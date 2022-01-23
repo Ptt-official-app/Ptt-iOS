@@ -150,7 +150,7 @@ extension APIClient: APIClientProtocol {
         let bodyDic = ["client_id": "test_client_id",
                        "client_secret": "test_client_secret",
                        "username": account,
-                       "password": "@@",
+                       "password": password,
                        "password_confirm": password,
                        "over18": false,
                        "email": email,

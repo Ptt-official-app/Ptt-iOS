@@ -54,7 +54,6 @@ extension LoginViewController {
     @objc func btnAttemptRegisterPress(){
         print("btnAttemptRegisterPress")
         
-        btnAttemptRegister.isEnabled = false
         if let tfEmail = tfRegisterEmail.view as? LoginTextField,
            let tfUser = tfRegisterUsername.view as? LoginTextField,
            let tfPass = tfRegisterPassword.view as? LoginTextField,
@@ -70,15 +69,15 @@ extension LoginViewController {
                     tfEmail.warning(msg: "請輸mail")
                 }
                 if username.isEmpty {
-                    tfEmail.warning(msg: "請輸user")
+                    tfUser.warning(msg: "請輸user")
                 }
                 if password.isEmpty {
-                    tfEmail.warning(msg: "請輸PW")
+                    tfPass.warning(msg: "請輸PW")
                 }
             }
             else {
-                print("start request")
                 // todo: add email format check
+                btnAttemptRegister.isEnabled = false
                 APIClient.shared.attemptRegister(account: username, email: email) {result in
                     DispatchQueue.main.async {
                         self.btnAttemptRegister.isEnabled = true
@@ -92,10 +91,9 @@ extension LoginViewController {
                             print(result.user_id)
                             // get user id: Attempt Register Success
                             // wait for email notification
+                            // this account can be register
                             self.toggleState(UILoginState.VerifyCode)
                         }
-                        
-                        print("@@ account can be use=", type(of: result), result)
                     }
                 }
                     
