@@ -94,34 +94,20 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         return contentStackSpec!
     }
     
+    func getTextFieldList() -> [ASDisplayNode] {
+        return [tfUsername, tfPassword,
+                tfRegisterUsername, tfRegisterEmail, tfRegisterPassword,
+                tfVerifyCode,
+                tfFillRealName, tfFillBirthday, tfFillAddress ]
+    }
+    
     @objc func hideKeyboard() {
-        if let tf = tfPassword.view as? UITextField {
-            tf.endEditing(true)
-        }
-        if let tf = tfUsername.view as? UITextField {
-            tf.endEditing(true)
-        }
-        if let tf = tfRegisterEmail.view as? UITextField {
-            tf.endEditing(true)
-        }
-        if let tf = tfRegisterUsername.view as? UITextField {
-            tf.endEditing(true)
-        }
-        if let tf = tfRegisterPassword.view as? UITextField {
-            tf.endEditing(true)
-        }
-        if let tf = tfVerifyCode.view as? UITextField {
-            tf.endEditing(true)
-        }
         
-        if let tf = tfFillRealName.view as? UITextField {
-            tf.endEditing(true)
-        }
-        if let tf = tfFillBirthday.view as? UITextField {
-            tf.endEditing(true)
-        }
-        if let tf = tfFillAddress.view as? UITextField {
-            tf.endEditing(true)
+        let tfList = getTextFieldList()
+        for node in tfList {
+            if let tf = node.view as? UITextField {
+                tf.endEditing(true)
+            }
         }
     }
     
@@ -138,7 +124,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         
         
         // for debug
-        self.lbRegisterProgress.addTarget(self, action: #selector(testFill), forControlEvents: ASControlNodeEvent.touchUpInside)
+        //self.lbRegisterProgress.addTarget(self, action: #selector(testFill), forControlEvents: ASControlNodeEvent.touchUpInside)
         
 //        lbTitle.addTarget(self, action: #selector(testErrorMsg), forControlEvents: ASControlNodeEvent.touchUpInside)
     }
@@ -155,7 +141,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
                let u = tfRegisterUsername.view as? LoginTextField,
                let p = tfRegisterPassword.view as? LoginTextField
             {
-                let sn = 57
+                let sn = 60
                 tf.text = "scsonic+sc\(sn)@gmail.com"
                 u.text = "sc\(sn)"
                 p.text = "sc\(sn)"
@@ -513,25 +499,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     // error views
     lazy var lbError:ASTextNode = getErrorView()
-
-//    class TextFieldWithPadding: UITextField {
-//        var textPadding = UIEdgeInsets(
-//            top: 0,
-//            left: 20,
-//            bottom: 0,
-//            right: 20
-//        )
-//
-//        override func textRect(forBounds bounds: CGRect) -> CGRect {
-//            let rect = super.textRect(forBounds: bounds)
-//            return rect.inset(by: textPadding)
-//        }
-//
-//        override func editingRect(forBounds bounds: CGRect) -> CGRect {
-//            let rect = super.editingRect(forBounds: bounds)
-//            return rect.inset(by: textPadding)
-//        }
-//    }
     
     func showAlert(title:String, msg:String) {
         let controller = UIAlertController(title: title, message: msg, preferredStyle: .alert)
@@ -556,21 +523,22 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         // block by btnLogin.isEnabled
         // todo: fix
         if ( account.isEmpty ) {
-            if let tf = self.tfUsername as? LoginTextField {
+            if let tf = self.tfUsername.view as? LoginTextField {
                 tf.warning(msg: L10n.notFinish)
             }
             return
         }
 
         if (passwd.isEmpty ){
-            if let tf = self.tfPassword as? LoginTextField {
+            if let tf = self.tfPassword.view as? LoginTextField {
                 tf.warning(msg: L10n.notFinish)
             }
-            return ;
+            return
         }
         
         self.btnLogin.isEnabled = false
         APIClient.shared.login(account: account, password: passwd) { (result) in
+            self.btnLogin.isEnabled = true ;
             DispatchQueue.main.async {
                 print("login using", account, " result", result)
                 switch (result) {
@@ -601,8 +569,25 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
 
     lazy var btnLogin: ASButtonNode = {
         let button = ButtonNode(type: .primary)
-        button.title = L10n.login
-        button.isEnabled = false
+        let title = L10n.login
+        
+        let attr_tint : [NSAttributedString.Key : Any] = [
+            NSAttributedString.Key.foregroundColor: PttColors.shark.color,
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1
+            )
+        ]
+        
+        button.setTitle(title, with: .preferredFont(forTextStyle: .caption1),
+                 with: PttColors.tangerine.color, for: .normal)
+        button.setBackgroundImage(UIImage.backgroundImg(from: .clear), for: UIControl.State.normal)
+        
+        button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.selected)
+        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr_tint), for: UIControl.State.selected)
+
+        // override the disable state
+        button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.disabled)
+        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr_tint), for: UIControl.State.disabled)
+        
         return button
     }()
     
@@ -669,7 +654,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
             NSAttributedString.Key.paragraphStyle: paragraphStyle
         ]
         
-        let title = "驗證碼已經發送到你的信箱，請在五分鐘內輸入驗證碼 bala bala"
+        let title = "驗證碼已經發送到你的信箱，請在五分鐘內輸入驗證碼 (註: 打到6個字時 會自動觸發)"
         label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
         return label
     }()
@@ -886,10 +871,7 @@ extension LoginViewController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         
-        let tfList = [tfUsername, tfPassword,
-                      tfRegisterUsername, tfRegisterEmail, tfRegisterPassword,
-                      tfFillRealName, tfFillBirthday, tfFillAddress
-        ]
+        let tfList = getTextFieldList()
         for node in tfList {
             if let tf = node.view as? LoginTextField {
                 if tf == textField {
@@ -910,9 +892,9 @@ extension LoginViewController {
            let username = usernameTextField.text,
            let password = passwordTextField.text,
            !username.isEmpty && !password.isEmpty {
-            btnLogin.isEnabled = true
+            btnLogin.isSelected = true
         } else {
-            btnLogin.isEnabled = false
+            btnLogin.isSelected = false
         }
         
         if let tfEmail = tfRegisterEmail.view as? UITextField,
@@ -923,21 +905,16 @@ extension LoginViewController {
            let password = tfPass.text,
            !email.isEmpty && !username.isEmpty && !password.isEmpty {
             btnAttemptRegister.isSelected = true
-            print("set att reg = isSelected", btnAttemptRegister.isSelected)
         }
         else {
             btnAttemptRegister.isSelected = false
-            print("set att reg = is false", btnAttemptRegister.isSelected)
         }
         
-        
-        print("textfield is verify code:", textField, tfVerifyCode.view)
         if textField == tfVerifyCode.view {
-            print("is same")
             // todo: modify the text length
             if textField.text?.count == 6 {
                 // start the register progress!!
-                print("start register !!!")
+                print("start the register process with text.count = 6")
                 self.onVerifyCodeFill()
             }
         }

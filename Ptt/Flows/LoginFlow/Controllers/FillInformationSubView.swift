@@ -58,7 +58,11 @@ extension LoginViewController {
     
     @objc func openAccountPress(){
         print("open account press")
-        showAlert(title: "NOT YET", msg: "Not Implement Yet -_-")
+        showAlert(title: "施工中", msg: "測試中未完成，但你剛剛的帳號可以登入了，請試試看")
+        (tfUsername.view as! LoginTextField).text = (tfRegisterUsername.view as! LoginTextField).text
+        (tfPassword.view as! LoginTextField).text = (tfRegisterPassword.view as! LoginTextField).text
+        toggleState(UILoginState.Login)
+        textFieldDidChange(textField: tfUsername.view as! UITextField)
     }
     
     func toggleFillInformationView(isHidden:Bool){
