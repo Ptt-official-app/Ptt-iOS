@@ -17,8 +17,8 @@ struct GlobalAppearance {
             let attrs = [NSAttributedString.Key.foregroundColor: UIColor.white]
             UINavigationBar.appearance().titleTextAttributes = attrs
             if #available(iOS 11.0, *) {
-                UINavigationBar.appearance().barTintColor = UIColor(named: "blackColor-23-23-23")
-                UITabBar.appearance().barTintColor = UIColor(named: "blackColor-23-23-23")
+                UINavigationBar.appearance().barTintColor = PttColors.codGray.color
+                UITabBar.appearance().barTintColor = PttColors.codGray.color
                 UINavigationBar.appearance().largeTitleTextAttributes = attrs
             } else {
                 UINavigationBar.appearance().barTintColor = UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0)
@@ -30,7 +30,7 @@ struct GlobalAppearance {
 
     static var tintColor : UIColor? {
         if #available(iOS 11.0, *) {
-            return UIColor(named: "tintColor-255-159-10")
+            return PttColors.tangerine.color
         } else {
             return UIColor(red: 255/255, green: 159/255, blue: 10/255, alpha: 1.0)
         }
@@ -38,7 +38,7 @@ struct GlobalAppearance {
 
     static var backgroundColor : UIColor? {
         if #available(iOS 11.0, *) {
-            return UIColor(named: "blackColor-23-23-23")
+            return PttColors.codGray.color
         } else {
             return UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0)
         }

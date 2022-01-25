@@ -28,7 +28,7 @@ final class AppearanceModeViewController: UITableViewController, FullscreenSwipe
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = NSLocalizedString("Appearance Mode", comment: "")
+        title = L10n.appearanceMode
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = GlobalAppearance.backgroundColor
         tableView.register(SettingsTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
@@ -51,7 +51,7 @@ final class AppearanceModeViewController: UITableViewController, FullscreenSwipe
         guard let sectionType = AppearanceModeSection(rawValue: section) else { return nil }
         switch sectionType {
         case .customization:
-            return NSLocalizedString("Customization Mode", comment: "")
+            return L10n.customizationMode
         default:
             return nil
         }
@@ -77,7 +77,7 @@ final class AppearanceModeViewController: UITableViewController, FullscreenSwipe
             guard let rowType = AppearanceModeSystemRow(rawValue: indexPath.row) else { return cell }
             switch rowType {
             case .system:
-                cell.textLabel?.text = NSLocalizedString("Use System Default", comment: "")
+                cell.textLabel?.text = L10n.useSystemDefault
                 let switchControl = UISwitch()
                 switchControl.onTintColor = GlobalAppearance.tintColor
                 switchControl.isOn = (UserDefaultsManager.appearanceMode() == .system)
@@ -89,13 +89,13 @@ final class AppearanceModeViewController: UITableViewController, FullscreenSwipe
             guard let rowType = AppearanceModeCustomizationRow(rawValue: indexPath.row) else { return cell }
             switch rowType {
             case .light:
-                cell.textLabel?.text = NSLocalizedString("Light", comment: "")
+                cell.textLabel?.text = L10n.light
                 if UserDefaultsManager.appearanceMode() == .light {
                     cell.accessoryType = .checkmark
                 }
                 updateColor(of: cell, for: .light)
             case .dark:
-                cell.textLabel?.text = NSLocalizedString("Dark", comment: "")
+                cell.textLabel?.text = L10n.dark
                 if UserDefaultsManager.appearanceMode() == .dark {
                     cell.accessoryType = .checkmark
                 }

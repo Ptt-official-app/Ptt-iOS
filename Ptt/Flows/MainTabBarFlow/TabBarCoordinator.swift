@@ -26,7 +26,7 @@ class TabBarCoordinator: BaseCoordinator, TabBarCoordinatorProtocol {
     
     override func start() {
         // Let's define which pages do we want to add into tab bar
-        let pages: [TabBarPage] = [.favorite, .fbPage, .settings, .popular]
+        let pages: [TabBarPage] = [.favorite, .fbPage, .popularArticles, .settings, .popular]
             .sorted(by: { $0.pageOrderNumber() < $1.pageOrderNumber() })
         // Initialization of ViewControllers or these pages
         let controllers: [UINavigationController] = pages.map({ getTabController($0) })
@@ -96,8 +96,11 @@ private extension TabBarCoordinator {
             let popularCoordinator = self.coordinatorFactory.makePopularBoardsCoordinator(navigationController: navController)
             self.addDependency(popularCoordinator)
             popularCoordinator.start()
+        case .popularArticles:
+            let coordinator = self.coordinatorFactory.makePopularArticleCoordinator(navigationController: navController)
+            self.addDependency(coordinator)
+            coordinator.start()
         }
-        
         return navController
     }
 }

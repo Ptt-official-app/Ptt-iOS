@@ -12,7 +12,8 @@ import UIKit
 final class SceneFactory: FavoriteSceneFactoryProtocol,
                           LoginSceneFactoryProtocol,
                           PopularBoardsSceneFactoryProtocol,
-                          FBPageSceneFactoryProtocol {
+                          FBPageSceneFactoryProtocol,
+                          PopularArticlesSceneFactoryProtocol {
     
     func makeLoginView() -> LoginView {
         let loginViewController = LoginViewController()
@@ -32,6 +33,14 @@ final class SceneFactory: FavoriteSceneFactoryProtocol,
     func makePopularBoardsView() -> PopularBoardsView {
         let popularBoardsViewController = PopularBoardsViewController()
         return popularBoardsViewController
+    }
+
+    func makePopularArticlesView() -> PopularArticlesView {
+        let vc = PopularArticlesViewController()
+        let viewModel = PopularArticlesViewModel(apiClient: APIClient.shared,
+                                                 uiDelegate: vc)
+        vc.setup(viewModel: viewModel)
+        return vc
     }
         
     func makeBoardView(withBoardName boardName: String) -> BoardView {

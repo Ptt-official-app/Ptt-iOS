@@ -28,7 +28,7 @@ final class SettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = NSLocalizedString("Settings", comment: "")
+        title = L10n.settings
         if #available(iOS 11.0, *) {
             navigationController?.navigationBar.prefersLargeTitles = true
         }
@@ -71,7 +71,7 @@ final class SettingsViewController: UITableViewController {
         case .main:
             return nil
         case .about:
-            return NSLocalizedString("About This Software", comment: "")
+            return L10n.aboutThisSoftware
         }
     }
 
@@ -95,7 +95,7 @@ final class SettingsViewController: UITableViewController {
             guard let rowType = SettingsMainRow(rawValue: indexPath.row) else { return cell }
             switch rowType {
             case .appearance:
-                var text = NSLocalizedString("Appearance Mode", comment: "")
+                var text = L10n.appearanceMode
                 if #available(iOS 13.0, *) {
                     cell.type = .disclosure
                 } else {
@@ -105,28 +105,28 @@ final class SettingsViewController: UITableViewController {
                 cell.textLabel?.text = text
                 switch UserDefaultsManager.appearanceMode() {
                 case .system:
-                    cell.detailTextLabel?.text = NSLocalizedString("System Default", comment: "")
+                    cell.detailTextLabel?.text = L10n.systemDefault
                 case .light:
-                    cell.detailTextLabel?.text = NSLocalizedString("Light", comment: "")
+                    cell.detailTextLabel?.text = L10n.light
                 case .dark:
-                    cell.detailTextLabel?.text = NSLocalizedString("Dark", comment: "")
+                    cell.detailTextLabel?.text = L10n.dark
                 }
             case .address:
-                cell.textLabel?.text = NSLocalizedString("Site Address", comment: "")
+                cell.textLabel?.text = L10n.siteAddress
                 cell.detailTextLabel?.text = UserDefaultsManager.addressForDisplay
                 cell.type = .disclosure
             case .cache:
-                cell.textLabel?.text = NSLocalizedString("Clear Cache", comment: "")
+                cell.textLabel?.text = L10n.clearCache
                 cell.type = .action
             }
         case .about:
             guard let rowType = SettingsAboutRow(rawValue: indexPath.row) else { return cell }
             switch rowType {
             case .license:
-                cell.textLabel?.text = NSLocalizedString("Third Party License", comment: "")
+                cell.textLabel?.text = L10n.thirdPartyLicense
                 cell.type = .disclosure
             case .version:
-                cell.textLabel?.text = NSLocalizedString("Version", comment: "")
+                cell.textLabel?.text = L10n.version
                 if let bundle = Bundle.main.infoDictionary, let version = bundle["CFBundleShortVersionString"] as? String, let build = bundle["CFBundleVersion"] as? String {
                     cell.detailTextLabel?.text = "\(version) (\(build))"
                 }
@@ -149,28 +149,28 @@ final class SettingsViewController: UITableViewController {
                     let appearanceModeViewController = AppearanceModeViewController(style: .insetGrouped)
                     show(appearanceModeViewController, sender: self)
                 } else {
-                    let alert = UIAlertController(title: nil, message: NSLocalizedString("Changing this value requires iOS 13 or later.", comment: ""), preferredStyle: .alert)
-                    let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
+                    let alert = UIAlertController(title: nil, message: L10n.changingThisValueRequiresIOS13OrLater, preferredStyle: .alert)
+                    let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
                     alert.addAction(confirm)
                     present(alert, animated: true, completion: nil)
                 }
             case .address:
                 tableView.deselectRow(at: indexPath, animated: true)
-                let prompt = UIAlertController(title: NSLocalizedString("Change Site Address", comment: ""),
-                                              message: NSLocalizedString("Leave it blank for default value", comment: ""),
+                let prompt = UIAlertController(title: L10n.changeSiteAddress,
+                                               message: L10n.leaveItBlankForDefaultValue,
                                               preferredStyle: .alert)
                 prompt.addTextField { (textField) in
                     textField.placeholder = UserDefaultsManager.addressDefaultForDisplay
                 }
-                let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default) { (action) in
+                let confirm = UIAlertAction(title: L10n.confirm, style: .default) { (action) in
                     guard var text = prompt.textFields?.first?.text else { return }
                     if text == "" {
                         text = UserDefaultsManager.addressDefaultForDisplay
                     }
                     let success = UserDefaultsManager.set(address: text)
                     if !success {
-                        let alert = UIAlertController(title: NSLocalizedString("Wrong Format", comment: ""), message: nil, preferredStyle: .alert)
-                        let confirm = UIAlertAction(title: NSLocalizedString("Confirm", comment: ""), style: .default, handler: nil)
+                        let alert = UIAlertController(title: L10n.wrongFormat, message: nil, preferredStyle: .alert)
+                        let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
                         alert.addAction(confirm)
                         self.present(alert, animated: true, completion: nil)
                         return
@@ -179,15 +179,15 @@ final class SettingsViewController: UITableViewController {
                                               section: SettingsSection.main.rawValue)
                     tableView.reloadRows(at: [indexPath], with: .automatic)
                 }
-                let cancel = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil)
+                let cancel = UIAlertAction(title: L10n.cancel, style: .cancel, handler: nil)
                 prompt.addAction(confirm)
                 prompt.addAction(cancel)
                 present(prompt, animated: true, completion: nil)
                 break
             case .cache:
                 tableView.deselectRow(at: indexPath, animated: true)
-                let alert = UIAlertController(title: NSLocalizedString("Are you sure to clear cache?", comment: ""), message: nil, preferredStyle: .alert)
-                let confirm = UIAlertAction(title: NSLocalizedString("Clear", comment: ""), style: .destructive) { (action) in
+                let alert = UIAlertController(title: L10n.areYouSureToClearCache, message: nil, preferredStyle: .alert)
+                let confirm = UIAlertAction(title: L10n.clear, style: .destructive) { (action) in
                     HTTPCookieStorage.shared.removeCookies(since: .distantPast)
                     // Remove URL cache (Library/Caches/{bundle_id}/fsCachedData/*)
                     URLCache.shared.removeAllCachedResponses()
@@ -199,7 +199,7 @@ final class SettingsViewController: UITableViewController {
                         store.removeData(ofTypes: dataType, for: records, completionHandler: {})
                     }
                 }
-                let cancel = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil)
+                let cancel = UIAlertAction(title: L10n.cancel, style: .cancel, handler: nil)
                 alert.addAction(confirm)
                 alert.addAction(cancel)
                 present(alert, animated: true, completion: nil)
@@ -252,7 +252,7 @@ final class SettingsTableViewCell: UITableViewCell {
         super.init(style: .value1, reuseIdentifier: reuseIdentifier)
 
         if #available(iOS 11.0, *) {
-            backgroundColor = UIColor(named: "blackColor-28-28-31")
+            backgroundColor = PttColors.shark.color
         } else {
             backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 31/255, alpha: 1.0)
         }
@@ -266,8 +266,8 @@ final class SettingsTableViewCell: UITableViewCell {
             detailTextLabel?.textColor = .clear
         case false:
             if #available(iOS 11.0, *) {
-                textLabel?.textColor = UIColor(named: "textColor-240-240-247")
-                detailTextLabel?.textColor = UIColor(named: "textColorGray")
+                textLabel?.textColor = PttColors.paleGrey.color
+                detailTextLabel?.textColor = .systemGray
             } else {
                 textLabel?.textColor = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
                 detailTextLabel?.textColor = .systemGray
