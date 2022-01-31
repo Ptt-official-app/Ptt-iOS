@@ -73,8 +73,6 @@ class LoginTextField : UITextField {
     }
     
     init(type: TextFieldType) {
-        // TODO: may not work for init in ASDisplay note
-        print("May not work with ASDisplayNode.init")
         super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         self.type = type
         _init()

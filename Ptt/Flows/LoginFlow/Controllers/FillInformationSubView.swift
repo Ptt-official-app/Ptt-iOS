@@ -74,4 +74,89 @@ extension LoginViewController {
         btnOpenAccount.isHidden = isHidden
     }
 
+    
+    func getlbFillTitle() -> ASTextNode {
+        let label = ASTextNode()
+        let paragraphStyle = NSMutableParagraphStyle.init()
+        paragraphStyle.alignment = .left
+        paragraphStyle.paragraphSpacing = 2
+        paragraphStyle.lineSpacing = 0
+        let attributes = [
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.subheadline),
+            NSAttributedString.Key.foregroundColor: self.text_color,
+            NSAttributedString.Key.paragraphStyle: paragraphStyle
+        ]
+        
+        let title = "帳號設定成功！\n請完成以下資訊以開通帳號："
+        label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
+        return label
+    }
+    
+    func gettfFillRealName() -> ASDisplayNode {
+        return ASDisplayNode.init { () -> UIView in
+            var tf = LoginTextField(type: TextFieldType.Email)
+            tf.title = NSLocalizedString("真實姓名", comment: "")
+            
+            tf.delegate = self
+            tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+            return tf
+        }
+    }
+        
+    func gettfFillBirthday() -> ASDisplayNode {
+        return ASDisplayNode.init { () -> UIView in
+            var tf = LoginTextField(type: TextFieldType.Email)
+            tf.title = NSLocalizedString("出生年", comment: "")
+            
+            tf.delegate = self
+            tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+            return tf
+        }
+    }
+    
+    func gettfFillAddress() -> ASDisplayNode {
+        return ASDisplayNode.init { () -> UIView in
+            var tf = LoginTextField(type: TextFieldType.Email)
+            tf.title = NSLocalizedString("聯絡地址", comment: "")
+            
+            tf.delegate = self
+            tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+            return tf
+        }
+    }
+    
+    func getlbNeedReason() -> ASButtonNode {
+        let button = ASButtonNode()
+        let title = "為何需要基本資料?"
+    
+        button.contentHorizontalAlignment = .left
+        let attr = [
+            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
+            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
+        ] as [NSAttributedString.Key : Any]
+        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+        
+        button.addTarget(self, action: #selector(onNotReceive), forControlEvents: ASControlNodeEvent.touchUpInside)
+        
+        return button
+    }
+    
+    func getbtnOpenAccount() -> ASButtonNode {
+        let button = ButtonNode(type: .primary)
+        let title = "開通帳號"
+        
+        let attr = [
+            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
+            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
+        ] as [NSAttributedString.Key : Any]
+        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+        
+        
+        button.addTarget(self, action: #selector(openAccountPress), forControlEvents: ASControlNodeEvent.touchUpInside)
+        
+        return button
+    }
+    
 }

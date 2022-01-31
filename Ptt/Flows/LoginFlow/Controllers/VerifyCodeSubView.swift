@@ -119,5 +119,95 @@ extension LoginViewController {
         print("not Receive")
         showAlert(title: "TEMP", msg: "NOT IMPLEMENT YET QQ")
     }
+    
+    func getlbVerifyCodeTitle() -> ASTextNode {
+        let label = ASTextNode()
+        let paragraphStyle = NSMutableParagraphStyle.init()
+        paragraphStyle.alignment = .left
+        paragraphStyle.paragraphSpacing = 2
+        paragraphStyle.lineSpacing = 0
+        let attributes = [
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.subheadline), //UIFont.boldSystemFont(ofSize: 24),
+            NSAttributedString.Key.foregroundColor: self.text_color,
+            NSAttributedString.Key.paragraphStyle: paragraphStyle
+        ]
+        
+        let title = "驗證碼已經發送到你的信箱，請在五分鐘內輸入驗證碼 (註: 打到6個字時 會自動觸發)"
+        label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
+        return label
+    }
+    
+    
+    func gettfVerifyCode() -> ASDisplayNode {
+        return ASDisplayNode.init { () -> UIView in
+            let tf = LoginTextField(type: TextFieldType.Username)
+            tf.title = "驗證碼"
+            
+            tf.keyboardType = .numberPad
+            tf.delegate = self
+            tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+            return tf
+        }
+    }
+    
+    func getlbVerifyCodeResponse() -> ASTextNode {
+        let label = ASTextNode()
+        let paragraphStyle = NSMutableParagraphStyle.init()
+        paragraphStyle.alignment = .center
+        paragraphStyle.paragraphSpacing = 2
+        paragraphStyle.lineSpacing = 0
+        let attributes = [
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
+            NSAttributedString.Key.foregroundColor: PttColors.tangerine.color,
+            NSAttributedString.Key.paragraphStyle: paragraphStyle
+        ]
+        
+        label.attributedText = NSAttributedString.init(string: "", attributes: attributes)
+        return label
+    }
+    
+    func getlbVerifyCodeTimer() -> ASTextNode {
+        let label = ASTextNode()
+        let paragraphStyle = NSMutableParagraphStyle.init()
+        paragraphStyle.alignment = .right
+        paragraphStyle.paragraphSpacing = 2
+        paragraphStyle.lineSpacing = 0
+        let attributes = [
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
+            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
+            NSAttributedString.Key.paragraphStyle: paragraphStyle
+        ]
+        
+        let title = "00:00"
+        label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
+        return label
+    }
+    
+    
+    func getbtnVerifyCodeBack() -> ASButtonNode {
+        let button = ButtonNode(type: .secondary)
+        button.title = "回到帳密設定"
+        
+        button.addTarget(self, action: #selector(onVerifyCodeBack), forControlEvents: ASControlNodeEvent.touchUpInside)
+        
+        return button
+    }
+    
+    func getbtnVerifyCodeNotReceive() -> ASButtonNode {
+        let button = ASButtonNode()
+        let title = "沒收到驗證碼?"
+        
+        let attr = [
+            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
+            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
+        ] as [NSAttributedString.Key : Any]
+        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+        
+        
+        button.addTarget(self, action: #selector(onNotReceive), forControlEvents: ASControlNodeEvent.touchUpInside)
+        
+        return button
+    }
 }
 

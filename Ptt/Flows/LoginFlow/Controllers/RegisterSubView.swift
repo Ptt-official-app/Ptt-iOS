@@ -36,11 +36,11 @@ extension LoginViewController {
         tfRegisterPassword.style.preferredSize = CGSize(width: global_width, height: 30)
         btnAttemptRegister.style.preferredSize = CGSize(width: global_width, height: 30)
         btnRegisterUserAgreement.style.preferredSize = CGSize(width: global_width, height: 30)
-        self.registerNode.addSubnode(tfRegisterEmail)
-        self.registerNode.addSubnode(tfRegisterUsername)
-        self.registerNode.addSubnode(tfRegisterPassword)
-        self.registerNode.addSubnode(btnAttemptRegister)
-        self.registerNode.addSubnode(btnRegisterUserAgreement)
+        self.node.addSubnode(tfRegisterEmail)
+        self.node.addSubnode(tfRegisterUsername)
+        self.node.addSubnode(tfRegisterPassword)
+        self.node.addSubnode(btnAttemptRegister)
+        self.node.addSubnode(btnRegisterUserAgreement)
         
     }
     func toggleRegisterView(isHidden:Bool){
@@ -137,4 +137,85 @@ extension LoginViewController {
     func onAttmeptRegisterSuccess(token:String) {
     }
     
+    func gettfRegisterEmail() -> ASDisplayNode {
+        return ASDisplayNode.init { () -> UIView in
+            var tf = LoginTextField(type: TextFieldType.Email)
+            tf.title = NSLocalizedString("User Email", comment: "")
+            
+            tf.returnKeyType = .next
+            tf.delegate = self
+            tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+            return tf
+        }
+    }
+    
+    func gettfRegisterUsername() -> ASDisplayNode {
+        return ASDisplayNode.init { () -> UIView in
+            var tf = LoginTextField(type: TextFieldType.Username)
+            tf.title = L10n.username
+            
+            tf.returnKeyType = .next
+            tf.delegate = self
+            tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+            return tf
+        }
+    }
+    
+    func gettfRegisterPassword() -> ASDisplayNode {
+        return ASDisplayNode.init { () -> UIView in
+            var tf = LoginTextField(type: TextFieldType.Password)
+            tf.title = L10n.password
+            
+            tf.returnKeyType = .send
+            
+            tf.delegate = self
+            tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+            return tf
+        }
+    }
+    
+    func getbtnAttemptRegister() -> ASButtonNode {
+        let button = ButtonNode(type: .primary)
+        let title = "下一步"
+        
+        let attr_tint : [NSAttributedString.Key : Any] = [
+            NSAttributedString.Key.foregroundColor: PttColors.shark.color,
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1
+            )
+        ]
+        
+        button.setTitle(title, with: .preferredFont(forTextStyle: .caption1),
+                 with: PttColors.tangerine.color, for: .normal)
+        button.setBackgroundImage(UIImage.backgroundImg(from: .clear), for: UIControl.State.normal)
+        
+        button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.selected)
+        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr_tint), for: UIControl.State.selected)
+
+        // override the disable state
+        button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.disabled)
+        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr_tint), for: UIControl.State.disabled)
+        
+        
+        button.addTarget(self, action: #selector(self.btnAttemptRegisterPress), forControlEvents: ASControlNodeEvent.touchUpInside)
+
+        return button
+    }
+    
+    func getbtnRegisterUserAgreement() -> ASButtonNode {
+        let button = ASButtonNode()
+        let title = NSLocalizedString("AgreeWhenYouUseApp", comment:"")
+        
+        let attr = [
+            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
+            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
+        ] as [NSAttributedString.Key : Any]
+        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+        
+        button.addTarget(self, action: #selector(userAgreementPress), forControlEvents: ASControlNodeEvent.touchUpInside)
+        
+        return button
+    }
+    
+
 }

@@ -26,12 +26,9 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     }
 
     
-    private let rootNode = ASDisplayNode()
+    //private let rootNode =
     
     var scrollNode = ASScrollNode()
-    
-    var loginNode = ASDisplayNode()
-    var registerNode = ASDisplayNode()
     
     var contentStackSpec:ASStackLayoutSpec?
     var contentCenterLayoutSpec:ASCenterLayoutSpec?
@@ -82,8 +79,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
                                                    children: [lbTitle, funcStackSpec!, switchLayoutSpec])
 
         self.scrollNode.addSubnode(self.lbTitle)
-        self.scrollNode.addSubnode(self.loginNode)
-        self.scrollNode.addSubnode(self.registerNode)
         
         self.scrollNode.addSubnode(self.btnTypeLogin)
         self.scrollNode.addSubnode(self.btnTypeRegister)
@@ -118,19 +113,10 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         let tap = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         self.node.view.addGestureRecognizer(tap)
         
-        self.btnLogin.addTarget(self, action: #selector(loginPress), forControlEvents: ASControlNodeEvent.touchUpInside)
-        self.btnUserAgreement.addTarget(self, action: #selector(userAgreementPress), forControlEvents: ASControlNodeEvent.touchUpInside)
-        self.btnForget.addTarget(self, action: #selector(forgetPress), forControlEvents: ASControlNodeEvent.touchUpInside)
-        
-        
-        // for debug
-        //self.lbRegisterProgress.addTarget(self, action: #selector(testFill), forControlEvents: ASControlNodeEvent.touchUpInside)
-        
-//        lbTitle.addTarget(self, action: #selector(testErrorMsg), forControlEvents: ASControlNodeEvent.touchUpInside)
+
     }
     
     @objc func testErrorMsg(){
-        
         displayError(message: "TEST AAA BBC LDJ:LAKJ DD")
         toggleState(UILoginState.Error)
     }
@@ -205,18 +191,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         }
     }
     
-    
-    func justTest(){
-        print("just test new api")
-        APIClient.shared.attemptRegister(account: "sc30", email: "scsonic+sc30@gmail.com") {result in
-            print("@@ account already exist=", type(of: result), result)
-            
-            APIClient.shared.attemptRegister(account: "scsonic", email: "scsonic@gmail.com") {result in
-                print("@@ account can be use=", type(of: result), result)
-            }
-        }
-    }
-    
     override func viewDidLoad() {
         print("login view did load") ;
         self.bind_event()
@@ -224,8 +198,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     }
 
     override init() {
-        super.init(node: rootNode)
-        self.rootNode.backgroundColor = GlobalAppearance.backgroundColor // self.blackColor
+        super.init(node: ASDisplayNode())
+        self.node.backgroundColor = GlobalAppearance.backgroundColor
         
         let stack = self.init_layout()
         
@@ -377,6 +351,12 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         return label
     }()
     
+    lazy var vLine:ASDisplayNode = {
+        let line = ASDisplayNode()
+        line.backgroundColor = PttColors.slateGrey.color
+        return line
+    }()
+    
     lazy var lbTitle:ASTextNode =  {
         let label = ASTextNode()
         let paragraphStyle = NSMutableParagraphStyle.init()
@@ -396,162 +376,21 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     
     
     // Register views
-    lazy var tfRegisterEmail = ASDisplayNode.init { () -> UIView in
-        var tf = LoginTextField(type: TextFieldType.Email)
-        tf.title = NSLocalizedString("User Email", comment: "")
-        
-        tf.returnKeyType = .next
-        tf.delegate = self
-        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
-        return tf
-    }
-    
-    lazy var tfRegisterUsername = ASDisplayNode.init { () -> UIView in
-        var tf = LoginTextField(type: TextFieldType.Username)
-        tf.title = L10n.username
-        
-        tf.returnKeyType = .next
-        tf.delegate = self
-        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
-        return tf
-    }
-    
-    lazy var tfRegisterPassword = ASDisplayNode.init { () -> UIView in
-        var tf = LoginTextField(type: TextFieldType.Password)
-        tf.title = L10n.password
-        
-        tf.returnKeyType = .send
-        
-        tf.delegate = self
-        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
-        return tf
-    }
-    
-    lazy var btnAttemptRegister: ASButtonNode = {
-        let button = ButtonNode(type: .primary)
-        let title = "下一步"
-        
-        let attr_tint : [NSAttributedString.Key : Any] = [
-            NSAttributedString.Key.foregroundColor: PttColors.shark.color,
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1
-            )
-        ]
-        
-        button.setTitle(title, with: .preferredFont(forTextStyle: .caption1),
-                 with: PttColors.tangerine.color, for: .normal)
-        button.setBackgroundImage(UIImage.backgroundImg(from: .clear), for: UIControl.State.normal)
-        
-        button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.selected)
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr_tint), for: UIControl.State.selected)
-
-        // override the disable state
-        button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.disabled)
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr_tint), for: UIControl.State.disabled)
-        
-        
-        button.addTarget(self, action: #selector(self.btnAttemptRegisterPress), forControlEvents: ASControlNodeEvent.touchUpInside)
-
-        return button
-    }()
-    
-    lazy var btnRegisterUserAgreement:ASButtonNode = {
-        let button = ASButtonNode()
-        let title = NSLocalizedString("AgreeWhenYouUseApp", comment:"")
-        
-        let attr = [
-            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
-            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
-        ] as [NSAttributedString.Key : Any]
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
-        
-        button.addTarget(self, action: #selector(userAgreementPress), forControlEvents: ASControlNodeEvent.touchUpInside)
-        
-        return button
-    }()
-    
+    lazy var tfRegisterEmail = gettfRegisterEmail()
+    lazy var tfRegisterUsername = gettfRegisterUsername()
+    lazy var tfRegisterPassword = gettfRegisterPassword()
+    lazy var btnAttemptRegister: ASButtonNode = getbtnAttemptRegister()
+    lazy var btnRegisterUserAgreement:ASButtonNode = getbtnRegisterUserAgreement()
     
     // Login Views
-    lazy var tfUsername = ASDisplayNode.init { () -> UIView in
-        var textField:LoginTextField = LoginTextField(type: .Username)
-        textField.title = L10n.username
-        textField.delegate = self
-        textField.returnKeyType = .next
-        
-        textField.keyboardType = .asciiCapable
-        
-        textField.addTarget(self, action: #selector(self.textFieldDidChange(textField:)), for: .editingChanged)
-        return textField
-    }
-    
-    lazy var tfPassword = ASDisplayNode.init { () -> UIView in
-        var textField:LoginTextField = LoginTextField(type: .Password)
-
-        textField.title = L10n.password
-        
-        textField.isSecureTextEntry = true
-        textField.returnKeyType = .send
-        
-        textField.delegate = self
-        textField.addTarget(self, action: #selector(self.textFieldDidChange(textField:)), for: .editingChanged)
-        return textField
-    }
+    lazy var tfUsername = gettfUsername()
+    lazy var tfPassword = gettfPassword()
+    lazy var btnLogin: ASButtonNode = getbtnLogin()
+    lazy var btnUserAgreement:ASButtonNode = getbtnUserAgreement()
+    lazy var btnForget: ASButtonNode = getbtnForget()
     
     // error views
     lazy var lbError:ASTextNode = getErrorView()
-    
-    func showAlert(title:String, msg:String) {
-        let controller = UIAlertController(title: title, message: msg, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
-        controller.addAction(okAction)
-        present(controller, animated: true, completion: nil)
-    }
-    
-    @objc func loginPress() {
-        print("login press")
-        self.hideKeyboard()
-        var account = ""
-        var passwd = ""
-        
-        if let tf = self.tfUsername.view as? UITextField, let tfText = tf.text {
-            account = tfText
-        }
-        if let tf = self.tfPassword.view as? UITextField, let tfText = tf.text {
-            passwd = tfText
-        }
-  
-        // block by btnLogin.isEnabled
-        // todo: fix
-        if ( account.isEmpty ) {
-            if let tf = self.tfUsername.view as? LoginTextField {
-                tf.warning(msg: L10n.notFinish)
-            }
-            return
-        }
-
-        if (passwd.isEmpty ){
-            if let tf = self.tfPassword.view as? LoginTextField {
-                tf.warning(msg: L10n.notFinish)
-            }
-            return
-        }
-        
-        self.btnLogin.isEnabled = false
-        APIClient.shared.login(account: account, password: passwd) { (result) in
-            self.btnLogin.isEnabled = true ;
-            DispatchQueue.main.async {
-                print("login using", account, " result", result)
-                switch (result) {
-                case .failure(let error):
-                    print(error)
-                    self.showAlert(title: L10n.error, msg: L10n.login + L10n.error + error.message)
-                case .success(let token):
-                    print(token.access_token)
-                    self.onLoginSuccess(token: token.access_token)
-                }
-            }
-        }
-    }
     
     func onLoginSuccess(token:String) {
         _ = LoginKeyChainItem.shared.saveToken(token)
@@ -567,251 +406,22 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         showAlert(title: "XD", msg: "NOT IMPLEMENT YET -_-")
     }
 
-    lazy var btnLogin: ASButtonNode = {
-        let button = ButtonNode(type: .primary)
-        let title = L10n.login
-        
-        let attr_tint : [NSAttributedString.Key : Any] = [
-            NSAttributedString.Key.foregroundColor: PttColors.shark.color,
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1
-            )
-        ]
-        
-        button.setTitle(title, with: .preferredFont(forTextStyle: .caption1),
-                 with: PttColors.tangerine.color, for: .normal)
-        button.setBackgroundImage(UIImage.backgroundImg(from: .clear), for: UIControl.State.normal)
-        
-        button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.selected)
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr_tint), for: UIControl.State.selected)
-
-        // override the disable state
-        button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.disabled)
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr_tint), for: UIControl.State.disabled)
-        
-        return button
-    }()
-    
-    lazy var btnUserAgreement:ASButtonNode = {
-        let button = ASButtonNode()
-        let title = NSLocalizedString("AgreeWhenYouUseApp", comment:"")
-        
-        let attr = [
-            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
-            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
-        ] as [NSAttributedString.Key : Any]
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
-        
-        return button
-    }()
-    
-    lazy var vLine:ASDisplayNode = {
-        let line = ASDisplayNode()
-        line.backgroundColor = PttColors.slateGrey.color
-        return line
-    }()
-    
-    lazy var btnForget: ASButtonNode = {
-        let button = ButtonNode(type: .secondary)
-        button.title = L10n.forget
-        return button
-    }()
-    
-    var text_color : UIColor {
-        if #available(iOS 11.0, *) {
-            return PttColors.paleGrey.color
-        } else {
-            return UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
-        }
-    }
-    
-    var textfield_backgroundcolor : UIColor {
-        if #available(iOS 11.0, *) {
-            return PttColors.shark.color
-        } else {
-            return UIColor(red: 28/255, green: 28/255, blue: 31/255, alpha: 1.0)
-        }
-    }
-    
-    var tint_color : UIColor {
-        if #available(iOS 11.0, *) {
-            return PttColors.tangerine.color // UIColor(named: "tintColor-255-159-10")!
-        } else {
-            return UIColor(red: 255/255, green: 159/255, blue: 10/255, alpha: 1.0)
-        }
-    }
-    
     // verify code views:
-    lazy var lbVerifyCodeTitle:ASTextNode =  {
-        let label = ASTextNode()
-        let paragraphStyle = NSMutableParagraphStyle.init()
-        paragraphStyle.alignment = .left
-        paragraphStyle.paragraphSpacing = 2
-        paragraphStyle.lineSpacing = 0
-        let attributes = [
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.subheadline), //UIFont.boldSystemFont(ofSize: 24),
-            NSAttributedString.Key.foregroundColor: self.text_color,
-            NSAttributedString.Key.paragraphStyle: paragraphStyle
-        ]
-        
-        let title = "驗證碼已經發送到你的信箱，請在五分鐘內輸入驗證碼 (註: 打到6個字時 會自動觸發)"
-        label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
-        return label
-    }()
-    
-    lazy var tfVerifyCode = ASDisplayNode.init { () -> UIView in
-        var tf = LoginTextField(type: TextFieldType.Username)
-        tf.title = "驗證碼"
-        
-        tf.keyboardType = .numberPad
-        tf.delegate = self
-        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
-        return tf
-    }
-    
-    lazy var lbVerifyCodeResponse:ASTextNode =  {
-        let label = ASTextNode()
-        let paragraphStyle = NSMutableParagraphStyle.init()
-        paragraphStyle.alignment = .center
-        paragraphStyle.paragraphSpacing = 2
-        paragraphStyle.lineSpacing = 0
-        let attributes = [
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
-            NSAttributedString.Key.foregroundColor: PttColors.tangerine.color,
-            NSAttributedString.Key.paragraphStyle: paragraphStyle
-        ]
-        
-        label.attributedText = NSAttributedString.init(string: "", attributes: attributes)
-        return label
-    }()
-    
-    lazy var lbVerifyCodeTimer:ASTextNode =  {
-        let label = ASTextNode()
-        let paragraphStyle = NSMutableParagraphStyle.init()
-        paragraphStyle.alignment = .right
-        paragraphStyle.paragraphSpacing = 2
-        paragraphStyle.lineSpacing = 0
-        let attributes = [
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
-            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
-            NSAttributedString.Key.paragraphStyle: paragraphStyle
-        ]
-        
-        let title = "00:00"
-        label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
-        return label
-    }()
-    
-    
-    lazy var btnVerifyCodeBack: ASButtonNode = {
-        let button = ButtonNode(type: .secondary)
-        button.title = "回到帳密設定"
-        
-        button.addTarget(self, action: #selector(onVerifyCodeBack), forControlEvents: ASControlNodeEvent.touchUpInside)
-        
-        return button
-    }()
-    
-    lazy var btnVerifyCodeNotReceive:ASButtonNode = {
-        let button = ASButtonNode()
-        let title = "沒收到驗證碼?"
-        
-        let attr = [
-            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
-            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
-        ] as [NSAttributedString.Key : Any]
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
-        
-        
-        button.addTarget(self, action: #selector(onNotReceive), forControlEvents: ASControlNodeEvent.touchUpInside)
-        
-        return button
-    }()
+    lazy var lbVerifyCodeTitle:ASTextNode = getlbVerifyCodeTitle()
+    lazy var tfVerifyCode = gettfVerifyCode()
+    lazy var lbVerifyCodeResponse:ASTextNode = getlbVerifyCodeResponse()
+    lazy var lbVerifyCodeTimer:ASTextNode = getlbVerifyCodeTimer()
+    lazy var btnVerifyCodeBack: ASButtonNode = getbtnVerifyCodeBack()
+    lazy var btnVerifyCodeNotReceive:ASButtonNode = getbtnVerifyCodeNotReceive()
     
     
     // Fill Information Views:
-    
-    lazy var lbFillTitle:ASTextNode =  {
-        let label = ASTextNode()
-        let paragraphStyle = NSMutableParagraphStyle.init()
-        paragraphStyle.alignment = .left
-        paragraphStyle.paragraphSpacing = 2
-        paragraphStyle.lineSpacing = 0
-        let attributes = [
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.subheadline), 
-            NSAttributedString.Key.foregroundColor: self.text_color,
-            NSAttributedString.Key.paragraphStyle: paragraphStyle
-        ]
-        
-        let title = "帳號設定成功！\n請完成以下資訊以開通帳號："
-        label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
-        return label
-    }()
-    
-    lazy var tfFillRealName = ASDisplayNode.init { () -> UIView in
-        var tf = LoginTextField(type: TextFieldType.Email)
-        tf.title = NSLocalizedString("真實姓名", comment: "")
-        
-        tf.delegate = self
-        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
-        return tf
-    }
-
-    
-    lazy var tfFillBirthday = ASDisplayNode.init { () -> UIView in
-        var tf = LoginTextField(type: TextFieldType.Email)
-        tf.title = NSLocalizedString("出生年", comment: "")
-        
-        tf.delegate = self
-        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
-        return tf
-    }
-
-    
-    lazy var tfFillAddress = ASDisplayNode.init { () -> UIView in
-        var tf = LoginTextField(type: TextFieldType.Email)
-        tf.title = NSLocalizedString("聯絡地址", comment: "")
-        
-        tf.delegate = self
-        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
-        return tf
-    }
-
-    lazy var lbNeedReason:ASButtonNode = {
-        let button = ASButtonNode()
-        let title = "為何需要基本資料?"
-    
-        button.contentHorizontalAlignment = .left
-        let attr = [
-            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
-            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
-        ] as [NSAttributedString.Key : Any]
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
-        
-        button.addTarget(self, action: #selector(onNotReceive), forControlEvents: ASControlNodeEvent.touchUpInside)
-        
-        return button
-    }()
-    
-    
-    lazy var btnOpenAccount:ASButtonNode = {
-        let button = ButtonNode(type: .primary)
-        let title = "開通帳號"
-        
-        let attr = [
-            NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
-            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
-        ] as [NSAttributedString.Key : Any]
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
-        
-        
-        button.addTarget(self, action: #selector(openAccountPress), forControlEvents: ASControlNodeEvent.touchUpInside)
-        
-        return button
-    }()
+    lazy var lbFillTitle:ASTextNode = getlbFillTitle()
+    lazy var tfFillRealName = gettfFillRealName()
+    lazy var tfFillBirthday =  gettfFillBirthday()
+    lazy var tfFillAddress = gettfFillAddress()
+    lazy var lbNeedReason:ASButtonNode = getlbNeedReason()
+    lazy var btnOpenAccount:ASButtonNode = getbtnOpenAccount()
 }
 
 extension LoginViewController: UITextFieldDelegate {
@@ -881,9 +491,6 @@ extension LoginViewController: UITextFieldDelegate {
         }
     }
 
-}
-
-extension LoginViewController {
     
     @objc func textFieldDidChange(textField: UITextField) {
         
@@ -918,6 +525,42 @@ extension LoginViewController {
                 self.onVerifyCodeFill()
             }
         }
-        
     }
+}
+
+// Others
+extension LoginViewController {
+
+    
+    var text_color : UIColor {
+        if #available(iOS 11.0, *) {
+            return PttColors.paleGrey.color
+        } else {
+            return UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
+        }
+    }
+    
+    var textfield_backgroundcolor : UIColor {
+        if #available(iOS 11.0, *) {
+            return PttColors.shark.color
+        } else {
+            return UIColor(red: 28/255, green: 28/255, blue: 31/255, alpha: 1.0)
+        }
+    }
+    
+    var tint_color : UIColor {
+        if #available(iOS 11.0, *) {
+            return PttColors.tangerine.color // UIColor(named: "tintColor-255-159-10")!
+        } else {
+            return UIColor(red: 255/255, green: 159/255, blue: 10/255, alpha: 1.0)
+        }
+    }
+    
+    func showAlert(title:String, msg:String) {
+        let controller = UIAlertController(title: title, message: msg, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
+        controller.addAction(okAction)
+        present(controller, animated: true, completion: nil)
+    }
+    
 }
