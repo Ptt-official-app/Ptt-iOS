@@ -103,7 +103,7 @@ extension LoginViewController {
     
     func getbtnUserAgreement() -> ASButtonNode {
         let button = ASButtonNode()
-        let title = NSLocalizedString("AgreeWhenYouUseApp", comment:"")
+        let title = L10n.agreeWhenYouUseApp
         
         let attr = [
             NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,

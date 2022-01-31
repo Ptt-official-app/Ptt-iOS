@@ -102,7 +102,7 @@ extension LoginViewController {
             }
         }
         else {
-            showAlert(title: "ERROR", msg: "ERROR data missing-_- ")
+            showAlert(title: L10n.error, msg: "ERROR data missing-_- ")
         }
     }
     
@@ -117,7 +117,7 @@ extension LoginViewController {
     
     @objc func onNotReceive(){
         print("not Receive")
-        showAlert(title: "TEMP", msg: "NOT IMPLEMENT YET QQ")
+        showAlert(title: L10n.error, msg: "NOT IMPLEMENT YET QQ")
     }
     
     func getlbVerifyCodeTitle() -> ASTextNode {
@@ -141,7 +141,7 @@ extension LoginViewController {
     func gettfVerifyCode() -> ASDisplayNode {
         return ASDisplayNode.init { () -> UIView in
             let tf = LoginTextField(type: TextFieldType.Username)
-            tf.title = "驗證碼"
+            tf.title = L10n.verifyCode
             
             tf.keyboardType = .numberPad
             tf.delegate = self
@@ -186,7 +186,7 @@ extension LoginViewController {
     
     func getbtnVerifyCodeBack() -> ASButtonNode {
         let button = ButtonNode(type: .secondary)
-        button.title = "回到帳密設定"
+        button.title = L10n.backToRegister
         
         button.addTarget(self, action: #selector(onVerifyCodeBack), forControlEvents: ASControlNodeEvent.touchUpInside)
         
@@ -195,7 +195,7 @@ extension LoginViewController {
     
     func getbtnVerifyCodeNotReceive() -> ASButtonNode {
         let button = ASButtonNode()
-        let title = "沒收到驗證碼?"
+        let title = L10n.notReceiveYet
         
         let attr = [
             NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,

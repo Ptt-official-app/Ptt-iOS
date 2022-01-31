@@ -33,12 +33,10 @@ extension LoginViewController {
     }
     
     func getErrorView() -> ASTextNode {
-        {
-            let label = ASTextNode()
-            let title = NSAttributedString.init(string: "Error Message 123 123 123 123 456 456 456 ASDF", attributes: getErrorAttr())
-            label.attributedText = title
-            return label
-        }()
+        let label = ASTextNode()
+        let title = NSAttributedString.init(string: "Error Message 123 123 123 123 456 456 456 ASDF", attributes: getErrorAttr())
+        label.attributedText = title
+        return label
     }
     
     func toggleErrorView(isHidden:Bool){

@@ -12,6 +12,8 @@ import Foundation
 enum L10n {
   /// About This Software
   static let aboutThisSoftware = L10n.tr("Localizable", "About This Software")
+  /// Address
+  static let address = L10n.tr("Localizable", "Address")
   /// Adds
   static let adds = L10n.tr("Localizable", "Adds")
   /// ago
@@ -24,6 +26,10 @@ enum L10n {
   static let appearanceMode = L10n.tr("Localizable", "Appearance Mode")
   /// Are you sure to clear cache?
   static let areYouSureToClearCache = L10n.tr("Localizable", "Are you sure to clear cache?")
+  /// Back to Register
+  static let backToRegister = L10n.tr("Localizable", "BackToRegister")
+  /// Birthday
+  static let birthday = L10n.tr("Localizable", "Birthday")
   /// Cancel
   static let cancel = L10n.tr("Localizable", "Cancel")
   /// Change Site Address
@@ -42,6 +48,8 @@ enum L10n {
   static let customizationMode = L10n.tr("Localizable", "Customization Mode")
   /// Dark
   static let dark = L10n.tr("Localizable", "Dark")
+  /// Email
+  static let email = L10n.tr("Localizable", "Email")
   /// Error
   static let error = L10n.tr("Localizable", "Error")
   /// Favorite Boards
@@ -66,20 +74,34 @@ enum L10n {
   static let login = L10n.tr("Localizable", "Login")
   /// More actions
   static let moreActions = L10n.tr("Localizable", "More actions")
+  /// Next
+  static let next = L10n.tr("Localizable", "Next")
   /// Not in favorite
   static let notInFavorite = L10n.tr("Localizable", "Not in favorite")
   /// Not Finish yet
   static let notFinish = L10n.tr("Localizable", "NotFinish")
+  /// Not Receive Yet?
+  static let notReceiveYet = L10n.tr("Localizable", "NotReceiveYet")
   /// Account not Register
   static let notRegisterAccount = L10n.tr("Localizable", "NotRegisterAccount")
+  /// OpenAccount
+  static let openAccount = L10n.tr("Localizable", "OpenAccount")
   /// Password
   static let password = L10n.tr("Localizable", "Password")
+  /// Please Fill Email
+  static let pleaseFillEmail = L10n.tr("Localizable", "PleaseFillEmail")
+  /// Please Fill Password
+  static let pleaseFillPassword = L10n.tr("Localizable", "PleaseFillPassword")
+  /// Please Fill Username
+  static let pleaseFillUsername = L10n.tr("Localizable", "PleaseFillUsername")
   /// Popular Articles
   static let popularArticles = L10n.tr("Localizable", "Popular Articles")
   /// Popular Boards
   static let popularBoards = L10n.tr("Localizable", "Popular Boards")
   /// PTT FB Page
   static let pttfbPage = L10n.tr("Localizable", "PTT FB Page")
+  /// Real Name
+  static let realName = L10n.tr("Localizable", "RealName")
   /// Refresh
   static let refresh = L10n.tr("Localizable", "Refresh")
   /// Register
@@ -104,8 +126,12 @@ enum L10n {
   static let userId = L10n.tr("Localizable", "User Id")
   /// Username
   static let username = L10n.tr("Localizable", "Username")
+  /// Verify Code
+  static let verifyCode = L10n.tr("Localizable", "VerifyCode")
   /// Version
   static let version = L10n.tr("Localizable", "Version")
+  /// Why Need Personal Info?
+  static let whyNeedPersonalInfo = L10n.tr("Localizable", "WhyNeedPersonalInfo")
   /// Wrong Format
   static let wrongFormat = L10n.tr("Localizable", "Wrong Format")
   /// Wrong Password

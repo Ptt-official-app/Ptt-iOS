@@ -120,20 +120,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
         displayError(message: "TEST AAA BBC LDJ:LAKJ DD")
         toggleState(UILoginState.Error)
     }
-                                          
-    @objc func testFill(){
-            
-            if let tf = tfRegisterEmail.view as? LoginTextField,
-               let u = tfRegisterUsername.view as? LoginTextField,
-               let p = tfRegisterPassword.view as? LoginTextField
-            {
-                let sn = 60
-                tf.text = "scsonic+sc\(sn)@gmail.com"
-                u.text = "sc\(sn)"
-                p.text = "sc\(sn)"
-                textFieldDidChange(textField: p)
-            }
-    }
 
     func toggleState(_ state:UILoginState) {
         switch state {

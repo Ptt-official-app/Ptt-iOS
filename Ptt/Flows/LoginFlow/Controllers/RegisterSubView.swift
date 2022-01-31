@@ -66,13 +66,13 @@ extension LoginViewController {
                 print("anyone is empty:", email, username, password)
                 // any one is empty
                 if email.isEmpty {
-                    tfEmail.warning(msg: "請輸mail")
+                    tfEmail.warning(msg: L10n.pleaseFillEmail)
                 }
                 if username.isEmpty {
-                    tfUser.warning(msg: "請輸user")
+                    tfUser.warning(msg: L10n.pleaseFillUsername)
                 }
                 if password.isEmpty {
-                    tfPass.warning(msg: "請輸PW")
+                    tfPass.warning(msg: L10n.pleaseFillPassword)
                 }
             }
             else {
@@ -139,8 +139,8 @@ extension LoginViewController {
     
     func gettfRegisterEmail() -> ASDisplayNode {
         return ASDisplayNode.init { () -> UIView in
-            var tf = LoginTextField(type: TextFieldType.Email)
-            tf.title = NSLocalizedString("User Email", comment: "")
+            let tf = LoginTextField(type: TextFieldType.Email)
+            tf.title = L10n.email
             
             tf.returnKeyType = .next
             tf.delegate = self
@@ -151,7 +151,7 @@ extension LoginViewController {
     
     func gettfRegisterUsername() -> ASDisplayNode {
         return ASDisplayNode.init { () -> UIView in
-            var tf = LoginTextField(type: TextFieldType.Username)
+            let tf = LoginTextField(type: TextFieldType.Username)
             tf.title = L10n.username
             
             tf.returnKeyType = .next
@@ -163,7 +163,7 @@ extension LoginViewController {
     
     func gettfRegisterPassword() -> ASDisplayNode {
         return ASDisplayNode.init { () -> UIView in
-            var tf = LoginTextField(type: TextFieldType.Password)
+            let tf = LoginTextField(type: TextFieldType.Password)
             tf.title = L10n.password
             
             tf.returnKeyType = .send
@@ -176,7 +176,7 @@ extension LoginViewController {
     
     func getbtnAttemptRegister() -> ASButtonNode {
         let button = ButtonNode(type: .primary)
-        let title = "下一步"
+        let title = L10n.next
         
         let attr_tint : [NSAttributedString.Key : Any] = [
             NSAttributedString.Key.foregroundColor: PttColors.shark.color,
@@ -203,7 +203,7 @@ extension LoginViewController {
     
     func getbtnRegisterUserAgreement() -> ASButtonNode {
         let button = ASButtonNode()
-        let title = NSLocalizedString("AgreeWhenYouUseApp", comment:"")
+        let title = L10n.agreeWhenYouUseApp
         
         let attr = [
             NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,

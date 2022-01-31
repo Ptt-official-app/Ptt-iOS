@@ -94,8 +94,8 @@ extension LoginViewController {
     
     func gettfFillRealName() -> ASDisplayNode {
         return ASDisplayNode.init { () -> UIView in
-            var tf = LoginTextField(type: TextFieldType.Email)
-            tf.title = NSLocalizedString("真實姓名", comment: "")
+            let tf = LoginTextField(type: TextFieldType.Username)
+            tf.title = L10n.realName
             
             tf.delegate = self
             tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
@@ -105,9 +105,8 @@ extension LoginViewController {
         
     func gettfFillBirthday() -> ASDisplayNode {
         return ASDisplayNode.init { () -> UIView in
-            var tf = LoginTextField(type: TextFieldType.Email)
-            tf.title = NSLocalizedString("出生年", comment: "")
-            
+            let tf = LoginTextField(type: TextFieldType.Username)
+            tf.title = L10n.birthday
             tf.delegate = self
             tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
             return tf
@@ -116,8 +115,8 @@ extension LoginViewController {
     
     func gettfFillAddress() -> ASDisplayNode {
         return ASDisplayNode.init { () -> UIView in
-            var tf = LoginTextField(type: TextFieldType.Email)
-            tf.title = NSLocalizedString("聯絡地址", comment: "")
+            let tf = LoginTextField(type: TextFieldType.Username)
+            tf.title = L10n.address
             
             tf.delegate = self
             tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
@@ -127,7 +126,7 @@ extension LoginViewController {
     
     func getlbNeedReason() -> ASButtonNode {
         let button = ASButtonNode()
-        let title = "為何需要基本資料?"
+        let title = L10n.whyNeedPersonalInfo
     
         button.contentHorizontalAlignment = .left
         let attr = [
@@ -144,7 +143,7 @@ extension LoginViewController {
     
     func getbtnOpenAccount() -> ASButtonNode {
         let button = ButtonNode(type: .primary)
-        let title = "開通帳號"
+        let title = L10n.openAccount
         
         let attr = [
             NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,

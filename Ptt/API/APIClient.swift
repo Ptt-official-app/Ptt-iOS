@@ -491,7 +491,7 @@ extension APIClient {
 
             
         if let error = error {
-            return .failure(APIError(message: error_msg))
+            return .failure(APIError(message: "\(error):\(error_msg)"))
         }
         
         guard let httpURLResponse = urlResponse as? HTTPURLResponse else {

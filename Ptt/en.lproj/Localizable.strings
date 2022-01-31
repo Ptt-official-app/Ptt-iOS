@@ -42,7 +42,20 @@
 "Forget" = "Forget Account / Password?";
 "Register" = "Register";
 "Username" = "Username";
-"Password" = "Password";
+"AgreeWhenYouUseApp" = "Agree When You Use App" ;
+"Email" = "Email";
+"Next" = "Next";
+"PleaseFillEmail" = "Please Fill Email";
+"PleaseFillUsername" = "Please Fill Username";
+"PleaseFillPassword" = "Please Fill Password";
+"VerifyCode" = "Verify Code";
+"BackToRegister" = "Back to Register";
+"NotReceiveYet" = "Not Receive Yet?" ;
+"RealName" = "Real Name";
+"Birthday" = "Birthday";
+"Address" = "Address";
+"WhyNeedPersonalInfo" = "Why Need Personal Info?" ;
+"OpenAccount" = "OpenAccount" ;
 
 "NotRegisterAccount"= "Account not Register";
 "NotFinish" = "Not Finish yet";
