@@ -60,7 +60,7 @@ final class ColorAsset {
   }()
 
   #if os(iOS) || os(tvOS)
-  @available(iOS 11.0, tvOS 11.0, *)
+@available(iOS 11.0, tvOS 11.0, *)
   func color(compatibleWith traitCollection: UITraitCollection) -> Color {
     let bundle = BundleToken.bundle
     guard let color = Color(named: name, in: bundle, compatibleWith: traitCollection) else {

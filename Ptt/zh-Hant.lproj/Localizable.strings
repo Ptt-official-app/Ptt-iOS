@@ -36,12 +36,32 @@
 "Confirm" = "確認";
 "Cancel" = "取消";
 
+"User Id" = "使用者帳號";
+"Password" = "密碼";
 "Login" = "登入";
-"Forget" = "忘記密碼";
+"Forget" = "忘記帳號 / 密碼？";
 "Register" = "註冊";
 "Username" = "使用者帳號";
-"Password" = "密碼";
+"AgreeWhenYouUseApp" = "使用本服務即表示您同意使用者條款";
+"Email" = "電子信箱";
+"Next" = "下一步";
+"PleaseFillEmail" = "請輸入電子信箱";
+"PleaseFillUsername" = "請輸入使用者帳號";
+"PleaseFillPassword" = "請輸入密碼";
+"VerifyCode" = "驗證碼";
+"BackToRegister" = "回到帳密設定";
+"NotReceiveYet" = "沒收到驗證碼?" ;
+"RealName" = "真實姓名";
+"Birthday" = "出生年";
+"Address" = "聯絡地址";
+"WhyNeedPersonalInfo" = "為何需要基本資料?" ;
+"OpenAccount" = "開通帳號" ;
 
+
+"NotRegisterAccount"= "此帳號尚未註冊";
+"NotFinish" = "這裡還沒完成";
+"WrongPassword" = "不是這組密碼";
+"AgreeWhenYouUseApp" = "使用本服務即表示您同意使用者條款";
 
 /* VoiceOver */
 "In favorite" = "已加入最愛";
