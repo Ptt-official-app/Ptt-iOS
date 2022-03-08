@@ -4,6 +4,10 @@ import WebKit
 
 protocol RegisterView: BaseView {}
 
+/**
+    This is web version of register
+    will be remove later
+ */
 final class RegisterViewController: UIViewController, RegisterView {
 
     private let webView = WKWebView()
