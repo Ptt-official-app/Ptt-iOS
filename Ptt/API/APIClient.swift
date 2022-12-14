@@ -27,8 +27,7 @@ struct APIClient {
     private var go_pttbbs_URLComponents : URLComponents {
         var urlComponent = URLComponents()
         urlComponent.scheme = "https"
-        urlComponent.host = "api.devptt.site"
-        urlComponent.port = 3457
+        urlComponent.host = "api.devptt.dev"
         return urlComponent
     }
 
