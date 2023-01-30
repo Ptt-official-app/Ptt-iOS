@@ -45,7 +45,7 @@ extension UserDefaultsManager {
 extension UserDefaultsManager {
 
     private static let addressKey = "address"
-    private static let addressDefault = "https://api.devptt.site:3457"
+    private static let addressDefault = "https://api.devptt.dev"
 
     private static func displayString(of address: String) -> String {
         guard let url = URL(string: address), let host = url.host else {
