@@ -830,7 +830,6 @@
 				EA475F8323C4834C000867FE /* Sources */,
 				EA475F8423C4834C000867FE /* Frameworks */,
 				EA475F8523C4834C000867FE /* Resources */,
-				1268F238A3BEA94945CE4662 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -909,23 +908,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1268F238A3BEA94945CE4662 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PttTests/Pods-PttTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PttTests/Pods-PttTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PttTests/Pods-PttTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		3EAED621276CD2F1005AC13A /* SwiftGen */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

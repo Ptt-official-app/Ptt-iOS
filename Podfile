@@ -6,12 +6,11 @@ target 'Ptt' do
   use_frameworks!
 
   # Pods for Ptt
-  pod "Texture", '~> 3.0'
+  pod "Texture", :git => 'https://github.com/TextureGroup/Texture', :commit => '2c7ba2234748c4205091818584bdae458de60828'
   pod 'KeychainSwift', '~> 20.0'
 
   target 'PttTests' do
     inherit! :search_paths
-    pod 'KeychainSwift', '~> 20.0'
   end
 
 end

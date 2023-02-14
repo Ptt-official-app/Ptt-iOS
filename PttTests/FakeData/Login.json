@@ -1,4 +1,5 @@
 {
+  "user_id": "fake user id",
   "access_token": "fake token",
   "token_type": "fake type"
 }
