@@ -1,4 +1,5 @@
 PODS:
+  - KeychainSwift (20.0.0)
   - PINCache (3.0.3):
     - PINCache/Arc-exception-safe (= 3.0.3)
     - PINCache/Core (= 3.0.3)
@@ -36,21 +37,24 @@ PODS:
     - Texture/Core
 
 DEPENDENCIES:
+  - KeychainSwift (~> 20.0)
   - Texture (~> 3.0)
 
 SPEC REPOS:
   trunk:
+    - KeychainSwift
     - PINCache
     - PINOperation
     - PINRemoteImage
     - Texture
 
 SPEC CHECKSUMS:
+  KeychainSwift: 0ce6a4d13f7228054d1a71bb1b500448fb2ab837
   PINCache: 7a8fc1a691173d21dbddbf86cd515de6efa55086
   PINOperation: 00c935935f1e8cf0d1e2d6b542e75b88fc3e5e20
   PINRemoteImage: f1295b29f8c5e640e25335a1b2bd9d805171bd01
   Texture: 2e8ab2519452515f7f5a520f5a8f7e0a413abfa3
 
-PODFILE CHECKSUM: 5cdeac6c60da99fa23b109832e648438b3a29699
+PODFILE CHECKSUM: 00d4c1848515d23e85e8da4480258eaf97fcebf6
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

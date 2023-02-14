@@ -194,6 +194,7 @@ extension LoginViewController {
                     self.showAlert(title: L10n.error, msg: L10n.login + L10n.error + error.message)
                 case .success(let token):
                     print(token.access_token)
+                    try? KeychainWrapper.set(object: token, for: .loginToken)
                     self.onLoginSuccess(token: token.access_token)
                 }
             }

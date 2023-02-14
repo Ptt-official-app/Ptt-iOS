@@ -7,10 +7,11 @@ target 'Ptt' do
 
   # Pods for Ptt
   pod "Texture", '~> 3.0'
+  pod 'KeychainSwift', '~> 20.0'
 
   target 'PttTests' do
     inherit! :search_paths
-    # Pods for testing
+    pod 'KeychainSwift', '~> 20.0'
   end
 
 end
