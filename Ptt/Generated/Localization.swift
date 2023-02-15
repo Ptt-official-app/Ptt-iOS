@@ -40,6 +40,8 @@ enum L10n {
   static let clear = L10n.tr("Localizable", "Clear")
   /// Clear Cache
   static let clearCache = L10n.tr("Localizable", "Clear Cache")
+  /// Comment
+  static let comment = L10n.tr("Localizable", "Comment")
   /// Compose
   static let compose = L10n.tr("Localizable", "Compose")
   /// Confirm
@@ -108,10 +110,14 @@ enum L10n {
   static let register = L10n.tr("Localizable", "Register")
   /// Removes
   static let removes = L10n.tr("Localizable", "Removes")
+  /// Reply
+  static let reply = L10n.tr("Localizable", "Reply")
   /// Search
   static let search = L10n.tr("Localizable", "Search")
   /// Settings
   static let settings = L10n.tr("Localizable", "Settings")
+  /// Share
+  static let share = L10n.tr("Localizable", "Share")
   /// Site Address
   static let siteAddress = L10n.tr("Localizable", "Site Address")
   /// System Default
@@ -120,6 +126,8 @@ enum L10n {
   static let thirdPartyLicense = L10n.tr("Localizable", "Third Party License")
   /// to favorite.
   static let toFavorite = L10n.tr("Localizable", "to favorite.")
+  /// Upvote
+  static let upvote = L10n.tr("Localizable", "Upvote")
   /// Use System Default
   static let useSystemDefault = L10n.tr("Localizable", "Use System Default")
   /// User Id
