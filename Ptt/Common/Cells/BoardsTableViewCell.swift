@@ -45,7 +45,7 @@ class BoardsTableViewCell: UITableViewCell {
             boardNameLabel.textColor = PttColors.paleGrey.color
             boardTitleLabel.textColor = .systemGray
         } else {
-            boardNameLabel.textColor = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
+            boardNameLabel.textColor = UIColor(red: 240 / 255, green: 240 / 255, blue: 247 / 255, alpha: 1.0)
             boardTitleLabel.textColor = .systemGray
         }
 

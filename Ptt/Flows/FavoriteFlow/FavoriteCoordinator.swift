@@ -32,7 +32,7 @@ private extension FavoriteCoordinator {
     func showFavoriteView() {
         let favoriteView = factory.makeFavoriteView()
 
-        favoriteView.onBoardSelect = { [unowned self] (boardName) in
+        favoriteView.onBoardSelect = { [unowned self] boardName in
             self.runBoardFlow(withBoardName: boardName)
         }
 

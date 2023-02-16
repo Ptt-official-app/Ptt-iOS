@@ -6,8 +6,8 @@
 //  Copyright © 2022 Ptt. All rights reserved.
 //
 
-import Foundation
 import AsyncDisplayKit
+import Foundation
 
 enum TextFieldType {
     case Username, Password, Email
@@ -27,7 +27,7 @@ class LoginTextField: UITextField {
                 NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
                 NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
             ]
-            self.attributedPlaceholder = NSAttributedString.init(string: title, attributes: attr)
+            self.attributedPlaceholder = NSAttributedString(string: title, attributes: attr)
         }
     }
 

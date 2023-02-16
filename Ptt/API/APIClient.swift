@@ -15,6 +15,7 @@ struct APIClient {
         case DELETE
         case PUT
     }
+
     static let shared: APIClient = APIClient()
 
     private var legacyURLComponents: URLComponents {
@@ -24,14 +25,14 @@ struct APIClient {
         return urlComponent
     }
 
-    private var go_pttbbs_URLComponents: URLComponents {
+    private var goPttBBSURLComponents: URLComponents {
         var urlComponent = URLComponents()
         urlComponent.scheme = "https"
         urlComponent.host = "api.devptt.dev"
         return urlComponent
     }
 
-    private var go_bbs_URLComponents: URLComponents {
+    private var goBBSURLComponents: URLComponents {
         var urlComponent = URLComponents()
         urlComponent.scheme = "https"
         urlComponent.host = "pttapp.cc"
@@ -52,7 +53,7 @@ struct APIClient {
 
     private let session: URLSessionProtocol
 
-    init(session: URLSessionProtocol=URLSession.shared) {
+    init(session: URLSessionProtocol = URLSession.shared) {
         self.session = session
     }
 }
@@ -78,7 +79,7 @@ extension APIClient: APIClientProtocol {
         request.httpMethod = Method.POST.rawValue
         request.httpBody = jsonBody
 
-        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+        let task = self.session.dataTask(with: request) { data, urlResponse, error in
             let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
             switch result {
             case .failure(let apiError):
@@ -118,7 +119,7 @@ extension APIClient: APIClientProtocol {
         request.httpMethod = Method.POST.rawValue
         request.httpBody = jsonBody
 
-        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+        let task = self.session.dataTask(with: request) { data, urlResponse, error in
             let result = self.processResponseWithErrorMSG(data: data, urlResponse: urlResponse, error: error)
             switch result {
             case .failure(let apiError):
@@ -142,7 +143,13 @@ extension APIClient: APIClientProtocol {
      the email field still not comfirm
      token: verify code six digit
      */
-    func register(account: String, email: String, password: String, token: String, completion: @escaping (RegisterResult) -> Void) {
+    func register(
+        account: String,
+        email: String,
+        password: String,
+        token: String,
+        completion: @escaping (RegisterResult) -> Void
+    ) {
         let bodyDic = ["client_id": "test_client_id",
                        "client_secret": "test_client_secret",
                        "username": account,
@@ -164,7 +171,7 @@ extension APIClient: APIClientProtocol {
         request.httpMethod = Method.POST.rawValue
         request.httpBody = jsonBody
 
-        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+        let task = self.session.dataTask(with: request) { data, urlResponse, error in
             let result = self.processResponseWithErrorMSG(data: data, urlResponse: urlResponse, error: error)
             switch result {
             case .failure(let apiError):
@@ -186,14 +193,14 @@ extension APIClient: APIClientProtocol {
         var urlComponent: URLComponents
         switch params {
         case .go_pttbbs(bid: let bid, startIdx: let startIdx):
-            urlComponent = go_pttbbs_URLComponents
+            urlComponent = goPttBBSURLComponents
             urlComponent.path = "/api/board/\(bid)/articles"
             // Percent encoding is automatically done with RFC 3986
             urlComponent.queryItems = [
                 URLQueryItem(name: "start_idx", value: startIdx)
             ]
         case .go_bbs(boardID: let boardID):
-            urlComponent = go_bbs_URLComponents
+            urlComponent = goBBSURLComponents
             urlComponent.path = "/v1/boards/\(boardID)/articles"
         case .legacy(boardName: let boardName, page: let page):
             urlComponent = legacyURLComponents
@@ -206,7 +213,7 @@ extension APIClient: APIClientProtocol {
             assertionFailure()
             return
         }
-        let task = self.session.dataTask(with: url) {(data, urlResponse, error) in
+        let task = self.session.dataTask(with: url) { data, urlResponse, error in
             let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
             switch result {
             case .failure(let apiError):
@@ -216,14 +223,14 @@ extension APIClient: APIClientProtocol {
                     let board: APIModel.BoardModel
                     switch params {
                     case .go_pttbbs:
-                        let _board = try self.decoder.decode(APIModel.GoPttBBSBoard.self, from: resultData)
-                        board = APIModel.GoPttBBSBoard.adapter(model: _board)
+                        let model = try self.decoder.decode(APIModel.GoPttBBSBoard.self, from: resultData)
+                        board = APIModel.GoPttBBSBoard.adapter(model: model)
                     case .go_bbs:
-                        let _board = try self.decoder.decode(APIModel.GoBBSBoard.self, from: resultData)
-                        board = APIModel.GoBBSBoard.adapter(model: _board)
+                        let model = try self.decoder.decode(APIModel.GoBBSBoard.self, from: resultData)
+                        board = APIModel.GoBBSBoard.adapter(model: model)
                     case .legacy:
-                        let _board = try self.decoder.decode(APIModel.LegacyBoard.self, from: resultData)
-                        board = APIModel.LegacyBoard.adapter(model: _board)
+                        let model = try self.decoder.decode(APIModel.LegacyBoard.self, from: resultData)
+                        board = APIModel.LegacyBoard.adapter(model: model)
                     }
                     completion(.success(board))
                 } catch {
@@ -239,10 +246,10 @@ extension APIClient: APIClientProtocol {
         var urlComponent: URLComponents
         switch params {
         case .go_pttbbs(bid: let bid, aid: let aid):
-            urlComponent = go_pttbbs_URLComponents
+            urlComponent = goPttBBSURLComponents
             urlComponent.path = "/api/board/\(bid)/article/\(aid)"
         case .go_bbs(boardID: let boardID, articleID: let articleID):
-            urlComponent = go_bbs_URLComponents
+            urlComponent = goBBSURLComponents
             urlComponent.path = "/v1/boards/\(boardID)/articles/\(articleID)"
         case .legacy(boardName: let boardName, filename: let filename):
             urlComponent = legacyURLComponents
@@ -252,7 +259,7 @@ extension APIClient: APIClientProtocol {
             assertionFailure()
             return
         }
-        let task = self.session.dataTask(with: url) { (data, urlResponse, error) in
+        let task = self.session.dataTask(with: url) { data, urlResponse, error in
             let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
             switch result {
             case .failure(let apiError):
@@ -262,14 +269,14 @@ extension APIClient: APIClientProtocol {
                     let article: APIModel.FullArticle
                     switch params {
                     case .go_pttbbs:
-                        let _article = try self.decoder.decode(APIModel.GoPttBBSArticle.self, from: resultData)
-                        article = APIModel.GoPttBBSArticle.adapter(model: _article)
+                        let model = try self.decoder.decode(APIModel.GoPttBBSArticle.self, from: resultData)
+                        article = APIModel.GoPttBBSArticle.adapter(model: model)
                     case .go_bbs:
-                        let _article = try self.decoder.decode(APIModel.GoBBSArticle.self, from: resultData)
-                        article = APIModel.GoBBSArticle.adapter(model: _article)
+                        let model = try self.decoder.decode(APIModel.GoBBSArticle.self, from: resultData)
+                        article = APIModel.GoBBSArticle.adapter(model: model)
                     case .legacy:
-                        let _article = try self.decoder.decode(APIModel.LegacyArticle.self, from: resultData)
-                        article = APIModel.LegacyArticle.adapter(model: _article)
+                        let model = try self.decoder.decode(APIModel.LegacyArticle.self, from: resultData)
+                        article = APIModel.LegacyArticle.adapter(model: model)
                     }
                     completion(.success(article))
                 } catch {
@@ -288,8 +295,13 @@ extension APIClient: APIClientProtocol {
     ///   - startIdx: starting idx, '' if fetch from the beginning.
     ///   - max: max number of the returned list, requiring <= 300
     ///   - completion: the list of board information
-    func getBoardList(token: String, keyword: String="", startIdx: String="", max: Int=200, completion: @escaping (BoardListResult) -> Void) {
-
+    func getBoardList(
+        token: String,
+        keyword: String = "",
+        startIdx: String = "",
+        max: Int = 200,
+        completion: @escaping (BoardListResult) -> Void
+    ) {
         let matcherEnglish = MyRegex("^[a-zA-Z]+$")
         let matcherChinese = MyRegex("^[\\u4e00-\\u9fa5]+$")
         var urlComponent = rootURLComponents
@@ -314,7 +326,7 @@ extension APIClient: APIClientProtocol {
         request.httpMethod = Method.GET.rawValue
         request.setValue("bearer \(token)", forHTTPHeaderField: "Authorization")
 
-        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+        let task = self.session.dataTask(with: request) { data, urlResponse, error in
             let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
             switch result {
             case .failure(let apiError):
@@ -332,9 +344,14 @@ extension APIClient: APIClientProtocol {
         task.resume()
     }
 
-    func getPopularBoards(subPath: String, token: String, querys: [String: Any] = [:], completion: @escaping (BoardListResult) -> Void) {
+    func getPopularBoards(
+        subPath: String,
+        token: String,
+        querys: [String: Any] = [:],
+        completion: @escaping (BoardListResult) -> Void
+    ) {
         var urlComponent = rootURLComponents
-        urlComponent.path = "/api/"+subPath
+        urlComponent.path = "/api/" + subPath
 
         urlComponent.queryItems = []
         if querys.count > 0 {
@@ -352,7 +369,7 @@ extension APIClient: APIClientProtocol {
         request.httpMethod = Method.GET.rawValue
 //        request.setValue("bearer \(token)", forHTTPHeaderField: "Authorization")
 
-        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+        let task = self.session.dataTask(with: request) { data, urlResponse, error in
             let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
             switch result {
             case .failure(let apiError):
@@ -370,7 +387,11 @@ extension APIClient: APIClientProtocol {
         task.resume()
     }
 
-    func createArticle(boardId: String, article: APIModel.CreateArticle, completion: @escaping (createArticleResult) -> Void) {
+    func createArticle(
+        boardId: String,
+        article: APIModel.CreateArticle,
+        completion: @escaping (createArticleResult) -> Void
+    ) {
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/board/" + boardId + "/article"
 
@@ -387,7 +408,7 @@ extension APIClient: APIClientProtocol {
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue( "Bearer \(LoginKeyChainItem.shared.readToken()!)", forHTTPHeaderField: "Authorization")
 
-        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+        let task = self.session.dataTask(with: request) { data, urlResponse, error in
             let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
             switch result {
             case .failure(let apiError):
@@ -405,12 +426,17 @@ extension APIClient: APIClientProtocol {
         task.resume()
     }
 
-    func getPopularArticles(startIdx: String, limit: Int, desc: Bool, completion: @escaping (PopularArticlesResult) -> Void) {
+    func getPopularArticles(
+        startIdx: String,
+        limit: Int,
+        desc: Bool,
+        completion: @escaping (PopularArticlesResult) -> Void
+    ) {
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/articles/popular"
 
         let limit = min(200, limit)
-        let desc = desc ? "true": "false"
+        let desc = desc ? "true" : "false"
         urlComponent.queryItems = [
             URLQueryItem(name: "start_idx", value: startIdx),
             URLQueryItem(name: "limit", value: "\(limit)"),
@@ -425,7 +451,7 @@ extension APIClient: APIClientProtocol {
         var request = URLRequest(url: url)
         request.httpMethod = Method.GET.rawValue
 
-        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+        let task = self.session.dataTask(with: request) { data, urlResponse, error in
             let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
             switch result {
             case .failure(let apiError):
@@ -457,7 +483,8 @@ extension APIClient {
 
         let statusCode = httpURLResponse.statusCode
         if statusCode != 200 {
-            return .failure(APIError(message: "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"))
+            let error = APIError(message: "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))")
+            return .failure(error)
         }
 
         guard let resultData = data else {
@@ -472,11 +499,11 @@ extension APIClient {
      */
     private func processResponseWithErrorMSG(data: Data?, urlResponse: URLResponse?, error: Error?) -> ProcessResult {
 
-        var error_msg: String = ""
+        var errorMsg: String = ""
         do {
-            if let d = data {
-                let errorDict = try decoder.decode(APIModel.ErrorMsg.self, from: d)
-                error_msg = errorDict.Msg
+            if let data = data {
+                let errorDict = try decoder.decode(APIModel.ErrorMsg.self, from: data)
+                errorMsg = errorDict.Msg
                 print("get server message=", errorDict.Msg)
             }
         } catch {
@@ -484,20 +511,21 @@ extension APIClient {
         }
 
         if let error = error {
-            return .failure(APIError(message: "\(error):\(error_msg)"))
+            return .failure(APIError(message: "\(error):\(errorMsg)"))
         }
 
         guard let httpURLResponse = urlResponse as? HTTPURLResponse else {
-            return .failure(APIError(message: error_msg))
+            return .failure(APIError(message: errorMsg))
         }
 
         let statusCode = httpURLResponse.statusCode
         if statusCode != 200 {
-            return .failure(APIError(message: "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode)) : \(error_msg)"))
+            let message = "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode)) : \(errorMsg)"
+            return .failure(APIError(message: message))
         }
 
         guard let resultData = data else {
-            return .failure(APIError(message: error_msg))
+            return .failure(APIError(message: errorMsg))
         }
 
         return .success(resultData)
@@ -511,9 +539,9 @@ extension APIClient {
         let message: String
         switch error {
         case .typeMismatch(_, let context):
-            message = context.debugDescription + " \(context.codingPath.map({$0.stringValue}))"
+            message = context.debugDescription + " \(context.codingPath.map({ $0.stringValue }))"
         case .valueNotFound( _, let context):
-            message = context.debugDescription + " \(context.codingPath.map({$0.stringValue}))"
+            message = context.debugDescription + " \(context.codingPath.map({ $0.stringValue }))"
         case .keyNotFound(_, let context):
             message = context.debugDescription
         case .dataCorrupted(let context):
@@ -533,7 +561,7 @@ extension APIClient {
 
         func match(input: String) -> Bool {
             let range = NSRange(location: 0, length: input.count)
-            if let matches = regex?.matches(in: input, options: [], range:  range) {
+            if let matches = regex?.matches(in: input, options: [], range: range) {
                 return matches.count > 0
             } else {
                 return false

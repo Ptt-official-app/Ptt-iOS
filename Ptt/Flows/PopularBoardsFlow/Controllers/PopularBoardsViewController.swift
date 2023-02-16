@@ -87,7 +87,7 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
     }
 
     func initBinding() {
-        viewModel.popularBoards.addObserver(fireNow: false) { [weak self] (popularBoards) in
+        viewModel.popularBoards.addObserver(fireNow: false) { [weak self] popularBoards in
             if popularBoards.count > 0 {
                 self?.tableview.reloadData()
             }
@@ -141,7 +141,7 @@ extension PopularBoardsViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text, searchText.count > 0  else { return }
         resultsTableController.activityIndicator.startAnimating()
-        APIClient.shared.getBoardList(token: "", keyword: searchText) { [weak self] (result) in
+        APIClient.shared.getBoardList(token: "", keyword: searchText) { [weak self] result in
             guard let weakSelf = self else { return }
             switch result {
                 case .failure(error: let error):

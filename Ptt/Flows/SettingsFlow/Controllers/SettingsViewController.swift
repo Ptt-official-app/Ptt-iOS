@@ -159,7 +159,7 @@ final class SettingsViewController: UITableViewController {
                 let prompt = UIAlertController(title: L10n.changeSiteAddress,
                                                message: L10n.leaveItBlankForDefaultValue,
                                               preferredStyle: .alert)
-                prompt.addTextField { (textField) in
+                prompt.addTextField { textField in
                     textField.placeholder = UserDefaultsManager.addressDefaultForDisplay
                 }
                 let confirm = UIAlertAction(title: L10n.confirm, style: .default) { _ in
@@ -195,7 +195,7 @@ final class SettingsViewController: UITableViewController {
                     // However, WebKit/NetworkCache/* not get deleted...
                     let store = WKWebsiteDataStore.default()
                     let dataType = WKWebsiteDataStore.allWebsiteDataTypes()
-                    store.fetchDataRecords(ofTypes: dataType) { (records) in
+                    store.fetchDataRecords(ofTypes: dataType) { records in
                         store.removeData(ofTypes: dataType, for: records, completionHandler: {})
                     }
                 }
@@ -254,7 +254,7 @@ final class SettingsTableViewCell: UITableViewCell {
         if #available(iOS 11.0, *) {
             backgroundColor = PttColors.shark.color
         } else {
-            backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 31/255, alpha: 1.0)
+            backgroundColor = UIColor(red: 28 / 255, green: 28 / 255, blue: 31 / 255, alpha: 1.0)
         }
         self.type = .plain
     }
@@ -269,7 +269,7 @@ final class SettingsTableViewCell: UITableViewCell {
                 textLabel?.textColor = PttColors.paleGrey.color
                 detailTextLabel?.textColor = .systemGray
             } else {
-                textLabel?.textColor = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
+                textLabel?.textColor = UIColor(red: 240 / 255, green: 240 / 255, blue: 247 / 255, alpha: 1.0)
                 detailTextLabel?.textColor = .systemGray
             }
         }

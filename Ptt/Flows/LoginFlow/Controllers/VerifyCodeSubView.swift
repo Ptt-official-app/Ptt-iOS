@@ -6,9 +6,9 @@
 //  Copyright © 2022 Ptt. All rights reserved.
 //
 
+import AsyncDisplayKit
 import Foundation
 import UIKit
-import AsyncDisplayKit
 
 extension LoginViewController {
 
@@ -27,8 +27,8 @@ extension LoginViewController {
         lbVerifyCodeResponse.style.preferredSize = CGSize(width: global_width, height: 44)
         lbVerifyCodeTimer.style.preferredSize = CGSize(width: global_width, height: 44)
 
-        btnVerifyCodeBack.style.preferredSize = CGSize(width: global_width/2, height: 30)
-        btnVerifyCodeNotReceive.style.preferredSize = CGSize(width: global_width/2, height: 30)
+        btnVerifyCodeBack.style.preferredSize = CGSize(width: global_width / 2, height: 30)
+        btnVerifyCodeNotReceive.style.preferredSize = CGSize(width: global_width / 2, height: 30)
 
         let tfVerifyCodeInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0), child: tfVerifyCode)
 
@@ -88,7 +88,7 @@ extension LoginViewController {
                     switch result {
                     case .failure(let error):
                         print(error)
-                        self.lbVerifyCodeResponse.attributedText = NSAttributedString.init(string: error.message, attributes: nil)
+                        self.lbVerifyCodeResponse.attributedText = NSAttributedString(string: error.message, attributes: nil)
                     case .success(let result):
                         print(result)
                         self.onRegisterSuccess(result: result)
@@ -117,7 +117,7 @@ extension LoginViewController {
 
     func getlbVerifyCodeTitle() -> ASTextNode {
         let label = ASTextNode()
-        let paragraphStyle = NSMutableParagraphStyle.init()
+        let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .left
         paragraphStyle.paragraphSpacing = 2
         paragraphStyle.lineSpacing = 0
@@ -128,12 +128,12 @@ extension LoginViewController {
         ]
 
         let title = "驗證碼已經發送到你的信箱，請在五分鐘內輸入驗證碼 (註: 打到6個字時 會自動觸發)"
-        label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
+        label.attributedText = NSAttributedString(string: title, attributes: attributes)
         return label
     }
 
     func gettfVerifyCode() -> ASDisplayNode {
-        return ASDisplayNode.init { () -> UIView in
+        return ASDisplayNode { () -> UIView in
             let tf = LoginTextField(type: TextFieldType.Username)
             tf.title = L10n.verifyCode
 
@@ -146,7 +146,7 @@ extension LoginViewController {
 
     func getlbVerifyCodeResponse() -> ASTextNode {
         let label = ASTextNode()
-        let paragraphStyle = NSMutableParagraphStyle.init()
+        let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
         paragraphStyle.paragraphSpacing = 2
         paragraphStyle.lineSpacing = 0
@@ -156,13 +156,13 @@ extension LoginViewController {
             NSAttributedString.Key.paragraphStyle: paragraphStyle
         ]
 
-        label.attributedText = NSAttributedString.init(string: "", attributes: attributes)
+        label.attributedText = NSAttributedString(string: "", attributes: attributes)
         return label
     }
 
     func getlbVerifyCodeTimer() -> ASTextNode {
         let label = ASTextNode()
-        let paragraphStyle = NSMutableParagraphStyle.init()
+        let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .right
         paragraphStyle.paragraphSpacing = 2
         paragraphStyle.lineSpacing = 0
@@ -173,7 +173,7 @@ extension LoginViewController {
         ]
 
         let title = "00:00"
-        label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
+        label.attributedText = NSAttributedString(string: title, attributes: attributes)
         return label
     }
 
@@ -195,7 +195,7 @@ extension LoginViewController {
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
             NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
         ] as [NSAttributedString.Key: Any]
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+        button.setAttributedTitle(NSAttributedString(string: title, attributes: attr), for: UIControl.State.normal)
 
         button.addTarget(self, action: #selector(onNotReceive), forControlEvents: ASControlNodeEvent.touchUpInside)
 

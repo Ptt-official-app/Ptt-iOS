@@ -6,8 +6,8 @@
 //  Copyright © 2021 Ptt. All rights reserved.
 //
 
-import XCTest
 @testable import Ptt
+import XCTest
 
 class StringExtensionTest: XCTestCase {
     func testGetBoardName() throws {

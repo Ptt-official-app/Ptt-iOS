@@ -32,7 +32,7 @@ private extension PopularBoardsCoordinator {
     func showPopularBoardsView() {
         let popularBoardsView = factory.makePopularBoardsView()
 
-        popularBoardsView.onBoardSelect = { [unowned self] (boardName) in
+        popularBoardsView.onBoardSelect = { [unowned self] boardName in
             self.runBoardFlow(withBoardName: boardName)
         }
 

@@ -32,11 +32,11 @@ private extension BoardCoordinator {
     func showBoardView(withBoardName boardName: String) {
         let boardView = factory.makeBoardView(withBoardName: boardName)
 
-        boardView.onArticleSelect = { [weak self] (boardArticle) in
+        boardView.onArticleSelect = { [weak self] boardArticle in
             self?.showArticleView(withBoardArticle: boardArticle)
         }
 
-        boardView.composeArticle = { [weak self] (boardName) in
+        boardView.composeArticle = { [weak self] boardName in
             self?.showComposeArticleView(withBoardName: boardName)
         }
 

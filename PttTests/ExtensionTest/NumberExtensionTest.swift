@@ -6,8 +6,8 @@
 //  Copyright © 2021 Ptt. All rights reserved.
 //
 
-import XCTest
 @testable import Ptt
+import XCTest
 
 class NumberExtensionTest: XCTestCase {
 
@@ -15,10 +15,10 @@ class NumberExtensionTest: XCTestCase {
         let num1 = 124
         XCTAssertEqual(num1.easyRead, "124")
 
-        let num2 = 1234
+        let num2 = 1_234
         XCTAssertEqual(num2.easyRead, "1.2K")
 
-        let num3 = 12345678
+        let num3 = 12_345_678
         XCTAssertEqual(num3.easyRead, "12.3M")
     }
 }

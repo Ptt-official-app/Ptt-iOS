@@ -21,8 +21,8 @@ struct GlobalAppearance {
                 UITabBar.appearance().barTintColor = PttColors.codGray.color
                 UINavigationBar.appearance().largeTitleTextAttributes = attrs
             } else {
-                UINavigationBar.appearance().barTintColor = UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0)
-                UITabBar.appearance().barTintColor = UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0)
+                UINavigationBar.appearance().barTintColor = UIColor(red: 23 / 255, green: 23 / 255, blue: 23 / 255, alpha: 1.0)
+                UITabBar.appearance().barTintColor = UIColor(red: 23 / 255, green: 23 / 255, blue: 23 / 255, alpha: 1.0)
             }
             UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         }
@@ -32,7 +32,7 @@ struct GlobalAppearance {
         if #available(iOS 11.0, *) {
             return PttColors.tangerine.color
         } else {
-            return UIColor(red: 255/255, green: 159/255, blue: 10/255, alpha: 1.0)
+            return UIColor(red: 255 / 255, green: 159 / 255, blue: 10 / 255, alpha: 1.0)
         }
     }
 
@@ -40,7 +40,7 @@ struct GlobalAppearance {
         if #available(iOS 11.0, *) {
             return PttColors.codGray.color
         } else {
-            return UIColor(red: 23/255, green: 23/255, blue: 23/255, alpha: 1.0)
+            return UIColor(red: 23 / 255, green: 23 / 255, blue: 23 / 255, alpha: 1.0)
         }
     }
 }
@@ -48,7 +48,7 @@ struct GlobalAppearance {
 extension UINavigationController {
 
     /// Only required for iOS 12 or earlier
-    override open var preferredStatusBarStyle: UIStatusBarStyle {
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
         if #available(iOS 13.0, *) {
             // For forward compatibility
             if traitCollection.userInterfaceStyle == .light {

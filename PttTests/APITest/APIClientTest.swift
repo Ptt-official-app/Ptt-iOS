@@ -6,8 +6,8 @@
 //  Copyright © 2020 Ptt. All rights reserved.
 //
 
-import XCTest
 @testable import Ptt
+import XCTest
 
 final class APIClientTest: XCTestCase {
     private lazy var manager = APITestClient()
@@ -19,7 +19,7 @@ final class APIClientTest: XCTestCase {
         let session = MockURLSession(mockDataTask: dataTask, fakeData: nil, error: unknowError)
         let client = APIClient(session: session)
 
-        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { (result) in
+        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { result in
             switch result {
             case .failure(let error):
                 XCTAssertTrue(error.message == "Network error")
@@ -35,7 +35,7 @@ final class APIClientTest: XCTestCase {
         let session = MockURLSession(mockDataTask: dataTask, fakeData: Data(), error: nil, statusCode: statusCode)
         let client = APIClient(session: session)
 
-        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { (result) in
+        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { result in
             switch result {
             case .failure(let error):
                 let msg = "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"
@@ -51,7 +51,7 @@ final class APIClientTest: XCTestCase {
         let session = MockURLSession(mockDataTask: dataTask, fakeData: nil, error: nil)
         let client = APIClient(session: session)
 
-        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { (result) in
+        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { result in
             switch result {
             case .failure(let error):
                 XCTAssert(error.message == "No data")
@@ -63,7 +63,7 @@ final class APIClientTest: XCTestCase {
 
     func testLoginSuccess() {
         let client = manager.login()
-        client.login(account: "asd", password: "123") { (result) in
+        client.login(account: "asd", password: "123") { result in
             switch result {
             case .failure:
                 XCTAssert(false)
@@ -77,7 +77,7 @@ final class APIClientTest: XCTestCase {
     func testGetBoardArticlesSuccess() {
         let client = manager.newArticleClient()
 
-        client.getBoardArticles(of: .legacy(boardName: "MyBoard", page: 1)) { (result) in
+        client.getBoardArticles(of: .legacy(boardName: "MyBoard", page: 1)) { result in
             switch result {
             case .failure:
                 XCTAssert(false)
@@ -93,7 +93,7 @@ final class APIClientTest: XCTestCase {
 
     func testGetArticleSuccess() {
         let client = manager.getArticleClient()
-        client.getArticle(of: .legacy(boardName: "MyBoard", filename: "M.392837.A.F25")) { (result) in
+        client.getArticle(of: .legacy(boardName: "MyBoard", filename: "M.392837.A.F25")) { result in
             switch result {
                 case .failure:
                     XCTAssert(false)
@@ -114,7 +114,7 @@ final class APIClientTest: XCTestCase {
     func testBoardListSuccess() {
         let client = manager.getBoardList()
 
-        client.getBoardList(token: "eyJhbGc....", keyword: "", startIdx: "", max: 300) { (result) in
+        client.getBoardList(token: "eyJhbGc....", keyword: "", startIdx: "", max: 300) { result in
             switch result {
                 case .failure:
                     XCTAssert(false)

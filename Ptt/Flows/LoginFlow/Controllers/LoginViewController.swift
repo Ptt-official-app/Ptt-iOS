@@ -6,9 +6,9 @@
 //  Copyright © 2020 Ptt. All rights reserved.
 //
 
+import AsyncDisplayKit
 import Foundation
 import UIKit
-import AsyncDisplayKit
 
 protocol LoginView: BaseView {
     var onCompleteAuth: (() -> Void)? { get set }
@@ -61,7 +61,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
         RightfuncStackSpec.style.preferredSize = CGSize(width: global_width, height: 44)
 
         funcStackSpec = ASAbsoluteLayoutSpec(children: [RightfuncStackSpec, LeftfuncStackSpec])
-        funcStackSpec?.style.preferredSize = CGSize(width: global_width, height: 44+43)
+        funcStackSpec?.style.preferredSize = CGSize(width: global_width, height: 44 + 43)
 
         initErrorViews()
         initVerifyCodeViews()
@@ -252,7 +252,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
         // The attributed text length can't be changed -_-
         let title = "帳密  驗證  資料"
 
-        let paragraphStyle = NSMutableParagraphStyle.init()
+        let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .right
         paragraphStyle.paragraphSpacing = 2
         paragraphStyle.lineSpacing = 0
@@ -316,14 +316,14 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
         return button
     }()
 
-    lazy var lbLine: ASTextNode =  {
+    lazy var lbLine: ASTextNode = {
         let label = ASTextNode()
         let attr: [NSAttributedString.Key: Any] = [
             .foregroundColor: PttColors.paleGrey.color,
             .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline)
         ]
 
-        var title = NSAttributedString.init(string: "|", attributes: attr)
+        var title = NSAttributedString(string: "|", attributes: attr)
         label.attributedText = title
         return label
     }()
@@ -334,9 +334,9 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
         return line
     }()
 
-    lazy var lbTitle: ASTextNode =  {
+    lazy var lbTitle: ASTextNode = {
         let label = ASTextNode()
-        let paragraphStyle = NSMutableParagraphStyle.init()
+        let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .left
         paragraphStyle.paragraphSpacing = 2
         paragraphStyle.lineSpacing = 0
@@ -346,7 +346,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
             NSAttributedString.Key.paragraphStyle: paragraphStyle
         ]
 
-        label.attributedText = NSAttributedString.init(string: "批踢踢實業坊\nPtt.cc", attributes: attributes)
+        label.attributedText = NSAttributedString(string: "批踢踢實業坊\nPtt.cc", attributes: attributes)
 
         return label
     }()
@@ -393,7 +393,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
     // Fill Information Views:
     lazy var lbFillTitle: ASTextNode = getlbFillTitle()
     lazy var tfFillRealName = gettfFillRealName()
-    lazy var tfFillBirthday =  gettfFillBirthday()
+    lazy var tfFillBirthday = gettfFillBirthday()
     lazy var tfFillAddress = gettfFillAddress()
     lazy var lbNeedReason: ASButtonNode = getlbNeedReason()
     lazy var btnOpenAccount: ASButtonNode = getbtnOpenAccount()
@@ -415,7 +415,7 @@ extension LoginViewController: UITextFieldDelegate {
         let keyboardHeight: Int = lastKeyboardHeight + Int(self.btnForget.frame.height + self.btnLogin.frame.height + 31) // 31 = login~forget height
 
         let margin_to_keyboard = 10
-        let diff = Int(btnLogin.view.frame.origin.y) - (screenHeight-keyboardHeight) + margin_to_keyboard
+        let diff = Int(btnLogin.view.frame.origin.y) - (screenHeight - keyboardHeight) + margin_to_keyboard
 
         if diff > 0 {
             let point = CGPoint(x: 0, y: Int(diff) )
@@ -508,7 +508,7 @@ extension LoginViewController {
         if #available(iOS 11.0, *) {
             return PttColors.paleGrey.color
         } else {
-            return UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
+            return UIColor(red: 240 / 255, green: 240 / 255, blue: 247 / 255, alpha: 1.0)
         }
     }
 
@@ -516,7 +516,7 @@ extension LoginViewController {
         if #available(iOS 11.0, *) {
             return PttColors.shark.color
         } else {
-            return UIColor(red: 28/255, green: 28/255, blue: 31/255, alpha: 1.0)
+            return UIColor(red: 28 / 255, green: 28 / 255, blue: 31 / 255, alpha: 1.0)
         }
     }
 
@@ -524,7 +524,7 @@ extension LoginViewController {
         if #available(iOS 11.0, *) {
             return PttColors.tangerine.color // UIColor(named: "tintColor-255-159-10")!
         } else {
-            return UIColor(red: 255/255, green: 159/255, blue: 10/255, alpha: 1.0)
+            return UIColor(red: 255 / 255, green: 159 / 255, blue: 10 / 255, alpha: 1.0)
         }
     }
 

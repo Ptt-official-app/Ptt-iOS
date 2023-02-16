@@ -6,8 +6,8 @@
 //  Copyright © 2022 Ptt. All rights reserved.
 //
 
-import Foundation
 import AsyncDisplayKit
+import Foundation
 import UIKit
 
 extension LoginViewController {
@@ -32,7 +32,7 @@ extension LoginViewController {
 
     func getErrorView() -> ASTextNode {
         let label = ASTextNode()
-        let title = NSAttributedString.init(string: "Error Message 123 123 123 123 456 456 456 ASDF", attributes: getErrorAttr())
+        let title = NSAttributedString(string: "Error Message 123 123 123 123 456 456 456 ASDF", attributes: getErrorAttr())
         label.attributedText = title
         return label
     }
@@ -42,6 +42,6 @@ extension LoginViewController {
     }
 
     func displayError(message: String) {
-        lbError.attributedText = NSAttributedString.init(string: message, attributes: getErrorAttr())
+        lbError.attributedText = NSAttributedString(string: message, attributes: getErrorAttr())
     }
 }

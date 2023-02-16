@@ -6,9 +6,9 @@
 //  Copyright © 2022 Ptt. All rights reserved.
 //
 
+import AsyncDisplayKit
 import Foundation
 import UIKit
-import AsyncDisplayKit
 
 extension LoginViewController {
 
@@ -24,7 +24,7 @@ extension LoginViewController {
         let forgetCenterLayout = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0), child: forgetInset)
 
         // login
-        lbTitle.style.preferredSize = CGSize(width: global_width, height: 58+63)
+        lbTitle.style.preferredSize = CGSize(width: global_width, height: 58 + 63)
         tfUsername.style.preferredSize = CGSize(width: global_width, height: 30)
         tfPassword.style.preferredSize = CGSize(width: global_width, height: 30)
         btnLogin.style.preferredSize = CGSize(width: global_width, height: 30)
@@ -37,7 +37,7 @@ extension LoginViewController {
         self.node.addSubnode(self.btnForget)
         self.node.addSubnode(self.btnUserAgreement)
         self.node.addSubnode(self.vLine)
-        self.node.bounds = CGRect.init(x: 0, y: 0, width: 100, height: 100)
+        self.node.bounds = CGRect(x: 0, y: 0, width: 100, height: 100)
 
         loginStackSpec = ASCenterLayoutSpec(centeringOptions: ASCenterLayoutSpecCenteringOptions.X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: ASStackLayoutSpec(direction: .vertical,
                                                    spacing: 0,
@@ -69,7 +69,7 @@ extension LoginViewController {
     }
 
     func gettfUsername() -> ASDisplayNode {
-        return ASDisplayNode.init { () -> UIView in
+        return ASDisplayNode { () -> UIView in
             let textField: LoginTextField = LoginTextField(type: .Username)
             textField.title = L10n.username
             textField.delegate = self
@@ -83,7 +83,7 @@ extension LoginViewController {
     }
 
     func gettfPassword() -> ASDisplayNode {
-        return ASDisplayNode.init { () -> UIView in
+        return ASDisplayNode { () -> UIView in
             let textField: LoginTextField = LoginTextField(type: .Password)
 
             textField.title = L10n.password
@@ -106,7 +106,7 @@ extension LoginViewController {
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
             NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
         ] as [NSAttributedString.Key: Any]
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+        button.setAttributedTitle(NSAttributedString(string: title, attributes: attr), for: UIControl.State.normal)
 
         button.addTarget(self, action: #selector(userAgreementPress), forControlEvents: ASControlNodeEvent.touchUpInside)
 
@@ -128,11 +128,11 @@ extension LoginViewController {
         button.setBackgroundImage(UIImage.backgroundImg(from: .clear), for: UIControl.State.normal)
 
         button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.selected)
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr_tint), for: UIControl.State.selected)
+        button.setAttributedTitle(NSAttributedString(string: title, attributes: attr_tint), for: UIControl.State.selected)
 
         // override the disable state
         button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.disabled)
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr_tint), for: UIControl.State.disabled)
+        button.setAttributedTitle(NSAttributedString(string: title, attributes: attr_tint), for: UIControl.State.disabled)
 
         button.addTarget(self, action: #selector(loginPress), forControlEvents: ASControlNodeEvent.touchUpInside)
 
@@ -177,7 +177,7 @@ extension LoginViewController {
         }
 
         self.btnLogin.isEnabled = false
-        APIClient.shared.login(account: account, password: passwd) { (result) in
+        APIClient.shared.login(account: account, password: passwd) { result in
             self.btnLogin.isEnabled = true
             DispatchQueue.main.async {
                 print("login using", account, " result", result)

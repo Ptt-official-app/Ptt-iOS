@@ -6,8 +6,8 @@
 //  Copyright © 2020 Ptt. All rights reserved.
 //
 
-import UIKit
 import SafariServices
+import UIKit
 
 protocol ArticleView: BaseView {}
 
@@ -75,7 +75,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
                             if #available(iOS 11.0, *) {
                                 contentAttributes[.foregroundColor] = PttColors.paleGrey.color
                             } else {
-                                contentAttributes[.foregroundColor] = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
+                                contentAttributes[.foregroundColor] = UIColor(red: 240 / 255, green: 240 / 255, blue: 247 / 255, alpha: 1.0)
                             }
                         }
                         attributedText.append(NSAttributedString(string: contentElement + separator, attributes: contentAttributes))
@@ -113,7 +113,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
     }
     private let cellReuseIdentifier = "CommentCell"
 
-    init(article: APIModel.BoardArticle, boardName: String, apiClient: APIClientProtocol=APIClient.shared) {
+    init(article: APIModel.BoardArticle, boardName: String, apiClient: APIClientProtocol = APIClient.shared) {
         self.article = article
         self.boardName = boardName
         self.filename = article.articleID
@@ -126,7 +126,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
         textView.attributedText = headerAttributedString(of: article)
     }
 
-    init(url: URL, apiClient: APIClientProtocol=APIClient.shared) {
+    init(url: URL, apiClient: APIClientProtocol = APIClient.shared) {
         let (boardName, filename) = APIModel.FullArticle.info(from: url)
         self.boardName = boardName
         self.filename = filename
@@ -232,7 +232,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
         } else {
             articleParams = .go_pttbbs(bid: boardName, aid: filename)
         }
-        self.apiClient.getArticle(of: articleParams) { (result) in
+        self.apiClient.getArticle(of: articleParams) { result in
             DispatchQueue.main.async {
                 self.activityIndicator.stopAnimating()
                 if #available(iOS 10.0, *) {

@@ -19,7 +19,7 @@ class ArticleClassTableViewCell: UITableViewCell {
         titleLabel.font = titleLabel.font.withSize(18)
         titleLabel.textColor = GlobalAppearance.tintColor
         titleLabel.textAlignment = .center
-        titleLabel.backgroundColor = UIColor(red: 34/255, green: 34/255, blue: 36/255, alpha: 1.0)
+        titleLabel.backgroundColor = UIColor(red: 34 / 255, green: 34 / 255, blue: 36 / 255, alpha: 1.0)
         contentView.addSubview(self.titleLabel)
     }
 
@@ -38,6 +38,6 @@ class ArticleClassTableViewCell: UITableViewCell {
 
     func configure(index: Int, listLimit: Int, value: String) {
         titleLabel.text = value
-        titleLabel.textColor = (listLimit == index) ? UIColor(red: 136/255, green: 136/255, blue: 148/255, alpha: 1.0) : GlobalAppearance.tintColor
+        titleLabel.textColor = (listLimit == index) ? UIColor(red: 136 / 255, green: 136 / 255, blue: 148 / 255, alpha: 1.0) : GlobalAppearance.tintColor
     }
 }

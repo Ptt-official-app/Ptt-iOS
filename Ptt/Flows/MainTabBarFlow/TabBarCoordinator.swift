@@ -37,8 +37,7 @@ class TabBarCoordinator: BaseCoordinator, TabBarCoordinatorProtocol {
     // MARK: - TabBarCoordinatorProtocol
     var tabBarView: TabBarView
 
-    func currentPage() -> TabBarPage? {
-        TabBarPage.init(index: tabBarView.selectedIndex)
+    func currentPage() -> TabBarPage? {TabBarPage(index: tabBarView.selectedIndex)
     }
 
     func selectPage(_ page: TabBarPage) {
@@ -46,7 +45,7 @@ class TabBarCoordinator: BaseCoordinator, TabBarCoordinatorProtocol {
     }
 
     func setSelectedIndex(_ index: Int) {
-        guard let page = TabBarPage.init(index: index) else { return }
+        guard let page = TabBarPage(index: index) else { return }
 
         tabBarView.selectedIndex = page.pageOrderNumber()
     }

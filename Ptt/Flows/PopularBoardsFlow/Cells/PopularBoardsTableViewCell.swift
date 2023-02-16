@@ -17,7 +17,7 @@ class PopularBoardsTableViewCell: BoardsTableViewCell {
         if #available(iOS 11.0, *) {
             nuserLabel.textColor = PttColors.paleGrey.color
         } else {
-            nuserLabel.textColor = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
+            nuserLabel.textColor = UIColor(red: 240 / 255, green: 240 / 255, blue: 247 / 255, alpha: 1.0)
         }
         return nuserLabel
     }()
@@ -43,13 +43,13 @@ class PopularBoardsTableViewCell: BoardsTableViewCell {
         boardTitle = viewModel.popularBoards.value[index].title
         nuserLabel.text = "\(viewModel.popularBoards.value[index].nuser)"
 
-        if viewModel.popularBoards.value[index].nuser < 2000 {
+        if viewModel.popularBoards.value[index].nuser < 2_000 {
             nuserUIImageView.setImageColor(color: UIColor.white)
-        } else if viewModel.popularBoards.value[index].nuser < 5000 {
+        } else if viewModel.popularBoards.value[index].nuser < 5_000 {
             nuserUIImageView.setImageColor(color: UIColor.red)
-        } else if viewModel.popularBoards.value[index].nuser < 10000 {
+        } else if viewModel.popularBoards.value[index].nuser < 10_000 {
             nuserUIImageView.setImageColor(color: UIColor.blue)
-        } else if viewModel.popularBoards.value[index].nuser >= 10000 {
+        } else if viewModel.popularBoards.value[index].nuser >= 10_000 {
             nuserUIImageView.setImageColor(color: UIColor.cyan)
         }
     }

@@ -51,7 +51,7 @@ final class PopularArticlesViewModel: PopularArticlesVMProtocol {
                     self.data += lists
                     let lower = self.data.count
                     let paths = Array(upper..<lower)
-                        .map { IndexPath(row: $0, section: 0)}
+                        .map { IndexPath(row: $0, section: 0) }
                     self.uiDelegate?.insert(rows: paths)
                 }
                 self.pageIndex = response.next_idx

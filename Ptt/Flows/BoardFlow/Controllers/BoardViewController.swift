@@ -6,9 +6,9 @@
 //  Copyright © 2020 Ptt. All rights reserved.
 //
 
-import UIKit
-import SafariServices
 import AsyncDisplayKit
+import SafariServices
+import UIKit
 
 struct BoardArticle {
     let article: APIModel.BoardArticle
@@ -47,7 +47,7 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
     private var receivedPage: Int = 0
     private let cellReuseIdentifier = "BoardArticleCell"
 
-    init(boardName: String, apiClient: APIClientProtocol=APIClient.shared) {
+    init(boardName: String, apiClient: APIClientProtocol = APIClient.shared) {
         self.apiClient = apiClient
         self.boardName = boardName
         super.init(node: boardNode)
@@ -105,7 +105,7 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
         self.isRequesting = true
         context.beginBatchFetching()
 
-        self.apiClient.getBoardArticles(of: .go_pttbbs(bid: boardName, startIdx: "")) { (result) in
+        self.apiClient.getBoardArticles(of: .go_pttbbs(bid: boardName, startIdx: "")) { result in
             switch result {
             case .failure(error: let apiError):
                 context.cancelBatchFetching()
@@ -220,7 +220,7 @@ extension BoardViewController: ASTableDataSource {
                 if #available(iOS 11.0, *) {
                     cell.backgroundColor = PttColors.shark.color
                 } else {
-                    cell.backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 31/255, alpha: 1.0)
+                    cell.backgroundColor = UIColor(red: 28 / 255, green: 28 / 255, blue: 31 / 255, alpha: 1.0)
                 }
             } else {
                 cell.backgroundColor = GlobalAppearance.backgroundColor
@@ -352,7 +352,7 @@ private class BoardCellNode: ASCellNode {
         if #available(iOS 11.0, *) {
             textColor = PttColors.paleGrey.color
         } else {
-            textColor = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
+            textColor = UIColor(red: 240 / 255, green: 240 / 255, blue: 247 / 255, alpha: 1.0)
         }
         let attrs: [NSAttributedString.Key: Any] =
             [.font: UIFont.preferredFont(forTextStyle: .title3),

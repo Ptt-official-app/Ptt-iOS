@@ -6,8 +6,8 @@
 //  Copyright © 2021 Ptt. All rights reserved.
 //
 
-import UIKit
 import AsyncDisplayKit
+import UIKit
 
 final class LicenseViewController: ASDKViewController<ASTableNode>, FullscreenSwipeable {
 
@@ -72,7 +72,7 @@ private class LicenseCellNode: ASCellNode {
         if #available(iOS 11.0, *) {
             textColor = PttColors.paleGrey.color
         } else {
-            textColor = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
+            textColor = UIColor(red: 240 / 255, green: 240 / 255, blue: 247 / 255, alpha: 1.0)
         }
         let attributes = [NSAttributedString.Key.foregroundColor: textColor]
         let licenses = [

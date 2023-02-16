@@ -53,7 +53,7 @@ class ArticleClassTableView: UITableView {
         label.textAlignment = .center
         label.textColor = PttColors.paleGrey.color
         label.text = "分類選擇"
-        label.backgroundColor = UIColor(red: 34/255, green: 34/255, blue: 36/255, alpha: 1.0)
+        label.backgroundColor = UIColor(red: 34 / 255, green: 34 / 255, blue: 36 / 255, alpha: 1.0)
         label.setBottomBorder()
         self.tableHeaderView = label
     }
@@ -66,7 +66,7 @@ extension ArticleClassTableView: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ArticleClassTableViewCell.cellIdentifier()) as! ArticleClassTableViewCell
-        cell.configure(index: indexPath.row, listLimit: classList.count-1, value: classList[indexPath.row])
+        cell.configure(index: indexPath.row, listLimit: classList.count - 1, value: classList[indexPath.row])
         return cell
     }
 

@@ -6,8 +6,8 @@
 //  Copyright © 2021 Ptt. All rights reserved.
 //
 
-import UIKit
 import AsyncDisplayKit
+import UIKit
 
 protocol ComposeArticleView: BaseView {
 }
@@ -47,7 +47,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
     lazy var articleTitle: UITextField = {
         var articleTitle = UITextField()
         articleTitle.translatesAutoresizingMaskIntoConstraints = false
-        articleTitle.attributedPlaceholder = NSAttributedString(string: "請輸入文章標題", attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 56/255, green: 56/255, blue: 61/255, alpha: 1.0), NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 24)])
+        articleTitle.attributedPlaceholder = NSAttributedString(string: "請輸入文章標題", attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 56 / 255, green: 56 / 255, blue: 61 / 255, alpha: 1.0), NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 24)])
         articleTitle.font = UIFont.boldSystemFont(ofSize: 24)
         contentView.addSubview(articleTitle)
         return articleTitle
@@ -60,7 +60,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         articleContentView.translatesAutoresizingMaskIntoConstraints = false
         articleContentView.textAlignment = .left
         articleContentView.text = placeholderText
-        articleContentView.textColor = UIColor(red: 56/255, green: 56/255, blue: 61/255, alpha: 1.0)
+        articleContentView.textColor = UIColor(red: 56 / 255, green: 56 / 255, blue: 61 / 255, alpha: 1.0)
         articleContentView.backgroundColor = PttColors.codGray.color
         articleContentView.alwaysBounceVertical = true
         articleContentView.keyboardDismissMode = .interactive
@@ -78,7 +78,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         return articleClassContentView
     }()
 
-    lazy var articleClassTableView: ArticleClassTableView =  {
+    lazy var articleClassTableView: ArticleClassTableView = {
         let articleClassTableView = ArticleClassTableView()
         articleClassTableView.translatesAutoresizingMaskIntoConstraints = false
         articleClassTableView.articleClassTableViewDelegate = self
@@ -104,7 +104,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
             self.loadingView.isHidden = false
             self.navigationController?.isToolbarHidden = true
 
-            APIClient.shared.createArticle(boardId: self.boardName, article: createArticle) { (result) in
+            APIClient.shared.createArticle(boardId: self.boardName, article: createArticle) { result in
                 DispatchQueue.main.async {
                     self.loadingView.isHidden = true
                 }
@@ -244,7 +244,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
     func initToolBar() {
         navigationController?.isToolbarHidden = false
 
-        let deleteComposeButton =  UIBarButtonItem(image: UIImage(systemName: "trash.fill"),
+        let deleteComposeButton = UIBarButtonItem(image: UIImage(systemName: "trash.fill"),
                    style: .plain, target: self,
                    action: #selector(deleteCompose))
 
@@ -420,7 +420,7 @@ extension ComposeArticleViewController: UITextViewDelegate {
     func textViewDidEndEditing(_ textView: UITextView) {
         if articleContentView.text.isEmpty {
             articleContentView.text = placeholderText
-            articleContentView.textColor = UIColor(red: 56/255, green: 56/255, blue: 61/255, alpha: 1.0)
+            articleContentView.textColor = UIColor(red: 56 / 255, green: 56 / 255, blue: 61 / 255, alpha: 1.0)
         }
 
         scrollView.setContentOffset(.zero, animated: true)

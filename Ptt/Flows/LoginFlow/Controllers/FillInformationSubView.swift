@@ -5,8 +5,8 @@
 //  Created by You Gang Kuo on 2022/1/23.
 //  Copyright © 2022 Ptt. All rights reserved.
 //
-import Foundation
 import AsyncDisplayKit
+import Foundation
 import UIKit
 
 extension LoginViewController {
@@ -14,12 +14,12 @@ extension LoginViewController {
     func initFillInformationViews() {
         lbFillTitle.style.preferredSize = CGSize(width: global_width, height: 55)
 
-        tfFillRealName.style.preferredSize = CGSize(width: global_width/2, height: 30)
-        tfFillBirthday.style.preferredSize = CGSize(width: global_width/2, height: 30)
+        tfFillRealName.style.preferredSize = CGSize(width: global_width / 2, height: 30)
+        tfFillBirthday.style.preferredSize = CGSize(width: global_width / 2, height: 30)
         tfFillAddress.style.preferredSize = CGSize(width: global_width, height: 30)
 
-        lbNeedReason.style.preferredSize = CGSize(width: global_width/2, height: 30)
-        btnOpenAccount.style.preferredSize = CGSize(width: global_width/2, height: 30)
+        lbNeedReason.style.preferredSize = CGSize(width: global_width / 2, height: 30)
+        btnOpenAccount.style.preferredSize = CGSize(width: global_width / 2, height: 30)
 
         let horiLine1 = ASStackLayoutSpec(direction: .horizontal,
                                                                   spacing: 0,
@@ -71,7 +71,7 @@ extension LoginViewController {
 
     func getlbFillTitle() -> ASTextNode {
         let label = ASTextNode()
-        let paragraphStyle = NSMutableParagraphStyle.init()
+        let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .left
         paragraphStyle.paragraphSpacing = 2
         paragraphStyle.lineSpacing = 0
@@ -82,12 +82,12 @@ extension LoginViewController {
         ]
 
         let title = "帳號設定成功！\n請完成以下資訊以開通帳號："
-        label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
+        label.attributedText = NSAttributedString(string: title, attributes: attributes)
         return label
     }
 
     func gettfFillRealName() -> ASDisplayNode {
-        return ASDisplayNode.init { () -> UIView in
+        return ASDisplayNode { () -> UIView in
             let tf = LoginTextField(type: TextFieldType.Username)
             tf.title = L10n.realName
 
@@ -98,7 +98,7 @@ extension LoginViewController {
     }
 
     func gettfFillBirthday() -> ASDisplayNode {
-        return ASDisplayNode.init { () -> UIView in
+        return ASDisplayNode { () -> UIView in
             let tf = LoginTextField(type: TextFieldType.Username)
             tf.title = L10n.birthday
             tf.delegate = self
@@ -108,7 +108,7 @@ extension LoginViewController {
     }
 
     func gettfFillAddress() -> ASDisplayNode {
-        return ASDisplayNode.init { () -> UIView in
+        return ASDisplayNode { () -> UIView in
             let tf = LoginTextField(type: TextFieldType.Username)
             tf.title = L10n.address
 
@@ -128,7 +128,7 @@ extension LoginViewController {
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
             NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
         ] as [NSAttributedString.Key: Any]
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+        button.setAttributedTitle(NSAttributedString(string: title, attributes: attr), for: UIControl.State.normal)
 
         button.addTarget(self, action: #selector(onNotReceive), forControlEvents: ASControlNodeEvent.touchUpInside)
 
@@ -144,7 +144,7 @@ extension LoginViewController {
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
             NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
         ] as [NSAttributedString.Key: Any]
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+        button.setAttributedTitle(NSAttributedString(string: title, attributes: attr), for: UIControl.State.normal)
 
         button.addTarget(self, action: #selector(openAccountPress), forControlEvents: ASControlNodeEvent.touchUpInside)
 

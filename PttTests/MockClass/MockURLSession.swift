@@ -15,7 +15,7 @@ class MockURLSession: URLSessionProtocol {
     private let fakeData: Data?
     private let statusCode: Int
 
-    init(mockDataTask: MockURLSessionDataTask, fakeData: Data?=nil, error: Error?=nil, statusCode: Int=200) {
+    init(mockDataTask: MockURLSessionDataTask, fakeData: Data? = nil, error: Error? = nil, statusCode: Int = 200) {
         self.error = error
         self.mockDataTask = mockDataTask
         self.fakeData = fakeData

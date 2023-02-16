@@ -6,9 +6,9 @@
 //  Copyright © 2021 Ptt. All rights reserved.
 //
 
+import AsyncDisplayKit
 import Foundation
 import UIKit
-import AsyncDisplayKit
 
 extension LoginViewController {
 
@@ -114,7 +114,7 @@ extension LoginViewController {
         }
 
         self.btnLogin.isEnabled = false
-        APIClient.shared.login(account: account, password: passwd) { (result) in
+        APIClient.shared.login(account: account, password: passwd) { result in
             DispatchQueue.main.async {
                 print("login using", account, " result", result)
                 switch result {
@@ -133,7 +133,7 @@ extension LoginViewController {
     }
 
     func gettfRegisterEmail() -> ASDisplayNode {
-        return ASDisplayNode.init { () -> UIView in
+        return ASDisplayNode { () -> UIView in
             let tf = LoginTextField(type: TextFieldType.Email)
             tf.title = L10n.email
 
@@ -145,7 +145,7 @@ extension LoginViewController {
     }
 
     func gettfRegisterUsername() -> ASDisplayNode {
-        return ASDisplayNode.init { () -> UIView in
+        return ASDisplayNode { () -> UIView in
             let tf = LoginTextField(type: TextFieldType.Username)
             tf.title = L10n.username
 
@@ -157,7 +157,7 @@ extension LoginViewController {
     }
 
     func gettfRegisterPassword() -> ASDisplayNode {
-        return ASDisplayNode.init { () -> UIView in
+        return ASDisplayNode { () -> UIView in
             let tf = LoginTextField(type: TextFieldType.Password)
             tf.title = L10n.password
 
@@ -184,11 +184,11 @@ extension LoginViewController {
         button.setBackgroundImage(UIImage.backgroundImg(from: .clear), for: UIControl.State.normal)
 
         button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.selected)
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr_tint), for: UIControl.State.selected)
+        button.setAttributedTitle(NSAttributedString(string: title, attributes: attr_tint), for: UIControl.State.selected)
 
         // override the disable state
         button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.disabled)
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr_tint), for: UIControl.State.disabled)
+        button.setAttributedTitle(NSAttributedString(string: title, attributes: attr_tint), for: UIControl.State.disabled)
 
         button.addTarget(self, action: #selector(self.btnAttemptRegisterPress), forControlEvents: ASControlNodeEvent.touchUpInside)
 
@@ -204,7 +204,7 @@ extension LoginViewController {
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
             NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
         ] as [NSAttributedString.Key: Any]
-        button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
+        button.setAttributedTitle(NSAttributedString(string: title, attributes: attr), for: UIControl.State.normal)
 
         button.addTarget(self, action: #selector(userAgreementPress), forControlEvents: ASControlNodeEvent.touchUpInside)
 
