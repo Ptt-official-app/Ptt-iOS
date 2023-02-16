@@ -12,6 +12,7 @@
 		3E0101AE25669F5A00D39FAD /* APIClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0101AD25669F5A00D39FAD /* APIClientTest.swift */; };
 		3E0101B52566A9C500D39FAD /* BoardArticles.json in Resources */ = {isa = PBXBuildFile; fileRef = 3E0101B42566A9C500D39FAD /* BoardArticles.json */; };
 		3E0101BD2566AD1400D39FAD /* Article.json in Resources */ = {isa = PBXBuildFile; fileRef = 3E0101BC2566AD1400D39FAD /* Article.json */; };
+		3E15F01A299E567B00651809 /* KeyChainItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E15F019299E567B00651809 /* KeyChainItemTests.swift */; };
 		3E16943627611CE800F19B8E /* ConstrainsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E16943527611CE800F19B8E /* ConstrainsExtension.swift */; };
 		3E1694392761260500F19B8E /* PopularArticleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1694372761260500F19B8E /* PopularArticleCell.swift */; };
 		3E16943A2761260500F19B8E /* PopularArticleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E1694382761260500F19B8E /* PopularArticleCell.xib */; };
@@ -58,7 +59,7 @@
 		94BBA52025CF89D800FFFF0F /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BBA51F25CF89D700FFFF0F /* RegisterViewController.swift */; };
 		94D3FC2D2792726D001B61C5 /* TextFieldNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3FC2C2792726D001B61C5 /* TextFieldNode.swift */; };
 		94EB641225AC183F00BF69AB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EB641125AC183F00BF69AB /* LoginViewController.swift */; };
-		94EB641A25AD2FF800BF69AB /* LoginKeyChainItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EB641925AD2FF800BF69AB /* LoginKeyChainItem.swift */; };
+		94EB641A25AD2FF800BF69AB /* KeyChainItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EB641925AD2FF800BF69AB /* KeyChainItem.swift */; };
 		98E73DAD0503CF0D8D585826 /* Pods_PttTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E84C05B084821F8B5031D3BD /* Pods_PttTests.framework */; };
 		9B564C28256A9D7800787FD7 /* Coordinatorable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B564C27256A9D7800787FD7 /* Coordinatorable.swift */; };
 		9B564C2F256A9EAC00787FD7 /* Presentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B564C2E256A9EAC00787FD7 /* Presentable.swift */; };
@@ -135,6 +136,7 @@
 		3E0101AD25669F5A00D39FAD /* APIClientTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTest.swift; sourceTree = "<group>"; };
 		3E0101B42566A9C500D39FAD /* BoardArticles.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BoardArticles.json; sourceTree = "<group>"; };
 		3E0101BC2566AD1400D39FAD /* Article.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Article.json; sourceTree = "<group>"; };
+		3E15F019299E567B00651809 /* KeyChainItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainItemTests.swift; sourceTree = "<group>"; };
 		3E16943527611CE800F19B8E /* ConstrainsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstrainsExtension.swift; sourceTree = "<group>"; };
 		3E1694372761260500F19B8E /* PopularArticleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularArticleCell.swift; sourceTree = "<group>"; };
 		3E1694382761260500F19B8E /* PopularArticleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopularArticleCell.xib; sourceTree = "<group>"; };
@@ -184,7 +186,7 @@
 		94BBA51F25CF89D700FFFF0F /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		94D3FC2C2792726D001B61C5 /* TextFieldNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldNode.swift; sourceTree = "<group>"; };
 		94EB641125AC183F00BF69AB /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		94EB641925AD2FF800BF69AB /* LoginKeyChainItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginKeyChainItem.swift; sourceTree = "<group>"; };
+		94EB641925AD2FF800BF69AB /* KeyChainItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainItem.swift; sourceTree = "<group>"; };
 		9B564C27256A9D7800787FD7 /* Coordinatorable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinatorable.swift; sourceTree = "<group>"; };
 		9B564C2E256A9EAC00787FD7 /* Presentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presentable.swift; sourceTree = "<group>"; };
 		9B564C32256A9F3500787FD7 /* Routerable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routerable.swift; sourceTree = "<group>"; };
@@ -300,6 +302,22 @@
 			path = FakeData;
 			sourceTree = "<group>";
 		};
+		3E15F017299E563700651809 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				94EB641925AD2FF800BF69AB /* KeyChainItem.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		3E15F018299E566000651809 /* CommonTest */ = {
+			isa = PBXGroup;
+			children = (
+				3E15F019299E567B00651809 /* KeyChainItemTests.swift */,
+			);
+			path = CommonTest;
+			sourceTree = "<group>";
+		};
 		3E29387E25596B9500240C0F /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -385,13 +403,6 @@
 			path = Generated;
 			sourceTree = "<group>";
 		};
-		3ECAD05E2762776B00F50A91 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
 		3EDE67072760F8110063D6DF /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -426,7 +437,6 @@
 			children = (
 				9411ED9825A0A8C70005ADCB /* Controllers */,
 				9411EDA525A0AEC30005ADCB /* LoginCoordinator.swift */,
-				94EB641925AD2FF800BF69AB /* LoginKeyChainItem.swift */,
 			);
 			path = LoginFlow;
 			sourceTree = "<group>";
@@ -631,6 +641,7 @@
 		CD731CD225BC8945008C43DA /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				3E15F017299E563700651809 /* Utilities */,
 				CD6C1C1C26B7756700EBFEA9 /* Views */,
 				CD731CD325BC8945008C43DA /* Cells */,
 				CD731CD525BC8945008C43DA /* ResultsTableController */,
@@ -765,7 +776,7 @@
 		EA475F8A23C4834C000867FE /* PttTests */ = {
 			isa = PBXGroup;
 			children = (
-				3ECAD05E2762776B00F50A91 /* ViewModels */,
+				3E15F018299E566000651809 /* CommonTest */,
 				3E6205182762721800CC8236 /* ExtensionTest */,
 				3E0101B32566A9A200D39FAD /* FakeData */,
 				3E0101AC25669F3B00D39FAD /* APITest */,
@@ -918,7 +929,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "function generate() {\n  cd ${SRCROOT}/BuildTools \n  swiftgen config run\n}\n\nif which swiftgen > /dev/null; then\n  generate\nelse\n  brew bundle\n  generate\nfi\n";
+			shellScript = "function generate() {\n  cd ${SRCROOT}/BuildTools \n  swiftgen config run\n}\n\nif which swiftgen > /dev/null; then\n  generate\nelse\n  brew bundle install --no-upgrade\n  generate\nfi\n";
 		};
 		912D926E93907D87D492B266 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1056,7 +1067,7 @@
 				9B564C6B256AA8C800787FD7 /* BaseCoordinator.swift in Sources */,
 				3E620517276252D800CC8236 /* NumberExtension.swift in Sources */,
 				9BEE1CC02585D8E8002A9D95 /* BoardCoordinator.swift in Sources */,
-				94EB641A25AD2FF800BF69AB /* LoginKeyChainItem.swift in Sources */,
+				94EB641A25AD2FF800BF69AB /* KeyChainItem.swift in Sources */,
 				CD767B5125B0B79B0050E12A /* UserDefaultsManager.swift in Sources */,
 				CD731CD925BC8945008C43DA /* BoardsTableViewCell.swift in Sources */,
 				CD767B7A25B0B9980050E12A /* SettingsViewController.swift in Sources */,
@@ -1091,6 +1102,7 @@
 				3ECAD05D2762766A00F50A91 /* NumberExtensionTest.swift in Sources */,
 				3E62051A2762723500CC8236 /* StringExtensionTest.swift in Sources */,
 				3EE352E7276DDF1000C2CE67 /* DateExtensionTest.swift in Sources */,
+				3E15F01A299E567B00651809 /* KeyChainItemTests.swift in Sources */,
 				3ED16B3E25713D64004A33E0 /* APITestClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

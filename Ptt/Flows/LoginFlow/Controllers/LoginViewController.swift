@@ -379,7 +379,6 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView{
     lazy var lbError:ASTextNode = getErrorView()
     
     func onLoginSuccess(token:String) {
-        _ = LoginKeyChainItem.shared.saveToken(token)
         // todo: push view
         DispatchQueue.main.async {
             print("ready to call finish flow in main thread")

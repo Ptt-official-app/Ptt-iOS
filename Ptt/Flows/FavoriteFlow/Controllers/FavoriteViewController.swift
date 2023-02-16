@@ -82,7 +82,7 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
         print("Debug logout button press")
         
         DispatchQueue.main.async {
-            _ = LoginKeyChainItem.shared.removeToken()
+            KeyChainItem.delete(for: .loginToken)
             self.onLogout?()
         }
     }
