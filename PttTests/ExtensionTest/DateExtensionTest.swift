@@ -18,7 +18,7 @@ final class TimeIntervalExtensionTest: XCTestCase {
 
     func testDiffFrom_second_level() throws {
         let interval: TimeInterval = 1639820098
-        
+
         var interval_diff = interval + 10
         var date_diff = Date(timeIntervalSince1970: interval_diff)
         XCTAssertEqual(interval.diff(from: date_diff), "Just now")
@@ -38,7 +38,7 @@ final class TimeIntervalExtensionTest: XCTestCase {
         var interval_diff = interval + minuteDiff
         var date_diff = Date(timeIntervalSince1970: interval_diff)
         XCTAssertEqual(interval.diff(from: date_diff), "1 minute ago")
-        
+
         interval_diff = interval + 2 * minuteDiff
         date_diff = Date(timeIntervalSince1970: interval_diff)
         XCTAssertEqual(interval.diff(from: date_diff), "2 minutes ago")

@@ -13,13 +13,13 @@ class FavoriteCoordinator: BaseCoordinator {
     private let factory: FavoriteSceneFactoryProtocol & BoardSceneFactoryProtocol
     private let coordinatoryFactory: CoordinatorFactoryProtocol
     private let router: Routerable
-    
+
     init(router: Routerable, factory: FavoriteSceneFactoryProtocol, coordinatoryFactory: CoordinatorFactoryProtocol) {
         self.router = router
         self.factory = factory
         self.coordinatoryFactory = coordinatoryFactory
     }
-    
+
     override func start() {
         showFavoriteView()
     }
@@ -28,29 +28,29 @@ class FavoriteCoordinator: BaseCoordinator {
 // MARK: - Private
 
 private extension FavoriteCoordinator {
-    
+
     func showFavoriteView() {
         let favoriteView = factory.makeFavoriteView()
-        
+
         favoriteView.onBoardSelect = { [unowned self] (boardName) in
             self.runBoardFlow(withBoardName: boardName)
         }
-        
+
         favoriteView.onLogout = { [unowned self] () in
             self.removeDependency(self)
             self.finshFlow?()
         }
-        
+
         router.setRootModule(favoriteView)
     }
-    
+
     func runBoardFlow(withBoardName boardName: String) {
         let coordinator = BoardCoordinator(router: router, factory: factory, coordinatoryFactory: coordinatoryFactory)
-        
+
         coordinator.finshFlow = { [unowned self] in
             self.removeDependency(coordinator)
         }
-        
+
         addDependency(coordinator)
         coordinator.start(withBoardName: boardName)
     }

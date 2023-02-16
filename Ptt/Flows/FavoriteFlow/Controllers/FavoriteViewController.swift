@@ -10,7 +10,7 @@ import UIKit
 
 protocol FavoriteView: BaseView {
     var onBoardSelect: ((String) -> Void)? { get set }
-    var onLogout:(() -> Void)? { get set }
+    var onLogout: (() -> Void)? { get set }
 }
 
 final class FavoriteViewController: UITableViewController, FavoriteView {
@@ -19,12 +19,12 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
 
     private let cellReuseIdentifier = "FavoriteCell"
     private lazy var resultsTableController = configureResultsTableController()
-    private lazy var searchController : UISearchController = {
+    private lazy var searchController: UISearchController = {
         // For if #available(iOS 11.0, *), no need to set searchController as property (local variable is fine).
        return UISearchController(searchResultsController: resultsTableController)
     }()
-    
-    private var boardListDict : [APIModel.BoardInfo]? = nil
+
+    private var boardListDict: [APIModel.BoardInfo]?
 
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
@@ -38,8 +38,7 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
         if #available(iOS 11.0, *) {
             navigationController?.navigationBar.prefersLargeTitles = true
         }
-        
-        
+
         navigationItem.setRightBarButton(editButtonItem, animated: true)
 
         view.backgroundColor = GlobalAppearance.backgroundColor
@@ -69,18 +68,16 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
         }
 
         NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name("didUpdateFavoriteBoards"), object: nil)
-        
-        
-        
+
         let logoutBarItem = UIBarButtonItem(title: "Logout", style: UIBarButtonItem.Style.plain, target: self, action: #selector(debug_logout))
-        
+
         navigationItem.setLeftBarButton(logoutBarItem, animated: true)
     }
-    
+
     @objc
     func debug_logout() {
         print("Debug logout button press")
-        
+
         DispatchQueue.main.async {
             _ = LoginKeyChainItem.shared.removeToken()
             self.onLogout?()
@@ -145,7 +142,7 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
             onBoardSelect?(Favorite.boards[index].brdname)
         }
     }
-    
+
     private func configureResultsTableController() -> ResultsTableController {
         let controller = ResultsTableController(style: .plain)
         controller.onBoardSelect = onBoardSelect
@@ -174,7 +171,7 @@ extension FavoriteViewController: UISearchResultsUpdating {
                         weakSelf.present(alert, animated: true, completion: nil)
                     }
                 case .success(data: let data):
-                    
+
                     weakSelf.resultsTableController.filteredBoards = data.list
                     DispatchQueue.main.async {
                         // Only update UI for the matching result

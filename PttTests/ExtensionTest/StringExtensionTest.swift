@@ -27,6 +27,6 @@ class StringExtensionTest: XCTestCase {
 
         let str2 = "[Test] random string"
         XCTAssertEqual(str2.withoutCategory, str1)
-        
+
     }
 }

@@ -40,7 +40,7 @@ final class PopularArticlesViewModel: PopularArticlesVMProtocol {
 
         self.apiClient.getPopularArticles(startIdx: self.pageIndex, limit: self.paginationLimit, desc: self.isDescending) { [weak self] result in
             guard let self = self else { return }
-            switch (result) {
+            switch result {
             case .success(let response):
                 let lists = response.list
                 if self.pageIndex.isEmpty {

@@ -798,6 +798,7 @@
 				EA475F6F23C4834C000867FE /* Resources */,
 				C6B1DC1C85F6FDA381BEBEA9 /* [CP] Embed Pods Frameworks */,
 				3EAED621276CD2F1005AC13A /* SwiftGen */,
+				3E15F01B299E5EB000651809 /* SwiftLint */,
 			);
 			buildRules = (
 			);
@@ -898,6 +899,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		3E15F01B299E5EB000651809 /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nbrew bundle install --no-update\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
 		3EAED621276CD2F1005AC13A /* SwiftGen */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -918,7 +937,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "function generate() {\n  cd ${SRCROOT}/BuildTools \n  swiftgen config run\n}\n\nif which swiftgen > /dev/null; then\n  generate\nelse\n  brew bundle\n  generate\nfi\n";
+			shellScript = "function generate() {\n  cd ${SRCROOT}/BuildTools \n  swiftgen config run\n}\n\nif which swiftgen > /dev/null; then\n  generate\nelse\n  PATH=${PATH}:/opt/homebrew/bin/\n  brew bundle\n  generate\nfi\n";
 		};
 		912D926E93907D87D492B266 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

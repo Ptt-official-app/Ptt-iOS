@@ -12,7 +12,7 @@ final class RegisterViewController: UIViewController, RegisterView {
 
     private let webView = WKWebView()
     private let webProgressView = UIProgressView(progressViewStyle: .bar)
-    private var webViewProgressObservation : NSKeyValueObservation!
+    private var webViewProgressObservation: NSKeyValueObservation!
 
     override func loadView() {
         webView.navigationDelegate = self
@@ -20,10 +20,10 @@ final class RegisterViewController: UIViewController, RegisterView {
         webView.backgroundColor = .black
         view = webView
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.navigationItem.title = L10n.register
         self.navigationController?.fixBarColor()
         if #available(iOS 11.0, *) {
@@ -33,22 +33,21 @@ final class RegisterViewController: UIViewController, RegisterView {
             automaticallyAdjustsScrollViewInsets = true
             webView.scrollView.decelerationRate = .normal
         }
-        
+
         navigationController?.navigationBar.ptt_add(subviews: [webProgressView])
         var constraints = [NSLayoutConstraint]()
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[webProgressView]-0-|", options: [], metrics: nil, views: ["webProgressView": webProgressView])
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:[webProgressView(2)]-0-|", options: [], metrics: nil, views: ["webProgressView": webProgressView])
         NSLayoutConstraint.activate(constraints)
-        
-        
-        webViewProgressObservation = webView.observe(\.estimatedProgress, options: [.new], changeHandler: { (webView, change) in
+
+        webViewProgressObservation = webView.observe(\.estimatedProgress, options: [.new], changeHandler: { _, change in
             guard let progress = change.newValue else { return }
             switch progress {
             case 1.0:
                 self.webProgressView.setProgress(Float(progress), animated: false)
                 UIView.animate(withDuration: 0.2, delay: 0.3, options: .curveEaseIn, animations: {
                     self.webProgressView.alpha = 0
-                }) { (isFinished) in
+                }) { _ in
                     self.webProgressView.setProgress(0, animated: false)
                 }
             default:
@@ -70,7 +69,7 @@ final class RegisterViewController: UIViewController, RegisterView {
         super.viewWillDisappear(animated)
         webProgressView.isHidden = true
         self.navigationController?.setNavigationBarHidden(true, animated: true)
-        
+
     }
 
     override func viewDidLayoutSubviews() {
@@ -106,8 +105,8 @@ final class RegisterViewController: UIViewController, RegisterView {
     }
 }
 
-extension RegisterViewController : WKNavigationDelegate {
-    
+extension RegisterViewController: WKNavigationDelegate {
+
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
     }
 
@@ -118,4 +117,3 @@ extension RegisterViewController : WKNavigationDelegate {
         self.present(alert, animated: true, completion: nil)
     }
 }
-

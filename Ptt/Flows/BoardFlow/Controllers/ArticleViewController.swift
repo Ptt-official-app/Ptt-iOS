@@ -15,9 +15,9 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
 
     private var useLegacyAPI: Bool = false
     private let apiClient: APIClientProtocol
-    private var boardName : String?
-    private var filename : String?
-    private var url : URL? {
+    private var boardName: String?
+    private var filename: String?
+    private var url: URL? {
         if let boardName = boardName, let filename = filename {
             var urlComponents = URLComponents()
             urlComponents.scheme = "https"
@@ -31,7 +31,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
     private let textView = UITextView()
     private let activityIndicator = UIActivityIndicatorView()
 
-    private var article : Article? = nil {
+    private var article: Article? {
         didSet {
             if article != nil {
                 guard let article = self.article as? APIModel.FullArticle else {
@@ -48,7 +48,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
                     attributedText.append(self.headerAttributedString(of: article))
                     // Content
                     let contentParagraphStyle = NSMutableParagraphStyle()
-                    let hPadding : CGFloat = {
+                    let hPadding: CGFloat = {
                         if self.view.bounds.width > 320.0 {
                             return 20.0
                         } else {
@@ -62,7 +62,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
                     contentParagraphStyle.baseWritingDirection = .leftToRight
                     contentParagraphStyle.lineHeightMultiple = 1.1
                     contentParagraphStyle.alignment = .left
-                    var contentAttributes : [NSAttributedString.Key : Any] = [
+                    var contentAttributes: [NSAttributedString.Key: Any] = [
                         .font: UIFont.preferredFont(forTextStyle: .body),
                         .paragraphStyle: contentParagraphStyle
                     ]
@@ -75,19 +75,19 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
                             if #available(iOS 11.0, *) {
                                 contentAttributes[.foregroundColor] = PttColors.paleGrey.color
                             } else {
-                                contentAttributes[.foregroundColor] = UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0)
+                                contentAttributes[.foregroundColor] = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
                             }
                         }
                         attributedText.append(NSAttributedString(string: contentElement + separator, attributes: contentAttributes))
                     }
                     // Comments
                     let commentsAttributedString = NSMutableAttributedString()
-                    let commentAuthorAttributes : [NSAttributedString.Key : Any] = [
+                    let commentAuthorAttributes: [NSAttributedString.Key: Any] = [
                         .font: UIFont.preferredFont(forTextStyle: .body),
                         .paragraphStyle: contentParagraphStyle,
                         .foregroundColor: UIColor(red: 1.00, green: 0.99, blue: 0.48, alpha: 1.00)  // #FFFC7A
                     ]
-                    let commentContentAttributes : [NSAttributedString.Key : Any] = [
+                    let commentContentAttributes: [NSAttributedString.Key: Any] = [
                         .font: UIFont.preferredFont(forTextStyle: .body),
                         .paragraphStyle: contentParagraphStyle,
                         .foregroundColor: UIColor(red: 0.62, green: 0.59, blue: 0.16, alpha: 1.00)   // #9D972A
@@ -95,7 +95,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
                     // Note: tabStops https://stackoverflow.com/a/33029957/3796488 or
                     // paragraphSpacingBefore https://stackoverflow.com/a/49427510/3796488
                     // those solutions don't work well; giving up.
-                    let commentDateAttributes : [NSAttributedString.Key : Any] = [
+                    let commentDateAttributes: [NSAttributedString.Key: Any] = [
                         .font: UIFont.preferredFont(forTextStyle: .body),
                         .paragraphStyle: contentParagraphStyle,
                         .foregroundColor: UIColor.systemGray
@@ -225,7 +225,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
         } else {
             activityIndicator.startAnimating()
         }
-        
+
         let articleParams: ArticleParams
         if useLegacyAPI {
             articleParams = .legacy(boardName: boardName, filename: filename)
@@ -254,7 +254,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
     }
 
     @objc private func share(sender: UIBarButtonItem) {
-        var shareUrl : URL? = nil
+        var shareUrl: URL?
         if let article = article as? APIModel.FullArticle {
             shareUrl = URL(string: article.url)
         } else {
@@ -269,22 +269,22 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
 
     private func headerAttributedString(of article: Article) -> NSAttributedString {
         let headParagraphStyle = NSMutableParagraphStyle()
-        let hPadding : CGFloat = 26.0
+        let hPadding: CGFloat = 26.0
         headParagraphStyle.firstLineHeadIndent = hPadding
         headParagraphStyle.headIndent = hPadding
         headParagraphStyle.tailIndent = -hPadding
         headParagraphStyle.baseWritingDirection = .leftToRight
         headParagraphStyle.alignment = .left
         headParagraphStyle.lineSpacing = 4.0
-        let headAttributes : [NSAttributedString.Key : Any] = [
+        let headAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.preferredFont(forTextStyle: .headline),
             .paragraphStyle: headParagraphStyle,
             .foregroundColor: UIColor.systemGray
         ]
         let headerAttributedString = NSMutableAttributedString()
-        let categoryAttachment : NSTextAttachment
-        let authorAttachment : NSTextAttachment
-        let dateAttachment : NSTextAttachment
+        let categoryAttachment: NSTextAttachment
+        let authorAttachment: NSTextAttachment
+        let dateAttachment: NSTextAttachment
         if #available(iOS 13.0, *) {
             categoryAttachment = NSTextAttachment(image: StyleKit.imageOfBoardCategory())
             authorAttachment = NSTextAttachment(image: StyleKit.imageOfAuthor())
@@ -323,7 +323,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
 
 // MARK: - UITextViewDelegate
 
-extension ArticleViewController : UITextViewDelegate {
+extension ArticleViewController: UITextViewDelegate {
 
     /// Legacy method for pre-iOS 10
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {

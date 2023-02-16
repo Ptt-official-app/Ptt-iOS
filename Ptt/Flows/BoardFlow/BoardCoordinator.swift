@@ -9,17 +9,17 @@
 import UIKit
 
 class BoardCoordinator: BaseCoordinator {
-    
+
     private let factory: BoardSceneFactoryProtocol
     private let coordinatoryFactory: CoordinatorFactoryProtocol
     private let router: Routerable
-    
+
     init(router: Routerable, factory: BoardSceneFactoryProtocol, coordinatoryFactory: CoordinatorFactoryProtocol) {
         self.router = router
         self.factory = factory
         self.coordinatoryFactory = coordinatoryFactory
     }
-    
+
     func start(withBoardName boardName: String) {
         showBoardView(withBoardName: boardName)
     }
@@ -28,28 +28,28 @@ class BoardCoordinator: BaseCoordinator {
 // MARK: - Private
 
 private extension BoardCoordinator {
-    
+
     func showBoardView(withBoardName boardName: String) {
         let boardView = factory.makeBoardView(withBoardName: boardName)
-        
+
         boardView.onArticleSelect = { [weak self] (boardArticle) in
             self?.showArticleView(withBoardArticle: boardArticle)
         }
-        
+
         boardView.composeArticle = { [weak self] (boardName) in
             self?.showComposeArticleView(withBoardName: boardName)
         }
-        
+
         router.push(boardView, animated: true, hideBottomBar: true) { [weak self] in
             self?.finshFlow?()
         }
     }
-    
+
     func showArticleView(withBoardArticle boardArticle: BoardArticle) {
         let articleView = factory.makeArticleView(withBoardArticle: boardArticle)
         router.push(articleView)
     }
-    
+
     func showComposeArticleView(withBoardName boardName: String) {
         let composeArticleView = factory.makeComposeArticleView(withBoardName: boardName)
         let nav = UINavigationController(rootViewController: composeArticleView)

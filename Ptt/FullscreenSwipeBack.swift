@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol FullscreenSwipeable : UIViewController {
+protocol FullscreenSwipeable: UIViewController {
 
     func enableFullscreenSwipeBack()
 }
@@ -26,12 +26,12 @@ extension FullscreenSwipeable {
     }
 }
 
-extension UIViewController : UIGestureRecognizerDelegate {
+extension UIViewController: UIGestureRecognizerDelegate {
 
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard let panGestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer else { return false }
         let translation = panGestureRecognizer.translation(in: panGestureRecognizer.view)
-        if (translation.x <= 0) {
+        if translation.x <= 0 {
             return false
         }
         return true

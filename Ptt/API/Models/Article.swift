@@ -8,18 +8,18 @@
 
 import Foundation
 
-protocol Article : Codable {
-    var title : String { get }
-    var date : String { get }
-    var author : String { get }
+protocol Article: Codable {
+    var title: String { get }
+    var date: String { get }
+    var author: String { get }
 
     // implemented in protocol extension below
-    var category : String? { get }
-    var titleWithoutCategory : String { get }
+    var category: String? { get }
+    var titleWithoutCategory: String { get }
 }
 
 extension Article {
-    var category : String? {
+    var category: String? {
         if let leftBracket = title.firstIndex(of: "["), let rightBracket = title.firstIndex(of: "]") {
             let nextLeftBracket = title.index(after: leftBracket)
             let range = nextLeftBracket..<rightBracket
@@ -29,7 +29,7 @@ extension Article {
         return nil
     }
 
-    var titleWithoutCategory : String {
+    var titleWithoutCategory: String {
         if let leftBracket = title.firstIndex(of: "["),
             let rightBracket = title.firstIndex(of: "]") {
             var _title = title

@@ -15,9 +15,9 @@ final class FBPageViewController: UIViewController, FBPageView {
 
     private let webView = WKWebView()
     private let webProgressView = UIProgressView(progressViewStyle: .bar)
-    private var webViewProgressObservation : NSKeyValueObservation!
+    private var webViewProgressObservation: NSKeyValueObservation!
 
-    private lazy var backItem : UIBarButtonItem = {
+    private lazy var backItem: UIBarButtonItem = {
         if #available(iOS 13.0, *) {
             return UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(back))
         } else {
@@ -27,7 +27,7 @@ final class FBPageViewController: UIViewController, FBPageView {
             return UIBarButtonItem(title: "←", style: .plain, target: self, action: #selector(back))
         }
     }()
-    private lazy var forwardItem : UIBarButtonItem = {
+    private lazy var forwardItem: UIBarButtonItem = {
         if #available(iOS 13.0, *) {
             return UIBarButtonItem(image: UIImage(systemName: "chevron.right"), style: .plain, target: self, action: #selector(forward))
         } else {
@@ -68,16 +68,22 @@ final class FBPageViewController: UIViewController, FBPageView {
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[webProgressView]-0-|", options: [], metrics: nil, views: ["webProgressView": webProgressView])
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:[webProgressView(2)]-0-|", options: [], metrics: nil, views: ["webProgressView": webProgressView])
         NSLayoutConstraint.activate(constraints)
-        webViewProgressObservation = webView.observe(\.estimatedProgress, options: [.new], changeHandler: { (webView, change) in
+        webViewProgressObservation = webView.observe(\.estimatedProgress, options: [.new], changeHandler: { _, change in
             guard let progress = change.newValue else { return }
             switch progress {
             case 1.0:
                 self.webProgressView.setProgress(Float(progress), animated: false)
-                UIView.animate(withDuration: 0.2, delay: 0.3, options: .curveEaseIn, animations: {
-                    self.webProgressView.alpha = 0
-                }) { (isFinished) in
-                    self.webProgressView.setProgress(0, animated: false)
-                }
+                UIView.animate(
+                    withDuration: 0.2,
+                    delay: 0.3,
+                    options: .curveEaseIn,
+                    animations: {
+                        self.webProgressView.alpha = 0
+                    },
+                    completion: { _ in
+                        self.webProgressView.setProgress(0, animated: false)
+                    }
+                )
             default:
                 self.webProgressView.setProgress(Float(progress), animated: true)
                 self.webProgressView.alpha = 1.0
@@ -136,11 +142,11 @@ final class FBPageViewController: UIViewController, FBPageView {
     }
 }
 
-extension FBPageViewController : WKNavigationDelegate {
+extension FBPageViewController: WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let url = navigationAction.request.url else { return }
-        var resultUrl : URL? = nil
+        var resultUrl: URL?
         switch url {
         // lm for mobile, l for desktop (iPadOS)
         case let url where url.host == "lm.facebook.com" || url.host == "l.facebook.com":

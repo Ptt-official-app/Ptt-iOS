@@ -9,18 +9,18 @@
 import UIKit
 
 class BoardsTableViewCell: UITableViewCell {
-    var boardName : String? {
+    var boardName: String? {
         didSet {
             boardNameLabel.text = boardName
         }
     }
-    var boardTitle : String? {
+    var boardTitle: String? {
         didSet {
             boardTitleLabel.text = boardTitle
         }
     }
-    
-    lazy var favoriteButton : FavoriteButton = {
+
+    lazy var favoriteButton: FavoriteButton = {
         let button = FavoriteButton()
         contentView.ptt_add(subviews: [button])
         NSLayoutConstraint.activate([
@@ -31,13 +31,13 @@ class BoardsTableViewCell: UITableViewCell {
         ])
         return button
     }()
-    
+
     private let boardNameLabel = UILabel()
     private let boardTitleLabel = UILabel()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
-        
+
         backgroundColor = GlobalAppearance.backgroundColor
         boardNameLabel.font = UIFont.preferredFont(forTextStyle: .title2)
         boardTitleLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
@@ -69,7 +69,7 @@ class BoardsTableViewCell: UITableViewCell {
 
 class FavoriteButton: UIButton {
 
-    var board : APIModel.BoardInfo? = nil {
+    var board: APIModel.BoardInfo? {
         didSet {
             if let board = self.board, Favorite.boards.contains(where: { $0.brdname == board.brdname }) {
                 isSelected = true
@@ -78,7 +78,7 @@ class FavoriteButton: UIButton {
             }
         }
     }
-    override var isSelected : Bool {
+    override var isSelected: Bool {
         didSet {
             if isSelected {
                 imageView?.tintColor = GlobalAppearance.tintColor

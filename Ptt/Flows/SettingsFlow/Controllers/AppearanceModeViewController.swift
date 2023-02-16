@@ -8,15 +8,15 @@
 
 import UIKit
 
-private enum AppearanceModeSection : Int, CaseIterable {
+private enum AppearanceModeSection: Int, CaseIterable {
     case system, customization
 }
 
-private enum AppearanceModeSystemRow : Int, CaseIterable {
+private enum AppearanceModeSystemRow: Int, CaseIterable {
     case system
 }
 
-private enum AppearanceModeCustomizationRow : Int, CaseIterable {
+private enum AppearanceModeCustomizationRow: Int, CaseIterable {
     case light, dark
 }
 

@@ -8,14 +8,14 @@
 
 import UIKit
 
-class ResultsTableController : UITableViewController, FavoriteView {
+class ResultsTableController: UITableViewController, FavoriteView {
     var onLogout: (() -> Void)?
     var onBoardSelect: ((String) -> Void)?
-    
+
     lazy var filteredBoards: [APIModel.BoardInfo] = {
         return [APIModel.BoardInfo]()
     }()
-    
+
     let activityIndicator = UIActivityIndicatorView()
 
     override func viewDidLoad() {

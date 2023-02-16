@@ -8,7 +8,6 @@
 
 import Foundation
 
-struct APIError : Codable, Error {
-    let message : String
+struct APIError: Codable, Error {
+    let message: String
 }
-

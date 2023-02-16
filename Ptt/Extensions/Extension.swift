@@ -35,7 +35,7 @@ extension UIImageView {
 extension UITextField {
     func setBottomBorder() {
         let layer = CALayer()
-        layer.backgroundColor = UIColor(red:56/255, green:56/255, blue:61/255, alpha:1.0).cgColor
+        layer.backgroundColor = UIColor(red: 56/255, green: 56/255, blue: 61/255, alpha: 1.0).cgColor
         layer.frame = CGRect(x: 0.0, y: self.frame.size.height - 1.0, width: self.frame.size.width, height: 1.0)
         self.clipsToBounds = true
         self.layer.addSublayer(layer)
@@ -46,7 +46,7 @@ extension UITextField {
 extension UILabel {
     func setBottomBorder() {
         let layer = CALayer()
-        layer.backgroundColor = UIColor(red:56/255, green:56/255, blue:61/255, alpha:1.0).cgColor
+        layer.backgroundColor = UIColor(red: 56/255, green: 56/255, blue: 61/255, alpha: 1.0).cgColor
         layer.frame = CGRect(x: 0.0, y: self.frame.size.height - 1.0, width: self.frame.size.width, height: 1.0)
         self.clipsToBounds = true
         self.layer.addSublayer(layer)
@@ -57,7 +57,7 @@ extension UILabel {
 extension Date {
     func toDateString() -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEE MMM dd HH:mm:ss yyyy" //Specify your format that you want
+        dateFormatter.dateFormat = "EEE MMM dd HH:mm:ss yyyy" // Specify your format that you want
         return dateFormatter.string(from: self as Date)
     }
 }

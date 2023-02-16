@@ -21,30 +21,30 @@ protocol BoardView: BaseView {
 }
 
 final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSwipeable, BoardView {
-    
+
     var onArticleSelect: ((BoardArticle) -> Void)?
     var composeArticle: ((String) -> Void)?
 
     private let boardNode = BoardNode()
-    private var tableNode : ASTableNode {
+    private var tableNode: ASTableNode {
         return boardNode.tableNode
     }
-    private var tableView : UITableView {
+    private var tableView: UITableView {
         return tableNode.view
     }
-    private var activityIndicator : UIActivityIndicatorView {
+    private var activityIndicator: UIActivityIndicatorView {
         return boardNode.activityIndicatorNode.view as! UIActivityIndicatorView
     }
-    private var toolbarNode : ToolbarNode {
+    private var toolbarNode: ToolbarNode {
         return boardNode.bottomToolbarNode.toolbarAreaNode
     }
 
     private let apiClient: APIClientProtocol
 
-    private var boardName : String
-    private var board : APIModel.BoardModel? = nil
+    private var boardName: String
+    private var board: APIModel.BoardModel?
     private var isRequesting = false
-    private var receivedPage : Int = 0
+    private var receivedPage: Int = 0
     private let cellReuseIdentifier = "BoardArticleCell"
 
     init(boardName: String, apiClient: APIClientProtocol=APIClient.shared) {
@@ -85,12 +85,12 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
         toolbarNode.searchNode.addTarget(self, action: #selector(search), forControlEvents: .touchUpInside)
         toolbarNode.composeNode.addTarget(self, action: #selector(compose), forControlEvents: .touchUpInside)
         toolbarNode.moreNode.addTarget(self, action: #selector(more), forControlEvents: .touchUpInside)
-        
+
         NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name("didPostNewArticle"), object: nil)
-        
+
         refresh()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if let selectedRow = tableView.indexPathForSelectedRow {
@@ -104,7 +104,7 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
         }
         self.isRequesting = true
         context.beginBatchFetching()
-        
+
         self.apiClient.getBoardArticles(of: .go_pttbbs(bid: boardName, startIdx: "")) { (result) in
             switch result {
             case .failure(error: let apiError):
@@ -313,7 +313,7 @@ private class ToolbarNode: ASDisplayNode {
     let searchNode = ASButtonNode()
     let composeNode = ASButtonNode()
     let moreNode = ASButtonNode()
-    let toolbarHeight : CGFloat = 49.0
+    let toolbarHeight: CGFloat = 49.0
 
     override init() {
         super.init()
@@ -347,21 +347,21 @@ private class ToolbarNode: ASDisplayNode {
 
 private class BoardCellNode: ASCellNode {
 
-    private var titleAttributes : [NSAttributedString.Key : Any] {
-        let textColor : UIColor
+    private var titleAttributes: [NSAttributedString.Key: Any] {
+        let textColor: UIColor
         if #available(iOS 11.0, *) {
             textColor = PttColors.paleGrey.color
         } else {
-            textColor = UIColor(red:240/255, green:240/255, blue:247/255, alpha:1.0)
+            textColor = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
         }
-        let attrs : [NSAttributedString.Key : Any] =
+        let attrs: [NSAttributedString.Key: Any] =
             [.font: UIFont.preferredFont(forTextStyle: .title3),
              .foregroundColor: textColor]
         return attrs
     }
-    private var metadataAttributes : [NSAttributedString.Key : Any] {
-        let textColor : UIColor = .systemGray
-        let attrs : [NSAttributedString.Key : Any] =
+    private var metadataAttributes: [NSAttributedString.Key: Any] {
+        let textColor: UIColor = .systemGray
+        let attrs: [NSAttributedString.Key: Any] =
             [.font: UIFont.preferredFont(forTextStyle: .footnote),
              .foregroundColor: textColor]
         return attrs

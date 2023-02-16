@@ -9,15 +9,15 @@
 import UIKit
 import WebKit
 
-private enum SettingsSection : Int, CaseIterable {
+private enum SettingsSection: Int, CaseIterable {
     case main, about
 }
 
-private enum SettingsMainRow : Int, CaseIterable {
+private enum SettingsMainRow: Int, CaseIterable {
     case appearance, address, cache
 }
 
-private enum SettingsAboutRow : Int, CaseIterable {
+private enum SettingsAboutRow: Int, CaseIterable {
     case license, version
 }
 
@@ -162,7 +162,7 @@ final class SettingsViewController: UITableViewController {
                 prompt.addTextField { (textField) in
                     textField.placeholder = UserDefaultsManager.addressDefaultForDisplay
                 }
-                let confirm = UIAlertAction(title: L10n.confirm, style: .default) { (action) in
+                let confirm = UIAlertAction(title: L10n.confirm, style: .default) { _ in
                     guard var text = prompt.textFields?.first?.text else { return }
                     if text == "" {
                         text = UserDefaultsManager.addressDefaultForDisplay
@@ -187,7 +187,7 @@ final class SettingsViewController: UITableViewController {
             case .cache:
                 tableView.deselectRow(at: indexPath, animated: true)
                 let alert = UIAlertController(title: L10n.areYouSureToClearCache, message: nil, preferredStyle: .alert)
-                let confirm = UIAlertAction(title: L10n.clear, style: .destructive) { (action) in
+                let confirm = UIAlertAction(title: L10n.clear, style: .destructive) { _ in
                     HTTPCookieStorage.shared.removeCookies(since: .distantPast)
                     // Remove URL cache (Library/Caches/{bundle_id}/fsCachedData/*)
                     URLCache.shared.removeAllCachedResponses()
@@ -225,7 +225,7 @@ final class SettingsTableViewCell: UITableViewCell {
         case plain, disclosure, selectable, action
     }
 
-    var type : SettingsCellType = .plain {
+    var type: SettingsCellType = .plain {
         didSet {
             switch type {
             case .plain:

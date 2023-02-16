@@ -8,8 +8,8 @@
 
 import Foundation
 extension APIModel {
-    struct LoginToken : Codable {
-        let access_token : String
-        let token_type : String
+    struct LoginToken: Codable {
+        let access_token: String
+        let token_type: String
     }
 }

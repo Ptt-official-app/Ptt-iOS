@@ -10,15 +10,15 @@ import Foundation
 
 extension APIModel {
 
-    struct BoardModel : Codable {
-        let page : Int?     // offset-based pagination
-        let next : String?  // cursor-based pagination
-        var articleList : [BoardArticle]
+    struct BoardModel: Codable {
+        let page: Int?     // offset-based pagination
+        let next: String?  // cursor-based pagination
+        var articleList: [BoardArticle]
     }
 
-    struct GoPttBBSBoard : Codable {
-        let list : [GoPttBBSBrdArticle]
-        let next_idx : String
+    struct GoPttBBSBoard: Codable {
+        let list: [GoPttBBSBrdArticle]
+        let next_idx: String
 
         static func adapter(model: GoPttBBSBoard) -> BoardModel {
             var articleList = [BoardArticle]()
@@ -30,11 +30,11 @@ extension APIModel {
         }
     }
 
-    struct GoBBSBoard : Codable {
-        let data : GoBBSBoardData
+    struct GoBBSBoard: Codable {
+        let data: GoBBSBoardData
 
-        struct GoBBSBoardData : Codable {
-            let items : [GoBBSBrdArticle]
+        struct GoBBSBoardData: Codable {
+            let items: [GoBBSBrdArticle]
         }
 
         static func adapter(model: GoBBSBoard) -> BoardModel {
@@ -47,9 +47,9 @@ extension APIModel {
         }
     }
 
-    struct LegacyBoard : Codable {
-        let page : Int
-        var postList : [LegacyBrdArticle]
+    struct LegacyBoard: Codable {
+        let page: Int
+        var postList: [LegacyBrdArticle]
 
         static func adapter(model: LegacyBoard) -> BoardModel {
             var articleList = [BoardArticle]()

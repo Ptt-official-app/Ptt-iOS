@@ -1,8 +1,7 @@
-
 import Foundation
 
 extension APIModel {
-    struct ErrorMsg : Codable {
+    struct ErrorMsg: Codable {
         let Msg: String
     }
 }

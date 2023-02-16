@@ -11,8 +11,7 @@ import UIKit
 import AsyncDisplayKit
 
 extension LoginViewController {
-    
-    
+
     func initVerifyCodeViews() {
 //        lbVerifyCodeTitle
 //        tfVerifyCode
@@ -24,15 +23,15 @@ extension LoginViewController {
 //
         lbVerifyCodeTitle.style.preferredSize = CGSize(width: global_width, height: 66)
         tfVerifyCode.style.preferredSize = CGSize(width: global_width, height: 30)
-        
+
         lbVerifyCodeResponse.style.preferredSize = CGSize(width: global_width, height: 44)
         lbVerifyCodeTimer.style.preferredSize = CGSize(width: global_width, height: 44)
-        
+
         btnVerifyCodeBack.style.preferredSize = CGSize(width: global_width/2, height: 30)
         btnVerifyCodeNotReceive.style.preferredSize = CGSize(width: global_width/2, height: 30)
-        
+
         let tfVerifyCodeInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0), child: tfVerifyCode)
-        
+
         let horiLine1 = ASAbsoluteLayoutSpec(children: [lbVerifyCodeResponse, lbVerifyCodeTimer])
         horiLine1.style.preferredSize = CGSize(width: global_width, height: 44)
 //        let horiLine1 = ASAbs(direction: .horizontal,
@@ -40,24 +39,23 @@ extension LoginViewController {
 //                                                    justifyContent: .center,
 //                                          alignItems: .end,
 //                                                   children: [lbVerifyCodeResponse, lbVerifyCodeTimer])
-        
+
         let horiLine2 = ASStackLayoutSpec(direction: .horizontal,
                                                    spacing: 0,
                                                    justifyContent: .center,
                                                    alignItems: .center,
                                                    children: [btnVerifyCodeBack, btnVerifyCodeNotReceive])
-        
-        
+
         let horiLine2Inset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 32, left: 0, bottom: 0, right: 0), child: horiLine2)
-        
+
         let vertLine = ASStackLayoutSpec(direction: .vertical,
                                                    spacing: 0,
                                                    justifyContent: .center,
                                                    alignItems: .center,
                                                    children: [lbVerifyCodeTitle, tfVerifyCodeInset, horiLine1, horiLine2Inset])
-        
+
         verifyStackSpec = ASCenterLayoutSpec(centeringOptions: ASCenterLayoutSpecCenteringOptions.X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: vertLine)
-        
+
         self.node.addSubnode(lbVerifyCodeTitle)
         self.node.addSubnode(tfVerifyCode)
         self.node.addSubnode(lbVerifyCodeResponse)
@@ -65,8 +63,8 @@ extension LoginViewController {
         self.node.addSubnode(btnVerifyCodeBack)
         self.node.addSubnode(btnVerifyCodeNotReceive)
     }
-    
-    func toggleVerifyCodeView(isHidden:Bool){
+
+    func toggleVerifyCodeView(isHidden: Bool) {
         lbVerifyCodeTitle.isHidden = isHidden
         tfVerifyCode.isHidden = isHidden
         lbVerifyCodeResponse.isHidden = isHidden
@@ -74,12 +72,10 @@ extension LoginViewController {
         btnVerifyCodeBack.isHidden = isHidden
         btnVerifyCodeNotReceive.isHidden = isHidden
     }
-    
-    
-    func onVerifyCodeFill()
-    {
+
+    func onVerifyCodeFill() {
         let tf = tfVerifyCode.view as! LoginTextField
-        tf.isEnabled = false ;
+        tf.isEnabled = false
         if let user = (self.tfRegisterUsername.view as! LoginTextField).text,
            let email = (self.tfRegisterUsername.view as! LoginTextField).text,
            let password = (self.tfRegisterUsername.view as! LoginTextField).text,
@@ -87,9 +83,9 @@ extension LoginViewController {
             APIClient.shared.register(account: user, email: email, password: password, token: token) { result in
                 DispatchQueue.main.async {
                     tf.isEnabled = true
-                    (self.tfVerifyCode.view as! LoginTextField).text = "";
-                    
-                    switch (result) {
+                    (self.tfVerifyCode.view as! LoginTextField).text = ""
+
+                    switch result {
                     case .failure(let error):
                         print(error)
                         self.lbVerifyCodeResponse.attributedText = NSAttributedString.init(string: error.message, attributes: nil)
@@ -100,26 +96,25 @@ extension LoginViewController {
                     }
                 }
             }
-        }
-        else {
+        } else {
             showAlert(title: L10n.error, msg: "ERROR data missing-_- ")
         }
     }
-    
-    func onRegisterSuccess(result:APIModel.Register){
-        
+
+    func onRegisterSuccess(result: APIModel.Register) {
+
     }
-    
-    @objc func onVerifyCodeBack(){
+
+    @objc func onVerifyCodeBack() {
         print("onVerifyCodeBack")
         toggleState(.AttemptRegister)
     }
-    
-    @objc func onNotReceive(){
+
+    @objc func onNotReceive() {
         print("not Receive")
         showAlert(title: L10n.error, msg: "NOT IMPLEMENT YET QQ")
     }
-    
+
     func getlbVerifyCodeTitle() -> ASTextNode {
         let label = ASTextNode()
         let paragraphStyle = NSMutableParagraphStyle.init()
@@ -127,29 +122,28 @@ extension LoginViewController {
         paragraphStyle.paragraphSpacing = 2
         paragraphStyle.lineSpacing = 0
         let attributes = [
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.subheadline), //UIFont.boldSystemFont(ofSize: 24),
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.subheadline), // UIFont.boldSystemFont(ofSize: 24),
             NSAttributedString.Key.foregroundColor: self.text_color,
             NSAttributedString.Key.paragraphStyle: paragraphStyle
         ]
-        
+
         let title = "驗證碼已經發送到你的信箱，請在五分鐘內輸入驗證碼 (註: 打到6個字時 會自動觸發)"
         label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
         return label
     }
-    
-    
+
     func gettfVerifyCode() -> ASDisplayNode {
         return ASDisplayNode.init { () -> UIView in
             let tf = LoginTextField(type: TextFieldType.Username)
             tf.title = L10n.verifyCode
-            
+
             tf.keyboardType = .numberPad
             tf.delegate = self
             tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
             return tf
         }
     }
-    
+
     func getlbVerifyCodeResponse() -> ASTextNode {
         let label = ASTextNode()
         let paragraphStyle = NSMutableParagraphStyle.init()
@@ -161,11 +155,11 @@ extension LoginViewController {
             NSAttributedString.Key.foregroundColor: PttColors.tangerine.color,
             NSAttributedString.Key.paragraphStyle: paragraphStyle
         ]
-        
+
         label.attributedText = NSAttributedString.init(string: "", attributes: attributes)
         return label
     }
-    
+
     func getlbVerifyCodeTimer() -> ASTextNode {
         let label = ASTextNode()
         let paragraphStyle = NSMutableParagraphStyle.init()
@@ -177,37 +171,34 @@ extension LoginViewController {
             NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
             NSAttributedString.Key.paragraphStyle: paragraphStyle
         ]
-        
+
         let title = "00:00"
         label.attributedText = NSAttributedString.init(string: title, attributes: attributes)
         return label
     }
-    
-    
+
     func getbtnVerifyCodeBack() -> ASButtonNode {
         let button = ButtonNode(type: .secondary)
         button.title = L10n.backToRegister
-        
+
         button.addTarget(self, action: #selector(onVerifyCodeBack), forControlEvents: ASControlNodeEvent.touchUpInside)
-        
+
         return button
     }
-    
+
     func getbtnVerifyCodeNotReceive() -> ASButtonNode {
         let button = ASButtonNode()
         let title = L10n.notReceiveYet
-        
+
         let attr = [
             NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
             NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue
-        ] as [NSAttributedString.Key : Any]
+        ] as [NSAttributedString.Key: Any]
         button.setAttributedTitle(NSAttributedString.init(string: title, attributes: attr), for: UIControl.State.normal)
-        
-        
+
         button.addTarget(self, action: #selector(onNotReceive), forControlEvents: ASControlNodeEvent.touchUpInside)
-        
+
         return button
     }
 }
-

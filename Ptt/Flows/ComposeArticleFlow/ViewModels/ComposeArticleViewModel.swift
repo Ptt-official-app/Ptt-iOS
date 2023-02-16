@@ -11,46 +11,43 @@ import Foundation
 class ComposeArticleViewModel {
     var contentPropertyOutSideArray: [[APIModel.ContentProperty]] = []
     var currentText: String = ""
-    
+
     init() {
         initViewModel()
     }
-    
+
     func initViewModel() {
         contentPropertyOutSideArray.removeAll()
         currentText = ""
     }
-    
+
     func getContentPropertyOutSideArray() -> [[APIModel.ContentProperty]] {
-        if (!currentText.isEmpty) {
+        if !currentText.isEmpty {
             var contentPropertyArray: [APIModel.ContentProperty] = []
             contentPropertyArray.append(APIModel.ContentProperty(text: currentText))
             contentPropertyOutSideArray.append(contentPropertyArray)
         }
         return contentPropertyOutSideArray
     }
-    
+
     func insertContent(_ text: String) {
-        if (text == "\n") {
+        if text == "\n" {
             var contentPropertyArray: [APIModel.ContentProperty] = []
-            if (!currentText.isEmpty) {
+            if !currentText.isEmpty {
                 contentPropertyArray.append(APIModel.ContentProperty(text: currentText))
             }
             contentPropertyOutSideArray.append(contentPropertyArray)
             currentText = ""
-        }
-        else if (text == "") {
-            if (currentText.isEmpty) {
-                if (!contentPropertyOutSideArray.isEmpty) {
+        } else if text == "" {
+            if currentText.isEmpty {
+                if !contentPropertyOutSideArray.isEmpty {
                     currentText = contentPropertyOutSideArray.last?.last?.text ?? ""
                     contentPropertyOutSideArray.removeLast()
                 }
-            }
-            else {
+            } else {
                 currentText = String(currentText.dropLast())
             }
-        }
-        else {
+        } else {
             currentText += text
         }
     }

@@ -11,7 +11,7 @@ import Foundation
 struct Favorite {
 
     // TODO: Switch to Ptt API later
-    private static let savePath : URL? = {
+    private static let savePath: URL? = {
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let path = dir.appendingPathComponent("favoriteBoardsData")
             return path
@@ -19,7 +19,7 @@ struct Favorite {
         assertionFailure()
         return nil
     }()
-    static var boards : [APIModel.BoardInfo] = {
+    static var boards: [APIModel.BoardInfo] = {
         guard let url = savePath,
             let data = try? Data(contentsOf: url),
             let boards = try? JSONDecoder().decode([APIModel.BoardInfo].self, from: data) else {
@@ -43,7 +43,7 @@ struct Favorite {
             }
             do {
                 try data.write(to: url)
-            } catch (let error) {
+            } catch {
                 assertionFailure(error.localizedDescription)
             }
         }

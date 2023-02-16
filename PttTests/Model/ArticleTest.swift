@@ -17,7 +17,7 @@ class ArticleTest: XCTestCase {
             ("[category]title", "category", "title"),
             ("[category]  title", "category", "title"),
             ("title", nil, "title"),
-            ("[category1][category2] title", "category1", "[category2] title"),
+            ("[category1][category2] title", "category1", "[category2] title")
         ]
         for (title, expectedCategory, expectedTitleWithoutCategory) in testCases {
             let article1 = APIModel.BoardArticle(title: title, date: "", author: "", boardID: "", articleID: "")

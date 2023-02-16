@@ -28,7 +28,7 @@ struct GlobalAppearance {
         }
     }
 
-    static var tintColor : UIColor? {
+    static var tintColor: UIColor? {
         if #available(iOS 11.0, *) {
             return PttColors.tangerine.color
         } else {
@@ -36,7 +36,7 @@ struct GlobalAppearance {
         }
     }
 
-    static var backgroundColor : UIColor? {
+    static var backgroundColor: UIColor? {
         if #available(iOS 11.0, *) {
             return PttColors.codGray.color
         } else {
@@ -66,9 +66,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var rootController: UINavigationController {
         return (self.window?.rootViewController as? UINavigationController) ?? UINavigationController()
     }
-    
+
     private lazy var applicationCoordinator: Coordinatorable = self.makeCoordinator()
-    
+
     // MARK: - UIWindowSceneDelegate
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -126,7 +126,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 @available(iOS 13.0, *)
 private extension SceneDelegate {
-    
+
     func makeCoordinator() -> Coordinatorable {
         return ApplicationCoordinator(router: Router(rootController: self.rootController), coordinatorFactory: CoordinatorFactory())
     }
