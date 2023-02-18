@@ -5,7 +5,7 @@
 - We're using [PaintCode Plugin for Sketch](https://www.paintcodeapp.com/sketch) for vector image assets.
 
 ## SwiftLint 
-If you are using Apple Silicon, you might experience `brew` not installed error  
+If you are using Apple Silicon, you might experience `brew: command not found` error   
 That is because `Homebrew` on Apple Silicon installs the binaries into the `/opt/homebrew/bin` folder by default. To instruct Xcode where to find `Homebrew`   
 Please create a symbolic link in `/usr/local/bin`
 ```
