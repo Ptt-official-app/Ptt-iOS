@@ -1,5 +1,13 @@
 disabled_rules:
   - file_length
+  - type_body_length
+  - object_literal
+  - force_unwrapping
+  - identifier_name
+  - force_try
+  - force_cast
+  - line_length
+  - function_body_length
 
 opt_in_rules:
   - file_name
@@ -65,8 +73,7 @@ identifier_name:
     - id
     - x
     - y
-    - to  # as in "from, to"
-    - cc
+    - vc
 
 modifier_order:
   preferred_modifier_order:

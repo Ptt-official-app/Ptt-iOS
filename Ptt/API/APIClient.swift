@@ -189,10 +189,10 @@ extension APIClient: APIClientProtocol {
         task.resume()
     }
 
-    func getBoardArticles(of params: BoardArticlesParams, completion: @escaping (getBoardArticlesResult) -> Void) {
+    func getBoardArticles(of params: BoardArticlesParams, completion: @escaping (GetBoardArticlesResult) -> Void) {
         var urlComponent: URLComponents
         switch params {
-        case .go_pttbbs(bid: let bid, startIdx: let startIdx):
+        case let .go_pttbbs(bid: bid, startIdx: startIdx):
             urlComponent = goPttBBSURLComponents
             urlComponent.path = "/api/board/\(bid)/articles"
             // Percent encoding is automatically done with RFC 3986
@@ -202,7 +202,7 @@ extension APIClient: APIClientProtocol {
         case .go_bbs(boardID: let boardID):
             urlComponent = goBBSURLComponents
             urlComponent.path = "/v1/boards/\(boardID)/articles"
-        case .legacy(boardName: let boardName, page: let page):
+        case let .legacy(boardName: boardName, page: page):
             urlComponent = legacyURLComponents
             urlComponent.path = "/api/Article/\(boardName)"
             urlComponent.queryItems = [
@@ -245,13 +245,13 @@ extension APIClient: APIClientProtocol {
     func getArticle(of params: ArticleParams, completion: @escaping (GetArticleResult) -> Void) {
         var urlComponent: URLComponents
         switch params {
-        case .go_pttbbs(bid: let bid, aid: let aid):
+        case let .go_pttbbs(bid: bid, aid: aid):
             urlComponent = goPttBBSURLComponents
             urlComponent.path = "/api/board/\(bid)/article/\(aid)"
-        case .go_bbs(boardID: let boardID, articleID: let articleID):
+        case let .go_bbs(boardID: boardID, articleID: articleID):
             urlComponent = goBBSURLComponents
             urlComponent.path = "/v1/boards/\(boardID)/articles/\(articleID)"
-        case .legacy(boardName: let boardName, filename: let filename):
+        case let .legacy(boardName: boardName, filename: filename):
             urlComponent = legacyURLComponents
             urlComponent.path = "/api/Article/\(boardName)/\(filename)"
         }
@@ -354,7 +354,7 @@ extension APIClient: APIClientProtocol {
         urlComponent.path = "/api/" + subPath
 
         urlComponent.queryItems = []
-        if querys.count > 0 {
+        if !querys.isEmpty {
             for (key, value) in querys {
                 urlComponent.queryItems?.append(URLQueryItem(name: key, value: value as? String))
             }
@@ -390,7 +390,7 @@ extension APIClient: APIClientProtocol {
     func createArticle(
         boardId: String,
         article: APIModel.CreateArticle,
-        completion: @escaping (createArticleResult) -> Void
+        completion: @escaping (CreateArticleResult) -> Void
     ) {
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/board/" + boardId + "/article"
@@ -555,6 +555,7 @@ extension APIClient {
 
     struct MyRegex {
         let regex: NSRegularExpression?
+
         init(_ pattern: String) {
             regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive)
         }
@@ -562,7 +563,7 @@ extension APIClient {
         func match(input: String) -> Bool {
             let range = NSRange(location: 0, length: input.count)
             if let matches = regex?.matches(in: input, options: [], range: range) {
-                return matches.count > 0
+                return !matches.isEmpty
             } else {
                 return false
             }

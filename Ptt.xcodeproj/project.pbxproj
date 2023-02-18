@@ -915,7 +915,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nbrew bundle install --no-update\nif which swiftlint > /dev/null; then\n  swiftlint --config swiftlint.yaml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nbrew bundle install --no-upgrade\nif which swiftlint > /dev/null; then\n  swiftlint --config swiftlint.yaml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 		3EAED621276CD2F1005AC13A /* SwiftGen */ = {
 			isa = PBXShellScriptBuildPhase;

@@ -15,11 +15,17 @@ extension LoginViewController {
     func initErrorViews() {
         let errorInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0), child: lbError)
 
-        self.errorStackSpec = ASCenterLayoutSpec(centeringOptions: ASCenterLayoutSpecCenteringOptions.X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: ASStackLayoutSpec(direction: .vertical,
-                                                   spacing: 0,
-                                                   justifyContent: .center,
-                                                   alignItems: .center,
-                                                   children: [errorInset]))
+        self.errorStackSpec = ASCenterLayoutSpec(
+            centeringOptions: ASCenterLayoutSpecCenteringOptions.X,
+            sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY,
+            child: ASStackLayoutSpec(
+                direction: .vertical,
+                spacing: 0,
+                justifyContent: .center,
+                alignItems: .center,
+                children: [errorInset]
+            )
+        )
 
         lbError.style.preferredSize = CGSize(width: global_width, height: 100)
     }

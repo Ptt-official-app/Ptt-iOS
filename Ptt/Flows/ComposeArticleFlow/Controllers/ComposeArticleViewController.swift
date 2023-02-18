@@ -47,7 +47,14 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
     lazy var articleTitle: UITextField = {
         var articleTitle = UITextField()
         articleTitle.translatesAutoresizingMaskIntoConstraints = false
-        articleTitle.attributedPlaceholder = NSAttributedString(string: "請輸入文章標題", attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 56 / 255, green: 56 / 255, blue: 61 / 255, alpha: 1.0), NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 24)])
+        let color = UIColor(red: 56 / 255, green: 56 / 255, blue: 61 / 255, alpha: 1.0)
+        articleTitle.attributedPlaceholder = NSAttributedString(
+            string: "請輸入文章標題",
+            attributes: [
+                NSAttributedString.Key.foregroundColor: color,
+                NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 24)
+            ]
+        )
         articleTitle.font = UIFont.boldSystemFont(ofSize: 24)
         contentView.addSubview(articleTitle)
         return articleTitle

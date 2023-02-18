@@ -156,7 +156,7 @@ extension FavoriteViewController: UISearchControllerDelegate {
 
 extension FavoriteViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text, searchText.count > 0  else { return }
+        guard let searchText = searchController.searchBar.text, !searchText.isEmpty  else { return }
         resultsTableController.activityIndicator.startAnimating()
         APIClient.shared.getBoardList(token: "", keyword: searchText) { [weak self] result in
             guard let weakSelf = self else { return }

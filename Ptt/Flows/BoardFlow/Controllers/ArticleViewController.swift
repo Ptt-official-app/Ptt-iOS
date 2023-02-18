@@ -68,17 +68,23 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
                     ]
                     for contentElement in contentArray {
                         if contentElement.hasPrefix("※") {
-                            contentAttributes[.foregroundColor] = UIColor(red: 0.00, green: 0.60, blue: 0.00, alpha: 1.00)
+                            let color = UIColor(red: 0.00, green: 0.60, blue: 0.00, alpha: 1.00)
+                            contentAttributes[.foregroundColor] = color
                         } else if contentElement.hasPrefix(": ") {
-                            contentAttributes[.foregroundColor] = UIColor(red: 0.00, green: 0.60, blue: 0.60, alpha: 1.00)
+                            let color = UIColor(red: 0.00, green: 0.60, blue: 0.60, alpha: 1.00)
+                            contentAttributes[.foregroundColor] = color
                         } else {
                             if #available(iOS 11.0, *) {
                                 contentAttributes[.foregroundColor] = PttColors.paleGrey.color
                             } else {
-                                contentAttributes[.foregroundColor] = UIColor(red: 240 / 255, green: 240 / 255, blue: 247 / 255, alpha: 1.0)
+                                let color = UIColor(red: 240 / 255, green: 240 / 255, blue: 247 / 255, alpha: 1.0)
+                                contentAttributes[.foregroundColor] = color
                             }
                         }
-                        attributedText.append(NSAttributedString(string: contentElement + separator, attributes: contentAttributes))
+                        attributedText.append(NSAttributedString(
+                            string: contentElement + separator,
+                            attributes: contentAttributes)
+                        )
                     }
                     // Comments
                     let commentsAttributedString = NSMutableAttributedString()
@@ -101,9 +107,18 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
                         .foregroundColor: UIColor.systemGray
                     ]
                     for comment in article.comments {
-                        commentsAttributedString.append(NSAttributedString(string: comment.userid, attributes: commentAuthorAttributes))
-                        commentsAttributedString.append(NSAttributedString(string: comment.content, attributes: commentContentAttributes))
-                        commentsAttributedString.append(NSAttributedString(string: " " + comment.iPdatetime, attributes: commentDateAttributes))
+                        commentsAttributedString.append(NSAttributedString(
+                            string: comment.userid,
+                            attributes: commentAuthorAttributes)
+                        )
+                        commentsAttributedString.append(NSAttributedString(
+                            string: comment.content,
+                            attributes: commentContentAttributes)
+                        )
+                        commentsAttributedString.append(NSAttributedString(
+                            string: " " + comment.iPdatetime,
+                            attributes: commentDateAttributes)
+                        )
                     }
                     attributedText.append(commentsAttributedString)
                     self.textView.attributedText = attributedText
@@ -169,10 +184,18 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
         // "So, with auto layout in particular, that text system caches some layout information. And this can really improve performance."
         // See: https://developer.apple.com/videos/play/wwdc2017/244/?time=2029
         var constraints = [NSLayoutConstraint]()
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[textView]|",
-                                                      options: [], metrics: nil, views: ["textView": textView])
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[textView]|",
-                                                      options: [], metrics: nil, views: ["textView": textView])
+        constraints += NSLayoutConstraint.constraints(
+            withVisualFormat: "H:|[textView]|",
+            options: [],
+            metrics: nil,
+            views: ["textView": textView]
+        )
+        constraints += NSLayoutConstraint.constraints(
+            withVisualFormat: "V:|[textView]|",
+            options: [],
+            metrics: nil,
+            views: ["textView": textView]
+        )
         NSLayoutConstraint.activate(constraints)
 
         let refreshControl = UIRefreshControl()
@@ -208,7 +231,8 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
         userActivity?.becomeCurrent()
     }
 
-    @objc private func refresh() {
+    @objc
+    private func refresh() {
         guard let boardName = boardName, let filename = filename else {
             let alert = UIAlertController(title: L10n.error, message: "wrong parameters", preferredStyle: .alert)
             let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
@@ -253,7 +277,8 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
         }
     }
 
-    @objc private func share(sender: UIBarButtonItem) {
+    @objc
+    private func share(sender: UIBarButtonItem) {
         var shareUrl: URL?
         if let article = article as? APIModel.FullArticle {
             shareUrl = URL(string: article.url)
@@ -261,9 +286,9 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
             shareUrl = url
         }
         if let shareUrl = shareUrl {
-            let vc = UIActivityViewController(activityItems: [shareUrl], applicationActivities: nil)
-            vc.popoverPresentationController?.barButtonItem = sender
-            present(vc, animated: true, completion: nil)
+            let controller = UIActivityViewController(activityItems: [shareUrl], applicationActivities: nil)
+            controller.popoverPresentationController?.barButtonItem = sender
+            present(controller, animated: true, completion: nil)
         }
     }
 
@@ -299,24 +324,25 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
         }
         headerAttributedString.append(NSAttributedString(attachment: categoryAttachment))
         // Workaround: We cannot vertically center align attachments easily, so use tab to align text.
-        if let _article = article as? APIModel.BoardArticle, let boardName = self.boardName {
-            headerAttributedString.append(NSAttributedString(string: "\t\(boardName) / \(_article.category)\n"))
-        } else if let _article = article as? APIModel.FullArticle {
-            headerAttributedString.append(NSAttributedString(string: "\t\(_article.board) / \(_article.category)\n"))
+        if let article = article as? APIModel.BoardArticle, let boardName = self.boardName {
+            headerAttributedString.append(NSAttributedString(string: "\t\(boardName) / \(article.category)\n"))
+        } else if let article = article as? APIModel.FullArticle {
+            headerAttributedString.append(NSAttributedString(string: "\t\(article.board) / \(article.category)\n"))
         }
         headerAttributedString.append(NSAttributedString(attachment: authorAttachment))
-        if let _article = article as? APIModel.FullArticle {
-            headerAttributedString.append(NSAttributedString(string: "\t\(article.author) (\(_article.nickname))\n"))
+        if let article = article as? APIModel.FullArticle {
+            headerAttributedString.append(NSAttributedString(string: "\t\(article.author) (\(article.nickname))\n"))
         } else {
             headerAttributedString.append(NSAttributedString(string: "\t\(article.author)\n"))
         }
         headerAttributedString.append(NSAttributedString(attachment: dateAttachment))
-        if let _ = article as? APIModel.BoardArticle {
+        if (article as? APIModel.BoardArticle) != nil {
             headerAttributedString.append(NSAttributedString(string: "\t\(article.date)\n\n"))
         } else {
             headerAttributedString.append(NSAttributedString(string: "\t\(article.date)\n\n"))
         }
-        headerAttributedString.addAttributes(headAttributes, range: NSRange(location: 0, length: headerAttributedString.length))
+        let range = NSRange(location: 0, length: headerAttributedString.length)
+        headerAttributedString.addAttributes(headAttributes, range: range)
         return headerAttributedString
     }
 }
@@ -331,7 +357,12 @@ extension ArticleViewController: UITextViewDelegate {
     }
 
     @available(iOS 10.0, *)
-    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+    func textView(
+        _ textView: UITextView,
+        shouldInteractWith URL: URL,
+        in characterRange: NSRange,
+        interaction: UITextItemInteraction
+    ) -> Bool {
         return self.shouldInteractWith(URL: URL)
     }
 
