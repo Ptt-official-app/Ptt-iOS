@@ -1,16 +1,8 @@
 # Coding Guidelines
 
 - How to join the project? Check out [our documentation](https://hackmd.io/bNV8xhVwQxOYnLt9NTRdFw).
-- We are using Swiftlint to enforce Swift style and conventions
+- We are using [Swiftlint](https://github.com/realm/SwiftLint) to enforce Swift style and conventions
 - We're using [PaintCode Plugin for Sketch](https://www.paintcodeapp.com/sketch) for vector image assets.
-
-## SwiftLint 
-If you are using Apple Silicon, you might experience `brew: command not found` error   
-That is because `Homebrew` on Apple Silicon installs the binaries into the `/opt/homebrew/bin` folder by default. To instruct Xcode where to find `Homebrew`   
-Please create a symbolic link in `/usr/local/bin`
-```
-$ sudo ln -s /opt/homebrew/bin/brew /usr/local/bin/brew
-```
 
 # License
 
