@@ -381,7 +381,7 @@ extension APIClient: APIClientProtocol {
         
         guard let url = urlComponent.url,
               let jsonBody = try? JSONEncoder().encode(article),
-              let accessToken = KeyChainItem.readText(for: .loginToken) else {
+              let loginToken: APIModel.LoginToken = KeyChainItem.readObject(for: .loginToken) else {
             assertionFailure()
             return
         }
@@ -391,7 +391,7 @@ extension APIClient: APIClientProtocol {
         request.httpBody = jsonBody
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(loginToken.access_token)", forHTTPHeaderField: "Authorization")
 
         let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
             let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
