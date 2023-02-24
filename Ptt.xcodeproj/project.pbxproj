@@ -110,7 +110,8 @@
 		EA475F8123C4834C000867FE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA475F7F23C4834C000867FE /* LaunchScreen.storyboard */; };
 		EA475F8C23C4834C000867FE /* PttTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA475F8B23C4834C000867FE /* PttTests.swift */; };
 		EA475F9923C48CC1000867FE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EA475F9B23C48CC1000867FE /* Localizable.strings */; };
-		EA479EB42431F27C008A0D99 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA479EB32431F27C008A0D99 /* ArticleViewController.swift */; };
+		EA479EB42431F27C008A0D99 /* LegacyArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA479EB32431F27C008A0D99 /* LegacyArticleViewController.swift */; };
+		EA48D455299CC79B00EF4062 /* SingleArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA48D454299CC79B00EF4062 /* SingleArticleViewController.swift */; };
 		EA78E0C124050EB100309694 /* StyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA78E0C024050EB000309694 /* StyleKit.swift */; };
 		EA9DE10F2563A82200AEFC19 /* FullscreenSwipeBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9DE10E2563A82200AEFC19 /* FullscreenSwipeBack.swift */; };
 		EAA4F6F123C72B01005ABCE3 /* BoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA4F6F023C72B01005ABCE3 /* BoardViewController.swift */; };
@@ -244,7 +245,8 @@
 		EA475F9623C48C61000867FE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		EA475F9A23C48CC1000867FE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		EA475F9C23C48CC3000867FE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		EA479EB32431F27C008A0D99 /* ArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewController.swift; sourceTree = "<group>"; };
+		EA479EB32431F27C008A0D99 /* LegacyArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyArticleViewController.swift; sourceTree = "<group>"; };
+		EA48D454299CC79B00EF4062 /* SingleArticleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleArticleViewController.swift; sourceTree = "<group>"; };
 		EA78E0C024050EB000309694 /* StyleKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleKit.swift; sourceTree = "<group>"; };
 		EA9DE10E2563A82200AEFC19 /* FullscreenSwipeBack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullscreenSwipeBack.swift; sourceTree = "<group>"; };
 		EAA4F6F023C72B01005ABCE3 /* BoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardViewController.swift; sourceTree = "<group>"; };
@@ -589,7 +591,8 @@
 			isa = PBXGroup;
 			children = (
 				EAA4F6F023C72B01005ABCE3 /* BoardViewController.swift */,
-				EA479EB32431F27C008A0D99 /* ArticleViewController.swift */,
+				EA48D454299CC79B00EF4062 /* SingleArticleViewController.swift */,
+				EA479EB32431F27C008A0D99 /* LegacyArticleViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1000,7 +1003,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3E29388125596BA900240C0F /* URLSessionProtocol.swift in Sources */,
-				EA479EB42431F27C008A0D99 /* ArticleViewController.swift in Sources */,
+				EA479EB42431F27C008A0D99 /* LegacyArticleViewController.swift in Sources */,
 				944209DA279C2462002B2B7A /* Register.swift in Sources */,
 				9B564C3D256AA0EB00787FD7 /* Router.swift in Sources */,
 				944527C02769844F00B6B54F /* AttemptRegister.swift in Sources */,
@@ -1083,6 +1086,7 @@
 				CD072A82266D3F5400279419 /* ArticleClassTableView.swift in Sources */,
 				3E65529A255962DA0026290B /* APIModel.swift in Sources */,
 				3EDE670B276106530063D6DF /* StringExtension.swift in Sources */,
+				EA48D455299CC79B00EF4062 /* SingleArticleViewController.swift in Sources */,
 				94EB641225AC183F00BF69AB /* LoginViewController.swift in Sources */,
 				CD6C1C1E26B779A500EBFEA9 /* LoadingView.swift in Sources */,
 				3E655290255960CF0026290B /* APIError.swift in Sources */,
