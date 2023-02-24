@@ -10,7 +10,8 @@ import Foundation
 
 extension KeyChainItem {
     enum Key: String {
-        case loginToken
+        case loginToken = "service"
+        case userID
         case unitTest
     }
 }
@@ -38,7 +39,7 @@ final class KeyChainItem {
         delete(for: key)
         let query: [String : Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key.rawValue,
+            kSecAttrService as String: key.rawValue,
             kSecValueData as String: data
         ]
 
@@ -65,7 +66,7 @@ final class KeyChainItem {
     static func readData(for key: Key) -> Data? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key.rawValue,
+            kSecAttrService as String: key.rawValue,
             kSecMatchLimit as String: kSecMatchLimitOne,
             kSecReturnData as String: kCFBooleanTrue!
         ]
@@ -80,7 +81,7 @@ final class KeyChainItem {
     static func delete(for key: Key) -> Bool {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key.rawValue
+            kSecAttrService as String: key.rawValue
         ]
         let status = SecItemDelete(query as CFDictionary)
         return status == errSecSuccess

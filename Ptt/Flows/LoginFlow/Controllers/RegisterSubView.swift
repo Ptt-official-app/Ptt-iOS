@@ -128,7 +128,8 @@ extension LoginViewController {
                     self.showAlert(title: L10n.error, msg: L10n.login + L10n.error + error.message)
                 case .success(let token):
                     print(token.access_token)
-                    KeyChainItem.save(object: token, for: .loginToken)
+                    KeyChainItem.save(text: token.access_token, for: .loginToken)
+                    KeyChainItem.save(text: token.user_id, for: .userID)
                     self.onLoginSuccess(token: token.access_token)
                 }
             }

@@ -83,6 +83,7 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
         
         DispatchQueue.main.async {
             KeyChainItem.delete(for: .loginToken)
+            KeyChainItem.delete(for: .userID)
             self.onLogout?()
         }
     }
