@@ -17,14 +17,24 @@ final class FavoriteViewController: UITableViewController, FavoriteView {
     var onBoardSelect: ((String) -> Void)?
     var onLogout: (() -> Void)?
 
+    private let apiClient: APIClientProtocol
     private let cellReuseIdentifier = "FavoriteCell"
     private lazy var resultsTableController = configureResultsTableController()
     private lazy var searchController : UISearchController = {
         // For if #available(iOS 11.0, *), no need to set searchController as property (local variable is fine).
        return UISearchController(searchResultsController: resultsTableController)
     }()
-    
-    private var boardListDict : [APIModel.BoardInfo]? = nil
+
+    private var lists: [APIModel.BoardInfo] = []
+
+    init(apiClient: APIClientProtocol=APIClient.shared) {
+        self.apiClient = apiClient
+        super.init(style: .plain)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
@@ -161,26 +171,26 @@ extension FavoriteViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text, searchText.count > 0  else { return }
         resultsTableController.activityIndicator.startAnimating()
-        APIClient.shared.getBoardList(token: "", keyword: searchText) { [weak self] (result) in
-            guard let weakSelf = self else { return }
+        apiClient.getFavoritesBoards(startIndex: 0, limit: 200) { [weak self] result in
+            guard let self = self else { return }
             switch result {
-                case .failure(error: let error):
-                    DispatchQueue.main.async {
-                        weakSelf.resultsTableController.activityIndicator.stopAnimating()
-                        weakSelf.searchController.isActive = false
-                        let alert = UIAlertController(title: L10n.error, message: error.message, preferredStyle: .alert)
-                        let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
-                        alert.addAction(confirm)
-                        weakSelf.present(alert, animated: true, completion: nil)
-                    }
-                case .success(data: let data):
-                    
-                    weakSelf.resultsTableController.filteredBoards = data.list
-                    DispatchQueue.main.async {
-                        // Only update UI for the matching result
-                        weakSelf.resultsTableController.activityIndicator.stopAnimating()
-                        weakSelf.resultsTableController.tableView.reloadData()
-                    }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self.resultsTableController.activityIndicator.stopAnimating()
+                    self.searchController.isActive = false
+                    let message = error.localizedDescription
+                    let alert = UIAlertController(title: L10n.error, message: message, preferredStyle: .alert)
+                    let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
+                    alert.addAction(confirm)
+                    self.present(alert, animated: true, completion: nil)
+                }
+            case .success(let response):
+                self.resultsTableController.filteredBoards = response.list
+                DispatchQueue.main.async {
+                    // Only update UI for the matching result
+                    self.resultsTableController.activityIndicator.stopAnimating()
+                    self.resultsTableController.tableView.reloadData()
+                }
             }
         }
     }

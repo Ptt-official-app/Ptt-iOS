@@ -89,7 +89,7 @@ extension APIClient: APIClientProtocol {
                     completion(.success(token))
                 } catch (let decodingError) {
                     let message = self.message(of: decodingError)
-                    completion(.failure(APIError(message: message)))
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -129,7 +129,7 @@ extension APIClient: APIClientProtocol {
                     completion(.success(token))
                 } catch (let decodingError) {
                     let message = self.message(of: decodingError)
-                    completion(.failure(APIError(message: message)))
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -178,7 +178,7 @@ extension APIClient: APIClientProtocol {
                     completion(.success(token))
                 } catch (let decodingError) {
                     let message = self.message(of: decodingError)
-                    completion(.failure(APIError(message: message)))
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -233,7 +233,7 @@ extension APIClient: APIClientProtocol {
                     completion(.success(board))
                 } catch (let decodingError) {
                     let message = self.message(of: decodingError)
-                    completion(.failure(APIError(message: message)))
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -279,7 +279,7 @@ extension APIClient: APIClientProtocol {
                     completion(.success(article))
                 } catch (let decodingError) {
                     let message = self.message(of: decodingError)
-                    completion(.failure(APIError(message: message)))
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -330,7 +330,7 @@ extension APIClient: APIClientProtocol {
                     completion(.success(list))
                 } catch (let decodingError) {
                     let message = self.message(of: decodingError)
-                    completion(.failure(APIError(message: message)))
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -368,7 +368,7 @@ extension APIClient: APIClientProtocol {
                     completion(.success(list))
                 } catch (let decodingError) {
                     let message = self.message(of: decodingError)
-                    completion(.failure(APIError(message: message)))
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -404,7 +404,7 @@ extension APIClient: APIClientProtocol {
                     completion(.success(response))
                 } catch (let decodingError) {
                     let message = self.message(of: decodingError)
-                    completion(.failure(APIError(message: message)))
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -442,7 +442,51 @@ extension APIClient: APIClientProtocol {
                     completion(.success(result))
                 } catch (let decodingError) {
                     let message = self.message(of: decodingError)
-                    completion(.failure(APIError(message: message)))
+                    completion(.failure(.decodingError(message)))
+                }
+            }
+        }
+        task.resume()
+    }
+
+    func getFavoritesBoards(
+        startIndex: Int = 0,
+        limit: Int = 200,
+        completion: @escaping (FavoriteBoardsResult) -> Void
+    ) {
+        guard let loginObj: APIModel.LoginToken = KeyChainItem.readObject(for: .loginToken) else {
+            completion(.failure(.loginTokenNotExist))
+            return
+        }
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/user/\(loginObj.user_id)/favorites"
+
+        let limit = min(200, limit)
+        urlComponent.queryItems = [
+            URLQueryItem(name: "start_idx", value: "\(startIndex)"),
+            URLQueryItem(name: "limit", value: "\(limit)")
+        ]
+
+        guard let url = urlComponent.url else {
+            assertionFailure()
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.GET.rawValue
+
+        let task = session.dataTask(with: request) { (data, urlResponse, error) in
+            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
+            switch result {
+            case .failure(let apiError):
+                completion(.failure(apiError))
+            case .success(let resultData):
+                do {
+                    let result = try self.decoder.decode(APIModel.BoardInfoList.self, from: resultData)
+                    completion(.success(result))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -454,20 +498,21 @@ extension APIClient: APIClientProtocol {
 extension APIClient {
     private func processResponse(data: Data?, urlResponse: URLResponse?, error: Error?) -> ProcessResult {
         if let error = error {
-            return .failure(APIError(message: error.localizedDescription))
+            return .failure(.httpError(error))
         }
         
         guard let httpURLResponse = urlResponse as? HTTPURLResponse else {
-            return .failure(APIError(message: "No data"))
+            return .failure(.responseNotExist)
         }
     
         let statusCode = httpURLResponse.statusCode
         if statusCode != 200 {
-            return .failure(APIError(message: "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"))
+            let errorMessage = "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"
+            return .failure(.notExpectedHTTPStatus(errorMessage))
         }
         
         guard let resultData = data else {
-            return .failure(APIError(message: "No data"))
+            return .failure(.dataNotExist)
         }
         
         return .success(resultData)
@@ -478,12 +523,11 @@ extension APIClient {
      */
     private func processResponseWithErrorMSG(data: Data?, urlResponse: URLResponse?, error: Error?) -> ProcessResult {
         
-        var error_msg:String = "" ;
         do {
             if let d = data {
                 let errorDict = try decoder.decode(APIModel.ErrorMsg.self, from: d)
-                error_msg = errorDict.Msg
-                print("get server message=", errorDict.Msg)
+                let error_msg = errorDict.Msg
+                return .failure(.requestFailed(error_msg))
             }
         } catch (let decodingError) {
             print("Decode error:", decodingError) ;
@@ -491,20 +535,21 @@ extension APIClient {
 
             
         if let error = error {
-            return .failure(APIError(message: "\(error):\(error_msg)"))
+            return .failure(.httpError(error))
         }
         
         guard let httpURLResponse = urlResponse as? HTTPURLResponse else {
-            return .failure(APIError(message: error_msg))
+            return .failure(.responseNotExist)
         }
     
         let statusCode = httpURLResponse.statusCode
         if statusCode != 200 {
-            return .failure(APIError(message: "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode)) : \(error_msg)"))
+            let message = "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"
+            return .failure(.notExpectedHTTPStatus(message))
         }
         
         guard let resultData = data else {
-            return .failure(APIError(message: error_msg))
+            return .failure(.dataNotExist)
         }
         
         return .success(resultData)
