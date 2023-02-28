@@ -474,6 +474,7 @@ extension APIClient: APIClientProtocol {
 
         var request = URLRequest(url: url)
         request.httpMethod = Method.GET.rawValue
+        request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
 
         let task = session.dataTask(with: request) { (data, urlResponse, error) in
             let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
