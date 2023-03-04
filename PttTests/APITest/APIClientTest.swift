@@ -10,7 +10,19 @@ import XCTest
 @testable import Ptt
 
 final class APIClientTest: XCTestCase {
+    private var urlSession: MockURLSessionV2!
+    private var apiClient: APIClientProtocol!
     private lazy var manager = APITestClient()
+
+    override func setUp() async throws {
+        urlSession = MockURLSessionV2()
+        apiClient = APIClient(session: urlSession)
+    }
+
+    override func tearDown() {
+        urlSession = nil
+        apiClient = nil
+    }
     
     func testNetworkError() {
         let dataTask = MockURLSessionDataTask()
@@ -111,22 +123,90 @@ final class APIClientTest: XCTestCase {
         }
     }
     
-    func testBoardListSuccess() {
-        let client = manager.getBoardList()
-        
-        client.getBoardList(token: "eyJhbGc....", keyword: "", startIdx: "", max: 300) { (result) in
-            switch (result) {
-                case .failure(_):
-                    XCTAssert(false)
-                case .success(let list):
-                    XCTAssert(list.next_idx == "")
-                    XCTAssert(list.list.count == 6)
-                    let info = list.list[0]
-                    XCTAssert(info.bid == "6_ALLPOST")
-                    XCTAssert(info.brdname == "ALLPOST")
-                    XCTAssert(info.title == "跨板式LOCAL新文章")
-                    XCTAssert(info.flag == 32)
-                    XCTAssert(info.nuser == 0)
+    func testBoardListSuccess_with_english_keyword() {
+        let startIdx = "\(Int.random(in: 0...99))"
+        let max = Int.random(in: 0...99)
+        urlSession.stub { path, headers, queryItem, requestBody, completion in
+            XCTAssertEqual(path, "/api/boards/autocomplete")
+            XCTAssertEqual(headers["Authorization"], "bearer theToken")
+            for item in queryItem {
+                if item.name == "brdname" {
+                    XCTAssertEqual(item.value, "stup")
+                } else if item.name == "start_idx" {
+                    XCTAssertEqual(item.value, startIdx)
+                } else if item.name == "limit" {
+                    XCTAssertEqual(item.value, "\(max)")
+                }
+            }
+            completion(.success(BoardListFakeData.successData))
+        }
+        apiClient.getBoardList(token: "theToken", keyword: "stup", startIdx: startIdx, max: max) { result in
+            switch result {
+            case .failure:
+                XCTFail("Shouldn't fail")
+            case .success(let list):
+                XCTAssert(list.next_idx == "")
+                XCTAssert(list.list.count == 6)
+                let info = list.list[0]
+                XCTAssert(info.bid == "6_ALLPOST")
+                XCTAssert(info.brdname == "ALLPOST")
+                XCTAssert(info.title == "跨板式LOCAL新文章")
+                XCTAssert(info.flag == 32)
+                XCTAssert(info.nuser == 0)
+            }
+        }
+    }
+
+    func testBoardListSuccess_with_chinese_keyword() {
+        let startIdx = "\(Int.random(in: 0...99))"
+        let max = Int.random(in: 0...99)
+        urlSession.stub { path, headers, queryItem, requestBody, completion in
+            XCTAssertEqual(path, "/api/boards/byclass")
+            for item in queryItem {
+                if item.name == "keyword" {
+                    XCTAssertEqual(item.value, "笨")
+                } else if item.name == "start_idx" {
+                    XCTAssertEqual(item.value, startIdx)
+                } else if item.name == "limit" {
+                    XCTAssertEqual(item.value, "\(max)")
+                }
+            }
+            completion(.success(BoardListFakeData.successData))
+        }
+        apiClient.getBoardList(token: "theToken", keyword: "笨", startIdx: startIdx, max: max) { result in
+            switch result {
+            case .failure:
+                XCTFail("Shouldn't fail")
+            case .success(let list):
+                XCTAssert(list.next_idx == "")
+                XCTAssert(list.list.count == 6)
+            }
+        }
+    }
+
+    func testBoardListSuccess_with_japanese_keyword() {
+        let startIdx = "\(Int.random(in: 0...99))"
+        let max = Int.random(in: 0...99)
+        urlSession.stub { path, headers, queryItem, requestBody, completion in
+            XCTAssertEqual(path, "/api/boards")
+            for item in queryItem {
+                if item.name == "keyword" {
+                    XCTAssertEqual(item.value, "ごじゅうおん")
+                } else if item.name == "start_idx" {
+                    XCTAssertEqual(item.value, startIdx)
+                } else if item.name == "limit" {
+                    XCTAssertEqual(item.value, "\(max)")
+                }
+            }
+            completion(.success(BoardListFakeData.successData))
+        }
+        apiClient.getBoardList(token: "theToken", keyword: "ごじゅうおん", startIdx: startIdx, max: max) { result in
+            switch result {
+            case .failure:
+                XCTFail("Shouldn't fail")
+            case .success(let list):
+                XCTAssert(list.next_idx == "")
+                XCTAssert(list.list.count == 6)
             }
         }
     }
