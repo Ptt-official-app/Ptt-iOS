@@ -12,13 +12,18 @@ protocol PostTypeSelectionDelegate: AnyObject {
     func select(postType: String)
 }
 
+extension PostTypeSelectionView {
+    private enum Layout {
+        static let cellID = "PostTypeSelectionCell"
+        static let cellHeight: CGFloat = 48
+        static let headerHeight: CGFloat = 75
+        static let footerHeight: CGFloat = 60
+    }
+}
+
 final class PostTypeSelectionView: UIView {
     private let postTypes: [String]
     private let tableView: UITableView
-    private let cellID = "PostTypeSelectionCell"
-    private let cellHeight: CGFloat = 48
-    private let headerHeight: CGFloat = 75
-    private let footerHeight: CGFloat = 60
     private weak var delegate: PostTypeSelectionDelegate?
 
     init(postTypes: [String]) {
@@ -60,10 +65,10 @@ extension PostTypeSelectionView {
         if #available(iOS 15.0, *) {
             tableView.sectionHeaderTopPadding = 0.0
         }
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Layout.cellID)
 
         addSubview(tableView)
-        let height = CGFloat(postTypes.count) * cellHeight + headerHeight + footerHeight
+        let height = CGFloat(postTypes.count) * Layout.cellHeight + Layout.headerHeight + Layout.footerHeight
         [
             tableView.widthAnchor.constraint(equalToConstant: 266),
             tableView.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -118,7 +123,7 @@ extension PostTypeSelectionView: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: Layout.cellID, for: indexPath)
         cell.textLabel?.text = postTypes[indexPath.row]
         cell.textLabel?.textColor = PttColors.tangerine.color
         cell.textLabel?.textAlignment = .center

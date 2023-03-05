@@ -1,5 +1,5 @@
 //
-//  ComposeView.swift
+//  ComposeArticleView.swift
 //  Ptt
 //
 //  Created by AnsonChen on 2023/3/4.
@@ -8,13 +8,14 @@
 
 import UIKit
 
-final class ComposeView: UIView {
-    let container = ComposeView.container()
-    let contentTextView = ComposeView.contentTextView()
-    let postTypeButton = ComposeView.postTypeButton()
-    let scrollView = ComposeView.scrollView()
-    let titleField = ComposeView.titleField()
+final class ComposeArticleView: UIView {
+    private let container = ComposeArticleView.container()
+    private let scrollView = ComposeArticleView.scrollView()
     private(set) var scrollViewBottom: NSLayoutConstraint?
+    let postTypeButton = ComposeArticleView.postTypeButton()
+    let titleField = ComposeArticleView.titleField()
+    let contentTextView = ComposeArticleView.contentTextView()
+    let loadingView = ComposeArticleView.loadingView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,6 +34,7 @@ final class ComposeView: UIView {
         setUpPostTypeButton()
         setUpTitleField()
         setUpContentTextView()
+        setUpLoadingView()
     }
 
     private func setUpScrollView() {
@@ -98,10 +100,22 @@ final class ComposeView: UIView {
             contentTextView.heightAnchor.constraint(greaterThanOrEqualToConstant: 100)
         ].active()
     }
+
+    private func setUpLoadingView() {
+        addSubview(loadingView)
+        loadingView.isHidden = true
+
+        [
+            loadingView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            loadingView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            loadingView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            loadingView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+        ].active()
+    }
 }
 
 // MARK: - Components
-extension ComposeView {
+extension ComposeArticleView {
     private static func scrollView() -> UIScrollView {
         let scrollView = UIScrollView()
         scrollView.backgroundColor = PttColors.shark.color
@@ -144,5 +158,10 @@ extension ComposeView {
         textView.setContentHuggingPriority(.defaultHigh, for: .vertical)
         textView.autocorrectionType = .no
         return textView
+    }
+
+    private static func loadingView() -> LoadingView {
+        let view = LoadingView()
+        return view
     }
 }

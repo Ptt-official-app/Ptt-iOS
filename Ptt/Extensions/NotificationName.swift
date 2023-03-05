@@ -8,6 +8,10 @@
 
 import Foundation
 
+extension Notification.Name {
+    static var didPostNewArticle = NSNotification.Name("didPostNewArticle")
+}
+
 struct NotificationName {
 
     static func value(of notificationType: NotificationType) -> Notification.Name {

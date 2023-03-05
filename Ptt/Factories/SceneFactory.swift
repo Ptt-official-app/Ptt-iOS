@@ -52,7 +52,6 @@ final class SceneFactory: FavoriteSceneFactoryProtocol,
     }
     
     func makeComposeArticleView(withBoardName boardName: String) -> UIViewController {
-//        return ComposeArticleViewController(boardName: boardName)
         let types = [
             "無",
             "問題",
@@ -64,7 +63,7 @@ final class SceneFactory: FavoriteSceneFactoryProtocol,
             "公告",
             "新聞"
         ]
-        let vm = CViewModel(boardName: boardName, postTypes: types)
-        return ComposeViewController(viewModel: vm)
+        let vm = ComposeArticleViewModel(boardName: boardName, postTypes: types)
+        return ComposeArticleViewController(viewModel: vm)
     }
 }

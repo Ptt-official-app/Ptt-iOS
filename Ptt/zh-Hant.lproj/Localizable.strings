@@ -87,3 +87,7 @@
 "InputArticleTitle" = "請輸入文章標題";
 "InputArticleContent" = "請輸入文章內容";
 "EditArticle" = "編輯文章";
+"ArticleTitleIsEmpty" = "請輸入文章標題";
+"PostTypeIsEmpty" = "請選擇分類";
+"CreatePostConfirmMessage" = "確認發佈文章?";
+"submit" = "發佈";

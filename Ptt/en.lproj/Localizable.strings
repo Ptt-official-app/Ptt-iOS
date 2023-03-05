@@ -82,7 +82,11 @@
 "Reply" = "Reply";
 "Share" = "Share";
 
-"PostTypeSelection" = "Classification";
+"PostTypeSelection" = "Post type";
 "InputArticleTitle" = "Title";
 "InputArticleContent" = "Text";
 "EditArticle" = "Edit";
+"ArticleTitleIsEmpty" = "Title is empty";
+"PostTypeIsEmpty" = "Post type is empty";
+"CreatePostConfirmMessage" = "Do you want to submit this post?";
+"submit" = "Submit";

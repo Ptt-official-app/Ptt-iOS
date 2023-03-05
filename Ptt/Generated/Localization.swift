@@ -26,6 +26,8 @@ enum L10n {
   static let appearanceMode = L10n.tr("Localizable", "Appearance Mode")
   /// Are you sure to clear cache?
   static let areYouSureToClearCache = L10n.tr("Localizable", "Are you sure to clear cache?")
+  /// Title is empty
+  static let articleTitleIsEmpty = L10n.tr("Localizable", "ArticleTitleIsEmpty")
   /// Back to Register
   static let backToRegister = L10n.tr("Localizable", "BackToRegister")
   /// Birthday
@@ -46,6 +48,8 @@ enum L10n {
   static let compose = L10n.tr("Localizable", "Compose")
   /// Confirm
   static let confirm = L10n.tr("Localizable", "Confirm")
+  /// Do you want to submit this post?
+  static let createPostConfirmMessage = L10n.tr("Localizable", "CreatePostConfirmMessage")
   /// Customization Mode
   static let customizationMode = L10n.tr("Localizable", "Customization Mode")
   /// Dark
@@ -106,7 +110,9 @@ enum L10n {
   static let popularArticles = L10n.tr("Localizable", "Popular Articles")
   /// Popular Boards
   static let popularBoards = L10n.tr("Localizable", "Popular Boards")
-  /// Classification
+  /// Post type is empty
+  static let postTypeIsEmpty = L10n.tr("Localizable", "PostTypeIsEmpty")
+  /// Post type
   static let postTypeSelection = L10n.tr("Localizable", "PostTypeSelection")
   /// PTT FB Page
   static let pttfbPage = L10n.tr("Localizable", "PTT FB Page")
@@ -128,6 +134,8 @@ enum L10n {
   static let share = L10n.tr("Localizable", "Share")
   /// Site Address
   static let siteAddress = L10n.tr("Localizable", "Site Address")
+  /// Submit
+  static let submit = L10n.tr("Localizable", "submit")
   /// System Default
   static let systemDefault = L10n.tr("Localizable", "System Default")
   /// Third Party License
