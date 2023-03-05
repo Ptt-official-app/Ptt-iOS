@@ -53,6 +53,7 @@ private extension BoardCoordinator {
     func showComposeArticleView(withBoardName boardName: String) {
         let composeArticleView = factory.makeComposeArticleView(withBoardName: boardName)
         let nav = UINavigationController(rootViewController: composeArticleView)
+        nav.modalPresentationStyle = .fullScreen
         router.present(nav)
     }
 }

@@ -50,6 +50,8 @@ enum L10n {
   static let customizationMode = L10n.tr("Localizable", "Customization Mode")
   /// Dark
   static let dark = L10n.tr("Localizable", "Dark")
+  /// Edit
+  static let editArticle = L10n.tr("Localizable", "EditArticle")
   /// Email
   static let email = L10n.tr("Localizable", "Email")
   /// Error
@@ -66,6 +68,10 @@ enum L10n {
   static let hotTopics = L10n.tr("Localizable", "Hot Topics")
   /// In favorite
   static let inFavorite = L10n.tr("Localizable", "In favorite")
+  /// Text
+  static let inputArticleContent = L10n.tr("Localizable", "InputArticleContent")
+  /// Title
+  static let inputArticleTitle = L10n.tr("Localizable", "InputArticleTitle")
   /// Just now
   static let justNow = L10n.tr("Localizable", "Just now")
   /// Leave it blank for default value
@@ -100,6 +106,8 @@ enum L10n {
   static let popularArticles = L10n.tr("Localizable", "Popular Articles")
   /// Popular Boards
   static let popularBoards = L10n.tr("Localizable", "Popular Boards")
+  /// Classification
+  static let postTypeSelection = L10n.tr("Localizable", "PostTypeSelection")
   /// PTT FB Page
   static let pttfbPage = L10n.tr("Localizable", "PTT FB Page")
   /// Real Name

@@ -35,9 +35,13 @@
 		3E9FE306275D01C5002E144F /* PopularArticlesSceneFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9FE305275D01C5002E144F /* PopularArticlesSceneFactoryProtocol.swift */; };
 		3E9FE309275D0240002E144F /* PopularArticlesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9FE308275D0240002E144F /* PopularArticlesViewController.swift */; };
 		3E9FE30B275D0F16002E144F /* PopularArticlesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9FE30A275D0F16002E144F /* PopularArticlesViewModel.swift */; };
+		3EA6F1B629B386A2005D8B09 /* ComposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA6F1B529B386A2005D8B09 /* ComposeViewController.swift */; };
+		3EA6F1B829B386F1005D8B09 /* CViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA6F1B729B386F1005D8B09 /* CViewModel.swift */; };
+		3EA6F1BA29B388AF005D8B09 /* ComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA6F1B929B388AF005D8B09 /* ComposeView.swift */; };
 		3ECAD05D2762766A00F50A91 /* NumberExtensionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ECAD05C2762766A00F50A91 /* NumberExtensionTest.swift */; };
 		3ECAD060276277FF00F50A91 /* PopularArticles.json in Resources */ = {isa = PBXBuildFile; fileRef = 3ECAD05F276277FF00F50A91 /* PopularArticles.json */; };
 		3ED16B3E25713D64004A33E0 /* APITestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED16B3D25713D64004A33E0 /* APITestClient.swift */; };
+		3EDDC6DF29B453E000173F9F /* PostTypeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDDC6DE29B453E000173F9F /* PostTypeSelectionView.swift */; };
 		3EDE670B276106530063D6DF /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDE670A276106530063D6DF /* StringExtension.swift */; };
 		3EE352E5276DDC8300C2CE67 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE352E4276DDC8300C2CE67 /* DateExtension.swift */; };
 		3EE352E7276DDF1000C2CE67 /* DateExtensionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE352E6276DDF1000C2CE67 /* DateExtensionTest.swift */; };
@@ -159,9 +163,13 @@
 		3E9FE305275D01C5002E144F /* PopularArticlesSceneFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularArticlesSceneFactoryProtocol.swift; sourceTree = "<group>"; };
 		3E9FE308275D0240002E144F /* PopularArticlesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularArticlesViewController.swift; sourceTree = "<group>"; };
 		3E9FE30A275D0F16002E144F /* PopularArticlesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularArticlesViewModel.swift; sourceTree = "<group>"; };
+		3EA6F1B529B386A2005D8B09 /* ComposeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeViewController.swift; sourceTree = "<group>"; };
+		3EA6F1B729B386F1005D8B09 /* CViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CViewModel.swift; sourceTree = "<group>"; };
+		3EA6F1B929B388AF005D8B09 /* ComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeView.swift; sourceTree = "<group>"; };
 		3ECAD05C2762766A00F50A91 /* NumberExtensionTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberExtensionTest.swift; sourceTree = "<group>"; };
 		3ECAD05F276277FF00F50A91 /* PopularArticles.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PopularArticles.json; sourceTree = "<group>"; };
 		3ED16B3D25713D64004A33E0 /* APITestClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITestClient.swift; sourceTree = "<group>"; };
+		3EDDC6DE29B453E000173F9F /* PostTypeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTypeSelectionView.swift; sourceTree = "<group>"; };
 		3EDE670A276106530063D6DF /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		3EE352E4276DDC8300C2CE67 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		3EE352E6276DDF1000C2CE67 /* DateExtensionTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensionTest.swift; sourceTree = "<group>"; };
@@ -392,6 +400,15 @@
 			children = (
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		3EDDC6DD29B453C500173F9F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3EA6F1B929B388AF005D8B09 /* ComposeView.swift */,
+				3EDDC6DE29B453E000173F9F /* PostTypeSelectionView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		3EDE67072760F8110063D6DF /* Cells */ = {
@@ -677,6 +694,7 @@
 		CD7550C6264AC27300F87395 /* ComposeArticleFlow */ = {
 			isa = PBXGroup;
 			children = (
+				3EDDC6DD29B453C500173F9F /* View */,
 				CD84529C26E4B4DA00673450 /* ViewModels */,
 				CD73E13526861612009D3EF5 /* Cells */,
 				CD7550C7264AC2E900F87395 /* Controllers */,
@@ -689,6 +707,7 @@
 			children = (
 				CD7550C8264AC33C00F87395 /* ComposeArticleViewController.swift */,
 				CD072A81266D3F5400279419 /* ArticleClassTableView.swift */,
+				3EA6F1B529B386A2005D8B09 /* ComposeViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -715,6 +734,7 @@
 			isa = PBXGroup;
 			children = (
 				CD84529D26E4B51D00673450 /* ComposeArticleViewModel.swift */,
+				3EA6F1B729B386F1005D8B09 /* CViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1025,6 +1045,7 @@
 				CD767B7925B0B9980050E12A /* LicenseViewController.swift in Sources */,
 				9BEE1CB42584F644002A9D95 /* FBPageSceneFactoryProtocol.swift in Sources */,
 				944209DE279D51F6002B2B7A /* FillInformationSubView.swift in Sources */,
+				3EA6F1B829B386F1005D8B09 /* CViewModel.swift in Sources */,
 				3E9FE30B275D0F16002E144F /* PopularArticlesViewModel.swift in Sources */,
 				9BEE1C972584E773002A9D95 /* BaseView.swift in Sources */,
 				3E65527D25595FD30026290B /* Board.swift in Sources */,
@@ -1036,6 +1057,7 @@
 				3E1694392761260500F19B8E /* PopularArticleCell.swift in Sources */,
 				94AA091F278AE1E900AD3525 /* LoginSubView.swift in Sources */,
 				3E9FE303275CFEDC002E144F /* PopularArticlesCoordinator.swift in Sources */,
+				3EA6F1B629B386A2005D8B09 /* ComposeViewController.swift in Sources */,
 				3E65527525595F9E0026290B /* BoardArticle.swift in Sources */,
 				9BEE1C592584B2C0002A9D95 /* ApplicationCoordinator.swift in Sources */,
 				9BEE1CC42585DA6B002A9D95 /* BoardSceneFactoryProtocol.swift in Sources */,
@@ -1073,11 +1095,13 @@
 				3E65526D25595EE60026290B /* Article.swift in Sources */,
 				9411EDA625A0AEC30005ADCB /* LoginCoordinator.swift in Sources */,
 				CD072A82266D3F5400279419 /* ArticleClassTableView.swift in Sources */,
+				3EDDC6DF29B453E000173F9F /* PostTypeSelectionView.swift in Sources */,
 				3E65529A255962DA0026290B /* APIModel.swift in Sources */,
 				3EDE670B276106530063D6DF /* StringExtension.swift in Sources */,
 				EA48D455299CC79B00EF4062 /* SingleArticleViewController.swift in Sources */,
 				94EB641225AC183F00BF69AB /* LoginViewController.swift in Sources */,
 				CD6C1C1E26B779A500EBFEA9 /* LoadingView.swift in Sources */,
+				3EA6F1BA29B388AF005D8B09 /* ComposeView.swift in Sources */,
 				3E655290255960CF0026290B /* APIError.swift in Sources */,
 				EA05B18B277312D5004C13A8 /* ButtonNode.swift in Sources */,
 			);

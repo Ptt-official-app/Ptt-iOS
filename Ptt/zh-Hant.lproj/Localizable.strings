@@ -82,3 +82,8 @@
 "Comment" = "評論";
 "Reply" = "回覆";
 "Share" = "分享";
+
+"PostTypeSelection" = "分類選擇";
+"InputArticleTitle" = "請輸入文章標題";
+"InputArticleContent" = "請輸入文章內容";
+"EditArticle" = "編輯文章";

@@ -81,3 +81,8 @@
 "Comment" = "Comment";
 "Reply" = "Reply";
 "Share" = "Share";
+
+"PostTypeSelection" = "Classification";
+"InputArticleTitle" = "Title";
+"InputArticleContent" = "Text";
+"EditArticle" = "Edit";
