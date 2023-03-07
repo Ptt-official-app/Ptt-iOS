@@ -7,27 +7,78 @@
 //
 
 import Foundation
+import UIKit
 
-enum ANSIColor {
-    enum Foreground: Int {
-        case black = 30
-        case red = 31
-        case green = 32
-        case yellow = 33
-        case blue = 34
-        case magenta = 35
-        case cyan = 36
-        case white = 37
+enum ANSIColor: CaseIterable {
+    case black
+    case red
+    case green
+    case yellow
+    case blue
+    case magenta
+    case cyan
+    case white
+
+    var foreground: Int {
+        switch self {
+        case .black:
+            return 30
+        case .red:
+            return 31
+        case .green:
+            return 32
+        case .yellow:
+            return 33
+        case .blue:
+            return 34
+        case .magenta:
+            return 35
+        case .cyan:
+            return 36
+        case .white:
+            return 37
+        }
     }
 
-    enum Background: Int {
-        case black = 40
-        case red = 41
-        case green = 42
-        case yellow = 43
-        case blue = 44
-        case magenta = 45
-        case cyan = 46
-        case white = 47
+    var background: Int {
+        switch self {
+        case .black:
+            return 40
+        case .red:
+            return 41
+        case .green:
+            return 42
+        case .yellow:
+            return 43
+        case .blue:
+            return 44
+        case .magenta:
+            return 45
+        case .cyan:
+            return 46
+        case .white:
+            return 47
+        }
+    }
+
+    var color: UIColor {
+        switch self {
+        case .black:
+            return UIColor.black
+        case .red:
+            return UIColor.red
+        case .green:
+            return UIColor.green
+        case .yellow:
+            return UIColor.yellow
+        case .blue:
+            return UIColor.blue
+        case .magenta:
+            return UIColor.magenta
+        case .cyan:
+            return UIColor.cyan
+        case .white:
+            return UIColor.white
+        }
     }
 }

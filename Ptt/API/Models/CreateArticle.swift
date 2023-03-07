@@ -45,14 +45,14 @@ extension APIModel {
         let reset: Bool
         
         init(
-            foreground: ANSIColor.Foreground = .white,
-            background: ANSIColor.Background = .black,
+            foreground: ANSIColor = .white,
+            background: ANSIColor = .black,
             blink: Bool = false,
             highlight: Bool = false,
             reset: Bool = false
         ) {
-            self.foreground = foreground.rawValue
-            self.background = background.rawValue
+            self.foreground = foreground.foreground
+            self.background = background.background
             self.blink = blink
             self.highlight = highlight
             self.reset = reset
