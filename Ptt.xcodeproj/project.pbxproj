@@ -29,6 +29,7 @@
 		3E65528C255960AE0026290B /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65528B255960AE0026290B /* Comment.swift */; };
 		3E655290255960CF0026290B /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65528F255960CF0026290B /* APIError.swift */; };
 		3E65529A255962DA0026290B /* APIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E655299255962DA0026290B /* APIModel.swift */; };
+		3E7CE88B29AE5BB600B39D0E /* GetFavoritesFakeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E7CE88A29AE5BB600B39D0E /* GetFavoritesFakeData.swift */; };
 		3E8D8C83258A511600346690 /* LoginToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8D8C82258A511600346690 /* LoginToken.swift */; };
 		3E8D8C87258A519F00346690 /* Login.json in Resources */ = {isa = PBXBuildFile; fileRef = 3E8D8C86258A519F00346690 /* Login.json */; };
 		3E9A6284258A5D9A00C9DC18 /* BoardList.json in Resources */ = {isa = PBXBuildFile; fileRef = 3E9A6283258A5D9A00C9DC18 /* BoardList.json */; };
@@ -154,6 +155,7 @@
 		3E65528B255960AE0026290B /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		3E65528F255960CF0026290B /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		3E655299255962DA0026290B /* APIModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIModel.swift; sourceTree = "<group>"; };
+		3E7CE88A29AE5BB600B39D0E /* GetFavoritesFakeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFavoritesFakeData.swift; sourceTree = "<group>"; };
 		3E8D8C82258A511600346690 /* LoginToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginToken.swift; sourceTree = "<group>"; };
 		3E8D8C86258A519F00346690 /* Login.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Login.json; sourceTree = "<group>"; };
 		3E9A6283258A5D9A00C9DC18 /* BoardList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BoardList.json; sourceTree = "<group>"; };
@@ -300,6 +302,7 @@
 				3E8D8C86258A519F00346690 /* Login.json */,
 				3E9A6283258A5D9A00C9DC18 /* BoardList.json */,
 				3ECAD05F276277FF00F50A91 /* PopularArticles.json */,
+				3E7CE88A29AE5BB600B39D0E /* GetFavoritesFakeData.swift */,
 			);
 			path = FakeData;
 			sourceTree = "<group>";
@@ -932,7 +935,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "function generate() {\n  cd ${SRCROOT}/BuildTools \n  swiftgen config run\n}\n\nif which swiftgen > /dev/null; then\n  generate\nelse\n  brew bundle install --no-upgrade\n  generate\nfi\n";
+			shellScript = "PATH=${PATH}:/opt/homebrew/bin/\nfunction generate() {\n  cd ${SRCROOT}/BuildTools \n  swiftgen config run\n}\n\nif which swiftgen > /dev/null; then\n  generate\nelse\n  brew bundle install --no-upgrade\n  generate\nfi\n";
 		};
 		912D926E93907D87D492B266 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1102,6 +1105,7 @@
 				3E0101A325669DDB00D39FAD /* MockURLSession.swift in Sources */,
 				EA475F8C23C4834C000867FE /* PttTests.swift in Sources */,
 				EAE0839D27686657009DE954 /* ArticleTest.swift in Sources */,
+				3E7CE88B29AE5BB600B39D0E /* GetFavoritesFakeData.swift in Sources */,
 				3E0101AE25669F5A00D39FAD /* APIClientTest.swift in Sources */,
 				3ECAD05D2762766A00F50A91 /* NumberExtensionTest.swift in Sources */,
 				3E62051A2762723500CC8236 /* StringExtensionTest.swift in Sources */,
