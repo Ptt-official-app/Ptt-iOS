@@ -1,5 +1,5 @@
 //
-//  ArticleViewController.swift
+//  LegacyArticleViewController.swift
 //  Ptt
 //
 //  Created by denkeni on 2020/3/30.
@@ -11,7 +11,7 @@ import UIKit
 
 protocol ArticleView: BaseView {}
 
-final class ArticleViewController: UIViewController, FullscreenSwipeable, ArticleView {
+final class LegacyArticleViewController: UIViewController, FullscreenSwipeable, ArticleView {
 
     private var useLegacyAPI: Bool = false
     private let apiClient: APIClientProtocol
@@ -349,7 +349,7 @@ final class ArticleViewController: UIViewController, FullscreenSwipeable, Articl
 
 // MARK: - UITextViewDelegate
 
-extension ArticleViewController: UITextViewDelegate {
+extension LegacyArticleViewController: UITextViewDelegate {
 
     /// Legacy method for pre-iOS 10
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
@@ -368,8 +368,8 @@ extension ArticleViewController: UITextViewDelegate {
 
     private func shouldInteractWith(URL: URL) -> Bool {
         if APIModel.FullArticle.isPttArticle(url: URL) {
-            let articleViewController = ArticleViewController(url: URL)
-            show(articleViewController, sender: self)
+            let legacyArticleViewController = LegacyArticleViewController(url: URL)
+            show(legacyArticleViewController, sender: self)
             return false
         }
         if URL.scheme == "http" || URL.scheme == "https" {

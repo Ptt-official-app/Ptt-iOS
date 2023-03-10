@@ -11,11 +11,9 @@ import UIKit
 class ResultsTableController: UITableViewController, FavoriteView {
     var onLogout: (() -> Void)?
     var onBoardSelect: ((String) -> Void)?
-
-    lazy var filteredBoards: [APIModel.BoardInfo] = {
-        return [APIModel.BoardInfo]()
-    }()
-
+    
+    private var filteredBoards: [APIModel.BoardInfo] = []
+    
     let activityIndicator = UIActivityIndicatorView()
 
     override func viewDidLoad() {
@@ -37,6 +35,11 @@ class ResultsTableController: UITableViewController, FavoriteView {
             activityIndicator.topAnchor.constraint(equalTo: tableView.topAnchor, constant: 20.0),
             activityIndicator.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
         ])
+    }
+
+    func update(filteredBoards: [APIModel.BoardInfo]) {
+        self.filteredBoards = filteredBoards
+        tableView.reloadData()
     }
 
     @objc private func addToFavorite(sender: FavoriteButton) {

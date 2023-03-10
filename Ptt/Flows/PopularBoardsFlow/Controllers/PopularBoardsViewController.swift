@@ -154,8 +154,8 @@ extension PopularBoardsViewController: UISearchResultsUpdating {
                         weakSelf.present(alert, animated: true, completion: nil)
                     }
                 case .success(data: let data):
-
-                    weakSelf.resultsTableController.filteredBoards = data.list
+                    
+                    weakSelf.resultsTableController.update(filteredBoards: data.list)
                     DispatchQueue.main.async {
                         // Only update UI for the matching result
                         weakSelf.resultsTableController.activityIndicator.stopAnimating()

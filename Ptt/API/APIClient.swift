@@ -88,9 +88,9 @@ extension APIClient: APIClientProtocol {
                 do {
                     let token = try self.decoder.decode(APIModel.LoginToken.self, from: resultData)
                     completion(.success(token))
-                } catch {
-                    let message = self.message(of: error)
-                    completion(.failure(APIError(message: message)))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -128,9 +128,9 @@ extension APIClient: APIClientProtocol {
                 do {
                     let token = try self.decoder.decode(APIModel.AttemptRegister.self, from: resultData)
                     completion(.success(token))
-                } catch {
-                    let message = self.message(of: error)
-                    completion(.failure(APIError(message: message)))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -180,9 +180,9 @@ extension APIClient: APIClientProtocol {
                 do {
                     let token = try self.decoder.decode(APIModel.Register.self, from: resultData)
                     completion(.success(token))
-                } catch {
-                    let message = self.message(of: error)
-                    completion(.failure(APIError(message: message)))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -233,9 +233,9 @@ extension APIClient: APIClientProtocol {
                         board = APIModel.LegacyBoard.adapter(model: model)
                     }
                     completion(.success(board))
-                } catch {
-                    let message = self.message(of: error)
-                    completion(.failure(APIError(message: message)))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -279,9 +279,9 @@ extension APIClient: APIClientProtocol {
                         article = APIModel.LegacyArticle.adapter(model: model)
                     }
                     completion(.success(article))
-                } catch {
-                    let message = self.message(of: error)
-                    completion(.failure(APIError(message: message)))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -335,9 +335,9 @@ extension APIClient: APIClientProtocol {
                 do {
                     let list = try self.decoder.decode(APIModel.BoardInfoList.self, from: resultData)
                     completion(.success(list))
-                } catch {
-                    let message = self.message(of: error)
-                    completion(.failure(APIError(message: message)))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -378,9 +378,9 @@ extension APIClient: APIClientProtocol {
                 do {
                     let list = try self.decoder.decode(APIModel.BoardInfoList.self, from: resultData)
                     completion(.success(list))
-                } catch {
-                    let message = self.message(of: error)
-                    completion(.failure(APIError(message: message)))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -396,7 +396,8 @@ extension APIClient: APIClientProtocol {
         urlComponent.path = "/api/board/" + boardId + "/article"
 
         guard let url = urlComponent.url,
-              let jsonBody = try? JSONEncoder().encode(article) else {
+              let jsonBody = try? JSONEncoder().encode(article),
+              let loginToken: APIModel.LoginToken = KeyChainItem.readObject(for: .loginToken) else {
             assertionFailure()
             return
         }
@@ -406,7 +407,7 @@ extension APIClient: APIClientProtocol {
         request.httpBody = jsonBody
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.setValue( "Bearer \(LoginKeyChainItem.shared.readToken()!)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(loginToken.access_token)", forHTTPHeaderField: "Authorization")
 
         let task = self.session.dataTask(with: request) { data, urlResponse, error in
             let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
@@ -417,9 +418,9 @@ extension APIClient: APIClientProtocol {
                 do {
                     let response = try self.decoder.decode(APIModel.CreateArticleResponse.self, from: resultData)
                     completion(.success(response))
-                } catch {
-                    let message = self.message(of: error)
-                    completion(.failure(APIError(message: message)))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -460,9 +461,54 @@ extension APIClient: APIClientProtocol {
                 do {
                     let result = try self.decoder.decode(APIModel.GoPttBBSBoard.self, from: resultData)
                     completion(.success(result))
-                } catch {
-                    let message = self.message(of: error)
-                    completion(.failure(APIError(message: message)))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(.decodingError(message)))
+                }
+            }
+        }
+        task.resume()
+    }
+
+    func getFavoritesBoards(
+        startIndex: Int = 0,
+        limit: Int = 200,
+        completion: @escaping (FavoriteBoardsResult) -> Void
+    ) {
+        guard let loginObj: APIModel.LoginToken = KeyChainItem.readObject(for: .loginToken) else {
+            completion(.failure(.loginTokenNotExist))
+            return
+        }
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/user/\(loginObj.user_id)/favorites"
+
+        let limit = min(200, limit)
+        urlComponent.queryItems = [
+            URLQueryItem(name: "start_idx", value: "\(startIndex)"),
+            URLQueryItem(name: "limit", value: "\(limit)")
+        ]
+
+        guard let url = urlComponent.url else {
+            assertionFailure()
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.GET.rawValue
+        request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
+
+        let task = session.dataTask(with: request) { (data, urlResponse, error) in
+            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
+            switch result {
+            case .failure(let apiError):
+                completion(.failure(apiError))
+            case .success(let resultData):
+                do {
+                    let result = try self.decoder.decode(APIModel.BoardInfoList.self, from: resultData)
+                    completion(.success(result))
+                } catch (let decodingError) {
+                    let message = self.message(of: decodingError)
+                    completion(.failure(.decodingError(message)))
                 }
             }
         }
@@ -474,21 +520,21 @@ extension APIClient: APIClientProtocol {
 extension APIClient {
     private func processResponse(data: Data?, urlResponse: URLResponse?, error: Error?) -> ProcessResult {
         if let error = error {
-            return .failure(APIError(message: error.localizedDescription))
+            return .failure(.httpError(error))
         }
 
         guard let httpURLResponse = urlResponse as? HTTPURLResponse else {
-            return .failure(APIError(message: "No data"))
+            return .failure(.responseNotExist)
         }
 
         let statusCode = httpURLResponse.statusCode
         if statusCode != 200 {
-            let error = APIError(message: "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))")
-            return .failure(error)
+            let errorMessage = "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"
+            return .failure(.notExpectedHTTPStatus(errorMessage))
         }
 
         guard let resultData = data else {
-            return .failure(APIError(message: "No data"))
+            return .failure(.dataNotExist)
         }
 
         return .success(resultData)
@@ -498,34 +544,33 @@ extension APIClient {
      Temp for get Register/AttmentRegister Error msg
      */
     private func processResponseWithErrorMSG(data: Data?, urlResponse: URLResponse?, error: Error?) -> ProcessResult {
-
-        var errorMsg: String = ""
+        
         do {
-            if let data = data {
-                let errorDict = try decoder.decode(APIModel.ErrorMsg.self, from: data)
-                errorMsg = errorDict.Msg
-                print("get server message=", errorDict.Msg)
+            if let d = data {
+                let errorDict = try decoder.decode(APIModel.ErrorMsg.self, from: d)
+                let error_msg = errorDict.Msg
+                return .failure(.requestFailed(error_msg))
             }
         } catch {
             print("Decode error:", error)
         }
 
         if let error = error {
-            return .failure(APIError(message: "\(error):\(errorMsg)"))
+            return .failure(.httpError(error))
         }
 
         guard let httpURLResponse = urlResponse as? HTTPURLResponse else {
-            return .failure(APIError(message: errorMsg))
+            return .failure(.responseNotExist)
         }
 
         let statusCode = httpURLResponse.statusCode
         if statusCode != 200 {
-            let message = "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode)) : \(errorMsg)"
-            return .failure(APIError(message: message))
+            let message = "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"
+            return .failure(.notExpectedHTTPStatus(message))
         }
 
         guard let resultData = data else {
-            return .failure(APIError(message: errorMsg))
+            return .failure(.dataNotExist)
         }
 
         return .success(resultData)

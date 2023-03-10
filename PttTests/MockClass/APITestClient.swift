@@ -58,4 +58,12 @@ class APITestClient {
         let client = APIClient(session: session)
         return client
     }
+
+    func getFavoritesBoards() -> APIClientProtocol {
+        let data = Data(GetFavoritesFakeData.successfulResponse.utf8)
+        let dataTask = MockURLSessionDataTask()
+        let session = MockURLSession(mockDataTask: dataTask, fakeData: data, error: nil)
+        let client = APIClient(session: session)
+        return client
+    }
 }
