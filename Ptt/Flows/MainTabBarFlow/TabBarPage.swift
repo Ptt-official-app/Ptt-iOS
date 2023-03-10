@@ -9,22 +9,22 @@
 import UIKit
 
 enum TabBarPage {
-    case favorite
-    case fbPage
-    case popularArticles
-    case settings
     case popular
-    
+    case favorite
+    case popularArticles
+    case profile
+    case settings
+
     init?(index: Int) {
         switch index {
         case 0:
-            self = .favorite
+            self = .popular
         case 1:
-            self = .fbPage
+            self = .favorite
         case 2:
             self = .popularArticles
         case 3:
-            self = .popular
+            self = .profile
         case 4:
             self = .settings
         default:
@@ -32,15 +32,15 @@ enum TabBarPage {
         }
     }
     
-    func pageOrderNumber() -> Int {
+    var pageOrderNumber: Int {
         switch self {
-        case .favorite:
+        case .popular:
             return 0
-        case .fbPage:
+        case .favorite:
             return 1
         case .popularArticles:
             return 2
-        case .popular:
+        case .profile:
             return 3
         case .settings:
             return 4
@@ -48,27 +48,32 @@ enum TabBarPage {
     }
     
     
-    func pageTitleValue() -> String {
+    var pageTitleValue: String {
         switch self {
-        case .favorite:
-            return "Favorite Boards"
-        case .fbPage:
-            return "FB Page"
-        case .popularArticles:
-            return "Popular Articles"
-        case .settings:
-            return "Settings"
         case .popular:
-            return "Popular Boards"
+            return L10n.popularBoards
+        case .favorite:
+            return L10n.favoriteBoards
+        case .popularArticles:
+            return L10n.popularArticles
+        case .profile:
+            return L10n.profilePage
+        case .settings:
+            return L10n.settings
+
         }
     }
     
-    func pageIconImage() -> UIImage {
+    var pageIconImage: UIImage {
         switch self {
+        case .popular:
+            return StyleKit.imageOfPopularBoard()
         case .favorite:
             return StyleKit.imageOfFavoriteTabBar()
-        case .fbPage:
-            return StyleKit.imageOfFBPage()
+        case .popularArticles:
+            return StyleKit.imageOfHotTopic()
+        case .profile:
+            return StyleKit.imageOfProfile()
         case .settings:
             // TODO: update design from Zeplin
             if #available(iOS 13.0, *) {
@@ -77,10 +82,6 @@ enum TabBarPage {
                 }
             }
             return UIImage()
-        case .popular:
-            return StyleKit.imageOfPopularBoard()
-        case .popularArticles:
-            return StyleKit.imageOfHotTopic()
         }
     }
     // Add tab icon selected / deselected color

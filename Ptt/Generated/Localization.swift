@@ -100,6 +100,8 @@ enum L10n {
   static let popularArticles = L10n.tr("Localizable", "Popular Articles")
   /// Popular Boards
   static let popularBoards = L10n.tr("Localizable", "Popular Boards")
+  /// Profile
+  static let profilePage = L10n.tr("Localizable", "Profile Page")
   /// PTT FB Page
   static let pttfbPage = L10n.tr("Localizable", "PTT FB Page")
   /// Real Name

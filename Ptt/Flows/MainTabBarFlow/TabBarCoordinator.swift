@@ -26,8 +26,8 @@ class TabBarCoordinator: BaseCoordinator, TabBarCoordinatorProtocol {
     
     override func start() {
         // Let's define which pages do we want to add into tab bar
-        let pages: [TabBarPage] = [.favorite, .fbPage, .popularArticles, .settings, .popular]
-            .sorted(by: { $0.pageOrderNumber() < $1.pageOrderNumber() })
+        let pages: [TabBarPage] = [.popular, .favorite, .popularArticles, .profile, .settings]
+            .sorted(by: { $0.pageOrderNumber < $1.pageOrderNumber })
         // Initialization of ViewControllers or these pages
         let controllers: [UINavigationController] = pages.map({ getTabController($0) })
         
@@ -42,13 +42,13 @@ class TabBarCoordinator: BaseCoordinator, TabBarCoordinatorProtocol {
     }
     
     func selectPage(_ page: TabBarPage) {
-        tabBarView.selectedIndex = page.pageOrderNumber()
+        tabBarView.selectedIndex = page.pageOrderNumber
     }
     
     func setSelectedIndex(_ index: Int) {
         guard let page = TabBarPage.init(index: index) else { return }
         
-        tabBarView.selectedIndex = page.pageOrderNumber()
+        tabBarView.selectedIndex = page.pageOrderNumber
     }
 }
 
@@ -58,15 +58,15 @@ private extension TabBarCoordinator {
         /// Assign page's controllers
         tabBarView.setViewControllers(tabControllers, animated: true)
         /// Let set index
-        tabBarView.selectedIndex = TabBarPage.favorite.pageOrderNumber()
+        tabBarView.selectedIndex = TabBarPage.favorite.pageOrderNumber
     }
     
     func getTabController(_ page: TabBarPage) -> UINavigationController {
         let navController = UINavigationController()
         navController.setNavigationBarHidden(false, animated: false)
-        navController.tabBarItem = UITabBarItem(title: NSLocalizedString(page.pageTitleValue(), comment: ""),
-                                                image: page.pageIconImage(),
-                                                tag: page.pageOrderNumber())
+        navController.tabBarItem = UITabBarItem(title: page.pageTitleValue,
+                                                image: page.pageIconImage,
+                                                tag: page.pageOrderNumber)
         
         switch page {
         case .favorite:
@@ -80,7 +80,8 @@ private extension TabBarCoordinator {
             }
             
             favoriteCoordinator.start()
-        case .fbPage:
+        case .profile:
+            // TBD
             let fbPageCoordinator = self.coordinatorFactory.makeFBPageCoordinator(navigationController: navController)
             self.addDependency(fbPageCoordinator)
             fbPageCoordinator.start()
