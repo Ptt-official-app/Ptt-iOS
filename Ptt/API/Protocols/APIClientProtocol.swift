@@ -39,12 +39,11 @@ protocol APIClientProtocol {
     
     /// Get board list
     /// - Parameters:
-    ///   - token: access token
     ///   - keyword: query string, '' returns all boards
     ///   - startIdx: starting idx, '' if fetch from the beginning.
     ///   - max: max number of the returned list, requiring <= 300
     ///   - completion: the list of board information
-    func getBoardList(token: String, keyword: String, startIdx: String, max: Int, completion: @escaping (BoardListResult) -> Void)
+    func getBoardList(keyword: String, startIdx: String, max: Int, completion: @escaping (BoardListResult) -> Void)
     
     func getPopularBoards(subPath: String, token: String, querys: Dictionary<String, Any>, completion: @escaping (BoardListResult) -> Void)
     
@@ -57,7 +56,7 @@ protocol APIClientProtocol {
     ///   - desc: descending (or ascending if false)
     func getPopularArticles(startIdx: String, limit: Int, desc: Bool, completion: @escaping (PopularArticlesResult) -> Void)
     func getFavoritesBoards(
-        startIndex: Int,
+        startIndex: String,
         limit: Int,
         completion: @escaping (FavoriteBoardsResult) -> Void
     )

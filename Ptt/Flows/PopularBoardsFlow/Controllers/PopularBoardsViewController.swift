@@ -27,7 +27,7 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
     
     lazy var tableview: UITableView = {
         let tableview = UITableView()
-        tableview.register(PopularBoardsTableViewCell.self, forCellReuseIdentifier: PopularBoardsTableViewCell.cellIdentifier())
+        tableview.register(BoardsTableViewCell.self, forCellReuseIdentifier: BoardsTableViewCell.cellID)
         tableview.translatesAutoresizingMaskIntoConstraints = false
         tableview.dataSource = self
         tableview.delegate = self
@@ -107,8 +107,10 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: PopularBoardsTableViewCell.cellIdentifier()) as! PopularBoardsTableViewCell
-        cell.configure(viewModel, index: indexPath.row)
+        let cell = tableView.dequeueReusableCell(withIdentifier: BoardsTableViewCell.cellID) as! BoardsTableViewCell
+//        cell.configure(viewModel, index: indexPath.row)
+        let data = viewModel.popularBoards.value[indexPath.row]
+        cell.config(boardName: data.brdname, title: data.title, numberOfUsers: data.nuser)
         return cell
     }
     
@@ -141,7 +143,7 @@ extension PopularBoardsViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text, searchText.count > 0  else { return }
         resultsTableController.activityIndicator.startAnimating()
-        APIClient.shared.getBoardList(token: "", keyword: searchText) { [weak self] (result) in
+        APIClient.shared.getBoardList(keyword: searchText) { [weak self] (result) in
             guard let weakSelf = self else { return }
             switch result {
                 case .failure(error: let error):

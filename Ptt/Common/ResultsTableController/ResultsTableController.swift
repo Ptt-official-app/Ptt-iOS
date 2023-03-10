@@ -42,20 +42,20 @@ class ResultsTableController : UITableViewController, FavoriteView {
         tableView.reloadData()
     }
 
-    @objc private func addToFavorite(sender: FavoriteButton) {
-        switch sender.isSelected {
-        case false:
-            sender.isSelected = true
-            if let boardToAdded = sender.board {
-                Favorite.boards.append(boardToAdded)
-            }
-        case true:
-            sender.isSelected = false
-            if let boardToRemoved = sender.board,
-               let indexToRemoved = Favorite.boards.firstIndex(where: {$0.brdname == boardToRemoved.brdname}) {
-                Favorite.boards.remove(at: indexToRemoved)
-            }
-        }
+    @objc private func addToFavorite(sender: Any) {
+//        switch sender.isSelected {
+//        case false:
+//            sender.isSelected = true
+//            if let boardToAdded = sender.board {
+//                Favorite.boards.append(boardToAdded)
+//            }
+//        case true:
+//            sender.isSelected = false
+//            if let boardToRemoved = sender.board,
+//               let indexToRemoved = Favorite.boards.firstIndex(where: {$0.brdname == boardToRemoved.brdname}) {
+//                Favorite.boards.remove(at: indexToRemoved)
+//            }
+//        }
         NotificationCenter.default.post(name: NSNotification.Name("didUpdateFavoriteBoards"), object: nil)
     }
 
@@ -67,13 +67,13 @@ class ResultsTableController : UITableViewController, FavoriteView {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: BoardsTableViewCell.cellIdentifier(), for: indexPath) as! BoardsTableViewCell
-        cell.favoriteButton.addTarget(self, action: #selector(addToFavorite), for: .touchUpInside)
-        let index = indexPath.row
-        if index < filteredBoards.count {
-            cell.boardName = filteredBoards[index].brdname
-            cell.boardTitle = filteredBoards[index].title
-            cell.favoriteButton.board = filteredBoards[index]
-        }
+//        cell.favoriteButton.addTarget(self, action: #selector(addToFavorite), for: .touchUpInside)
+//        let index = indexPath.row
+//        if index < filteredBoards.count {
+//            cell.boardName = filteredBoards[index].brdname
+//            cell.boardTitle = filteredBoards[index].title
+//            cell.favoriteButton.board = filteredBoards[index]
+//        }
         return cell
     }
 

@@ -288,12 +288,11 @@ extension APIClient: APIClientProtocol {
     
     /// Get board list
     /// - Parameters:
-    ///   - token: access token
     ///   - keyword: query string, '' returns all boards
     ///   - startIdx: starting idx, '' if fetch from the beginning.
     ///   - max: max number of the returned list, requiring <= 300
     ///   - completion: the list of board information
-    func getBoardList(token: String, keyword: String="", startIdx: String="", max: Int=200, completion: @escaping (BoardListResult) -> Void) {
+    func getBoardList(keyword: String="", startIdx: String="", max: Int=200, completion: @escaping (BoardListResult) -> Void) {
         
         let matcherEnglish = MyRegex("^[a-zA-Z]+$")
         let matcherChinese = MyRegex("^[\\u4e00-\\u9fa5]+$")
@@ -310,14 +309,15 @@ extension APIClient: APIClientProtocol {
             URLQueryItem(name: "start_idx", value: startIdx),
             URLQueryItem(name: "limit", value: "\(max)")
         ]
-        guard let url = urlComponent.url else {
+        guard let url = urlComponent.url,
+              let loginObj: APIModel.LoginToken = KeyChainItem.readObject(for: .loginToken) else {
             assertionFailure()
             return
         }
         
         var request = URLRequest(url: url)
         request.httpMethod = Method.GET.rawValue
-        request.setValue("bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
         
         let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
             let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
@@ -450,7 +450,7 @@ extension APIClient: APIClientProtocol {
     }
 
     func getFavoritesBoards(
-        startIndex: Int = 0,
+        startIndex: String,
         limit: Int = 200,
         completion: @escaping (FavoriteBoardsResult) -> Void
     ) {
@@ -463,7 +463,7 @@ extension APIClient: APIClientProtocol {
 
         let limit = min(200, limit)
         urlComponent.queryItems = [
-            URLQueryItem(name: "start_idx", value: "\(startIndex)"),
+            URLQueryItem(name: "start_idx", value: startIndex),
             URLQueryItem(name: "limit", value: "\(limit)")
         ]
 

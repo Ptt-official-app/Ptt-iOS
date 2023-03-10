@@ -66,7 +66,7 @@ final class APIClientTest: XCTestCase {
         client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { (result) in
             switch (result) {
             case .failure(let error):
-                XCTAssert(error.message == "No data")
+                XCTAssert(error.message == "Data doesn't exist")
             case .success(_):
                 XCTAssert(false)
             }
@@ -128,7 +128,6 @@ final class APIClientTest: XCTestCase {
         let max = Int.random(in: 0...99)
         urlSession.stub { path, headers, queryItem, requestBody, completion in
             XCTAssertEqual(path, "/api/boards/autocomplete")
-            XCTAssertEqual(headers["Authorization"], "bearer theToken")
             for item in queryItem {
                 if item.name == "brdname" {
                     XCTAssertEqual(item.value, "stup")
@@ -140,7 +139,7 @@ final class APIClientTest: XCTestCase {
             }
             completion(.success(BoardListFakeData.successData))
         }
-        apiClient.getBoardList(token: "theToken", keyword: "stup", startIdx: startIdx, max: max) { result in
+        apiClient.getBoardList(keyword: "stup", startIdx: startIdx, max: max) { result in
             switch result {
             case .failure:
                 XCTFail("Shouldn't fail")
@@ -173,7 +172,7 @@ final class APIClientTest: XCTestCase {
             }
             completion(.success(BoardListFakeData.successData))
         }
-        apiClient.getBoardList(token: "theToken", keyword: "笨", startIdx: startIdx, max: max) { result in
+        apiClient.getBoardList(keyword: "笨", startIdx: startIdx, max: max) { result in
             switch result {
             case .failure:
                 XCTFail("Shouldn't fail")
@@ -200,7 +199,7 @@ final class APIClientTest: XCTestCase {
             }
             completion(.success(BoardListFakeData.successData))
         }
-        apiClient.getBoardList(token: "theToken", keyword: "ごじゅうおん", startIdx: startIdx, max: max) { result in
+        apiClient.getBoardList(keyword: "ごじゅうおん", startIdx: startIdx, max: max) { result in
             switch result {
             case .failure:
                 XCTFail("Shouldn't fail")
@@ -214,7 +213,7 @@ final class APIClientTest: XCTestCase {
     func testGetFavoritesBoards() {
         let client = manager.getFavoritesBoards()
 
-        client.getFavoritesBoards(startIndex: 0, limit: 0) { result in
+        client.getFavoritesBoards(startIndex: "", limit: 0) { result in
             switch result {
             case .failure:
                 XCTFail("Shouldn't failed")
