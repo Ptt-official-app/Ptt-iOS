@@ -6,8 +6,8 @@
 //  Copyright © 2020 Ptt. All rights reserved.
 //
 
-import XCTest
 @testable import Ptt
+import XCTest
 
 final class APIClientTest: XCTestCase {
     private var urlSession: MockURLSessionV2!
@@ -30,54 +30,54 @@ final class APIClientTest: XCTestCase {
         let unknowError = NSError(domain: "term.ptt.cc", code: 404, userInfo: info)
         let session = MockURLSession(mockDataTask: dataTask, fakeData: nil, error: unknowError)
         let client = APIClient(session: session)
-        
-        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { (result) in
-            switch (result) {
+
+        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { result in
+            switch result {
             case .failure(let error):
                 XCTAssertTrue(error.message == "Network error")
-            case .success(_):
+            case .success:
                 XCTAssert(false)
             }
         }
     }
-    
+
     func testHttpResponseError() {
         let dataTask = MockURLSessionDataTask()
         let statusCode = 404
         let session = MockURLSession(mockDataTask: dataTask, fakeData: Data(), error: nil, statusCode: statusCode)
         let client = APIClient(session: session)
-        
-        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { (result) in
-            switch (result) {
+
+        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { result in
+            switch result {
             case .failure(let error):
                 let msg = "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"
                 XCTAssert(error.message == msg)
-            case .success(_):
+            case .success:
                 XCTAssert(false)
             }
         }
     }
-    
+
     func testNoDataError() {
         let dataTask = MockURLSessionDataTask()
         let session = MockURLSession(mockDataTask: dataTask, fakeData: nil, error: nil)
         let client = APIClient(session: session)
-        
-        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { (result) in
-            switch (result) {
+
+        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { result in
+            switch result {
             case .failure(let error):
-                XCTAssert(error.message == "No data")
-            case .success(_):
+                XCTAssert(error.message == "Data doesn't exist")
+            case .success:
                 XCTAssert(false)
             }
         }
     }
-    
+
     func testLoginSuccess() {
         let client = manager.login()
-        client.login(account: "asd", password: "123") { (result) in
-            switch (result) {
-            case .failure(_):
+        client.login(account: "asd", password: "123") { result in
+            switch result {
+            case .failure:
                 XCTAssert(false)
             case .success(let token):
                 XCTAssert(token.access_token == "fake token")
@@ -85,13 +85,13 @@ final class APIClientTest: XCTestCase {
             }
         }
     }
-    
+
     func testGetBoardArticlesSuccess() {
         let client = manager.newArticleClient()
-        
-        client.getBoardArticles(of: .legacy(boardName: "MyBoard", page: 1)) { (result) in
-            switch (result) {
-            case .failure(_):
+
+        client.getBoardArticles(of: .legacy(boardName: "MyBoard", page: 1)) { result in
+            switch result {
+            case .failure:
                 XCTAssert(false)
             case .success(let board):
                 XCTAssert(board.page == 1)
@@ -102,12 +102,12 @@ final class APIClientTest: XCTestCase {
             }
         }
     }
-    
+
     func testGetArticleSuccess() {
         let client = manager.getArticleClient()
-        client.getArticle(of: .legacy(boardName: "MyBoard", filename: "M.392837.A.F25")) { (result) in
-            switch (result) {
-                case .failure(_):
+        client.getArticle(of: .legacy(boardName: "MyBoard", filename: "M.392837.A.F25")) { result in
+            switch result {
+                case .failure:
                     XCTAssert(false)
                 case .success(let article):
                     guard let fullArticle = article as? APIModel.FullArticle else {

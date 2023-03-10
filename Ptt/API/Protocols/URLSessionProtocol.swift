@@ -16,10 +16,10 @@ protocol URLSessionProtocol {
 
 extension URLSession: URLSessionProtocol {
     func dataTask(with request: URLRequest, completionHandler: @escaping DataTaskResult) -> URLSessionDataTaskProtocol {
-        let task:URLSessionDataTask = dataTask(with: request, completionHandler: completionHandler)
+        let task: URLSessionDataTask = dataTask(with: request, completionHandler: completionHandler)
         return task
     }
-    
+
     func dataTask(with url: URL, completionHandler: @escaping DataTaskResult) -> URLSessionDataTaskProtocol {
         let task: URLSessionDataTask = dataTask(with: url, completionHandler: completionHandler)
         return task

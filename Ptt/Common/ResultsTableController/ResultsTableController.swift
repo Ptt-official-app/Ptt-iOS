@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ResultsTableController : UITableViewController, FavoriteView {
+class ResultsTableController: UITableViewController, FavoriteView {
     var onLogout: (() -> Void)?
     var onBoardSelect: ((String) -> Void)?
     
@@ -52,7 +52,7 @@ class ResultsTableController : UITableViewController, FavoriteView {
         case true:
             sender.isSelected = false
             if let boardToRemoved = sender.board,
-               let indexToRemoved = Favorite.boards.firstIndex(where: {$0.brdname == boardToRemoved.brdname}) {
+               let indexToRemoved = Favorite.boards.firstIndex(where: { $0.brdname == boardToRemoved.brdname }) {
                 Favorite.boards.remove(at: indexToRemoved)
             }
         }

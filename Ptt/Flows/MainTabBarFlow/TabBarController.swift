@@ -9,7 +9,7 @@
 import UIKit
 
 final class TabBarController: UITabBarController, UITabBarControllerDelegate, TabBarView {
-    
+
     // MARK: - Life Cycle
 
     override func viewDidLoad() {

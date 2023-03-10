@@ -15,20 +15,20 @@ protocol PopularBoardsViewModelDelegate {
 class PopularBoardsViewModel {
     var popularBoards = Observable<[APIModel.BoardInfo]>(value: [])
     var delegate: PopularBoardsViewModelDelegate?
-    
+
     let subPath = "boards/popular"
     let token = ""
-    
+
     init() {
         initViewModel()
     }
-    
+
     func initViewModel() {
         popularBoards.value.removeAll()
     }
-    
+
     func start() {
-        APIClient.shared.getPopularBoards(subPath: subPath, token: token) { [weak self] (result) in
+        APIClient.shared.getPopularBoards(subPath: subPath, token: token) { [weak self] result in
             guard let weakSelf = self else { return }
             switch result {
                 case .failure(error: let apiError):
@@ -37,7 +37,7 @@ class PopularBoardsViewModel {
                     return
                 case .success(data: let data):
                     var tempList: [APIModel.BoardInfo] = []
-                    
+
                     for item in data.list {
                         tempList.append(item)
                     }
@@ -57,13 +57,13 @@ class Observable<T> {
             }
         }
     }
-    
+
     private var valueChanged: ((T) -> Void)?
-    
+
     init(value: T) {
         self.value = value
     }
-    
+
     /// Add closure as an observer and trigger the closure imeediately if fireNow = true
     func addObserver(fireNow: Bool = true, _ onChange: ((T) -> Void)?) {
         valueChanged = onChange
@@ -71,9 +71,9 @@ class Observable<T> {
             onChange?(value)
         }
     }
-    
+
     func removeObserver() {
         valueChanged = nil
     }
-    
+
 }

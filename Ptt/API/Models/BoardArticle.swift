@@ -10,27 +10,27 @@ import Foundation
 
 extension APIModel {
 
-    struct BoardArticle : Article {
-        let title : String
-        let date : String
-        let author : String
+    struct BoardArticle: Article {
+        let title: String
+        let date: String
+        let author: String
 
-        let boardID : String
-        let articleID : String
+        let boardID: String
+        let articleID: String
     }
 
-    struct GoPttBBSBrdArticle : Codable {
-        let title : String
-        let create_time : TimeInterval
-        let owner : String
-        let bid : String
-        let aid : String
+    struct GoPttBBSBrdArticle: Codable {
+        let title: String
+        let create_time: TimeInterval
+        let owner: String
+        let bid: String
+        let aid: String
         let recommend: Int
         let n_comments: Int
         let money: Int
         let idx: String
         let url: String
-        let `class` : String
+        let `class`: String
 
         static func adapter(model: GoPttBBSBrdArticle) -> BoardArticle {
             // TODO:
@@ -42,12 +42,12 @@ extension APIModel {
         }
     }
 
-    struct GoBBSBrdArticle : Codable {
-        let title : String
-        let modified_time : String
-        let owner : String
+    struct GoBBSBrdArticle: Codable {
+        let title: String
+        let modified_time: String
+        let owner: String
 
-        let filename : String
+        let filename: String
 
         static func adapter(model: GoBBSBrdArticle) -> BoardArticle {
             // TODO:
@@ -55,11 +55,11 @@ extension APIModel {
         }
     }
 
-    struct LegacyBrdArticle : Codable {
-        let title : String
-        let href : String
-        let author : String
-        let date : String
+    struct LegacyBrdArticle: Codable {
+        let title: String
+        let href: String
+        let author: String
+        let date: String
 
         static func adapter(model: LegacyBrdArticle) -> BoardArticle? {
             guard let url = URL(string: "https://www.ptt.cc\(model.href)") else {

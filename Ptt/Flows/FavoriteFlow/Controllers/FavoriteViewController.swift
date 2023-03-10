@@ -10,7 +10,7 @@ import UIKit
 
 protocol FavoriteView: BaseView {
     var onBoardSelect: ((String) -> Void)? { get set }
-    var onLogout:(() -> Void)? { get set }
+    var onLogout: (() -> Void)? { get set }
 }
 
 final class FavoriteViewController: UITableViewController, FavoriteView, UISearchControllerDelegate {
@@ -20,7 +20,7 @@ final class FavoriteViewController: UITableViewController, FavoriteView, UISearc
     private let apiClient: APIClientProtocol
     private let cellReuseIdentifier = "FavoriteCell"
     private lazy var resultsTableController = configureResultsTableController()
-    private lazy var searchController : UISearchController = {
+    private lazy var searchController: UISearchController = {
         // For if #available(iOS 11.0, *), no need to set searchController as property (local variable is fine).
        return UISearchController(searchResultsController: resultsTableController)
     }()
@@ -190,7 +190,7 @@ extension FavoriteViewController {
 
 extension FavoriteViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text, searchText.count > 0  else { return }
+        guard let searchText = searchController.searchBar.text, !searchText.isEmpty else { return }
         let filtered = list.filter { $0.brdname.contains(searchText) || $0.title.contains(searchText) }
         resultsTableController.update(filteredBoards: filtered)
     }

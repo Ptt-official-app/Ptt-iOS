@@ -49,7 +49,7 @@ final class PopularArticleCell: UITableViewCell {
 
     private func assembleCategoryText(info: APIModel.GoPttBBSBrdArticle) -> String {
         let boardName = info.url.getBorderName()
-        return info.class.isEmpty ? boardName: "\(boardName)/\(info.class)"
+        return info.class.isEmpty ? boardName : "\(boardName)/\(info.class)"
     }
 
     private func assembleMetadataText(info: APIModel.GoPttBBSBrdArticle) -> String {
@@ -57,7 +57,7 @@ final class PopularArticleCell: UITableViewCell {
     }
 
     private func setupVote(recommend: Int) {
-        self.upvoteIcon.image = recommend >= 0 ? StyleKit.imageOfUpvote(): StyleKit.imageOfDownvote()
+        self.upvoteIcon.image = recommend >= 0 ? StyleKit.imageOfUpvote() : StyleKit.imageOfDownvote()
         self.upvoteLabel.text = recommend.easyRead
     }
 

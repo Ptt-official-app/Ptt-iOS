@@ -15,9 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var rootController: UINavigationController {
         return (self.window?.rootViewController as? UINavigationController) ?? UINavigationController()
     }
-    
+
     private lazy var applicationCoordinator: Coordinatorable = self.makeCoordinator()
-    
+
     // MARK: - UIApplicationDelegate
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -55,7 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 // MARK: - Private
 
 private extension AppDelegate {
-    
+
     func makeCoordinator() -> Coordinatorable {
         return ApplicationCoordinator(router: Router(rootController: self.rootController), coordinatorFactory: CoordinatorFactory())
     }

@@ -9,27 +9,27 @@
 import UIKit
 
 final class CoordinatorFactory: CoordinatorFactoryProtocol {
- 
+
     func makeTabbarCoordinator() -> (coordinator: Coordinatorable, toPresent: Presentable?) {
         let controller = TabBarController()
         let coordinator = TabBarCoordinator(tabBarView: controller, coordinatorFactory: CoordinatorFactory())
         return (coordinator, controller)
     }
-    
+
     func makeFavoriteCoordinator(navigationController: UINavigationController?) -> Coordinatorable {
         let coordinator = FavoriteCoordinator(router: router(navigationController),
                                               factory: SceneFactory(),
                                               coordinatoryFactory: CoordinatorFactory())
         return coordinator
     }
-    
+
     func makeFBPageCoordinator(navigationController: UINavigationController?) -> Coordinatorable {
         let coordinator = FBPageCoordinator(router: router(navigationController),
                                             factory: SceneFactory(),
                                             coordinatoryFactory: CoordinatorFactory())
         return coordinator
     }
-    
+
     func makePopularBoardsCoordinator(navigationController: UINavigationController?) -> Coordinatorable {
         let coordinator = PopularBoardsCoordinator(router: router(navigationController),
                                               factory: SceneFactory(),
@@ -44,7 +44,7 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
         return coordinator
     }
 
-    func makeLoginCoordinator(router:Router) -> Coordinatorable {
+    func makeLoginCoordinator(router: Router) -> Coordinatorable {
         let coordinator = LoginCoordinator(router: router,
                                               factory: SceneFactory(),
                                               coordinatoryFactory: CoordinatorFactory())
@@ -53,11 +53,11 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
 }
 
 private extension CoordinatorFactory {
-    
+
     func router(_ navigationController: UINavigationController?) -> Routerable {
         return Router(rootController: self.navigationController(navigationController))
     }
-    
+
     func navigationController(_ navController: UINavigationController?) -> UINavigationController {
         if let navController = navController {
             return navController

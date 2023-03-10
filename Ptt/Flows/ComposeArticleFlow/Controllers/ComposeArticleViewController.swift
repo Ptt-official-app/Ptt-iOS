@@ -6,8 +6,8 @@
 //  Copyright © 2021 Ptt. All rights reserved.
 //
 
-import UIKit
 import AsyncDisplayKit
+import UIKit
 
 protocol ComposeArticleView: BaseView {
 }
@@ -17,22 +17,21 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
     var noticeText = ""
     let placeholderText = "請輸入文章內容"
     var boardName = ""
-    
+
     lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
         return scrollView
     }()
-    
+
     lazy var contentView: UIView = {
         var contentView = UIView()
         contentView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(contentView)
         return contentView
     }()
-    
-    
+
     lazy var classSelectButton: UIButton = {
         var classSelectButton = UIButton()
         classSelectButton.translatesAutoresizingMaskIntoConstraints = false
@@ -48,7 +47,14 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
     lazy var articleTitle: UITextField = {
         var articleTitle = UITextField()
         articleTitle.translatesAutoresizingMaskIntoConstraints = false
-        articleTitle.attributedPlaceholder = NSAttributedString(string:"請輸入文章標題", attributes:[NSAttributedString.Key.foregroundColor: UIColor(red:56/255, green:56/255, blue:61/255, alpha:1.0), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 24)])
+        let color = UIColor(red: 56 / 255, green: 56 / 255, blue: 61 / 255, alpha: 1.0)
+        articleTitle.attributedPlaceholder = NSAttributedString(
+            string: "請輸入文章標題",
+            attributes: [
+                NSAttributedString.Key.foregroundColor: color,
+                NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 24)
+            ]
+        )
         articleTitle.font = UIFont.boldSystemFont(ofSize: 24)
         contentView.addSubview(articleTitle)
         return articleTitle
@@ -61,7 +67,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         articleContentView.translatesAutoresizingMaskIntoConstraints = false
         articleContentView.textAlignment = .left
         articleContentView.text = placeholderText
-        articleContentView.textColor = UIColor(red:56/255, green:56/255, blue:61/255, alpha:1.0)
+        articleContentView.textColor = UIColor(red: 56 / 255, green: 56 / 255, blue: 61 / 255, alpha: 1.0)
         articleContentView.backgroundColor = PttColors.codGray.color
         articleContentView.alwaysBounceVertical = true
         articleContentView.keyboardDismissMode = .interactive
@@ -79,7 +85,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         return articleClassContentView
     }()
 
-    lazy var articleClassTableView: ArticleClassTableView =  {
+    lazy var articleClassTableView: ArticleClassTableView = {
         let articleClassTableView = ArticleClassTableView()
         articleClassTableView.translatesAutoresizingMaskIntoConstraints = false
         articleClassTableView.articleClassTableViewDelegate = self
@@ -98,18 +104,18 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
     lazy var confirmComposeAlertViewController: UIAlertController = {
         let confirmComposeAlertViewController = UIAlertController(title: "確認發佈文章？", message: "", preferredStyle: UIAlertController.Style.alert)
 
-        confirmComposeAlertViewController.addAction(UIAlertAction(title: "發佈", style: UIAlertAction.Style.default, handler: {action in
+        confirmComposeAlertViewController.addAction(UIAlertAction(title: "發佈", style: UIAlertAction.Style.default, handler: {_ in
 
             let createArticle = APIModel.CreateArticle(className: self.classText, title: self.articleTitle.text ?? "", content: self.viewModel.getContentPropertyOutSideArray())
 
             self.loadingView.isHidden = false
             self.navigationController?.isToolbarHidden = true
 
-            APIClient.shared.createArticle(boardId: self.boardName, article: createArticle) { (result) in
+            APIClient.shared.createArticle(boardId: self.boardName, article: createArticle) { result in
                 DispatchQueue.main.async {
                     self.loadingView.isHidden = true
                 }
-                switch (result) {
+                switch result {
                 case .failure(let error):
                     DispatchQueue.main.async {
                         self.navigationController?.isToolbarHidden = false
@@ -134,7 +140,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
     lazy var deleteComposeAlertViewController: UIAlertController = {
         let deleteComposeAlertViewController = UIAlertController(title: "確認放棄文章？", message: "", preferredStyle: UIAlertController.Style.alert)
 
-        deleteComposeAlertViewController.addAction(UIAlertAction(title: "確定", style: UIAlertAction.Style.default, handler: {action in
+        deleteComposeAlertViewController.addAction(UIAlertAction(title: "確定", style: UIAlertAction.Style.default, handler: {_ in
         }))
 
         deleteComposeAlertViewController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
@@ -147,58 +153,57 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         noticeAlertViewController.addAction(UIAlertAction(title: "確定", style: UIAlertAction.Style.cancel, handler: nil))
         return noticeAlertViewController
     }()
-    
+
     lazy var leftBarButton: UIButton = {
         let leftBarButton = UIButton()
         leftBarButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
-        leftBarButton.imageView?.layer.transform = CATransform3DMakeScale(1.3 , 1.3 , 1.3)
+        leftBarButton.imageView?.layer.transform = CATransform3DMakeScale(1.3, 1.3, 1.3)
         leftBarButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: -12, bottom: 0, right: 0)
-        
+
         leftBarButton.setTitle("編輯文章", for: .normal)
         leftBarButton.addTarget(self, action: #selector(back), for: .touchUpInside)
         return leftBarButton
     }()
-    
+
     var keyboardY: CGFloat = 0
     var currentTextviewCursorPosMaxY: CGFloat = 0
     var scrollViewMoveStep: CGFloat = 0
-    
+
     let barSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
-    
+
     let viewModel = ComposeArticleViewModel()
-    
+
     @objc private func deleteCompose() {
         print("deleteCompose")
         present(deleteComposeAlertViewController, animated: true)
     }
-    
+
     @objc private func loadDraft() {
         print("loadDraft")
     }
-    
+
     @objc private func saveDraft() {
         print("saveDraft")
     }
-    
+
     @objc private func photoUpload() {
-        
+
     }
-    
+
     @objc private func openPaintpalette() {
-        
+
     }
-    
+
     @objc private func sendCompose() {
         self.view.endEditing(true)
-        if (articleContentView.text == "" || classText == "" || articleTitle.text == "") {
+        if articleContentView.text == "" || classText == "" || articleTitle.text == "" {
             noticeAlertViewController.title = (classText == "") ? "請選擇分類" : "請輸入標題或內容"
             present(noticeAlertViewController, animated: true)
-        }
-        else {
+        } else {
             present(confirmComposeAlertViewController, animated: true)
         }
     }
-    
+
     init(boardName: String) {
         self.boardName = boardName
         super.init(nibName: nil, bundle: nil)
@@ -207,7 +212,7 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -217,71 +222,71 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
         initToolBar()
         initKeyboardToolBar()
         setConstraint()
-        
+
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ComposeArticleViewController.backgroundTap))
         contentView.addGestureRecognizer(tapGestureRecognizer)
     }
-    
+
     override func viewDidLayoutSubviews() {
         articleTitle.setBottomBorder()
     }
-    
+
     func initView() {
         view.backgroundColor = GlobalAppearance.backgroundColor
 
         if #available(iOS 11.0, *) {
             navigationItem.largeTitleDisplayMode = .never
         }
-        
+
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButton)
     }
-    
+
     func initToolBar() {
         navigationController?.isToolbarHidden = false
-        
-        let deleteComposeButton =  UIBarButtonItem(image: UIImage(systemName: "trash.fill"),
-                   style: .plain, target:self,
+
+        let deleteComposeButton = UIBarButtonItem(image: UIImage(systemName: "trash.fill"),
+                   style: .plain, target: self,
                    action: #selector(deleteCompose))
-        
+
         let loadDraftButton = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"),
-           style: .plain, target:self,
+           style: .plain, target: self,
            action: #selector(loadDraft))
 
         let saveDraftButton = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.down.fill"),
-           style: .plain, target:self,
+           style: .plain, target: self,
            action: #selector(saveDraft))
 
-        let sendComposeButton = UIBarButtonItem(image:UIImage(systemName: "paperplane.fill"),
-           style: .plain, target:self,
+        let sendComposeButton = UIBarButtonItem(image: UIImage(systemName: "paperplane.fill"),
+           style: .plain, target: self,
            action: #selector(sendCompose))
-        
+
         deleteComposeButton.tintColor = .lightGray
         loadDraftButton.tintColor = .lightGray
         saveDraftButton.tintColor = .lightGray
         sendComposeButton.tintColor = .lightGray
-        
+
         self.toolbarItems = [barSpace, deleteComposeButton, barSpace, loadDraftButton, barSpace, saveDraftButton, barSpace, sendComposeButton, barSpace]
     }
-    
+
     func initKeyboardToolBar() {
-        let bar = UIToolbar(frame:CGRect(x:0, y:0, width:100, height:100))
+        let bar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         let photo = UIBarButtonItem(image: UIImage(systemName: "photo.fill"),
-            style: .plain, target:self,
+            style: .plain, target: self,
             action: #selector(photoUpload))
 
         let paintpalette = UIBarButtonItem(image: UIImage(systemName: "paintpalette.fill"),
-            style: .plain, target:self,
+            style: .plain, target: self,
             action: #selector(openPaintpalette))
 
-        let paperplane = UIBarButtonItem(image:UIImage(systemName: "paperplane.fill"),
-           style: .plain, target:self,
+        let paperplane = UIBarButtonItem(image: UIImage(systemName: "paperplane.fill"),
+           style: .plain, target: self,
            action: #selector(sendCompose))
 
         photo.tintColor = .lightGray
@@ -290,21 +295,21 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
 
         bar.items = [barSpace, photo, barSpace, paintpalette, barSpace, paperplane, barSpace]
         bar.sizeToFit()
-        
+
         articleTitle.inputAccessoryView = bar
         articleContentView.inputAccessoryView = bar
     }
-    
+
     @objc private func back() {
         navigationController?.dismiss(animated: true)
     }
-    
+
     @objc private func classSelect() {
         articleClassContentView.isHidden = false
         articleTitle.resignFirstResponder()
         articleContentView.resignFirstResponder()
     }
-    
+
     func setConstraint() {
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -319,19 +324,19 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
             contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor)
         ])
-    
+
         let contentViewCenterY = contentView.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor)
         contentViewCenterY.priority = .defaultLow
 
         let contentViewHeight = contentView.heightAnchor.constraint(greaterThanOrEqualTo: view.heightAnchor)
         contentViewHeight.priority = .defaultLow
-        
+
         NSLayoutConstraint.activate([
             contentView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             contentViewCenterY,
             contentViewHeight
         ])
-        
+
         NSLayoutConstraint(item: classSelectButton, attribute: .trailing, relatedBy: .equal, toItem: contentView, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: classSelectButton, attribute: .leading, relatedBy: .equal, toItem: contentView, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: classSelectButton, attribute: .top, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
@@ -367,15 +372,15 @@ class ComposeArticleViewController: UIViewController, ComposeArticleView {
 private extension ComposeArticleViewController {
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let keyboardSize = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
-        
+
         keyboardY = keyboardSize.minY
     }
-    
+
     @objc func keyboardWillHide(notification: NSNotification) {
         scrollView.contentInset = .zero
         scrollView.scrollIndicatorInsets = .zero
     }
-    
+
     @objc func backgroundTap(_ sender: UITapGestureRecognizer) {
         // go through all of the textfield inside the view, and end editing thus resigning first responder
         // ie. it will trigger a keyboardWillHide notification
@@ -387,47 +392,47 @@ extension ComposeArticleViewController: UITextViewDelegate {
 
     func textViewDidChange(_ textView: UITextView) {
         if let cursorPosition = textView.selectedTextRange?.end {
-            DispatchQueue.main.async{ [weak self] in
+            DispatchQueue.main.async { [weak self] in
                 let caretPositionRect = textView.caretRect(for: cursorPosition)
                 let pointsuperview = textView.convert(caretPositionRect, to: self?.scrollView)
                 let scrollviewState: CGFloat = -1
-                
-                var contentInsets = UIEdgeInsets(top: (50 * self!.scrollViewMoveStep * scrollviewState), left: 0.0, bottom: 0.0 , right: 0.0)
-                if (self!.keyboardY + (50 * self!.scrollViewMoveStep) - pointsuperview.maxY <= 50) {
+
+                var contentInsets = UIEdgeInsets(top: (50 * self!.scrollViewMoveStep * scrollviewState), left: 0.0, bottom: 0.0, right: 0.0)
+                if self!.keyboardY + (50 * self!.scrollViewMoveStep) - pointsuperview.maxY <= 50 {
                     self?.scrollViewMoveStep += 1
-                    contentInsets = UIEdgeInsets(top: (-50 * self!.scrollViewMoveStep * scrollviewState), left: 0.0, bottom: 0.0 , right: 0.0)
+                    contentInsets = UIEdgeInsets(top: (-50 * self!.scrollViewMoveStep * scrollviewState), left: 0.0, bottom: 0.0, right: 0.0)
                 }
-                
+
                 if pointsuperview.maxY < self!.currentTextviewCursorPosMaxY {
                     self?.scrollViewMoveStep -= 1
 //                    scrollviewState = 1
-                    contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: (50 * self!.scrollViewMoveStep ) , right: 0.0)
+                    contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: (50 * self!.scrollViewMoveStep ), right: 0.0)
                 }
-                
+
                 self?.scrollView.contentInset = contentInsets
                 self?.scrollView.scrollIndicatorInsets = contentInsets
-                
+
                 self!.currentTextviewCursorPosMaxY = pointsuperview.maxY
             }
         }
     }
-    
+
     func textViewDidBeginEditing(_ textView: UITextView) {
         if articleContentView.text == placeholderText {
             articleContentView.text = ""
             articleContentView.textColor = .white
         }
     }
-    
+
     func textViewDidEndEditing(_ textView: UITextView) {
         if articleContentView.text.isEmpty {
             articleContentView.text = placeholderText
-            articleContentView.textColor = UIColor(red:56/255, green:56/255, blue:61/255, alpha:1.0)
+            articleContentView.textColor = UIColor(red: 56 / 255, green: 56 / 255, blue: 61 / 255, alpha: 1.0)
         }
-        
+
         scrollView.setContentOffset(.zero, animated: true)
     }
-    
+
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         viewModel.insertContent(text)
         return true
@@ -436,7 +441,7 @@ extension ComposeArticleViewController: UITextViewDelegate {
 
 extension ComposeArticleViewController: ArticleClassTableViewDelegate {
     func setArticleClass(classText: String) {
-        if (classText != "無" && classText != "取消") {
+        if classText != "無" && classText != "取消" {
             self.classText = classText
             classSelectButton.setTitle(classText, for: .normal)
             classSelectButton.setTitleColor(GlobalAppearance.tintColor, for: .normal)

@@ -24,19 +24,19 @@ protocol APIClientProtocol {
     typealias LoginResult = Result<APIModel.LoginToken, APIError>
     typealias AttemptRegisterResult = Result<APIModel.AttemptRegister, APIError>
     typealias RegisterResult = Result<APIModel.Register, APIError>
-    typealias getBoardArticlesResult = Result<APIModel.BoardModel, APIError>
+    typealias GetBoardArticlesResult = Result<APIModel.BoardModel, APIError>
     typealias GetArticleResult = Result<Article, APIError>
     typealias BoardListResult = Result<APIModel.BoardInfoList, APIError>
     typealias ProcessResult = Result<Data, APIError>
-    typealias createArticleResult = Result<APIModel.CreateArticleResponse, APIError>
+    typealias CreateArticleResult = Result<APIModel.CreateArticleResponse, APIError>
     typealias PopularArticlesResult = Result<APIModel.GoPttBBSBoard, APIError>
     typealias FavoriteBoardsResult = Result<APIModel.BoardInfoList, APIError>
     
     func login(account: String, password: String, completion: @escaping (LoginResult) -> Void)
 
-    func getBoardArticles(of params: BoardArticlesParams, completion: @escaping (getBoardArticlesResult) -> Void)
+    func getBoardArticles(of params: BoardArticlesParams, completion: @escaping (GetBoardArticlesResult) -> Void)
     func getArticle(of params: ArticleParams, completion: @escaping (GetArticleResult) -> Void)
-    
+
     /// Get board list
     /// - Parameters:
     ///   - token: access token
@@ -45,11 +45,11 @@ protocol APIClientProtocol {
     ///   - max: max number of the returned list, requiring <= 300
     ///   - completion: the list of board information
     func getBoardList(token: String, keyword: String, startIdx: String, max: Int, completion: @escaping (BoardListResult) -> Void)
-    
-    func getPopularBoards(subPath: String, token: String, querys: Dictionary<String, Any>, completion: @escaping (BoardListResult) -> Void)
-    
-    func createArticle(boardId: String, article: APIModel.CreateArticle, completion: @escaping (createArticleResult) -> Void)
-    
+
+    func getPopularBoards(subPath: String, token: String, querys: [String: Any], completion: @escaping (BoardListResult) -> Void)
+
+    func createArticle(boardId: String, article: APIModel.CreateArticle, completion: @escaping (CreateArticleResult) -> Void)
+
     /// Get popular article list data
     /// - Parameters:
     ///   - startIdx: query string, empty string if fetch from the beginning

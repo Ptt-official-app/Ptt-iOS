@@ -14,7 +14,7 @@ enum TabBarPage {
     case popularArticles
     case settings
     case popular
-    
+
     init?(index: Int) {
         switch index {
         case 0:
@@ -31,7 +31,7 @@ enum TabBarPage {
             return nil
         }
     }
-    
+
     func pageOrderNumber() -> Int {
         switch self {
         case .favorite:
@@ -46,8 +46,7 @@ enum TabBarPage {
             return 4
         }
     }
-    
-    
+
     func pageTitleValue() -> String {
         switch self {
         case .favorite:
@@ -62,7 +61,7 @@ enum TabBarPage {
             return "Popular Boards"
         }
     }
-    
+
     func pageIconImage() -> UIImage {
         switch self {
         case .favorite:

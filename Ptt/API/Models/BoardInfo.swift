@@ -9,12 +9,12 @@
 import Foundation
 
 extension APIModel {
-    
+
     struct BoardInfoList: Codable {
         let list: [BoardInfo]
-        var next_idx: String? = nil
+        var next_idx: String?
     }
-    
+
     struct BoardInfo: Codable {
         let bid: String
         let brdname: String
@@ -29,8 +29,8 @@ extension APIModel {
         let total: Int
         let last_post_time: Int
         let stat_attr: Int
-        var level_idx: String? = nil
-        
+        var level_idx: String?
+
         init(brdname: String, title: String, nuser: Int = 0) {
             self.bid = "bid"
             self.brdname = brdname
@@ -48,4 +48,3 @@ extension APIModel {
         }
     }
 }
-

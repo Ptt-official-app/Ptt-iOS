@@ -9,15 +9,15 @@
 import UIKit
 import WebKit
 
-private enum SettingsSection : Int, CaseIterable {
+private enum SettingsSection: Int, CaseIterable {
     case main, about
 }
 
-private enum SettingsMainRow : Int, CaseIterable {
+private enum SettingsMainRow: Int, CaseIterable {
     case appearance, address, cache
 }
 
-private enum SettingsAboutRow : Int, CaseIterable {
+private enum SettingsAboutRow: Int, CaseIterable {
     case license, version
 }
 
@@ -159,10 +159,10 @@ final class SettingsViewController: UITableViewController {
                 let prompt = UIAlertController(title: L10n.changeSiteAddress,
                                                message: L10n.leaveItBlankForDefaultValue,
                                               preferredStyle: .alert)
-                prompt.addTextField { (textField) in
+                prompt.addTextField { textField in
                     textField.placeholder = UserDefaultsManager.addressDefaultForDisplay
                 }
-                let confirm = UIAlertAction(title: L10n.confirm, style: .default) { (action) in
+                let confirm = UIAlertAction(title: L10n.confirm, style: .default) { _ in
                     guard var text = prompt.textFields?.first?.text else { return }
                     if text == "" {
                         text = UserDefaultsManager.addressDefaultForDisplay
@@ -187,7 +187,7 @@ final class SettingsViewController: UITableViewController {
             case .cache:
                 tableView.deselectRow(at: indexPath, animated: true)
                 let alert = UIAlertController(title: L10n.areYouSureToClearCache, message: nil, preferredStyle: .alert)
-                let confirm = UIAlertAction(title: L10n.clear, style: .destructive) { (action) in
+                let confirm = UIAlertAction(title: L10n.clear, style: .destructive) { _ in
                     HTTPCookieStorage.shared.removeCookies(since: .distantPast)
                     // Remove URL cache (Library/Caches/{bundle_id}/fsCachedData/*)
                     URLCache.shared.removeAllCachedResponses()
@@ -195,7 +195,7 @@ final class SettingsViewController: UITableViewController {
                     // However, WebKit/NetworkCache/* not get deleted...
                     let store = WKWebsiteDataStore.default()
                     let dataType = WKWebsiteDataStore.allWebsiteDataTypes()
-                    store.fetchDataRecords(ofTypes: dataType) { (records) in
+                    store.fetchDataRecords(ofTypes: dataType) { records in
                         store.removeData(ofTypes: dataType, for: records, completionHandler: {})
                     }
                 }
@@ -225,7 +225,7 @@ final class SettingsTableViewCell: UITableViewCell {
         case plain, disclosure, selectable, action
     }
 
-    var type : SettingsCellType = .plain {
+    var type: SettingsCellType = .plain {
         didSet {
             switch type {
             case .plain:
@@ -254,7 +254,7 @@ final class SettingsTableViewCell: UITableViewCell {
         if #available(iOS 11.0, *) {
             backgroundColor = PttColors.shark.color
         } else {
-            backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 31/255, alpha: 1.0)
+            backgroundColor = UIColor(red: 28 / 255, green: 28 / 255, blue: 31 / 255, alpha: 1.0)
         }
         self.type = .plain
     }
@@ -269,7 +269,7 @@ final class SettingsTableViewCell: UITableViewCell {
                 textLabel?.textColor = PttColors.paleGrey.color
                 detailTextLabel?.textColor = .systemGray
             } else {
-                textLabel?.textColor = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
+                textLabel?.textColor = UIColor(red: 240 / 255, green: 240 / 255, blue: 247 / 255, alpha: 1.0)
                 detailTextLabel?.textColor = .systemGray
             }
         }
