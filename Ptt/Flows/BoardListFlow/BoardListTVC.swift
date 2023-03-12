@@ -112,7 +112,7 @@ final class BoardListTVC: UITableViewController, BoardListView {
         }
 
         if indexPath.row == viewModel.list.count - 3 && scrollDirection == .bottom {
-            viewModel.fetchListData()
+            viewModel.fetchMoreData()
         }
     }
 }

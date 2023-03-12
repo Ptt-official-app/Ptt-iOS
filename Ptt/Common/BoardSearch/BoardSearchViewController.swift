@@ -88,7 +88,9 @@ final class BoardSearchViewController: UITableViewController {
             scrollDirection = .up
         }
 
-        if indexPath.row == boards.count - 3 && scrollDirection == .bottom {
+        if indexPath.row == boards.count - 3 &&
+            scrollDirection == .bottom &&
+            !startIdx.isEmpty {
             getBoardList(keyword: keyword)
         }
     }

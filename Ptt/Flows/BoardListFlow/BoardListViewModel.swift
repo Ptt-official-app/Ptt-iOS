@@ -59,6 +59,16 @@ final class BoardListViewModel {
         fetchListData()
     }
 
+    func fetchMoreData() {
+        switch listType {
+        case .favorite:
+            break
+        case .popular:
+            guard !startIndex.isEmpty else { return }
+            Task { await fetchPopularBoards() }
+        }
+    }
+
     func removeBoard(at index: Int) {
         list.remove(at: index)
     }
