@@ -8,7 +8,7 @@
 
 import Foundation
 extension APIModel {
-    struct AttemptRegister : Codable {
+    struct AttemptRegister: Codable {
         let user_id: String
     }
 }

@@ -16,35 +16,34 @@ protocol TabBarCoordinatorProtocol {
 }
 
 class TabBarCoordinator: BaseCoordinator, TabBarCoordinatorProtocol {
-    
+
     private let coordinatorFactory: CoordinatorFactoryProtocol
-    
+
     init(tabBarView: TabBarView, coordinatorFactory: CoordinatorFactoryProtocol) {
         self.tabBarView = tabBarView
         self.coordinatorFactory = coordinatorFactory
     }
-    
+
     override func start() {
         // Let's define which pages do we want to add into tab bar
         let pages: [TabBarPage] = [.popular, .favorite, .popularArticles, .profile, .settings]
             .sorted(by: { $0.pageOrderNumber < $1.pageOrderNumber })
         // Initialization of ViewControllers or these pages
         let controllers: [UINavigationController] = pages.map({ getTabController($0) })
-        
+
         prepareTabBarController(withTabControllers: controllers)
     }
-    
+
     // MARK: - TabBarCoordinatorProtocol
     var tabBarView: TabBarView
-    
-    func currentPage() -> TabBarPage? {
-        TabBarPage.init(index: tabBarView.selectedIndex)
+
+    func currentPage() -> TabBarPage? {TabBarPage(index: tabBarView.selectedIndex)
     }
-    
+
     func selectPage(_ page: TabBarPage) {
         tabBarView.selectedIndex = page.pageOrderNumber
     }
-    
+
     func setSelectedIndex(_ index: Int) {
         guard let page = TabBarPage.init(index: index) else { return }
         
@@ -53,14 +52,14 @@ class TabBarCoordinator: BaseCoordinator, TabBarCoordinatorProtocol {
 }
 
 private extension TabBarCoordinator {
-    
+
     func prepareTabBarController(withTabControllers tabControllers: [UIViewController]) {
         /// Assign page's controllers
         tabBarView.setViewControllers(tabControllers, animated: true)
         /// Let set index
         tabBarView.selectedIndex = TabBarPage.favorite.pageOrderNumber
     }
-    
+
     func getTabController(_ page: TabBarPage) -> UINavigationController {
         let navController = UINavigationController()
         navController.setNavigationBarHidden(false, animated: false)
@@ -70,16 +69,6 @@ private extension TabBarCoordinator {
         
         switch page {
         case .favorite:
-//            let favoriteCoordinator = self.coordinatorFactory.makeFavoriteCoordinator(navigationController: navController)
-//            self.addDependency(favoriteCoordinator)
-//
-//            (favoriteCoordinator as? FavoriteCoordinator)?.finshFlow = { [unowned self] () in
-//                print("temp logout flow in FavoriteCoordinator")
-//                removeDependency(self)
-//                self.finshFlow?() // tab bar's finish flow
-//            }
-//
-//            favoriteCoordinator.start()
             let coordinator = coordinatorFactory.makeBoardListCoordinator(
                 navigationController: navController,
                 listType: .favorite
@@ -97,7 +86,7 @@ private extension TabBarCoordinator {
             self.addDependency(fbPageCoordinator)
             fbPageCoordinator.start()
         case .settings:
-            let settingsViewController : SettingsViewController
+            let settingsViewController: SettingsViewController
             if #available(iOS 13.0, *) {
                 settingsViewController = SettingsViewController(style: .insetGrouped)
             } else {
@@ -105,9 +94,6 @@ private extension TabBarCoordinator {
             }
             navController.setViewControllers([settingsViewController], animated: false)
         case .popular:
-//            let popularCoordinator = self.coordinatorFactory.makePopularBoardsCoordinator(navigationController: navController)
-//            self.addDependency(popularCoordinator)
-//            popularCoordinator.start()
             let coordinator = coordinatorFactory.makeBoardListCoordinator(
                 navigationController: navController,
                 listType: .popular

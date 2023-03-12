@@ -10,36 +10,36 @@ import Foundation
 
 extension APIModel {
     class CreateArticle: Codable {
-        var `class` : String = ""
-        var title : String = ""
+        var `class`: String = ""
+        var title: String = ""
         var content: [[ContentProperty]] = []
-        
+
         init(className: String, title: String, content: [[ContentProperty]]) {
             `class` = className
             self.title = title
             self.content = content
         }
     }
-    
+
     class ContentProperty: Codable {
         var text: String = ""
         var color0: Color
         var color1: Color
-        
+
         init(text: String, color0: Color = Color(), color1: Color = Color()) {
             self.text = text
             self.color0 = color0
             self.color1 = color1
         }
     }
-    
+
     class Color: Codable {
         var foreground: Int
         var background: Int
         var blink: Bool
         var highlight: Bool
         var reset: Bool
-        
+
         init(foreground: Int = 0, background: Int = 0, blink: Bool = false, highlight: Bool = false, reset: Bool = false) {
             self.foreground = foreground
             self.background = background
@@ -48,7 +48,7 @@ extension APIModel {
             self.reset = reset
         }
     }
-    
+
     struct CreateArticleResponse: Codable {
         let bid: String
         let aid: String

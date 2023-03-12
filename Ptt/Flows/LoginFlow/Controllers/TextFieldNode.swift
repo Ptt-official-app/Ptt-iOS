@@ -6,41 +6,39 @@
 //  Copyright © 2022 Ptt. All rights reserved.
 //
 
-import Foundation
 import AsyncDisplayKit
-
+import Foundation
 
 enum TextFieldType {
     case Username, Password, Email
 }
 
-class LoginTextField : UITextField {
+class LoginTextField: UITextField {
 
     var type: TextFieldType = .Username
-    var lbResponse:UILabel?
-    var btnTogglePassword:UIButton?
-    
-    var title: String? = nil {
+    var lbResponse: UILabel?
+    var btnTogglePassword: UIButton?
+
+    var title: String? {
         didSet {
             guard let title = title else { return }
-            
-            let attr:[NSAttributedString.Key : Any] = [
+
+            let attr: [NSAttributedString.Key: Any] = [
                 NSAttributedString.Key.foregroundColor: PttColors.slateGrey.color,
                 NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
             ]
-            self.attributedPlaceholder = NSAttributedString.init(string: title, attributes:attr)
+            self.attributedPlaceholder = NSAttributedString(string: title, attributes: attr)
         }
     }
-    
+
     override var frame: CGRect {
         didSet {
-            //print("ltf frame did set:", frame)
-            
+            // print("ltf frame did set:", frame)
+
             if self.type == .Password {
-                self.lbResponse?.frame = CGRect(x: 0, y:0, width: self.frame.width - 16 - 16, height:30)
-            }
-            else {
-                self.lbResponse?.frame = CGRect(x: 0, y:0, width: self.frame.width - 16, height:30)
+                self.lbResponse?.frame = CGRect(x: 0, y: 0, width: self.frame.width - 16 - 16, height: 30)
+            } else {
+                self.lbResponse?.frame = CGRect(x: 0, y: 0, width: self.frame.width - 16, height: 30)
             }
         }
     }
@@ -61,7 +59,7 @@ class LoginTextField : UITextField {
         let rect = super.editingRect(forBounds: bounds)
         return rect.inset(by: textPadding)
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         _init()
@@ -71,16 +69,16 @@ class LoginTextField : UITextField {
         super.init(coder: aDecoder)
         _init()
     }
-    
+
     init(type: TextFieldType) {
         super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         self.type = type
         _init()
     }
-    
+
     func _init() {
         lbResponse = self.responseLabel()
-        
+
         self.keyboardType = .asciiCapable
         switch type {
         case .Username:
@@ -92,49 +90,46 @@ class LoginTextField : UITextField {
             self.rightView = self.btnTogglePassword
         case .Email:
             keyboardType = .emailAddress
-            break;
+            break
         }
-        
+
         self.background = UIImage.backgroundImg(from: PttColors.shark.color)
 
         self.layer.cornerRadius = 15
         self.layer.borderColor = PttColors.tangerine.color.cgColor
         self.clipsToBounds = true
         self.textColor = PttColors.paleGrey.color
-        
-        
+
         self.autocapitalizationType = .none
         self.autocorrectionType = .no
 
         self.addSubview(self.lbResponse!)
     }
-    
-    
-    func warning(msg:String?){
+
+    func warning(msg: String?) {
         if let m = msg {
             lbResponse?.text = m
             self.layer.borderWidth = 1
-        }
-        else {
+        } else {
             lbResponse?.text = ""
             self.layer.borderWidth = 0
         }
-        
+
     }
-    
+
     @objc func togglePassword() {
-        print("toggle in ui event");
+        print("toggle in ui event")
         if let btn = self.btnTogglePassword {
             btn.isSelected = !btn.isSelected
         }
-        //self.btnTooglePassword?.isSelected = !self.btnTooglePassword?.isSelected
-        
+        // self.btnTooglePassword?.isSelected = !self.btnTooglePassword?.isSelected
+
         self.isSecureTextEntry = !self.isSecureTextEntry
     }
-    
-    func getButton() -> UIButton{
+
+    func getButton() -> UIButton {
         let btn = UIButton()
-        btn.frame = CGRect(x:0, y:0, width:44, height:44)
+        btn.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         if #available(iOS 12.0, *) {
             btn.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 8)
         }
@@ -145,14 +140,13 @@ class LoginTextField : UITextField {
         return btn
     }
 
-    
     func responseLabel() -> UILabel {
         let label = UILabel()
         label.textColor = PttColors.tangerine.color
         label.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
-        
+
         // TODO: adjust size by frame did set
-        label.frame = CGRect(x: 0, y:0, width: self.frame.width - 16, height:30)
+        label.frame = CGRect(x: 0, y: 0, width: self.frame.width - 16, height: 30)
         label.textAlignment = .right
         label.isUserInteractionEnabled = false
         return label

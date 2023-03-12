@@ -6,8 +6,8 @@
 //  Copyright © 2021 Ptt. All rights reserved.
 //
 
-import XCTest
 @testable import Ptt
+import XCTest
 
 class StringExtensionTest: XCTestCase {
     func testGetBoardName() throws {
@@ -27,6 +27,6 @@ class StringExtensionTest: XCTestCase {
 
         let str2 = "[Test] random string"
         XCTAssertEqual(str2.withoutCategory, str1)
-        
+
     }
 }

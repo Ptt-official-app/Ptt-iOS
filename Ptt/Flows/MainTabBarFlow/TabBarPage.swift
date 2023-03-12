@@ -47,7 +47,6 @@ enum TabBarPage {
         }
     }
     
-    
     var pageTitleValue: String {
         switch self {
         case .popular:

@@ -9,10 +9,9 @@
 import Foundation
 
 extension APIModel {
-    struct Register : Codable {
+    struct Register: Codable {
         let user_id: String
         let access_token: String
-        let token_type: String        
+        let token_type: String
     }
 }
-

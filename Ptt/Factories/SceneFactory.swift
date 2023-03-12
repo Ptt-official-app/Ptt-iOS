@@ -31,15 +31,15 @@ final class SceneFactory: LoginSceneFactoryProtocol,
         vc.setup(viewModel: viewModel)
         return vc
     }
-        
+
     func makeBoardView(withBoardName boardName: String) -> BoardView {
         return BoardViewController(boardName: boardName)
     }
-    
+
     func makeArticleView(withBoardArticle boardArticle: BoardArticle) -> ArticleView {
         return SingleArticleViewController(article: boardArticle)
     }
-    
+
     func makeComposeArticleView(withBoardName boardName: String) -> UIViewController {
         return ComposeArticleViewController(boardName: boardName)
     }

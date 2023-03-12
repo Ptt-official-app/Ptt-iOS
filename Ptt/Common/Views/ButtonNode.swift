@@ -12,10 +12,10 @@ enum ButtonNodeType {
     case primary, secondary
 }
 
-final class ButtonNode : ASButtonNode {
+final class ButtonNode: ASButtonNode {
 
     var type: ButtonNodeType
-    var title: String? = nil {
+    var title: String? {
         didSet {
             guard let title = title else { return }
             setTitle(title, with: .preferredFont(forTextStyle: .caption1),

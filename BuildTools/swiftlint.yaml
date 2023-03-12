@@ -1,0 +1,90 @@
+disabled_rules:
+  - file_length
+  - type_body_length
+  - object_literal
+  - force_unwrapping
+  - identifier_name
+  - force_try
+  - force_cast
+  - line_length
+  - function_body_length
+
+opt_in_rules:
+  - file_name
+  - empty_count
+  - sorted_imports
+  - force_unwrapping
+  - operator_usage_whitespace
+  - number_separator
+  - switch_case_on_newline
+  - overridden_super_call
+  - object_literal
+  - nimble_operator
+  - first_where
+  - closure_spacing
+  - closure_end_indentation
+  - attributes
+  - explicit_init
+  - fatal_error_message
+  - redundant_nil_coalescing
+  - private_outlet
+  - prohibited_super_call
+  - vertical_parameter_alignment_on_call
+  - unneeded_parentheses_in_closure_argument
+  - single_test_class
+  - quick_discouraged_call
+  - pattern_matching_keywords
+  - multiline_parameters
+  - joined_default_parameter
+  - strict_fileprivate
+  - let_var_whitespace
+  - contains_over_first_not_nil
+  - switch_case_alignment
+  - multiline_arguments
+  - unneeded_break_in_switch
+  - literal_expression_end_indentation
+  - sorted_first_last
+  - override_in_extension
+  - modifier_order
+  - yoda_condition
+  - for_where
+  - unused_closure_parameter
+  - discouraged_optional_boolean
+  - empty_string
+  - legacy_constructor
+  - untyped_error_in_catch
+
+line_length:
+  ignores_comments: true
+  ignores_interpolated_strings: true
+  ignores_urls: true
+  warning: 120
+
+type_name:
+  min_length: 2
+  max_length:
+    warning: 50
+
+identifier_name:
+  min_length: 3
+  max_length:
+    warning: 40
+  excluded:
+    - id
+    - x
+    - y
+    - vc
+
+modifier_order:
+  preferred_modifier_order:
+    - acl
+    - override
+
+cyclomatic_complexity:
+  ignores_case_statements: true
+
+function_parameter_count:
+  warning: 7
+
+large_tuple:
+  warning: 3

@@ -12,13 +12,13 @@ final class PopularArticlesCoordinator: BaseCoordinator {
     private let factory: PopularArticlesSceneFactoryProtocol & PopularArticlesSceneFactoryProtocol
     private let coordinatorFactory: CoordinatorFactoryProtocol
     private let router: Routerable
-    
+
     init(router: Routerable, factory: PopularArticlesSceneFactoryProtocol, coordinatorFactory: CoordinatorFactoryProtocol) {
         self.router = router
         self.factory = factory
         self.coordinatorFactory = coordinatorFactory
     }
-    
+
     override func start() {
         showPopularArticlesView()
     }

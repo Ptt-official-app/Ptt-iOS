@@ -8,16 +8,16 @@
 
 import Foundation
 
-fileprivate var onboardingWasShown = true
-fileprivate var isAutorized = false
+private var onboardingWasShown = true
+private var isAutorized = false
 
-fileprivate enum LaunchInstructor {
+private enum LaunchInstructor {
     case main, auth, onboarding
-    
+
     static func configure(
         tutorialWasShown: Bool = onboardingWasShown,
         isAutorized: Bool = isAutorized) -> LaunchInstructor {
-        
+
         switch (tutorialWasShown, isAutorized) {
         case (true, false), (false, false): return .auth
         case (false, true): return .onboarding
@@ -29,16 +29,16 @@ fileprivate enum LaunchInstructor {
 final class ApplicationCoordinator: BaseCoordinator {
     private let coordinatorFactory: CoordinatorFactory
     private let router: Router
-    
+
     private var instructor: LaunchInstructor {
         return LaunchInstructor.configure()
     }
-    
+
     init(router: Router, coordinatorFactory: CoordinatorFactory) {
         self.router = router
         self.coordinatorFactory = coordinatorFactory
     }
-    
+
     override func start() {
         switch instructor {
         case .onboarding: runOnboardingFlow()
@@ -46,7 +46,7 @@ final class ApplicationCoordinator: BaseCoordinator {
         case .main: runMainFlow()
         }
     }
-    
+
     private func runAuthFlow() {
         // TODO: 登入流程放這邊
         // uncomment to force logout
@@ -57,10 +57,9 @@ final class ApplicationCoordinator: BaseCoordinator {
             isAutorized = true
             // TODO: check token Expire from internet
             runMainFlow()
-        }
-        else {
+        } else {
             isAutorized = false
-            
+
             let loginCoordinator = coordinatorFactory.makeLoginCoordinator(router: self.router)
             (loginCoordinator as? LoginCoordinator)?.finshFlow = { [unowned self] in
                 // authed
@@ -71,7 +70,7 @@ final class ApplicationCoordinator: BaseCoordinator {
             loginCoordinator.start()
         }
     }
-    
+
     private func runOnboardingFlow() {
         //  TODO: 目前雖然沒看到，但如果有考慮介紹給使用者官方App的好處可以放這邊
 //        let coordinator = coordinatorFactory.makeOnboardingCoordinator(router: router)
@@ -83,11 +82,11 @@ final class ApplicationCoordinator: BaseCoordinator {
 //        addDependency(coordinator)
 //        coordinator.start()
     }
-    
+
     private func runMainFlow() {
         let (coordinator, module) = coordinatorFactory.makeTabbarCoordinator()
         addDependency(coordinator)
-        
+
         (coordinator as? TabBarCoordinator)?.finshFlow = { [unowned self] () in
             print("finish flow in TabBarCoordinator for logout")
             removeDependency(self)

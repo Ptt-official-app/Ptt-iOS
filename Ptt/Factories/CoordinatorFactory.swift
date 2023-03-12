@@ -9,7 +9,7 @@
 import UIKit
 
 final class CoordinatorFactory: CoordinatorFactoryProtocol {
- 
+
     func makeTabbarCoordinator() -> (coordinator: Coordinatorable, toPresent: Presentable?) {
         let controller = TabBarController()
         let coordinator = TabBarCoordinator(tabBarView: controller, coordinatorFactory: CoordinatorFactory())
@@ -28,7 +28,7 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
         )
         return coordinator
     }
-    
+
     func makeFBPageCoordinator(navigationController: UINavigationController?) -> Coordinatorable {
         let coordinator = FBPageCoordinator(router: router(navigationController),
                                             factory: SceneFactory(),
@@ -43,7 +43,7 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
         return coordinator
     }
 
-    func makeLoginCoordinator(router:Router) -> Coordinatorable {
+    func makeLoginCoordinator(router: Router) -> Coordinatorable {
         let coordinator = LoginCoordinator(router: router,
                                               factory: SceneFactory(),
                                               coordinatoryFactory: CoordinatorFactory())
@@ -52,11 +52,11 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
 }
 
 private extension CoordinatorFactory {
-    
+
     func router(_ navigationController: UINavigationController?) -> Routerable {
         return Router(rootController: self.navigationController(navigationController))
     }
-    
+
     func navigationController(_ navController: UINavigationController?) -> UINavigationController {
         if let navController = navController {
             return navController

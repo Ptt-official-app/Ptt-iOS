@@ -1,7 +1,7 @@
 # Coding Guidelines
 
 - How to join the project? Check out [our documentation](https://hackmd.io/bNV8xhVwQxOYnLt9NTRdFw).
-- We don’t have Swift style guide yet. Follow UIKit style for now.
+- We are using [Swiftlint](https://github.com/realm/SwiftLint) to enforce Swift style and conventions
 - We're using [PaintCode Plugin for Sketch](https://www.paintcodeapp.com/sketch) for vector image assets.
 
 # License

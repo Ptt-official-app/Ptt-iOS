@@ -8,9 +8,9 @@
 
 import Foundation
 extension APIModel {
-    struct Comment : Codable {
-        let userid : String
-        let content : String
-        let iPdatetime : String
+    struct Comment: Codable {
+        let userid: String
+        let content: String
+        let iPdatetime: String
     }
 }

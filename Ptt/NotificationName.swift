@@ -15,7 +15,7 @@ struct NotificationName {
     }
 }
 
-enum NotificationType : String {
+enum NotificationType: String {
 
     case didChangeAppearanceMode
 }
