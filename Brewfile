@@ -1,1 +1,2 @@
 brew "swiftgen"
+brew "swiftlint"

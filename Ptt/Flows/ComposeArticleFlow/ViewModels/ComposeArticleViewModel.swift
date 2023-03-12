@@ -29,7 +29,7 @@ final class ComposeArticleViewModel {
     func createPost(
         title: String,
         content: String,
-        completion: @escaping (APIClientProtocol.createArticleResult) -> Void
+        completion: @escaping (APIClientProtocol.CreateArticleResult) -> Void
     ) {
         let parsedContent = parse(content: content)
         let article = APIModel.CreateArticle(className: selectedPostType, title: title, content: parsedContent)

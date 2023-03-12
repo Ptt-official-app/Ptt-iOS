@@ -8,15 +8,15 @@
 
 import UIKit
 
-private enum AppearanceModeSection : Int, CaseIterable {
+private enum AppearanceModeSection: Int, CaseIterable {
     case system, customization
 }
 
-private enum AppearanceModeSystemRow : Int, CaseIterable {
+private enum AppearanceModeSystemRow: Int, CaseIterable {
     case system
 }
 
-private enum AppearanceModeCustomizationRow : Int, CaseIterable {
+private enum AppearanceModeCustomizationRow: Int, CaseIterable {
     case light, dark
 }
 
@@ -113,7 +113,7 @@ final class AppearanceModeViewController: UITableViewController, FullscreenSwipe
             cell.textLabel?.textColor = .darkText
             cell.backgroundColor = UIColor(red: 0.89, green: 0.89, blue: 0.88, alpha: 1.00) // #E3E3E0, blackColor-28-28-31 light
         case .dark:
-            cell.textLabel?.textColor = UIColor(red: 240/255, green: 240/255, blue: 247/255, alpha: 1.0)
+            cell.textLabel?.textColor = UIColor(red: 240 / 255, green: 240 / 255, blue: 247 / 255, alpha: 1.0)
             cell.backgroundColor = UIColor(red: 0.11, green: 0.11, blue: 0.12, alpha: 1.00) // #1C1C1F, blackColor-28-28-31 dark
         }
     }

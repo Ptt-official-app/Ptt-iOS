@@ -8,11 +8,11 @@
 
 import Foundation
 class LoginKeyChainItem: NSObject {
-    
+
     static let shared: LoginKeyChainItem = LoginKeyChainItem(service: "service")
-    
+
     private var service = ""
-   
+
     init(service: String) {
         super.init()
         self.service = service
@@ -24,15 +24,14 @@ class LoginKeyChainItem: NSObject {
         let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
                                     kSecAttrService as String: self.service,
                                     kSecValueData as String: tokenData]
-        
+
         if readToken() != nil {
             let attributes: [String: Any] = [kSecValueData as String: tokenData]
             let status = SecItemUpdate(query as CFDictionary, attributes as CFDictionary)
             if status == errSecSuccess {
                 return true
             }
-        }
-        else {
+        } else {
             let status = SecItemAdd(query as CFDictionary, nil)
             if status == errSecSuccess {
                 return true
@@ -40,33 +39,29 @@ class LoginKeyChainItem: NSObject {
         }
         return false
     }
-    
+
     func removeToken() -> Bool {
         let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
                                     kSecAttrService as String: self.service]
         let status = SecItemDelete(query as CFDictionary)
         if status == errSecSuccess {
             return true
-        }
-        else {
+        } else {
             return false
         }
     }
-        
+
     func readToken() -> String? {
         let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
                                     kSecAttrService as String: self.service,
                                     kSecMatchLimit as String: kSecMatchLimitOne,
                                     kSecReturnData as String: kCFBooleanTrue!]
-        
-        
-        var retrivedData: AnyObject? = nil
-        let _ = SecItemCopyMatching(query as CFDictionary, &retrivedData)
-        
-        
+
+        var retrivedData: AnyObject?
+        _ = SecItemCopyMatching(query as CFDictionary, &retrivedData)
+
         guard let data = retrivedData as? Data else {return nil}
         return String(data: data, encoding: String.Encoding.utf8)
     }
-        
-}
 
+}

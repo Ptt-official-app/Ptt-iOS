@@ -6,8 +6,8 @@
 //  Copyright © 2020 Ptt. All rights reserved.
 //
 
-import XCTest
 @testable import Ptt
+import XCTest
 
 class PttTests: XCTestCase {
 

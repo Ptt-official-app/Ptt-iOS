@@ -58,7 +58,7 @@ extension APIModel {
             self.reset = reset
         }
     }
-    
+
     struct CreateArticleResponse: Codable {
         let bid: String
         let aid: String

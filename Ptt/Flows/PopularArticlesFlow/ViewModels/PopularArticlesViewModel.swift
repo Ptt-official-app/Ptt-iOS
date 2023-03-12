@@ -40,7 +40,7 @@ final class PopularArticlesViewModel: PopularArticlesVMProtocol {
 
         self.apiClient.getPopularArticles(startIdx: self.pageIndex, limit: self.paginationLimit, desc: self.isDescending) { [weak self] result in
             guard let self = self else { return }
-            switch (result) {
+            switch result {
             case .success(let response):
                 let lists = response.list
                 if self.pageIndex.isEmpty {
@@ -51,7 +51,7 @@ final class PopularArticlesViewModel: PopularArticlesVMProtocol {
                     self.data += lists
                     let lower = self.data.count
                     let paths = Array(upper..<lower)
-                        .map { IndexPath(row: $0, section: 0)}
+                        .map { IndexPath(row: $0, section: 0) }
                     self.uiDelegate?.insert(rows: paths)
                 }
                 self.pageIndex = response.next_idx

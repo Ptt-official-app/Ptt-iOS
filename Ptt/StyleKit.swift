@@ -11,34 +11,31 @@
 
 import UIKit
 
-
-
 class StyleKit: NSObject {
-    
-    
-    //MARK: - Canvas Drawings
-    
+
+    // MARK: - Canvas Drawings
+
     /// Page 1
-    
+
     class func drawPopularNUser(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 10, height: 11), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 10, height: 11), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 10, y: resizedFrame.height / 11)
-        
+
         /// Group 241
         do {
             context.saveGState()
-            
+
             /// Group 3
             do {
                 context.saveGState()
                 context.translateBy(x: 0, y: 3)
-                
+
                 /// Fill 1
                 let fill1 = UIBezierPath()
                 fill1.move(to: CGPoint(x: 4.47, y: 6.07))
@@ -53,7 +50,7 @@ class StyleKit: NSObject {
                 UIColor(hue: 0.667, saturation: 0.028, brightness: 0.969, alpha: 1).setFill()
                 fill1.fill()
                 context.restoreGState()
-                
+
                 /// Fill 2
                 let fill2 = UIBezierPath()
                 fill2.move(to: CGPoint(x: 4.97, y: 1))
@@ -77,10 +74,10 @@ class StyleKit: NSObject {
                 UIColor(white: 0.09, alpha: 1).setFill()
                 fill2.fill()
                 context.restoreGState()
-                
+
                 context.restoreGState()
             }
-            
+
             /// Fill 4
             let fill4 = UIBezierPath()
             fill4.move(to: CGPoint(x: 2.47, y: 0))
@@ -107,12 +104,12 @@ class StyleKit: NSObject {
             UIColor(hue: 0.667, saturation: 0.028, brightness: 0.969, alpha: 1).setFill()
             fill4.fill()
             context.restoreGState()
-            
+
             /// Group 7
             do {
                 context.saveGState()
                 context.translateBy(x: 2, y: 0)
-                
+
                 /// Clip 6
                 let clip6 = UIBezierPath()
                 clip6.move(to: CGPoint(x: 0, y: 3))
@@ -125,11 +122,11 @@ class StyleKit: NSObject {
                 clip6.addCurve(to: CGPoint(x: 0.87, y: 5.12), controlPoint1: CGPoint(x: 2.15, y: 6), controlPoint2: CGPoint(x: 1.45, y: 5.71))
                 clip6.addCurve(to: CGPoint(x: 0, y: 3), controlPoint1: CGPoint(x: 0.29, y: 4.54), controlPoint2: CGPoint(x: 0, y: 3.83))
                 clip6.close()
-                
+
                 /// Clip 6 (Outline Mask)
                 context.saveGState()
                 clip6.addClip()
-                
+
                 /// Stroke 5
                 let stroke5 = UIBezierPath()
                 stroke5.move(to: CGPoint(x: 2.97, y: 0))
@@ -155,29 +152,29 @@ class StyleKit: NSObject {
                 UIColor(white: 0.09, alpha: 1).setStroke()
                 stroke5.stroke()
                 context.restoreGState()
-                
+
                 context.restoreGState()
                 // End Clip 6 (Outline Mask)
-                
+
                 context.restoreGState()
             }
-            
+
             context.restoreGState()
         }
-        
+
         context.restoreGState()
     }
-    
+
     class func drawPasswdVisibilitySelected(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 18, height: 11), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 18, height: 11), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 18, y: resizedFrame.height / 11)
-        
+
         /// visibility-24px (2)
         let visibility24px2 = UIBezierPath()
         visibility24px2.move(to: CGPoint(x: 9, y: 0))
@@ -203,20 +200,20 @@ class StyleKit: NSObject {
         UIColor(hue: 0.667, saturation: 0.028, brightness: 0.969, alpha: 1).setFill()
         visibility24px2.fill()
         context.restoreGState()
-        
+
         context.restoreGState()
     }
-    
+
     class func drawPasswdVisibility(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 18, height: 11), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 18, height: 11), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 18, y: resizedFrame.height / 11)
-        
+
         /// visibility-24px
         let visibility24px = UIBezierPath()
         visibility24px.move(to: CGPoint(x: 9, y: 0))
@@ -242,28 +239,28 @@ class StyleKit: NSObject {
         UIColor(hue: 0.667, saturation: 0.105, brightness: 0.298, alpha: 1).setFill()
         visibility24px.fill()
         context.restoreGState()
-        
+
         context.restoreGState()
     }
-    
+
     class func drawBoardCategory(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 12, height: 10), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 12, height: 10), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 12, y: resizedFrame.height / 10)
-        
+
         /// Component 8 – 18
         do {
             context.saveGState()
-            
+
             /// Group 3
             do {
                 context.saveGState()
-                
+
                 /// Fill 1
                 let fill1 = UIBezierPath()
                 fill1.move(to: CGPoint.zero)
@@ -275,7 +272,7 @@ class StyleKit: NSObject {
                 context.saveGState()
                 context.translateBy(x: 0.5, y: 0.5)
                 context.restoreGState()
-                
+
                 /// Stroke 2
                 let stroke2 = UIBezierPath()
                 stroke2.move(to: CGPoint.zero)
@@ -292,15 +289,15 @@ class StyleKit: NSObject {
                 UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setStroke()
                 stroke2.stroke()
                 context.restoreGState()
-                
+
                 context.restoreGState()
             }
-            
+
             /// Group 6
             do {
                 context.saveGState()
                 context.translateBy(x: 0, y: 6)
-                
+
                 /// Fill 4
                 let fill4 = UIBezierPath()
                 fill4.move(to: CGPoint.zero)
@@ -312,7 +309,7 @@ class StyleKit: NSObject {
                 context.saveGState()
                 context.translateBy(x: 0.5, y: 0.5)
                 context.restoreGState()
-                
+
                 /// Stroke 5
                 let stroke5 = UIBezierPath()
                 stroke5.move(to: CGPoint.zero)
@@ -329,26 +326,26 @@ class StyleKit: NSObject {
                 UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setStroke()
                 stroke5.stroke()
                 context.restoreGState()
-                
+
                 context.restoreGState()
             }
-            
+
             context.restoreGState()
         }
-        
+
         context.restoreGState()
     }
-    
+
     class func drawRefresh(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 20, height: 24), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 20, height: 24), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 20, y: resizedFrame.height / 24)
-        
+
         /// Fill 1
         let fill1 = UIBezierPath()
         fill1.move(to: CGPoint(x: 10, y: 4.8))
@@ -369,20 +366,20 @@ class StyleKit: NSObject {
         UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setFill()
         fill1.fill()
         context.restoreGState()
-        
+
         context.restoreGState()
     }
-    
+
     class func drawSearch(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 23, height: 23), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 23, height: 23), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 23, y: resizedFrame.height / 23)
-        
+
         /// Component 15 – 17
         let component1517 = UIBezierPath()
         component1517.move(to: CGPoint(x: 12.7, y: 12.7))
@@ -403,20 +400,20 @@ class StyleKit: NSObject {
         UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setStroke()
         component1517.stroke()
         context.restoreGState()
-        
+
         context.restoreGState()
     }
-    
+
     class func drawCompose(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 21, height: 21), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 21, height: 21), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 21, y: resizedFrame.height / 21)
-        
+
         /// edit-24px
         let edit24px = UIBezierPath()
         edit24px.move(to: CGPoint(x: 0, y: 16.63))
@@ -440,24 +437,24 @@ class StyleKit: NSObject {
         UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setFill()
         edit24px.fill()
         context.restoreGState()
-        
+
         context.restoreGState()
     }
-    
+
     class func drawMoreH(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 27, height: 5), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 27, height: 5), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 27, y: resizedFrame.height / 5)
-        
+
         /// Component 12 – 13
         do {
             context.saveGState()
-            
+
             /// Fill 1
             let fill1 = UIBezierPath()
             fill1.move(to: CGPoint(x: 2.5, y: 5))
@@ -472,7 +469,7 @@ class StyleKit: NSObject {
             UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setFill()
             fill1.fill()
             context.restoreGState()
-            
+
             /// Fill 2
             let fill2 = UIBezierPath()
             fill2.move(to: CGPoint(x: 2.5, y: 5))
@@ -499,7 +496,7 @@ class StyleKit: NSObject {
             UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setFill()
             fill2.fill()
             context.restoreGState()
-            
+
             /// Fill 3
             let fill3 = UIBezierPath()
             fill3.move(to: CGPoint(x: 2.5, y: 5))
@@ -513,23 +510,23 @@ class StyleKit: NSObject {
             UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setFill()
             fill3.fill()
             context.restoreGState()
-            
+
             context.restoreGState()
         }
-        
+
         context.restoreGState()
     }
-    
+
     class func drawUpvote(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 15, height: 15), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 15, height: 15), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 15, y: resizedFrame.height / 15)
-        
+
         /// Fill 1
         let fill1 = UIBezierPath()
         fill1.move(to: CGPoint(x: 5.46, y: 15))
@@ -546,20 +543,20 @@ class StyleKit: NSObject {
         UIColor(hue: 0.667, saturation: 0.082, brightness: 0.239, alpha: 1).setFill()
         fill1.fill()
         context.restoreGState()
-        
+
         context.restoreGState()
     }
-    
+
     class func drawDownvote(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 15, height: 15), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 15, height: 15), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 15, y: resizedFrame.height / 15)
-        
+
         /// Fill 1
         let fill1 = UIBezierPath()
         fill1.move(to: CGPoint(x: 9.54, y: 0))
@@ -576,20 +573,20 @@ class StyleKit: NSObject {
         UIColor(hue: 0.667, saturation: 0.082, brightness: 0.239, alpha: 1).setFill()
         fill1.fill()
         context.restoreGState()
-        
+
         context.restoreGState()
     }
-    
+
     class func drawComment(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 17, height: 12), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 17, height: 12), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 17, y: resizedFrame.height / 12)
-        
+
         /// Fill 1
         let fill1 = UIBezierPath()
         fill1.move(to: CGPoint(x: 5, y: 0))
@@ -607,29 +604,29 @@ class StyleKit: NSObject {
         UIColor(hue: 0.667, saturation: 0.082, brightness: 0.239, alpha: 1).setFill()
         fill1.fill()
         context.restoreGState()
-        
+
         context.restoreGState()
     }
-    
+
     class func drawAuthor(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 10, height: 11), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 10, height: 11), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 10, y: resizedFrame.height / 11)
-        
+
         /// component-10-5
         do {
             context.saveGState()
-            
+
             /// Group 3
             do {
                 context.saveGState()
                 context.translateBy(x: 0, y: 4)
-                
+
                 /// Fill 1
                 let fill1 = UIBezierPath()
                 fill1.move(to: CGPoint(x: 4.47, y: 6.07))
@@ -641,7 +638,7 @@ class StyleKit: NSObject {
                 context.saveGState()
                 context.translateBy(x: 0.5, y: 0.43)
                 context.restoreGState()
-                
+
                 /// Combined Shape
                 let combinedShape = UIBezierPath()
                 combinedShape.move(to: CGPoint(x: 4.56, y: 0.76))
@@ -665,10 +662,10 @@ class StyleKit: NSObject {
                 UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setFill()
                 combinedShape.fill()
                 context.restoreGState()
-                
+
                 context.restoreGState()
             }
-            
+
             /// Fill 4
             let fill4 = UIBezierPath()
             fill4.move(to: CGPoint(x: 2.47, y: 0))
@@ -692,12 +689,12 @@ class StyleKit: NSObject {
             context.saveGState()
             context.translateBy(x: 2.5, y: 0.5)
             context.restoreGState()
-            
+
             /// Group 7
             do {
                 context.saveGState()
                 context.translateBy(x: 2, y: 0)
-                
+
                 /// Clip 6
                 let clip6 = UIBezierPath()
                 clip6.move(to: CGPoint(x: 0, y: 3))
@@ -710,11 +707,11 @@ class StyleKit: NSObject {
                 clip6.addCurve(to: CGPoint(x: 0.87, y: 5.12), controlPoint1: CGPoint(x: 2.15, y: 6), controlPoint2: CGPoint(x: 1.45, y: 5.71))
                 clip6.addCurve(to: CGPoint(x: 0, y: 3), controlPoint1: CGPoint(x: 0.29, y: 4.54), controlPoint2: CGPoint(x: 0, y: 3.83))
                 clip6.close()
-                
+
                 /// Clip 6 (Outline Mask)
                 context.saveGState()
                 clip6.addClip()
-                
+
                 /// Stroke 5
                 let stroke5 = UIBezierPath()
                 stroke5.move(to: CGPoint(x: 2.97, y: 0))
@@ -740,37 +737,37 @@ class StyleKit: NSObject {
                 UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setStroke()
                 stroke5.stroke()
                 context.restoreGState()
-                
+
                 context.restoreGState()
                 // End Clip 6 (Outline Mask)
-                
+
                 context.restoreGState()
             }
-            
+
             context.restoreGState()
         }
-        
+
         context.restoreGState()
     }
-    
+
     class func drawClock(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 11, height: 11), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 11, height: 11), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 11, y: resizedFrame.height / 11)
-        
+
         /// component-11-7
         do {
             context.saveGState()
-            
+
             /// Group 3
             do {
                 context.saveGState()
-                
+
                 /// Fill 1
                 let fill1 = UIBezierPath()
                 fill1.move(to: CGPoint(x: 5, y: 10))
@@ -782,7 +779,7 @@ class StyleKit: NSObject {
                 context.saveGState()
                 context.translateBy(x: 0.5, y: 0.5)
                 context.restoreGState()
-                
+
                 /// Fill 2
                 let fill2 = UIBezierPath()
                 fill2.move(to: CGPoint(x: 5.5, y: 1))
@@ -803,10 +800,10 @@ class StyleKit: NSObject {
                 UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setFill()
                 fill2.fill()
                 context.restoreGState()
-                
+
                 context.restoreGState()
             }
-            
+
             /// Stroke 4
             let stroke4 = UIBezierPath()
             stroke4.move(to: CGPoint.zero)
@@ -820,23 +817,23 @@ class StyleKit: NSObject {
             UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setStroke()
             stroke4.stroke()
             context.restoreGState()
-            
+
             context.restoreGState()
         }
-        
+
         context.restoreGState()
     }
-    
+
     class func drawCategory(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 4, height: 10), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 4, height: 10), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 4, y: resizedFrame.height / 10)
-        
+
         /// Stroke 1
         let stroke1 = UIBezierPath()
         stroke1.move(to: CGPoint.zero)
@@ -852,24 +849,24 @@ class StyleKit: NSObject {
         UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setStroke()
         stroke1.stroke()
         context.restoreGState()
-        
+
         context.restoreGState()
     }
-    
+
     class func drawMoreV(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 3, height: 14), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 3, height: 14), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 3, y: resizedFrame.height / 14)
-        
+
         /// More
         do {
             context.saveGState()
-            
+
             /// Fill 1
             let fill1 = UIBezierPath()
             fill1.move(to: CGPoint(x: 3, y: 1.5))
@@ -895,7 +892,7 @@ class StyleKit: NSObject {
             UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setFill()
             fill1.fill()
             context.restoreGState()
-            
+
             /// Fill 2
             let fill2 = UIBezierPath()
             fill2.move(to: CGPoint(x: 3, y: 1.5))
@@ -922,7 +919,7 @@ class StyleKit: NSObject {
             UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setFill()
             fill2.fill()
             context.restoreGState()
-            
+
             /// Fill 3
             let fill3 = UIBezierPath()
             fill3.move(to: CGPoint(x: 3, y: 1.5))
@@ -949,23 +946,23 @@ class StyleKit: NSObject {
             UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setFill()
             fill3.fill()
             context.restoreGState()
-            
+
             context.restoreGState()
         }
-        
+
         context.restoreGState()
     }
-    
+
     class func drawFavorite(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 24, height: 20), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 24, height: 20), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 24, y: resizedFrame.height / 20)
-        
+
         /// Fill 1
         let fill1 = UIBezierPath()
         fill1.move(to: CGPoint(x: 12, y: 20))
@@ -983,24 +980,24 @@ class StyleKit: NSObject {
         UIColor(hue: 0.667, saturation: 0.078, brightness: 0.4, alpha: 1).setFill()
         fill1.fill()
         context.restoreGState()
-        
+
         context.restoreGState()
     }
-    
+
     class func drawFavoriteTabBar(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 24, height: 24), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 24, height: 24), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 24, y: resizedFrame.height / 24)
-        
+
         /// favorite-24-px
         do {
             context.saveGState()
-            
+
             /// Path_79
             let path_79 = UIBezierPath()
             path_79.move(to: CGPoint.zero)
@@ -1013,7 +1010,7 @@ class StyleKit: NSObject {
             UIColor.clear.setFill()
             path_79.fill()
             context.restoreGState()
-            
+
             /// Path_80
             let path_80 = UIBezierPath()
             path_80.move(to: CGPoint(x: 10, y: 18.35))
@@ -1033,23 +1030,23 @@ class StyleKit: NSObject {
             UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setFill()
             path_80.fill()
             context.restoreGState()
-            
+
             context.restoreGState()
         }
-        
+
         context.restoreGState()
     }
-    
+
     class func drawHotTopic(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 24, height: 24), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 24, height: 24), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 24, y: resizedFrame.height / 24)
-        
+
         /// Path
         let path = UIBezierPath()
         path.move(to: CGPoint.zero)
@@ -1058,7 +1055,7 @@ class StyleKit: NSObject {
         path.addLine(to: CGPoint(x: 0, y: 24))
         path.addLine(to: CGPoint.zero)
         path.close()
-        
+
         /// Shape
         let shape = UIBezierPath()
         shape.move(to: CGPoint(x: 9.5, y: 0))
@@ -1087,34 +1084,34 @@ class StyleKit: NSObject {
         UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setFill()
         shape.fill()
         context.restoreGState()
-        
+
         /// whatshot-24-px
         do {
             context.saveGState()
             context.translateBy(x: 4, y: 0)
-            
+
             // Empty.
-            
+
             context.restoreGState()
         }
-        
+
         context.restoreGState()
     }
-    
+
     class func drawProfile(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 26, height: 26), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 26, height: 26), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 26, y: resizedFrame.height / 26)
-        
+
         /// person-24-px
         do {
             context.saveGState()
-            
+
             /// Path
             let path = UIBezierPath()
             path.move(to: CGPoint.zero)
@@ -1123,7 +1120,7 @@ class StyleKit: NSObject {
             path.addLine(to: CGPoint(x: 0, y: 26))
             path.addLine(to: CGPoint.zero)
             path.close()
-            
+
             /// Shape
             let shape = UIBezierPath()
             shape.move(to: CGPoint(x: 9, y: 9))
@@ -1145,32 +1142,32 @@ class StyleKit: NSObject {
             UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setFill()
             shape.fill()
             context.restoreGState()
-            
+
             context.restoreGState()
         }
-        
+
         context.restoreGState()
     }
-    
+
     class func drawPopularBoard(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 24, height: 24), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 24, height: 24), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 24, y: resizedFrame.height / 24)
-        
+
         /// glyph
         do {
             context.saveGState()
             context.translateBy(x: 3, y: 5)
-            
+
             /// Group 3
             do {
                 context.saveGState()
-                
+
                 /// Fill 1
                 let fill1 = UIBezierPath()
                 fill1.move(to: CGPoint.zero)
@@ -1185,7 +1182,7 @@ class StyleKit: NSObject {
                 UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setFill()
                 fill1.fill()
                 context.restoreGState()
-                
+
                 /// Fill 2
                 let fill2 = UIBezierPath()
                 fill2.move(to: CGPoint(x: 1, y: 1))
@@ -1206,15 +1203,15 @@ class StyleKit: NSObject {
                 UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setFill()
                 fill2.fill()
                 context.restoreGState()
-                
+
                 context.restoreGState()
             }
-            
+
             /// Group 6
             do {
                 context.saveGState()
                 context.translateBy(x: 0, y: 9)
-                
+
                 /// Fill 4
                 let fill4 = UIBezierPath()
                 fill4.move(to: CGPoint.zero)
@@ -1229,7 +1226,7 @@ class StyleKit: NSObject {
                 UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setFill()
                 fill4.fill()
                 context.restoreGState()
-                
+
                 /// Fill 5
                 let fill5 = UIBezierPath()
                 fill5.move(to: CGPoint(x: 1, y: 1))
@@ -1250,35 +1247,35 @@ class StyleKit: NSObject {
                 UIColor(hue: 0.667, saturation: 0.081, brightness: 0.58, alpha: 1).setFill()
                 fill5.fill()
                 context.restoreGState()
-                
+
                 context.restoreGState()
             }
-            
+
             context.restoreGState()
         }
-        
+
         context.restoreGState()
     }
-    
+
     class func drawFBPage(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 26, height: 26), resizing: ResizingBehavior = .aspectFit) {
         /// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         /// Resize to Target Frame
         context.saveGState()
         let resizedFrame = resizing.apply(rect: CGRect(x: 0, y: 0, width: 26, height: 26), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 26, y: resizedFrame.height / 26)
-        
+
         /// f_logo_RGB-Grey_1024
         do {
             context.saveGState()
             context.translateBy(x: 1, y: 1)
-            
+
             /// Group 3
             do {
                 context.saveGState()
-                
+
                 /// Clip 2
                 let clip2 = UIBezierPath()
                 clip2.move(to: CGPoint.zero)
@@ -1290,12 +1287,12 @@ class StyleKit: NSObject {
                 context.saveGState()
                 context.translateBy(x: 0, y: 0)
                 context.restoreGState()
-                
+
                 /// Clip 2 (Outline Mask)
                 context.saveGState()
                 clip2.apply(CGAffineTransform(translationX: 0, y: 0))
                 clip2.addClip()
-                
+
                 /// Fill 1
                 let fill1 = UIBezierPath()
                 fill1.move(to: CGPoint(x: 24, y: 12))
@@ -1323,13 +1320,13 @@ class StyleKit: NSObject {
                 UIColor(hue: 0.589, saturation: 0.096, brightness: 0.562, alpha: 1).setFill()
                 fill1.fill()
                 context.restoreGState()
-                
+
                 context.restoreGState()
                 // End Clip 2 (Outline Mask)
-                
+
                 context.restoreGState()
             }
-            
+
             /// Fill 4
             let fill4 = UIBezierPath()
             fill4.move(to: CGPoint(x: 9.59, y: 10.78))
@@ -1353,18 +1350,17 @@ class StyleKit: NSObject {
             context.saveGState()
             context.translateBy(x: 7.08, y: 4.69)
             context.restoreGState()
-            
+
             context.restoreGState()
         }
-        
+
         context.restoreGState()
     }
-    
-    
-    //MARK: - Canvas Images
-    
+
+    // MARK: - Canvas Images
+
     /// Page 1
-    
+
     class func imageOfPopularNUser() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1373,16 +1369,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 10, height: 11), false, 0)
         StyleKit.drawPopularNUser()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfPasswdVisibilitySelected() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1391,16 +1387,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 18, height: 11), false, 0)
         StyleKit.drawPasswdVisibilitySelected()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfPasswdVisibility() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1409,16 +1405,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 18, height: 11), false, 0)
         StyleKit.drawPasswdVisibility()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfBoardCategory() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1427,16 +1423,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 12, height: 10), false, 0)
         StyleKit.drawBoardCategory()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfRefresh() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1445,16 +1441,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 20, height: 24), false, 0)
         StyleKit.drawRefresh()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfSearch() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1463,16 +1459,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 23, height: 23), false, 0)
         StyleKit.drawSearch()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfCompose() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1481,16 +1477,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 21, height: 21), false, 0)
         StyleKit.drawCompose()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfMoreH() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1499,16 +1495,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 27, height: 5), false, 0)
         StyleKit.drawMoreH()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfUpvote() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1517,16 +1513,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 15, height: 15), false, 0)
         StyleKit.drawUpvote()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfDownvote() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1535,16 +1531,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 15, height: 15), false, 0)
         StyleKit.drawDownvote()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfComment() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1553,16 +1549,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 17, height: 12), false, 0)
         StyleKit.drawComment()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfAuthor() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1571,16 +1567,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 10, height: 11), false, 0)
         StyleKit.drawAuthor()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfClock() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1589,16 +1585,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 11, height: 11), false, 0)
         StyleKit.drawClock()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfCategory() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1607,16 +1603,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 4, height: 10), false, 0)
         StyleKit.drawCategory()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfMoreV() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1625,16 +1621,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 3, height: 14), false, 0)
         StyleKit.drawMoreV()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfFavorite() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1643,16 +1639,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 24, height: 20), false, 0)
         StyleKit.drawFavorite()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfFavoriteTabBar() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1661,16 +1657,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 24, height: 24), false, 0)
         StyleKit.drawFavoriteTabBar()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfHotTopic() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1679,16 +1675,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 24, height: 24), false, 0)
         StyleKit.drawHotTopic()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfProfile() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1697,16 +1693,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 26, height: 26), false, 0)
         StyleKit.drawProfile()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfPopularBoard() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1715,16 +1711,16 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 24, height: 24), false, 0)
         StyleKit.drawPopularBoard()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
+
     class func imageOfFBPage() -> UIImage {
         struct LocalCache {
             static var image: UIImage!
@@ -1733,34 +1729,33 @@ class StyleKit: NSObject {
             return LocalCache.image
         }
         var image: UIImage
-        
+
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 26, height: 26), false, 0)
         StyleKit.drawFBPage()
         image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        
+
         LocalCache.image = image
         return image
     }
-    
-    
-    //MARK: - Resizing Behavior
-    
+
+    // MARK: - Resizing Behavior
+
     enum ResizingBehavior {
         case aspectFit /// The content is proportionally resized to fit into the target rectangle.
         case aspectFill /// The content is proportionally resized to completely fill the target rectangle.
         case stretch /// The content is stretched to match the entire target rectangle.
         case center /// The content is centered in the target rectangle, but it is NOT resized.
-        
+
         func apply(rect: CGRect, target: CGRect) -> CGRect {
             if rect == target || target == CGRect.zero {
                 return rect
             }
-            
+
             var scales = CGSize.zero
             scales.width = abs(target.width / rect.width)
             scales.height = abs(target.height / rect.height)
-            
+
             switch self {
                 case .aspectFit:
                     scales.width = min(scales.width, scales.height)
@@ -1774,7 +1769,7 @@ class StyleKit: NSObject {
                     scales.width = 1
                     scales.height = 1
             }
-            
+
             var result = rect.standardized
             result.size.width *= scales.width
             result.size.height *= scales.height
@@ -1783,6 +1778,5 @@ class StyleKit: NSObject {
             return result
         }
     }
-    
-    
+
 }

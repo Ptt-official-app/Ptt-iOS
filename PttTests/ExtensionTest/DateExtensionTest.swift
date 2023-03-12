@@ -6,8 +6,8 @@
 //  Copyright © 2021 Ptt. All rights reserved.
 //
 
-import XCTest
 @testable import Ptt
+import XCTest
 
 final class TimeIntervalExtensionTest: XCTestCase {
     private let minuteDiff: TimeInterval = 60
@@ -17,8 +17,8 @@ final class TimeIntervalExtensionTest: XCTestCase {
     private var yearDiff: TimeInterval { dayDiff * 365 }
 
     func testDiffFrom_second_level() throws {
-        let interval: TimeInterval = 1639820098
-        
+        let interval: TimeInterval = 1_639_820_098
+
         var interval_diff = interval + 10
         var date_diff = Date(timeIntervalSince1970: interval_diff)
         XCTAssertEqual(interval.diff(from: date_diff), "Just now")
@@ -27,18 +27,18 @@ final class TimeIntervalExtensionTest: XCTestCase {
         date_diff = Date(timeIntervalSince1970: interval_diff)
         XCTAssertEqual(interval.diff(from: date_diff), "Just now")
 
-        interval_diff = interval - 33440
+        interval_diff = interval - 33_440
         date_diff = Date(timeIntervalSince1970: interval_diff)
         XCTAssertEqual(interval.diff(from: date_diff), "Just now")
     }
 
     func testDiffFrom_minute_level() throws {
-        let interval: TimeInterval = 1639820098
+        let interval: TimeInterval = 1_639_820_098
 
         var interval_diff = interval + minuteDiff
         var date_diff = Date(timeIntervalSince1970: interval_diff)
         XCTAssertEqual(interval.diff(from: date_diff), "1 minute ago")
-        
+
         interval_diff = interval + 2 * minuteDiff
         date_diff = Date(timeIntervalSince1970: interval_diff)
         XCTAssertEqual(interval.diff(from: date_diff), "2 minutes ago")
@@ -53,7 +53,7 @@ final class TimeIntervalExtensionTest: XCTestCase {
     }
 
     func testDiffFrom_hour_level() throws {
-        let interval: TimeInterval = 1639820098
+        let interval: TimeInterval = 1_639_820_098
 
         var interval_diff = interval + hourDiff
         var date_diff = Date(timeIntervalSince1970: interval_diff)
@@ -69,7 +69,7 @@ final class TimeIntervalExtensionTest: XCTestCase {
     }
 
     func testDiffFrom_day_level() throws {
-        let interval: TimeInterval = 1639820098
+        let interval: TimeInterval = 1_639_820_098
 
         var interval_diff = interval + dayDiff
         var date_diff = Date(timeIntervalSince1970: interval_diff)
@@ -85,7 +85,7 @@ final class TimeIntervalExtensionTest: XCTestCase {
     }
 
     func testDiffFrom_month_level() throws {
-        let interval: TimeInterval = 1639820098
+        let interval: TimeInterval = 1_639_820_098
 
         var interval_diff = interval + monthDiff
         var date_diff = Date(timeIntervalSince1970: interval_diff)
@@ -101,7 +101,7 @@ final class TimeIntervalExtensionTest: XCTestCase {
     }
 
     func testDiffFrom_year_level() throws {
-        let interval: TimeInterval = 1639785600
+        let interval: TimeInterval = 1_639_785_600
 
         var interval_diff = interval + yearDiff
         var date_diff = Date(timeIntervalSince1970: interval_diff)

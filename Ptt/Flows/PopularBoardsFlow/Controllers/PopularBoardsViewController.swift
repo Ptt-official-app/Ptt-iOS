@@ -13,18 +13,18 @@ protocol PopularBoardsView: BaseView {
 }
 
 class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PopularBoardsView {
-    
+
     var onBoardSelect: ((String) -> Void)?
-    var boardListDict: [APIModel.BoardInfo]? = nil
-    
+    var boardListDict: [APIModel.BoardInfo]?
+
     lazy var resultsTableController = configureResultsTableController()
-    
+
     lazy var viewModel: PopularBoardsViewModel = {
         let viewModel = PopularBoardsViewModel()
         viewModel.delegate = self
         return viewModel
     }()
-    
+
     lazy var tableview: UITableView = {
         let tableview = UITableView()
         tableview.register(PopularBoardsTableViewCell.self, forCellReuseIdentifier: PopularBoardsTableViewCell.cellIdentifier())
@@ -32,7 +32,7 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
         tableview.dataSource = self
         tableview.delegate = self
         tableview.backgroundColor = GlobalAppearance.backgroundColor
-        
+
         if #available(iOS 13.0, *) {
         } else {
             tableview.indicatorStyle = .white
@@ -40,29 +40,29 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
         tableview.estimatedRowHeight = 80.0
         tableview.separatorStyle = .none
         tableview.keyboardDismissMode = .onDrag // to dismiss from search bar
-        
+
         return tableview
     }()
-    
-    lazy var searchController : UISearchController = {
+
+    lazy var searchController: UISearchController = {
         // For if #available(iOS 11.0, *), no need to set searchController as property (local variable is fine).
         let searchController = UISearchController(searchResultsController: resultsTableController)
         searchController.searchResultsUpdater = self
         return searchController
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
         initBinding()
         setConstraint()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewModel.start()
     }
-    
+
     func initView() {
         title = L10n.popularBoards
         if #available(iOS 11.0, *) {
@@ -71,7 +71,7 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
 
         view.backgroundColor = GlobalAppearance.backgroundColor
         definesPresentationContext = true
-        
+
         if #available(iOS 13.0, *) {
             searchController.searchBar.searchTextField.textColor = PttColors.paleGrey.color
             // otherwise covered in GlobalAppearance
@@ -85,15 +85,15 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
             tableview.backgroundView = UIView() // See: https://stackoverflow.com/questions/31463381/background-color-for-uisearchcontroller-in-uitableview
         }
     }
-    
+
     func initBinding() {
-        viewModel.popularBoards.addObserver(fireNow: false) { [weak self] (popularBoards) in
-            if (popularBoards.count > 0) {
+        viewModel.popularBoards.addObserver(fireNow: false) { [weak self] popularBoards in
+            if !popularBoards.isEmpty {
                 self?.tableview.reloadData()
             }
         }
     }
-    
+
     func setConstraint() {
         view.addSubview(tableview)
         NSLayoutConstraint(item: tableview, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
@@ -101,24 +101,24 @@ class PopularBoardsViewController: UIViewController, UITableViewDataSource, UITa
         NSLayoutConstraint(item: tableview, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: tableview, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.popularBoards.value.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: PopularBoardsTableViewCell.cellIdentifier()) as! PopularBoardsTableViewCell
         cell.configure(viewModel, index: indexPath.row)
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
         if index < viewModel.popularBoards.value.count {
             onBoardSelect?(viewModel.popularBoards.value[index].brdname)
         }
     }
-    
+
     private func configureResultsTableController() -> ResultsTableController {
         let controller = ResultsTableController(style: .plain)
         controller.onBoardSelect = onBoardSelect
@@ -139,9 +139,9 @@ extension PopularBoardsViewController: PopularBoardsViewModelDelegate {
 
 extension PopularBoardsViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text, searchText.count > 0  else { return }
+        guard let searchText = searchController.searchBar.text, !searchText.isEmpty  else { return }
         resultsTableController.activityIndicator.startAnimating()
-        APIClient.shared.getBoardList(token: "", keyword: searchText) { [weak self] (result) in
+        APIClient.shared.getBoardList(token: "", keyword: searchText) { [weak self] result in
             guard let weakSelf = self else { return }
             switch result {
                 case .failure(error: let error):
@@ -155,7 +155,7 @@ extension PopularBoardsViewController: UISearchResultsUpdating {
                     }
                 case .success(data: let data):
                     
-                    weakSelf.resultsTableController.filteredBoards = data.list
+                    weakSelf.resultsTableController.update(filteredBoards: data.list)
                     DispatchQueue.main.async {
                         // Only update UI for the matching result
                         weakSelf.resultsTableController.activityIndicator.stopAnimating()
@@ -165,4 +165,3 @@ extension PopularBoardsViewController: UISearchResultsUpdating {
         }
     }
 }
-

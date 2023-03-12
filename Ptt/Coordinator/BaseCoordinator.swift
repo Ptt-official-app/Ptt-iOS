@@ -7,24 +7,24 @@
 //
 
 class BaseCoordinator: Coordinatorable {
-    
+
     var finshFlow: (() -> Void)?
     var childCoordinators: [Coordinatorable] = []
 
         func start() {}
-    
+
     // add only unique object
     func addDependency(_ coordinator: Coordinatorable) {
         guard !childCoordinators.contains(where: { $0 === coordinator }) else { return }
         childCoordinators.append(coordinator)
     }
-    
+
     func removeDependency(_ coordinator: Coordinatorable?) {
         guard
             childCoordinators.isEmpty == false,
             let coordinator = coordinator
         else { return }
-        
+
         // Clear child-coordinators recursively
         if let coordinator = coordinator as? BaseCoordinator, !coordinator.childCoordinators.isEmpty {
             coordinator.childCoordinators

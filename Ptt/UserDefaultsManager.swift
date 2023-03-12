@@ -21,12 +21,12 @@ struct UserDefaultsManager {
 
 extension UserDefaultsManager {
 
-    enum AppearanceMode : String {
+    enum AppearanceMode: String {
         case system, light, dark
     }
 
     private static let appearanceModeKey = "appearanceMode"
-    private static let appearanceModeDefault : AppearanceMode = .dark
+    private static let appearanceModeDefault: AppearanceMode = .dark
 
     static func appearanceMode() -> AppearanceMode {
         guard let modeString = UserDefaults.standard.string(forKey: appearanceModeKey), let mode = AppearanceMode(rawValue: modeString) else {
@@ -57,11 +57,11 @@ extension UserDefaultsManager {
         return "\(host)"
     }
 
-    static var addressForDisplay : String {
+    static var addressForDisplay: String {
         return displayString(of: address())
     }
 
-    static var addressDefaultForDisplay : String {
+    static var addressDefaultForDisplay: String {
         return displayString(of: addressDefault)
     }
 

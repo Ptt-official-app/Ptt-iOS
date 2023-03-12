@@ -8,13 +8,11 @@
 
 import UIKit
 
-class ResultsTableController : UITableViewController, FavoriteView {
+class ResultsTableController: UITableViewController, FavoriteView {
     var onLogout: (() -> Void)?
     var onBoardSelect: ((String) -> Void)?
     
-    lazy var filteredBoards: [APIModel.BoardInfo] = {
-        return [APIModel.BoardInfo]()
-    }()
+    private var filteredBoards: [APIModel.BoardInfo] = []
     
     let activityIndicator = UIActivityIndicatorView()
 
@@ -39,6 +37,11 @@ class ResultsTableController : UITableViewController, FavoriteView {
         ])
     }
 
+    func update(filteredBoards: [APIModel.BoardInfo]) {
+        self.filteredBoards = filteredBoards
+        tableView.reloadData()
+    }
+
     @objc private func addToFavorite(sender: FavoriteButton) {
         switch sender.isSelected {
         case false:
@@ -49,7 +52,7 @@ class ResultsTableController : UITableViewController, FavoriteView {
         case true:
             sender.isSelected = false
             if let boardToRemoved = sender.board,
-               let indexToRemoved = Favorite.boards.firstIndex(where: {$0.brdname == boardToRemoved.brdname}) {
+               let indexToRemoved = Favorite.boards.firstIndex(where: { $0.brdname == boardToRemoved.brdname }) {
                 Favorite.boards.remove(at: indexToRemoved)
             }
         }
