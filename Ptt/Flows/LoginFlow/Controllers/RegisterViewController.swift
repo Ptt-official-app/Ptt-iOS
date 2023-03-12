@@ -36,8 +36,18 @@ final class RegisterViewController: UIViewController, RegisterView {
 
         navigationController?.navigationBar.ptt_add(subviews: [webProgressView])
         var constraints = [NSLayoutConstraint]()
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[webProgressView]-0-|", options: [], metrics: nil, views: ["webProgressView": webProgressView])
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:[webProgressView(2)]-0-|", options: [], metrics: nil, views: ["webProgressView": webProgressView])
+        constraints += NSLayoutConstraint.constraints(
+            withVisualFormat: "H:|-0-[webProgressView]-0-|",
+            options: [],
+            metrics: nil,
+            views: ["webProgressView": webProgressView]
+        )
+        constraints += NSLayoutConstraint.constraints(
+            withVisualFormat: "V:[webProgressView(2)]-0-|",
+            options: [],
+            metrics: nil,
+            views: ["webProgressView": webProgressView]
+        )
         NSLayoutConstraint.activate(constraints)
 
         webViewProgressObservation = webView.observe(\.estimatedProgress, options: [.new], changeHandler: { _, change in
@@ -45,11 +55,16 @@ final class RegisterViewController: UIViewController, RegisterView {
             switch progress {
             case 1.0:
                 self.webProgressView.setProgress(Float(progress), animated: false)
-                UIView.animate(withDuration: 0.2, delay: 0.3, options: .curveEaseIn, animations: {
-                    self.webProgressView.alpha = 0
-                }) { _ in
-                    self.webProgressView.setProgress(0, animated: false)
-                }
+                UIView.animate(
+                    withDuration: 0.2,
+                    delay: 0.3,
+                    options: .curveEaseIn,
+                    animations: {
+                        self.webProgressView.alpha = 0
+                    },
+                    completion: { _ in
+                        self.webProgressView.setProgress(0, animated: false)
+                    })
             default:
                 self.webProgressView.setProgress(Float(progress), animated: true)
                 self.webProgressView.alpha = 1.0
@@ -76,24 +91,28 @@ final class RegisterViewController: UIViewController, RegisterView {
         super.viewDidLayoutSubviews()
 
         if #available(iOS 11.0, *) {
-            let insects = UIEdgeInsets(top: view.safeAreaInsets.top, left: 0, bottom: view.safeAreaInsets.bottom, right: 0)
+            let insects = UIEdgeInsets(
+                top: view.safeAreaInsets.top,
+                left: 0,
+                bottom: view.safeAreaInsets.bottom,
+                right: 0
+            )
             webView.scrollView.contentInset = insects
-            if #available(iOS 12.0, *) {
-            } else {
-                webView.scrollView.scrollIndicatorInsets = insects
-            }
         }
     }
 
-    @objc private func back() {
+    @objc
+    private func back() {
         webView.goBack()
     }
 
-    @objc private func forward() {
+    @objc
+    private func forward() {
         webView.goForward()
     }
 
-    @objc private func refresh() {
+    @objc
+    private func refresh() {
         if webView.url == nil {
             if let url = URL(string: UserDefaultsManager.address() + "/register") {
                 let urlRequest = URLRequest(url: url)

@@ -38,17 +38,65 @@ class LoadingView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        NSLayoutConstraint(item: blurEffectView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(
+            item: blurEffectView,
+            attribute: .top,
+            relatedBy: .equal,
+            toItem: self,
+            attribute: .top,
+            multiplier: 1.0,
+            constant: 0
+        ).isActive = true
 
-        NSLayoutConstraint(item: blurEffectView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(
+            item: blurEffectView,
+            attribute: .bottom,
+            relatedBy: .equal,
+            toItem: self,
+            attribute: .bottom,
+            multiplier: 1.0,
+            constant: 0
+        ).isActive = true
 
-        NSLayoutConstraint(item: blurEffectView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(
+            item: blurEffectView,
+            attribute: .trailing,
+            relatedBy: .equal,
+            toItem: self,
+            attribute: .trailing,
+            multiplier: 1.0,
+            constant: 0
+        ).isActive = true
 
-        NSLayoutConstraint(item: blurEffectView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(
+            item: blurEffectView,
+            attribute: .leading,
+            relatedBy: .equal,
+            toItem: self,
+            attribute: .leading,
+            multiplier: 1.0,
+            constant: 0
+        ).isActive = true
 
-        NSLayoutConstraint(item: activityIndicator, attribute: .centerX, relatedBy: .equal, toItem: blurEffectView.contentView, attribute: .centerX, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(
+            item: activityIndicator,
+            attribute: .centerX,
+            relatedBy: .equal,
+            toItem: blurEffectView.contentView,
+            attribute: .centerX,
+            multiplier: 1.0,
+            constant: 0
+        ).isActive = true
 
-        NSLayoutConstraint(item: activityIndicator, attribute: .centerY, relatedBy: .equal, toItem: blurEffectView.contentView, attribute: .centerY, multiplier: 1.0, constant: 0).isActive = true
+        NSLayoutConstraint(
+            item: activityIndicator,
+            attribute: .centerY,
+            relatedBy: .equal,
+            toItem: blurEffectView.contentView,
+            attribute: .centerY,
+            multiplier: 1.0,
+            constant: 0
+        ).isActive = true
     }
 
 }

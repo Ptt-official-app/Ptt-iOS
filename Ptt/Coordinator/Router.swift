@@ -112,7 +112,11 @@ final class Router: NSObject, Routerable {
 
 extension Router: UINavigationControllerDelegate {
 
-    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+    func navigationController(
+        _ navigationController: UINavigationController,
+        didShow viewController: UIViewController,
+        animated: Bool
+    ) {
         guard let previousController = navigationController.transitionCoordinator?.viewController(forKey: .from),
               !navigationController.viewControllers.contains(previousController) else {
             return

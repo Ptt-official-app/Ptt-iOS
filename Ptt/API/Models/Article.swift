@@ -30,14 +30,6 @@ extension Article {
     }
 
     var titleWithoutCategory: String {
-        if let leftBracket = title.firstIndex(of: "["),
-            let rightBracket = title.firstIndex(of: "]") {
-            var _title = title
-            let categoryRange = leftBracket...rightBracket
-            _title.removeSubrange(categoryRange)
-            let _titleWithBothEndsTrimmed = _title.trimmingCharacters(in: .whitespacesAndNewlines)
-            return _titleWithBothEndsTrimmed
-        }
-        return title
+        title.withoutCategory
     }
 }

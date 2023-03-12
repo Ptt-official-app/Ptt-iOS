@@ -45,9 +45,11 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
     }
 
     func makeLoginCoordinator(router: Router) -> Coordinatorable {
-        let coordinator = LoginCoordinator(router: router,
-                                              factory: SceneFactory(),
-                                              coordinatoryFactory: CoordinatorFactory())
+        let coordinator = LoginCoordinator(
+            router: router,
+            factory: SceneFactory(),
+            coordinatoryFactory: CoordinatorFactory()
+        )
         return coordinator
     }
 }

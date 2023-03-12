@@ -1,13 +1,13 @@
 disabled_rules:
   - file_length
   - type_body_length
-  - object_literal
-  - force_unwrapping
   - identifier_name
-  - force_try
-  - force_cast
-  - line_length
-  - function_body_length
+  # - object_literal
+  # - force_unwrapping
+  # - force_try
+  # - force_cast
+  # - line_length
+  # - function_body_length
 
 opt_in_rules:
   - file_name
@@ -53,6 +53,9 @@ opt_in_rules:
   - empty_string
   - legacy_constructor
   - untyped_error_in_catch
+
+excluded:
+  - ${PWD}/Ptt/StyleKit.swift
 
 line_length:
   ignores_comments: true

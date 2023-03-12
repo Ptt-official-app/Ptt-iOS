@@ -31,7 +31,7 @@ protocol APIClientProtocol {
     typealias CreateArticleResult = Result<APIModel.CreateArticleResponse, APIError>
     typealias PopularArticlesResult = Result<APIModel.GoPttBBSBoard, APIError>
     typealias FavoriteBoardsResult = Result<APIModel.BoardInfoList, APIError>
-    
+
     func login(account: String, password: String, completion: @escaping (LoginResult) -> Void)
 
     func getBoardArticles(of params: BoardArticlesParams, completion: @escaping (GetBoardArticlesResult) -> Void)

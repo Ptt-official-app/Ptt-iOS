@@ -21,27 +21,39 @@ extension LoginViewController {
         lbNeedReason.style.preferredSize = CGSize(width: global_width / 2, height: 30)
         btnOpenAccount.style.preferredSize = CGSize(width: global_width / 2, height: 30)
 
-        let horiLine1 = ASStackLayoutSpec(direction: .horizontal,
-                                                                  spacing: 0,
-                                                                  justifyContent: .center,
-                                                                  alignItems: .center,
-                                                                  children: [tfFillRealName, tfFillBirthday])
-        let addressInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 32, left: 0, bottom: 32, right: 0), child: tfFillAddress)
+        let horiLine1 = ASStackLayoutSpec(
+            direction: .horizontal,
+            spacing: 0,
+            justifyContent: .center,
+            alignItems: .center,
+            children: [tfFillRealName, tfFillBirthday]
+        )
+        let addressInset = ASInsetLayoutSpec(
+            insets: UIEdgeInsets(top: 32, left: 0, bottom: 32, right: 0),
+            child: tfFillAddress
+        )
 
-        let horiLine2 = ASStackLayoutSpec(direction: .horizontal,
-                                                   spacing: 0,
-                                                   justifyContent: .center,
-                                                   alignItems: .center,
-                                                   children: [lbNeedReason, btnOpenAccount])
+        let horiLine2 = ASStackLayoutSpec(
+            direction: .horizontal,
+            spacing: 0,
+            justifyContent: .center,
+            alignItems: .center,
+            children: [lbNeedReason, btnOpenAccount]
+        )
 
-        let vertLine = ASStackLayoutSpec(direction: .vertical,
-                                                   spacing: 0,
-                                                   justifyContent: .center,
-                                                   alignItems: .center,
-                                                   children: [lbFillTitle, horiLine1,
-                                                              addressInset, horiLine2])
+        let vertLine = ASStackLayoutSpec(
+            direction: .vertical,
+            spacing: 0,
+            justifyContent: .center,
+            alignItems: .center,
+            children: [lbFillTitle, horiLine1, addressInset, horiLine2]
+        )
 
-        fillInformationStackSpec = ASCenterLayoutSpec(centeringOptions: ASCenterLayoutSpecCenteringOptions.X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: vertLine)
+        fillInformationStackSpec = ASCenterLayoutSpec(
+            centeringOptions: ASCenterLayoutSpecCenteringOptions.X,
+            sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY,
+            child: vertLine
+        )
 
         self.node.addSubnode(lbFillTitle)
         self.node.addSubnode(tfFillRealName)
@@ -51,7 +63,8 @@ extension LoginViewController {
         self.node.addSubnode(btnOpenAccount)
     }
 
-    @objc func openAccountPress() {
+    @objc
+    func openAccountPress() {
         print("open account press")
         showAlert(title: "施工中", msg: "測試中未完成，但你剛剛的帳號可以登入了，請試試看")
         (tfUsername.view as! LoginTextField).text = (tfRegisterUsername.view as! LoginTextField).text

@@ -67,11 +67,13 @@ extension APIModel {
             }
             let (boardName, filename) = APIModel.FullArticle.info(from: url)
             guard let boardName = boardName, let filename = filename else { return nil }
-            let boardArticle = BoardArticle(title: model.title,
-                                         date: model.date,
-                                         author: model.author,
-                                         boardID: boardName,
-                                         articleID: filename)
+            let boardArticle = BoardArticle(
+                title: model.title,
+                date: model.date,
+                author: model.author,
+                boardID: boardName,
+                articleID: filename
+            )
             return boardArticle
         }
     }

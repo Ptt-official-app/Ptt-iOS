@@ -10,12 +10,12 @@ import Foundation
 
 extension String {
     var withoutCategory: String {
-        if let leftBracket = self.firstIndex(of: "["),
-            let rightBracket = self.firstIndex(of: "]") {
-            var _title = self
+        if let leftBracket = firstIndex(of: "["),
+           let rightBracket = firstIndex(of: "]") {
+            var title = self
             let range = leftBracket...rightBracket
-            _title.removeSubrange(range)
-            return _title.trimmingCharacters(in: .whitespacesAndNewlines)
+            title.removeSubrange(range)
+            return title.trimmingCharacters(in: .whitespacesAndNewlines)
         }
         return self
     }
@@ -38,6 +38,7 @@ extension String {
 
     static func random(length: Int) -> String {
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        return String((0..<length).map{ _ in letters.randomElement()! })
+        // swiftlint:disable:next force_unwrapping
+        return String((0..<length).map { _ in letters.randomElement()! })
     }
 }
