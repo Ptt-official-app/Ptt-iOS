@@ -15,6 +15,19 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
         let coordinator = TabBarCoordinator(tabBarView: controller, coordinatorFactory: CoordinatorFactory())
         return (coordinator, controller)
     }
+
+    func makeBoardListCoordinator(
+        navigationController: UINavigationController?,
+        listType: BoardListViewModel.ListType
+    ) -> Coordinatorable {
+        let coordinator = BoardListCoordinator(
+            router: router(navigationController),
+            factory: SceneFactory(),
+            coordinatoryFactory: CoordinatorFactory(),
+            listType: listType
+        )
+        return coordinator
+    }
     
     func makeFavoriteCoordinator(navigationController: UINavigationController?) -> Coordinatorable {
         let coordinator = FavoriteCoordinator(router: router(navigationController),

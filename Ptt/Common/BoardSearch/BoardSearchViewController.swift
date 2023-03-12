@@ -10,7 +10,7 @@ import UIKit
 
 final class BoardSearchViewController: UITableViewController {
     private let apiClient: APIClientProtocol
-    private var favoriteBoards: [APIModel.BoardInfo] = []
+    private var favoriteBoardNames: [String] = []
     private var boards: [APIModel.BoardInfo] = []
     private var startIdx = ""
     private var scrollDirection: Direction = .unknown
@@ -39,8 +39,9 @@ final class BoardSearchViewController: UITableViewController {
         getBoardList(keyword: keyword)
     }
 
-    func update(favoriteBoards: [APIModel.BoardInfo]) {
-        self.favoriteBoards = favoriteBoards
+    func update(favoriteBoardNames: [String]) {
+        self.favoriteBoardNames = favoriteBoardNames
+        tableView.reloadData()
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -57,7 +58,7 @@ final class BoardSearchViewController: UITableViewController {
             return UITableViewCell()
         }
         let data = boards[indexPath.row]
-        let isFavorite = favoriteBoards.contains(where: { $0.brdname == data.brdname })
+        let isFavorite = favoriteBoardNames.contains(data.brdname)
         cell.config(boardName: data.brdname, isFavorite: isFavorite)
         return cell
     }
@@ -65,10 +66,10 @@ final class BoardSearchViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let data = boards[indexPath.row]
-        if let index = favoriteBoards.firstIndex(where: { $0.brdname == data.brdname }) {
-            favoriteBoards.remove(at: index)
+        if let index = favoriteBoardNames.firstIndex(of: data.brdname) {
+            favoriteBoardNames.remove(at: index)
         } else {
-            favoriteBoards.append(data)
+            favoriteBoardNames.append(data.brdname)
         }
         tableView.beginUpdates()
         tableView.reloadRows(at: [indexPath], with: .automatic)

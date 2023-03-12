@@ -70,16 +70,27 @@ private extension TabBarCoordinator {
         
         switch page {
         case .favorite:
-            let favoriteCoordinator = self.coordinatorFactory.makeFavoriteCoordinator(navigationController: navController)
-            self.addDependency(favoriteCoordinator)
-            
-            (favoriteCoordinator as? FavoriteCoordinator)?.finshFlow = { [unowned self] () in
+//            let favoriteCoordinator = self.coordinatorFactory.makeFavoriteCoordinator(navigationController: navController)
+//            self.addDependency(favoriteCoordinator)
+//
+//            (favoriteCoordinator as? FavoriteCoordinator)?.finshFlow = { [unowned self] () in
+//                print("temp logout flow in FavoriteCoordinator")
+//                removeDependency(self)
+//                self.finshFlow?() // tab bar's finish flow
+//            }
+//
+//            favoriteCoordinator.start()
+            let coordinator = coordinatorFactory.makeBoardListCoordinator(
+                navigationController: navController,
+                listType: .favorite
+            )
+            addDependency(coordinator)
+            (coordinator as? BoardListCoordinator)?.finshFlow = { [unowned self] () in
                 print("temp logout flow in FavoriteCoordinator")
                 removeDependency(self)
                 self.finshFlow?() // tab bar's finish flow
             }
-            
-            favoriteCoordinator.start()
+            coordinator.start()
         case .profile:
             // TBD
             let fbPageCoordinator = self.coordinatorFactory.makeFBPageCoordinator(navigationController: navController)
@@ -94,9 +105,15 @@ private extension TabBarCoordinator {
             }
             navController.setViewControllers([settingsViewController], animated: false)
         case .popular:
-            let popularCoordinator = self.coordinatorFactory.makePopularBoardsCoordinator(navigationController: navController)
-            self.addDependency(popularCoordinator)
-            popularCoordinator.start()
+//            let popularCoordinator = self.coordinatorFactory.makePopularBoardsCoordinator(navigationController: navController)
+//            self.addDependency(popularCoordinator)
+//            popularCoordinator.start()
+            let coordinator = coordinatorFactory.makeBoardListCoordinator(
+                navigationController: navController,
+                listType: .popular
+            )
+            addDependency(coordinator)
+            coordinator.start()
         case .popularArticles:
             let coordinator = self.coordinatorFactory.makePopularArticleCoordinator(navigationController: navController)
             self.addDependency(coordinator)

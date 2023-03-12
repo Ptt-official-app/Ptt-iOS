@@ -218,25 +218,25 @@ extension FavoriteViewController {
     }
 
     private func fetchFavoritesBoards() {
-        apiClient.getFavoritesBoards(startIndex: startIdx, limit: 200) { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.tableView.refreshControl?.endRefreshing()
-                switch result {
-                case .failure(let error):
-                    let message = error.localizedDescription
-                    let alert = UIAlertController(title: L10n.error, message: message, preferredStyle: .alert)
-                    let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
-                    alert.addAction(confirm)
-                    self.present(alert, animated: true, completion: nil)
-                case .success(let response):
-                    self.list += response.list
-                    self.startIdx = response.next_idx ?? ""
-                    self.searchTableController.update(favoriteBoards: self.list)
-                    self.tableView.reloadData()
-                }
-            }
-        }
+//        apiClient.getFavoritesBoards(startIndex: startIdx, limit: 200) { [weak self] result in
+//            guard let self = self else { return }
+//            DispatchQueue.main.async {
+//                self.tableView.refreshControl?.endRefreshing()
+//                switch result {
+//                case .failure(let error):
+//                    let message = error.localizedDescription
+//                    let alert = UIAlertController(title: L10n.error, message: message, preferredStyle: .alert)
+//                    let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
+//                    alert.addAction(confirm)
+//                    self.present(alert, animated: true, completion: nil)
+//                case .success(let response):
+//                    self.list += response.list
+//                    self.startIdx = response.next_idx ?? ""
+//                    self.searchTableController.update(favoriteBoardNames: self.list.map(\.brdname))
+//                    self.tableView.reloadData()
+//                }
+//            }
+//        }
     }
 }
 

@@ -14,4 +14,8 @@ protocol CoordinatorFactoryProtocol {
     func makePopularBoardsCoordinator(navigationController: UINavigationController?) -> Coordinatorable
     func makePopularArticleCoordinator(navigationController: UINavigationController?) -> Coordinatorable
     func makeFBPageCoordinator(navigationController: UINavigationController?) -> Coordinatorable
+    func makeBoardListCoordinator(
+        navigationController: UINavigationController?,
+        listType: BoardListViewModel.ListType
+    ) -> Coordinatorable
 }

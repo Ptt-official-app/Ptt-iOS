@@ -46,6 +46,7 @@ protocol APIClientProtocol {
     func getBoardList(keyword: String, startIdx: String, max: Int, completion: @escaping (BoardListResult) -> Void)
     
     func getPopularBoards(subPath: String, token: String, querys: Dictionary<String, Any>, completion: @escaping (BoardListResult) -> Void)
+    func getPopularBoards(completion: @escaping (BoardListResult) -> Void)
     
     func createArticle(boardId: String, article: APIModel.CreateArticle, completion: @escaping (createArticleResult) -> Void)
     
@@ -55,9 +56,6 @@ protocol APIClientProtocol {
     ///   - limit: max number of the returned list, requiring <= 200
     ///   - desc: descending (or ascending if false)
     func getPopularArticles(startIdx: String, limit: Int, desc: Bool, completion: @escaping (PopularArticlesResult) -> Void)
-    func getFavoritesBoards(
-        startIndex: String,
-        limit: Int,
-        completion: @escaping (FavoriteBoardsResult) -> Void
-    )
+    func favoritesBoards(startIndex: String, limit: Int) async throws -> APIModel.BoardInfoList
+    func popularBoards() async throws -> APIModel.BoardInfoList
 }

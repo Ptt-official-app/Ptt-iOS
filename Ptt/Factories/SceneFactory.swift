@@ -13,7 +13,8 @@ final class SceneFactory: FavoriteSceneFactoryProtocol,
                           LoginSceneFactoryProtocol,
                           PopularBoardsSceneFactoryProtocol,
                           FBPageSceneFactoryProtocol,
-                          PopularArticlesSceneFactoryProtocol {
+                          PopularArticlesSceneFactoryProtocol,
+                          BoardListSceneFactoryProtocol {
     
     func makeLoginView() -> LoginView {
         let loginViewController = LoginViewController()
@@ -53,5 +54,12 @@ final class SceneFactory: FavoriteSceneFactoryProtocol,
     
     func makeComposeArticleView(withBoardName boardName: String) -> UIViewController {
         return ComposeArticleViewController(boardName: boardName)
+    }
+
+    func makeBoardListView(listType: BoardListViewModel.ListType) -> BoardListView {
+        let viewModel = BoardListViewModel(listType: listType)
+        let tvc = BoardListTVC(viewModel: viewModel)
+        viewModel.uiDelegate = tvc
+        return tvc
     }
 }

@@ -26,15 +26,7 @@ final class UserNumberView: UIView {
         numberLabel.text = "\(number.easyRead)"
         iconView.isHidden = false
         switch number {
-        case 1...10:
-            iconView.tintColor = PttColors.blueGrey.color
-        case 11...49:
-            iconView.tintColor = PttColors.dandelion.color
-        case 50...99:
-            iconView.tintColor = PttColors.coral.color
-        case 100...999:
-            iconView.tintColor = .white
-        case 1000...1999:
+        case 1...1999:
             iconView.tintColor = .white
         case 2000...4999:
             iconView.tintColor = PttColors.coral.color
