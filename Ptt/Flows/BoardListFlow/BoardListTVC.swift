@@ -10,12 +10,12 @@ import UIKit
 
 protocol BoardListView: BaseView {
     var onBoardSelect: ((String) -> Void)? { get set }
-    var onLogout:(() -> Void)? { get set }
+    var onLogout: (() -> Void)? { get set }
 }
 
 final class BoardListTVC: UITableViewController, BoardListView {
     var onBoardSelect: ((String) -> Void)?
-    var onLogout:(() -> Void)?
+    var onLogout: (() -> Void)?
 
     private let viewModel: BoardListViewModel
     private let boardSearchVC: BoardSearchViewController

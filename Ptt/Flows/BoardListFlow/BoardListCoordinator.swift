@@ -39,7 +39,7 @@ private extension BoardListCoordinator {
     func showBoardListView() {
         let boardListView = factory.makeBoardListView(listType: listType)
 
-        boardListView.onBoardSelect = { [unowned self] (boardName) in
+        boardListView.onBoardSelect = { [unowned self] boardName in
             self.runBoardFlow(withBoardName: boardName)
         }
 
