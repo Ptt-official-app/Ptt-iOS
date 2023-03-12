@@ -2,12 +2,12 @@ disabled_rules:
   - file_length
   - type_body_length
   - identifier_name
-  # - object_literal
-  # - force_unwrapping
-  # - force_try
-  # - force_cast
-  # - line_length
-  # - function_body_length
+  - object_literal
+  - force_unwrapping
+  - force_try
+  - force_cast
+  - line_length
+  - function_body_length
 
 opt_in_rules:
   - file_name
