@@ -209,20 +209,4 @@ final class APIClientTest: XCTestCase {
             }
         }
     }
-
-    func testGetFavoritesBoards() {
-        let client = manager.getFavoritesBoards()
-
-        client.getFavoritesBoards(startIndex: "", limit: 0) { result in
-            switch result {
-            case .failure:
-                XCTFail("Shouldn't failed")
-            case .success(let response):
-                XCTAssertEqual(response.next_idx, "")
-                let list = response.list
-                XCTAssertEqual(list.count, 2)
-                XCTAssertEqual(list[0].title, "站長好!")
-            }
-        }
-    }
 }

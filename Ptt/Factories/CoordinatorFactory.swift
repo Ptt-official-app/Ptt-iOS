@@ -29,24 +29,10 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
         return coordinator
     }
     
-    func makeFavoriteCoordinator(navigationController: UINavigationController?) -> Coordinatorable {
-        let coordinator = FavoriteCoordinator(router: router(navigationController),
-                                              factory: SceneFactory(),
-                                              coordinatoryFactory: CoordinatorFactory())
-        return coordinator
-    }
-    
     func makeFBPageCoordinator(navigationController: UINavigationController?) -> Coordinatorable {
         let coordinator = FBPageCoordinator(router: router(navigationController),
                                             factory: SceneFactory(),
                                             coordinatoryFactory: CoordinatorFactory())
-        return coordinator
-    }
-    
-    func makePopularBoardsCoordinator(navigationController: UINavigationController?) -> Coordinatorable {
-        let coordinator = PopularBoardsCoordinator(router: router(navigationController),
-                                              factory: SceneFactory(),
-                                              coordinatoryFactory: CoordinatorFactory())
         return coordinator
     }
 

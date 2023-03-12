@@ -30,7 +30,6 @@ protocol APIClientProtocol {
     typealias ProcessResult = Result<Data, APIError>
     typealias createArticleResult = Result<APIModel.CreateArticleResponse, APIError>
     typealias PopularArticlesResult = Result<APIModel.GoPttBBSBoard, APIError>
-    typealias FavoriteBoardsResult = Result<APIModel.BoardInfoList, APIError>
     
     func login(account: String, password: String, completion: @escaping (LoginResult) -> Void)
 
@@ -44,9 +43,6 @@ protocol APIClientProtocol {
     ///   - max: max number of the returned list, requiring <= 300
     ///   - completion: the list of board information
     func getBoardList(keyword: String, startIdx: String, max: Int, completion: @escaping (BoardListResult) -> Void)
-    
-    func getPopularBoards(subPath: String, token: String, querys: Dictionary<String, Any>, completion: @escaping (BoardListResult) -> Void)
-    func getPopularBoards(completion: @escaping (BoardListResult) -> Void)
     
     func createArticle(boardId: String, article: APIModel.CreateArticle, completion: @escaping (createArticleResult) -> Void)
     

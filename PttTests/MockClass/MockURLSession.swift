@@ -43,6 +43,18 @@ class MockURLSession: URLSessionProtocol {
         let req = URLRequest(url: url)
         return self.dataTask(with: req, completionHandler: completionHandler)
     }
+
+    func data(for request: URLRequest) async throws -> (Data, URLResponse) {
+        if let _error = self.error {
+            throw _error
+        }
+
+        let response = self.mockHttpURLResponse(request: request)
+        if let _data = self.fakeData {
+            return (_data, response)
+        }
+        throw NSError(domain: "ptt.cc", code: 999)
+    }
 }
 
 final class MockURLSessionV2: URLSessionProtocol {
@@ -78,6 +90,9 @@ final class MockURLSessionV2: URLSessionProtocol {
         return dataTask(with: req, completionHandler: completionHandler)
     }
 
+    func data(for request: URLRequest) async throws -> (Data, URLResponse) {
+        throw NSError(domain: "notImplement.cc.ptt", code: 999)
+    }
 
     private func mockHttpURLResponse(request: URLRequest) -> URLResponse {
         return HTTPURLResponse(url: request.url!,
