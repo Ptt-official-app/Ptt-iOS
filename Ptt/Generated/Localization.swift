@@ -26,6 +26,8 @@ enum L10n {
   static let appearanceMode = L10n.tr("Localizable", "Appearance Mode")
   /// Are you sure to clear cache?
   static let areYouSureToClearCache = L10n.tr("Localizable", "Are you sure to clear cache?")
+  /// Title is empty
+  static let articleTitleIsEmpty = L10n.tr("Localizable", "ArticleTitleIsEmpty")
   /// Back to Register
   static let backToRegister = L10n.tr("Localizable", "BackToRegister")
   /// Birthday
@@ -46,10 +48,14 @@ enum L10n {
   static let compose = L10n.tr("Localizable", "Compose")
   /// Confirm
   static let confirm = L10n.tr("Localizable", "Confirm")
+  /// Do you want to submit this post?
+  static let createPostConfirmMessage = L10n.tr("Localizable", "CreatePostConfirmMessage")
   /// Customization Mode
   static let customizationMode = L10n.tr("Localizable", "Customization Mode")
   /// Dark
   static let dark = L10n.tr("Localizable", "Dark")
+  /// Edit
+  static let editArticle = L10n.tr("Localizable", "EditArticle")
   /// Email
   static let email = L10n.tr("Localizable", "Email")
   /// Error
@@ -66,6 +72,10 @@ enum L10n {
   static let hotTopics = L10n.tr("Localizable", "Hot Topics")
   /// In favorite
   static let inFavorite = L10n.tr("Localizable", "In favorite")
+  /// Text
+  static let inputArticleContent = L10n.tr("Localizable", "InputArticleContent")
+  /// Title
+  static let inputArticleTitle = L10n.tr("Localizable", "InputArticleTitle")
   /// Just now
   static let justNow = L10n.tr("Localizable", "Just now")
   /// Leave it blank for default value
@@ -100,6 +110,10 @@ enum L10n {
   static let popularArticles = L10n.tr("Localizable", "Popular Articles")
   /// Popular Boards
   static let popularBoards = L10n.tr("Localizable", "Popular Boards")
+  /// Post type is empty
+  static let postTypeIsEmpty = L10n.tr("Localizable", "PostTypeIsEmpty")
+  /// Post type
+  static let postTypeSelection = L10n.tr("Localizable", "PostTypeSelection")
   /// Profile
   static let profilePage = L10n.tr("Localizable", "Profile Page")
   /// PTT FB Page
@@ -122,6 +136,8 @@ enum L10n {
   static let share = L10n.tr("Localizable", "Share")
   /// Site Address
   static let siteAddress = L10n.tr("Localizable", "Site Address")
+  /// Submit
+  static let submit = L10n.tr("Localizable", "submit")
   /// System Default
   static let systemDefault = L10n.tr("Localizable", "System Default")
   /// Third Party License
