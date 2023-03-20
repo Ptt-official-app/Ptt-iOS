@@ -9,40 +9,50 @@
 import Foundation
 
 extension APIModel {
-    class CreateArticle: Codable {
-        var `class`: String = ""
-        var title: String = ""
-        var content: [[ContentProperty]] = []
-
+    final class CreateArticle: Codable {
+        let `class` : String
+        let title : String
+        /// The first dimension means line, the first line, the second line ...etc
+        /// The second dimension means content property
+        let content: [[ContentProperty]]
+        
         init(className: String, title: String, content: [[ContentProperty]]) {
             `class` = className
             self.title = title
             self.content = content
         }
     }
-
-    class ContentProperty: Codable {
-        var text: String = ""
-        var color0: Color
-        var color1: Color
-
-        init(text: String, color0: Color = Color(), color1: Color = Color()) {
+    
+    final class ContentProperty: Codable {
+        let text: String
+        let color0: Color
+        let color1: Color
+        
+        init(text: String, color0: Color = Color(), color1: Color? = nil) {
             self.text = text
             self.color0 = color0
-            self.color1 = color1
+            self.color1 = color1 ?? color0
         }
     }
-
-    class Color: Codable {
-        var foreground: Int
-        var background: Int
-        var blink: Bool
-        var highlight: Bool
-        var reset: Bool
-
-        init(foreground: Int = 0, background: Int = 0, blink: Bool = false, highlight: Bool = false, reset: Bool = false) {
-            self.foreground = foreground
-            self.background = background
+    
+    final class Color: Codable {
+        let foreground: Int
+        let background: Int
+        let blink: Bool
+        let highlight: Bool
+        /// `true`, the text will be reseted to black background, white foreground
+        /// Default value is `false`
+        let reset: Bool
+        
+        init(
+            foreground: ANSIColor = .white,
+            background: ANSIColor = .black,
+            blink: Bool = false,
+            highlight: Bool = false,
+            reset: Bool = false
+        ) {
+            self.foreground = foreground.foreground
+            self.background = background.background
             self.blink = blink
             self.highlight = highlight
             self.reset = reset

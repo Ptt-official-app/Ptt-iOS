@@ -8,47 +8,38 @@
 
 import Foundation
 
-class ComposeArticleViewModel {
-    var contentPropertyOutSideArray: [[APIModel.ContentProperty]] = []
-    var currentText: String = ""
+final class ComposeArticleViewModel {
+    let apiClient: APIClientProtocol
+    let boardName: String
+    // TODO: `posttype` in https://doc.devptt.dev/#/board/get_api_board__bid_
+    // But `posttype` is a string, will be updated to `posttypes`
+    let postTypes: [String]
+    private(set) var selectedPostType: String = ""
 
-    init() {
-        initViewModel()
+    init(boardName: String, postTypes: [String], apiClient: APIClientProtocol = APIClient.shared) {
+        self.apiClient = apiClient
+        self.boardName = boardName
+        self.postTypes = postTypes
     }
 
-    func initViewModel() {
-        contentPropertyOutSideArray.removeAll()
-        currentText = ""
+    func update(postType: String) {
+        selectedPostType = postType
     }
 
-    func getContentPropertyOutSideArray() -> [[APIModel.ContentProperty]] {
-        if !currentText.isEmpty {
-            var contentPropertyArray: [APIModel.ContentProperty] = []
-            contentPropertyArray.append(APIModel.ContentProperty(text: currentText))
-            contentPropertyOutSideArray.append(contentPropertyArray)
-        }
-        return contentPropertyOutSideArray
+    func createPost(
+        title: String,
+        content: String,
+        completion: @escaping (APIClientProtocol.CreateArticleResult) -> Void
+    ) {
+        let parsedContent = parse(content: content)
+        let article = APIModel.CreateArticle(className: selectedPostType, title: title, content: parsedContent)
+        apiClient.createArticle(boardId: boardName, article: article, completion: completion)
     }
+}
 
-    func insertContent(_ text: String) {
-        if text == "\n" {
-            var contentPropertyArray: [APIModel.ContentProperty] = []
-            if !currentText.isEmpty {
-                contentPropertyArray.append(APIModel.ContentProperty(text: currentText))
-            }
-            contentPropertyOutSideArray.append(contentPropertyArray)
-            currentText = ""
-        } else if text == "" {
-            if currentText.isEmpty {
-                if !contentPropertyOutSideArray.isEmpty {
-                    currentText = contentPropertyOutSideArray.last?.last?.text ?? ""
-                    contentPropertyOutSideArray.removeLast()
-                }
-            } else {
-                currentText = String(currentText.dropLast())
-            }
-        } else {
-            currentText += text
-        }
+extension ComposeArticleViewModel {
+    private func parse(content: String) -> [[APIModel.ContentProperty]] {
+        let lines = content.components(separatedBy: .newlines)
+        return lines.map { [APIModel.ContentProperty(text: $0)] }
     }
 }

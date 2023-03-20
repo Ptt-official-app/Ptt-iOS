@@ -18,3 +18,10 @@ extension Array where Element: NSLayoutConstraint {
         NSLayoutConstraint.activate(self)
     }
 }
+
+extension NSLayoutConstraint {
+    func set(priority: UILayoutPriority) -> NSLayoutConstraint {
+        self.priority = priority
+        return self
+    }
+}
