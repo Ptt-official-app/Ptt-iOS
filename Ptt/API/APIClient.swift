@@ -290,13 +290,11 @@ extension APIClient: APIClientProtocol {
 
     /// Get board list
     /// - Parameters:
-    ///   - token: access token
     ///   - keyword: query string, '' returns all boards
     ///   - startIdx: starting idx, '' if fetch from the beginning.
     ///   - max: max number of the returned list, requiring <= 300
     ///   - completion: the list of board information
     func getBoardList(
-        token: String,
         keyword: String = "",
         startIdx: String = "",
         max: Int = 200,
@@ -317,14 +315,15 @@ extension APIClient: APIClientProtocol {
             URLQueryItem(name: "start_idx", value: startIdx),
             URLQueryItem(name: "limit", value: "\(max)")
         ]
-        guard let url = urlComponent.url else {
+        guard let url = urlComponent.url,
+              let loginObj: APIModel.LoginToken = KeyChainItem.readObject(for: .loginToken) else {
             assertionFailure()
             return
         }
 
         var request = URLRequest(url: url)
         request.httpMethod = Method.GET.rawValue
-        request.setValue("bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
 
         let task = self.session.dataTask(with: request) { data, urlResponse, error in
             let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
@@ -343,55 +342,8 @@ extension APIClient: APIClientProtocol {
         }
         task.resume()
     }
-
-    func getPopularBoards(
-        subPath: String,
-        token: String,
-        querys: [String: Any] = [:],
-        completion: @escaping (BoardListResult) -> Void
-    ) {
-        var urlComponent = rootURLComponents
-        urlComponent.path = "/api/" + subPath
-
-        urlComponent.queryItems = []
-        if !querys.isEmpty {
-            for (key, value) in querys {
-                urlComponent.queryItems?.append(URLQueryItem(name: key, value: value as? String))
-            }
-        }
-
-        guard let url = urlComponent.url else {
-            assertionFailure()
-            return
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = Method.GET.rawValue
-//        request.setValue("bearer \(token)", forHTTPHeaderField: "Authorization")
-
-        let task = self.session.dataTask(with: request) { data, urlResponse, error in
-            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
-            switch result {
-            case .failure(let apiError):
-                completion(.failure(apiError))
-            case .success(let resultData):
-                do {
-                    let list = try self.decoder.decode(APIModel.BoardInfoList.self, from: resultData)
-                    completion(.success(list))
-                } catch (let decodingError) {
-                    let message = self.message(of: decodingError)
-                    completion(.failure(.decodingError(message)))
-                }
-            }
-        }
-        task.resume()
-    }
-
-    func createArticle(
-        boardId: String,
-        article: APIModel.CreateArticle,
-        completion: @escaping (CreateArticleResult) -> Void
-    ) {
+    
+    func createArticle(boardId: String, article: APIModel.CreateArticle, completion: @escaping (CreateArticleResult) -> Void) {
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/board/" + boardId + "/article"
 
@@ -470,49 +422,66 @@ extension APIClient: APIClientProtocol {
         task.resume()
     }
 
-    func getFavoritesBoards(
-        startIndex: Int = 0,
-        limit: Int = 200,
-        completion: @escaping (FavoriteBoardsResult) -> Void
-    ) {
+    func favoritesBoards(startIndex: String, limit: Int = 200) async throws -> APIModel.BoardInfoList {
         guard let loginObj: APIModel.LoginToken = KeyChainItem.readObject(for: .loginToken) else {
-            completion(.failure(.loginTokenNotExist))
-            return
+            throw APIError.loginTokenNotExist
         }
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/user/\(loginObj.user_id)/favorites"
 
         let limit = min(200, limit)
         urlComponent.queryItems = [
-            URLQueryItem(name: "start_idx", value: "\(startIndex)"),
+            URLQueryItem(name: "start_idx", value: startIndex),
             URLQueryItem(name: "limit", value: "\(limit)")
         ]
 
         guard let url = urlComponent.url else {
-            assertionFailure()
-            return
+            throw APIError.urlError
         }
 
         var request = URLRequest(url: url)
         request.httpMethod = Method.GET.rawValue
         request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
 
-        let task = session.dataTask(with: request) { (data, urlResponse, error) in
-            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
+        do {
+            let response = try await URLSession.shared.data(for: request)
+            let result = processResponse(data: response.0, urlResponse: response.1, error: nil)
             switch result {
             case .failure(let apiError):
-                completion(.failure(apiError))
+                throw apiError
             case .success(let resultData):
-                do {
-                    let result = try self.decoder.decode(APIModel.BoardInfoList.self, from: resultData)
-                    completion(.success(result))
-                } catch (let decodingError) {
-                    let message = self.message(of: decodingError)
-                    completion(.failure(.decodingError(message)))
-                }
+                let result = try decoder.decode(APIModel.BoardInfoList.self, from: resultData)
+                return result
             }
+        } catch (let decodingError) {
+            let message = self.message(of: decodingError)
+            throw APIError.decodingError(message)
         }
-        task.resume()
+    }
+
+    func popularBoards() async throws -> APIModel.BoardInfoList {
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/boards/popular"
+        guard let url = urlComponent.url else {
+            throw APIError.urlError
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.GET.rawValue
+        do {
+            let response = try await session.data(for: request)
+            let result = processResponse(data: response.0, urlResponse: response.1, error: nil)
+            switch result {
+            case .failure(let apiError):
+                throw apiError
+            case .success(let resultData):
+                let result = try decoder.decode(APIModel.BoardInfoList.self, from: resultData)
+                return result
+            }
+        } catch (let decodingError) {
+            let message = message(of: decodingError)
+            throw APIError.decodingError(message)
+        }
     }
 }
 

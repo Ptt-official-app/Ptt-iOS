@@ -9,30 +9,19 @@
 import Foundation
 import UIKit
 
-final class SceneFactory: FavoriteSceneFactoryProtocol,
-                          LoginSceneFactoryProtocol,
-                          PopularBoardsSceneFactoryProtocol,
+final class SceneFactory: LoginSceneFactoryProtocol,
                           FBPageSceneFactoryProtocol,
-                          PopularArticlesSceneFactoryProtocol {
-
+                          PopularArticlesSceneFactoryProtocol,
+                          BoardListSceneFactoryProtocol {
+    
     func makeLoginView() -> LoginView {
         let loginViewController = LoginViewController()
         return loginViewController
     }
-
-    func makeFavoriteView() -> FavoriteView {
-        let favoriteViewController = FavoriteViewController()
-        return favoriteViewController
-    }
-
+    
     func makeFBPageView() -> FBPageView {
         let fbPageViewController = FBPageViewController()
         return fbPageViewController
-    }
-
-    func makePopularBoardsView() -> PopularBoardsView {
-        let popularBoardsViewController = PopularBoardsViewController()
-        return popularBoardsViewController
     }
 
     func makePopularArticlesView() -> PopularArticlesView {
@@ -65,5 +54,12 @@ final class SceneFactory: FavoriteSceneFactoryProtocol,
         ]
         let vm = ComposeArticleViewModel(boardName: boardName, postTypes: types)
         return ComposeArticleViewController(viewModel: vm)
+    }
+
+    func makeBoardListView(listType: BoardListViewModel.ListType) -> BoardListView {
+        let viewModel = BoardListViewModel(listType: listType)
+        let tvc = BoardListTVC(viewModel: viewModel)
+        viewModel.uiDelegate = tvc
+        return tvc
     }
 }

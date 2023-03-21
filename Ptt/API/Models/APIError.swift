@@ -17,6 +17,7 @@ enum APIError: Error, LocalizedError {
     /// Error returns by backend
     case requestFailed(String)
     case responseNotExist
+    case urlError
 
     var errorDescription: String? {
         switch self {
@@ -34,6 +35,8 @@ enum APIError: Error, LocalizedError {
             return message
         case .responseNotExist:
             return "Response doesn't exist"
+        case .urlError:
+            return "URL error"
         }
     }
 

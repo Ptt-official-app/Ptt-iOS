@@ -114,6 +114,8 @@ enum L10n {
   static let postTypeIsEmpty = L10n.tr("Localizable", "PostTypeIsEmpty")
   /// Post type
   static let postTypeSelection = L10n.tr("Localizable", "PostTypeSelection")
+  /// Profile
+  static let profilePage = L10n.tr("Localizable", "Profile Page")
   /// PTT FB Page
   static let pttfbPage = L10n.tr("Localizable", "PTT FB Page")
   /// Real Name
