@@ -59,7 +59,7 @@
 		3EDDC6DF29B453E000173F9F /* PostTypeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDDC6DE29B453E000173F9F /* PostTypeSelectionView.swift */; };
 		3EDDC6E129B4841B00173F9F /* ANSIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDDC6E029B4841B00173F9F /* ANSIColor.swift */; };
 		3EE352E5276DDC8300C2CE67 /* TimeInterval+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE352E4276DDC8300C2CE67 /* TimeInterval+Extension.swift */; };
-		3EE352E7276DDF1000C2CE67 /* DateExtensionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE352E6276DDF1000C2CE67 /* DateExtensionTest.swift */; };
+		3EE352E7276DDF1000C2CE67 /* TimeIntervalExtensionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE352E6276DDF1000C2CE67 /* TimeIntervalExtensionTest.swift */; };
 		3EE7034B2767A12000FFF965 /* NavigationController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE7034A2767A12000FFF965 /* NavigationController+Extension.swift */; };
 		3EE9355D29C9E7E400DCEC81 /* MockKeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE9355C29C9E7E400DCEC81 /* MockKeyChain.swift */; };
 		3EF1A9C8276CE4CE0058EF2C /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF1A9C7276CE4CE0058EF2C /* Localization.swift */; };
@@ -187,7 +187,7 @@
 		3EDDC6DE29B453E000173F9F /* PostTypeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTypeSelectionView.swift; sourceTree = "<group>"; };
 		3EDDC6E029B4841B00173F9F /* ANSIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ANSIColor.swift; sourceTree = "<group>"; };
 		3EE352E4276DDC8300C2CE67 /* TimeInterval+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeInterval+Extension.swift"; sourceTree = "<group>"; };
-		3EE352E6276DDF1000C2CE67 /* DateExtensionTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensionTest.swift; sourceTree = "<group>"; };
+		3EE352E6276DDF1000C2CE67 /* TimeIntervalExtensionTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalExtensionTest.swift; sourceTree = "<group>"; };
 		3EE7034A2767A12000FFF965 /* NavigationController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationController+Extension.swift"; sourceTree = "<group>"; };
 		3EE9355C29C9E7E400DCEC81 /* MockKeyChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockKeyChain.swift; sourceTree = "<group>"; };
 		3EF1A9C7276CE4CE0058EF2C /* Localization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
@@ -345,7 +345,7 @@
 			children = (
 				3E6205192762723500CC8236 /* StringExtensionTest.swift */,
 				3ECAD05C2762766A00F50A91 /* NumberExtensionTest.swift */,
-				3EE352E6276DDF1000C2CE67 /* DateExtensionTest.swift */,
+				3EE352E6276DDF1000C2CE67 /* TimeIntervalExtensionTest.swift */,
 			);
 			path = ExtensionTest;
 			sourceTree = "<group>";
@@ -1100,7 +1100,7 @@
 				3ECAD05D2762766A00F50A91 /* NumberExtensionTest.swift in Sources */,
 				3E62051A2762723500CC8236 /* StringExtensionTest.swift in Sources */,
 				3EE9355D29C9E7E400DCEC81 /* MockKeyChain.swift in Sources */,
-				3EE352E7276DDF1000C2CE67 /* DateExtensionTest.swift in Sources */,
+				3EE352E7276DDF1000C2CE67 /* TimeIntervalExtensionTest.swift in Sources */,
 				3E15F01A299E567B00651809 /* KeyChainItemTests.swift in Sources */,
 				3ED16B3E25713D64004A33E0 /* APITestClient.swift in Sources */,
 			);

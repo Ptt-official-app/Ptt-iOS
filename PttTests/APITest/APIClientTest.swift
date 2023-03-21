@@ -122,18 +122,19 @@ final class APIClientTest: XCTestCase {
         let client = manager.getArticleClient()
         client.getArticle(of: .legacy(boardName: "MyBoard", filename: "M.392837.A.F25")) { result in
             switch result {
-                case .failure:
-                    XCTAssert(false)
-                case .success(let article):
-                    guard let fullArticle = article as? APIModel.FullArticle else {
-                        fatalError()
-                    }
-                    XCTAssert(article.author == "user3")
-                    XCTAssert(article.date == "Thu Nov 19 21:20:42 2020")
-                    XCTAssert(article.category == "問卦")
-                    XCTAssert(article.titleWithoutCategory == "有沒有問卦的八卦")
-                    XCTAssert(fullArticle.comments.count == 2)
-                    XCTAssert(fullArticle.comments[1].content == ": 叫學長啦")
+            case .failure:
+                XCTAssert(false)
+            case .success(let article):
+                guard let fullArticle = article as? APIModel.FullArticle else {
+                    XCTFail("Should be a FullArticle")
+                    return
+                }
+                XCTAssert(article.author == "user3")
+                XCTAssert(article.date == "Thu Nov 19 21:20:42 2020")
+                XCTAssert(article.category == "問卦")
+                XCTAssert(article.titleWithoutCategory == "有沒有問卦的八卦")
+                XCTAssert(fullArticle.comments.count == 2)
+                XCTAssert(fullArticle.comments[1].content == ": 叫學長啦")
             }
         }
     }
@@ -141,7 +142,7 @@ final class APIClientTest: XCTestCase {
     func testBoardListSuccess_with_english_keyword() {
         let startIdx = "\(Int.random(in: 0...99))"
         let max = Int.random(in: 0...99)
-        urlSession.stub { path, headers, queryItem, requestBody, completion in
+        urlSession.stub { path, _, queryItem, _, completion in
             XCTAssertEqual(path, "/api/boards/autocomplete")
             for item in queryItem {
                 if item.name == "brdname" {
@@ -159,7 +160,7 @@ final class APIClientTest: XCTestCase {
             case .failure:
                 XCTFail("Shouldn't fail")
             case .success(let list):
-                XCTAssert(list.next_idx == "")
+                XCTAssertEqual(list.next_idx, "")
                 XCTAssert(list.list.count == 6)
                 let info = list.list[0]
                 XCTAssert(info.bid == "6_ALLPOST")
@@ -174,7 +175,7 @@ final class APIClientTest: XCTestCase {
     func testBoardListSuccess_with_chinese_keyword() {
         let startIdx = "\(Int.random(in: 0...99))"
         let max = Int.random(in: 0...99)
-        urlSession.stub { path, headers, queryItem, requestBody, completion in
+        urlSession.stub { path, _, queryItem, _, completion in
             XCTAssertEqual(path, "/api/boards/byclass")
             for item in queryItem {
                 if item.name == "keyword" {
@@ -192,7 +193,7 @@ final class APIClientTest: XCTestCase {
             case .failure:
                 XCTFail("Shouldn't fail")
             case .success(let list):
-                XCTAssert(list.next_idx == "")
+                XCTAssertEqual(list.next_idx, "")
                 XCTAssert(list.list.count == 6)
             }
         }
@@ -201,7 +202,7 @@ final class APIClientTest: XCTestCase {
     func testBoardListSuccess_with_japanese_keyword() {
         let startIdx = "\(Int.random(in: 0...99))"
         let max = Int.random(in: 0...99)
-        urlSession.stub { path, headers, queryItem, requestBody, completion in
+        urlSession.stub { path, _, queryItem, _, completion in
             XCTAssertEqual(path, "/api/boards")
             for item in queryItem {
                 if item.name == "keyword" {

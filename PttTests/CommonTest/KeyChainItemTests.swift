@@ -46,7 +46,7 @@ final class KeyChainItemTests: XCTestCase {
             token_type: String.random(length: 4)
         )
         sut.save(object: obj, for: .unitTest)
-        var cache: APIModel.LoginToken = try XCTUnwrap(sut.readObject(for: .unitTest))
+        let cache: APIModel.LoginToken = try XCTUnwrap(sut.readObject(for: .unitTest))
         XCTAssertEqual(cache.user_id, obj.user_id)
         XCTAssertEqual(cache.access_token, obj.access_token)
         XCTAssertEqual(cache.token_type, obj.token_type)

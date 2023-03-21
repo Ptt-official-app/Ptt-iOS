@@ -38,7 +38,7 @@ final class MockKeyChain: PTTKeyChain {
         dict[key] as? String
     }
 
-    func readObject<T>(for key: Ptt.KeyChainItem.Key) -> T? where T : Decodable {
+    func readObject<T>(for key: Ptt.KeyChainItem.Key) -> T? where T: Decodable {
         dict[key] as? T
     }
 
@@ -50,6 +50,4 @@ final class MockKeyChain: PTTKeyChain {
         dict.removeValue(forKey: key)
         return true
     }
-
-
 }
