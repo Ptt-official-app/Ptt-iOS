@@ -44,20 +44,27 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
     let global_width = 265
 
     func init_layout() -> ASLayoutSpec {
-        let LeftfuncStackSpec = ASStackLayoutSpec(direction: .horizontal,
-                                                   spacing: 5,
-                                                   justifyContent: .start,
-                                                   alignItems: .start,
-                                                   children: [btnTypeLogin, lbLine, btnTypeRegister])
+        let LeftfuncStackSpec = ASStackLayoutSpec(
+            direction: .horizontal,
+            spacing: 5,
+            justifyContent: .start,
+            alignItems: .start,
+            children: [btnTypeLogin, lbLine, btnTypeRegister]
+        )
         LeftfuncStackSpec.style.preferredSize = CGSize(width: global_width, height: 44)
 
-        let registerProcessInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 4, left: 0, bottom: 0, right: 8), child: lbRegisterProgress)
+        let registerProcessInset = ASInsetLayoutSpec(
+            insets: UIEdgeInsets(top: 4, left: 0, bottom: 0, right: 8),
+            child: lbRegisterProgress
+        )
 
-        let RightfuncStackSpec = ASStackLayoutSpec(direction: .horizontal,
-                                                   spacing: 5,
-                                                   justifyContent: .end,
-                                                   alignItems: .start,
-                                                   children: [registerProcessInset])
+        let RightfuncStackSpec = ASStackLayoutSpec(
+            direction: .horizontal,
+            spacing: 5,
+            justifyContent: .end,
+            alignItems: .start,
+            children: [registerProcessInset]
+        )
         RightfuncStackSpec.style.preferredSize = CGSize(width: global_width, height: 44)
 
         funcStackSpec = ASAbsoluteLayoutSpec(children: [RightfuncStackSpec, LeftfuncStackSpec])
@@ -69,13 +76,22 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
         initRegisterViews() // init registerStackSpec and register views
         initFillInformationViews()
 
-        let switchLayoutSpec = ASAbsoluteLayoutSpec(children: [registerStackSpec!, loginStackSpec!, errorStackSpec!, verifyStackSpec!, fillInformationStackSpec!])
-        // ASLayoutSpec(children: [loginStackSpec, registerStackSpec])
-        contentStackSpec = ASStackLayoutSpec(direction: .vertical,
-                                                   spacing: 0,
-                                                   justifyContent: .center,
-                                                   alignItems: .center,
-                                                   children: [lbTitle, funcStackSpec!, switchLayoutSpec])
+        let switchLayoutSpec = ASAbsoluteLayoutSpec(
+            children: [
+                registerStackSpec!,
+                loginStackSpec!,
+                errorStackSpec!,
+                verifyStackSpec!,
+                fillInformationStackSpec!
+            ]
+        )
+        contentStackSpec = ASStackLayoutSpec(
+            direction: .vertical,
+            spacing: 0,
+            justifyContent: .center,
+            alignItems: .center,
+            children: [lbTitle, funcStackSpec!, switchLayoutSpec]
+        )
 
         self.scrollNode.addSubnode(self.lbTitle)
 
@@ -95,8 +111,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
                 tfFillRealName, tfFillBirthday, tfFillAddress ]
     }
 
-    @objc func hideKeyboard() {
-
+    @objc
+    func hideKeyboard() {
         let tfList = getTextFieldList()
         for node in tfList {
             if let tf = node.view as? UITextField {
@@ -106,15 +122,24 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
     }
 
     func bind_event() {
-        btnTypeLogin.addTarget(self, action: #selector(switchTypeRegister), forControlEvents: ASControlNodeEvent.touchUpInside)
-        btnTypeRegister.addTarget(self, action: #selector(switchTypeRegister), forControlEvents: ASControlNodeEvent.touchUpInside)
+        btnTypeLogin.addTarget(
+            self,
+            action: #selector(switchTypeRegister),
+            forControlEvents: ASControlNodeEvent.touchUpInside
+        )
+        btnTypeRegister.addTarget(
+            self,
+            action: #selector(switchTypeRegister),
+            forControlEvents: ASControlNodeEvent.touchUpInside
+        )
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         self.node.view.addGestureRecognizer(tap)
 
     }
 
-    @objc func testErrorMsg() {
+    @objc
+    func testErrorMsg() {
         displayError(message: "TEST AAA BBC LDJ:LAKJ DD")
         toggleState(UILoginState.Error)
     }
@@ -175,6 +200,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
     }
 
     override func viewDidLoad() {
+        super.viewDidLoad()
         print("login view did load")
         self.bind_event()
         toggleState(.Login)
@@ -203,11 +229,22 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        super.viewWillAppear(animated)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(
+            self,
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
     }
 
     func gotoRegisterWebview() {
@@ -215,7 +252,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
-    @objc func switchTypeRegister(_ button: ASButtonNode) {
+    @objc
+    func switchTypeRegister(_ button: ASButtonNode) {
 
         if button == btnTypeRegister {
             btnTypeRegister.isSelected = true
@@ -230,7 +268,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
     }
 
     required init?(coder aDecoder: NSCoder) {
-      fatalError("init(coder:) has not been implemented")
+        fatalError("init(coder:) has not been implemented")
     }
 
     lazy var lbRegisterProgress: ASTextNode = {
@@ -266,18 +304,54 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
 
         switch progress {
         case 0:
-            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.paleGrey.color, range: NSRange(location: 0, length: 2))
+            mString.addAttribute(
+                NSAttributedString.Key.foregroundColor,
+                value: PttColors.paleGrey.color,
+                range: NSRange(location: 0, length: 2)
+            )
         case 1:
-            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.tangerine.color, range: NSRange(location: 0, length: 2))
-            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.paleGrey.color, range: NSRange(location: 4, length: 2))
+            mString.addAttribute(
+                NSAttributedString.Key.foregroundColor,
+                value: PttColors.tangerine.color,
+                range: NSRange(location: 0, length: 2)
+            )
+            mString.addAttribute(
+                NSAttributedString.Key.foregroundColor,
+                value: PttColors.paleGrey.color,
+                range: NSRange(location: 4, length: 2)
+            )
         case 2:
-            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.tangerine.color, range: NSRange(location: 0, length: 2))
-            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.tangerine.color, range: NSRange(location: 4, length: 2))
-            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.paleGrey.color, range: NSRange(location: 8, length: 2))
+            mString.addAttribute(
+                NSAttributedString.Key.foregroundColor,
+                value: PttColors.tangerine.color,
+                range: NSRange(location: 0, length: 2)
+            )
+            mString.addAttribute(
+                NSAttributedString.Key.foregroundColor,
+                value: PttColors.tangerine.color,
+                range: NSRange(location: 4, length: 2)
+            )
+            mString.addAttribute(
+                NSAttributedString.Key.foregroundColor,
+                value: PttColors.paleGrey.color,
+                range: NSRange(location: 8, length: 2)
+            )
         case 3:
-            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.tangerine.color, range: NSRange(location: 0, length: 2))
-            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.tangerine.color, range: NSRange(location: 4, length: 2))
-            mString.addAttribute(NSAttributedString.Key.foregroundColor, value: PttColors.tangerine.color, range: NSRange(location: 8, length: 2))
+            mString.addAttribute(
+                NSAttributedString.Key.foregroundColor,
+                value: PttColors.tangerine.color,
+                range: NSRange(location: 0, length: 2)
+            )
+            mString.addAttribute(
+                NSAttributedString.Key.foregroundColor,
+                value: PttColors.tangerine.color,
+                range: NSRange(location: 4, length: 2)
+            )
+            mString.addAttribute(
+                NSAttributedString.Key.foregroundColor,
+                value: PttColors.tangerine.color,
+                range: NSRange(location: 8, length: 2)
+            )
 
         default:
             break
@@ -291,7 +365,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
         let title = L10n.register
 
         let attr: [NSAttributedString.Key: Any] = [
-            .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline) // UIFont(name: "HelveticaNeue-Bold", size: 16)!
+            .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline)
         ]
 
         button.setTitle(title, with: nil, with: PttColors.paleGrey.color, for: UIControl.State.selected)
@@ -306,7 +380,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
         let title = L10n.login
 
         let attr: [NSAttributedString.Key: Any] = [
-           .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline) // UIFont(name: "HelveticaNeue-Bold", size: 16)!
+            .font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline)
         ]
         button.setTitle(title, with: nil, with: PttColors.paleGrey.color, for: UIControl.State.selected)
         button.setTitle(title, with: nil, with: PttColors.slateGrey.color, for: UIControl.State.normal)
@@ -341,7 +415,7 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
         paragraphStyle.paragraphSpacing = 2
         paragraphStyle.lineSpacing = 0
         let attributes = [
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.title1), // UIFont.boldSystemFont(ofSize: 24),
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.title1),
             NSAttributedString.Key.foregroundColor: self.text_color,
             NSAttributedString.Key.paragraphStyle: paragraphStyle
         ]
@@ -367,8 +441,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
 
     // error views
     lazy var lbError: ASTextNode = getErrorView()
-    
-    func onLoginSuccess(token:String) {
+
+    func onLoginSuccess(token: String) {
         // todo: push view
         DispatchQueue.main.async {
             print("ready to call finish flow in main thread")
@@ -376,7 +450,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
         }
     }
 
-    @objc func userAgreementPress() {
+    @objc
+    func userAgreementPress() {
         print("user agreement press")
         showAlert(title: "XD", msg: "NOT IMPLEMENT YET -_-")
     }
@@ -400,7 +475,8 @@ final class LoginViewController: ASDKViewController<ASDisplayNode>, LoginView {
 
 extension LoginViewController: UITextFieldDelegate {
 
-    @objc func keyboardWillShow(_ notification: Notification) {
+    @objc
+    func keyboardWillShow(_ notification: Notification) {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
             let keyboardHeight = keyboardRectangle.height
@@ -411,7 +487,8 @@ extension LoginViewController: UITextFieldDelegate {
     func scrollViewToFitKeyboard(_ lastKeyboardHeight: Int) {
         let screenHeight = Int(self.view.bounds.height)
 
-        let keyboardHeight: Int = lastKeyboardHeight + Int(self.btnForget.frame.height + self.btnLogin.frame.height + 31) // 31 = login~forget height
+        // 31 = login~forget height
+        let keyboardHeight = lastKeyboardHeight + Int(self.btnForget.frame.height + self.btnLogin.frame.height + 31)
 
         let margin_to_keyboard = 10
         let diff = Int(btnLogin.view.frame.origin.y) - (screenHeight - keyboardHeight) + margin_to_keyboard
@@ -465,7 +542,8 @@ extension LoginViewController: UITextFieldDelegate {
         }
     }
 
-    @objc func textFieldDidChange(textField: UITextField) {
+    @objc
+    func textFieldDidChange(textField: UITextField) {
 
         if let usernameTextField = tfUsername.view as? UITextField,
            let passwordTextField = tfPassword.view as? UITextField,
@@ -504,27 +582,15 @@ extension LoginViewController: UITextFieldDelegate {
 extension LoginViewController {
 
     var text_color: UIColor {
-        if #available(iOS 11.0, *) {
-            return PttColors.paleGrey.color
-        } else {
-            return UIColor(red: 240 / 255, green: 240 / 255, blue: 247 / 255, alpha: 1.0)
-        }
+        PttColors.paleGrey.color
     }
 
     var textfield_backgroundcolor: UIColor {
-        if #available(iOS 11.0, *) {
-            return PttColors.shark.color
-        } else {
-            return UIColor(red: 28 / 255, green: 28 / 255, blue: 31 / 255, alpha: 1.0)
-        }
+        PttColors.shark.color
     }
 
     var tint_color: UIColor {
-        if #available(iOS 11.0, *) {
-            return PttColors.tangerine.color // UIColor(named: "tintColor-255-159-10")!
-        } else {
-            return UIColor(red: 255 / 255, green: 159 / 255, blue: 10 / 255, alpha: 1.0)
-        }
+        PttColors.tangerine.color
     }
 
     func showAlert(title: String, msg: String) {

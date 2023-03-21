@@ -29,7 +29,8 @@ extension UserDefaultsManager {
     private static let appearanceModeDefault: AppearanceMode = .dark
 
     static func appearanceMode() -> AppearanceMode {
-        guard let modeString = UserDefaults.standard.string(forKey: appearanceModeKey), let mode = AppearanceMode(rawValue: modeString) else {
+        guard let modeString = UserDefaults.standard.string(forKey: appearanceModeKey),
+              let mode = AppearanceMode(rawValue: modeString) else {
             return appearanceModeDefault
         }
         return mode

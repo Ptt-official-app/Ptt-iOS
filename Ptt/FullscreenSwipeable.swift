@@ -19,7 +19,10 @@ extension FullscreenSwipeable {
         guard let target = self.navigationController?.interactivePopGestureRecognizer?.delegate else { return }
         let selector = NSSelectorFromString("handleNavigationTransition:")
         if target.responds(to: selector) {
-            let panGestureRecognizer = UIPanGestureRecognizer(target: self.navigationController?.interactivePopGestureRecognizer?.delegate, action: selector)
+            let panGestureRecognizer = UIPanGestureRecognizer(
+                target: self.navigationController?.interactivePopGestureRecognizer?.delegate,
+                action: selector
+            )
             panGestureRecognizer.delegate = self
             self.view.addGestureRecognizer(panGestureRecognizer)
         }

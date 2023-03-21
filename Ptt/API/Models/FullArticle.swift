@@ -117,7 +117,16 @@ extension APIModel {
         let comments: [Comment]
 
         static func adapter(model: LegacyArticle) -> FullArticle {
-            let fullArticle = FullArticle(title: model.title, date: model.date, author: model.author, board: model.board, nickname: model.nickname, content: model.content, comments: model.comments, url: model.href)
+            let fullArticle = FullArticle(
+                title: model.title,
+                date: model.date,
+                author: model.author,
+                board: model.board,
+                nickname: model.nickname,
+                content: model.content,
+                comments: model.comments,
+                url: model.href
+            )
             return fullArticle
         }
     }

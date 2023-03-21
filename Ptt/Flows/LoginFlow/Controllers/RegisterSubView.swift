@@ -1,4 +1,4 @@
-//
+//  swiftlint:disable:this file_name
 //  RegisterSubView.swift
 //  Ptt
 //
@@ -14,19 +14,39 @@ extension LoginViewController {
 
     func initRegisterViews() {
 
-        let registerEmailInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0), child: tfRegisterEmail)
-        let registerUsernameInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0), child: tfRegisterUsername)
-        let registerPasswordInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0), child: tfRegisterPassword)
+        let registerEmailInset = ASInsetLayoutSpec(
+            insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0),
+            child: tfRegisterEmail
+        )
+        let registerUsernameInset = ASInsetLayoutSpec(
+            insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0),
+            child: tfRegisterUsername
+        )
+        let registerPasswordInset = ASInsetLayoutSpec(
+            insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0),
+            child: tfRegisterPassword
+        )
 
-        let btnAttemptRegisterInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0), child: btnAttemptRegister)
+        let btnAttemptRegisterInset = ASInsetLayoutSpec(
+            insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0),
+            child: btnAttemptRegister
+        )
 
-        let btnRegisterUserAgreementInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0), child: btnRegisterUserAgreement)
+        let btnRegisterUserAgreementInset = ASInsetLayoutSpec(
+            insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0),
+            child: btnRegisterUserAgreement
+        )
 
-        self.registerStackSpec = ASCenterLayoutSpec(centeringOptions: ASCenterLayoutSpecCenteringOptions.X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: ASStackLayoutSpec(direction: .vertical,
-                                                   spacing: 0,
-                                                   justifyContent: .center,
-                                                   alignItems: .center,
-                                                   children: [registerEmailInset, registerUsernameInset, registerPasswordInset, btnAttemptRegisterInset, btnRegisterUserAgreementInset]))
+        self.registerStackSpec = ASCenterLayoutSpec(
+            centeringOptions: ASCenterLayoutSpecCenteringOptions.X,
+            sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY,
+            child: ASStackLayoutSpec(
+                direction: .vertical,
+                spacing: 0,
+                justifyContent: .center,
+                alignItems: .center,
+                children: [registerEmailInset, registerUsernameInset, registerPasswordInset, btnAttemptRegisterInset, btnRegisterUserAgreementInset])
+        )
 
         // type register
         tfRegisterEmail.style.preferredSize = CGSize(width: global_width, height: 30)
@@ -41,6 +61,7 @@ extension LoginViewController {
         self.node.addSubnode(btnRegisterUserAgreement)
 
     }
+
     func toggleRegisterView(isHidden: Bool) {
         tfRegisterEmail.isHidden = isHidden
         tfRegisterUsername.isHidden = isHidden
@@ -49,7 +70,8 @@ extension LoginViewController {
         btnRegisterUserAgreement.isHidden = isHidden
     }
 
-    @objc func btnAttemptRegisterPress() {
+    @objc
+    func btnAttemptRegisterPress() {
         print("btnAttemptRegisterPress")
 
         if let tfEmail = tfRegisterEmail.view as? LoginTextField,
@@ -101,7 +123,8 @@ extension LoginViewController {
         }
     }
 
-    @objc func __loginPress() {
+    @objc
+    func __loginPress() {
         self.hideKeyboard()
         var account = ""
         var passwd = ""
@@ -177,21 +200,35 @@ extension LoginViewController {
         let attr_tint: [NSAttributedString.Key: Any] = [
             NSAttributedString.Key.foregroundColor: PttColors.shark.color,
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1
-            )
+                                                             )
         ]
 
-        button.setTitle(title, with: .preferredFont(forTextStyle: .caption1),
-                 with: PttColors.tangerine.color, for: .normal)
+        button.setTitle(
+            title,
+            with: .preferredFont(forTextStyle: .caption1),
+            with: PttColors.tangerine.color,
+            for: .normal
+        )
         button.setBackgroundImage(UIImage.backgroundImg(from: .clear), for: UIControl.State.normal)
 
         button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.selected)
-        button.setAttributedTitle(NSAttributedString(string: title, attributes: attr_tint), for: UIControl.State.selected)
+        button.setAttributedTitle(
+            NSAttributedString(string: title, attributes: attr_tint),
+            for: UIControl.State.selected
+        )
 
         // override the disable state
         button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.disabled)
-        button.setAttributedTitle(NSAttributedString(string: title, attributes: attr_tint), for: UIControl.State.disabled)
+        button.setAttributedTitle(
+            NSAttributedString(string: title, attributes: attr_tint),
+            for: UIControl.State.disabled
+        )
 
-        button.addTarget(self, action: #selector(self.btnAttemptRegisterPress), forControlEvents: ASControlNodeEvent.touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(self.btnAttemptRegisterPress),
+            forControlEvents: ASControlNodeEvent.touchUpInside
+        )
 
         return button
     }
@@ -207,7 +244,11 @@ extension LoginViewController {
         ] as [NSAttributedString.Key: Any]
         button.setAttributedTitle(NSAttributedString(string: title, attributes: attr), for: UIControl.State.normal)
 
-        button.addTarget(self, action: #selector(userAgreementPress), forControlEvents: ASControlNodeEvent.touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(userAgreementPress),
+            forControlEvents: ASControlNodeEvent.touchUpInside
+        )
 
         return button
     }

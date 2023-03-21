@@ -12,50 +12,14 @@ struct GlobalAppearance {
 
     static func apply(to window: UIWindow) {
         window.tintColor = tintColor
-        if #available(iOS 13.0, *) {
-        } else {
-            let attrs = [NSAttributedString.Key.foregroundColor: UIColor.white]
-            UINavigationBar.appearance().titleTextAttributes = attrs
-            if #available(iOS 11.0, *) {
-                UINavigationBar.appearance().barTintColor = PttColors.codGray.color
-                UITabBar.appearance().barTintColor = PttColors.codGray.color
-                UINavigationBar.appearance().largeTitleTextAttributes = attrs
-            } else {
-                UINavigationBar.appearance().barTintColor = UIColor(red: 23 / 255, green: 23 / 255, blue: 23 / 255, alpha: 1.0)
-                UITabBar.appearance().barTintColor = UIColor(red: 23 / 255, green: 23 / 255, blue: 23 / 255, alpha: 1.0)
-            }
-            UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        }
     }
 
     static var tintColor: UIColor? {
-        if #available(iOS 11.0, *) {
-            return PttColors.tangerine.color
-        } else {
-            return UIColor(red: 255 / 255, green: 159 / 255, blue: 10 / 255, alpha: 1.0)
-        }
+        PttColors.tangerine.color
     }
 
     static var backgroundColor: UIColor? {
-        if #available(iOS 11.0, *) {
-            return PttColors.codGray.color
-        } else {
-            return UIColor(red: 23 / 255, green: 23 / 255, blue: 23 / 255, alpha: 1.0)
-        }
-    }
-}
-
-extension UINavigationController {
-
-    /// Only required for iOS 12 or earlier
-    open override var preferredStatusBarStyle: UIStatusBarStyle {
-        if #available(iOS 13.0, *) {
-            // For forward compatibility
-            if traitCollection.userInterfaceStyle == .light {
-                return .darkContent
-            }
-        }
-        return .lightContent
+        PttColors.codGray.color
     }
 }
 
@@ -71,7 +35,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     // MARK: - UIWindowSceneDelegate
 
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+    func scene(
+        _ scene: UIScene,
+        willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions
+    ) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
@@ -128,6 +96,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 private extension SceneDelegate {
 
     func makeCoordinator() -> Coordinatorable {
-        return ApplicationCoordinator(router: Router(rootController: self.rootController), coordinatorFactory: CoordinatorFactory())
+        return ApplicationCoordinator(
+            router: Router(rootController: rootController),
+            coordinatorFactory: CoordinatorFactory()
+        )
     }
 }

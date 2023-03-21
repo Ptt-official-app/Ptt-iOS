@@ -36,7 +36,7 @@ final class KeyChainItem {
     @discardableResult
     static func save(data: Data, for key: Key) -> Bool {
         delete(for: key)
-        let query: [String : Any] = [
+        let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key.rawValue,
             kSecValueData as String: data
@@ -67,11 +67,12 @@ final class KeyChainItem {
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key.rawValue,
             kSecMatchLimit as String: kSecMatchLimitOne,
+            // swiftlint:disable:next force_unwrapping
             kSecReturnData as String: kCFBooleanTrue!
         ]
 
-        var retrievedData: AnyObject? = nil
-        let _ = SecItemCopyMatching(query as CFDictionary, &retrievedData)
+        var retrievedData: AnyObject?
+        _ = SecItemCopyMatching(query as CFDictionary, &retrievedData)
         return retrievedData as? Data
     }
 
@@ -86,4 +87,3 @@ final class KeyChainItem {
         return status == errSecSuccess
     }
 }
-

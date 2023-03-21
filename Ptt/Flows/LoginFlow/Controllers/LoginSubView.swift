@@ -1,4 +1,4 @@
-//
+//  swiftlint:disable:this file_name
 //  LoginSubView.swift
 //  Ptt
 //
@@ -15,13 +15,31 @@ extension LoginViewController {
     func initLoginViews() {
         // login:
 
-        let usernameInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0), child: tfUsername)
-        let passwordInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 56, right: 0), child: tfPassword)
-        let agreeInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0), child: btnUserAgreement)
-        let loginInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 25, right: 0), child: btnLogin)
+        let usernameInset = ASInsetLayoutSpec(
+            insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0),
+            child: tfUsername
+        )
+        let passwordInset = ASInsetLayoutSpec(
+            insets: UIEdgeInsets(top: 0, left: 0, bottom: 56, right: 0),
+            child: tfPassword
+        )
+        let agreeInset = ASInsetLayoutSpec(
+            insets: UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0),
+            child: btnUserAgreement
+        )
+        let loginInset = ASInsetLayoutSpec(
+            insets: UIEdgeInsets(top: 0, left: 0, bottom: 25, right: 0),
+            child: btnLogin
+        )
 
-        let forgetInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 30, left: 0, bottom: 0, right: 0), child: btnForget)
-        let forgetCenterLayout = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0), child: forgetInset)
+        let forgetInset = ASInsetLayoutSpec(
+            insets: UIEdgeInsets(top: 30, left: 0, bottom: 0, right: 0),
+            child: btnForget
+        )
+        let forgetCenterLayout = ASInsetLayoutSpec(
+            insets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0),
+            child: forgetInset
+        )
 
         // login
         lbTitle.style.preferredSize = CGSize(width: global_width, height: 58 + 63)
@@ -39,13 +57,17 @@ extension LoginViewController {
         self.node.addSubnode(self.vLine)
         self.node.bounds = CGRect(x: 0, y: 0, width: 100, height: 100)
 
-        loginStackSpec = ASCenterLayoutSpec(centeringOptions: ASCenterLayoutSpecCenteringOptions.X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: ASStackLayoutSpec(direction: .vertical,
-                                                   spacing: 0,
-                                                   justifyContent: .center,
-                                                   alignItems: .center,
-                                                   children: [usernameInset,
-                                                              passwordInset, loginInset, agreeInset,
-                                                              vLine, forgetCenterLayout]))
+        loginStackSpec = ASCenterLayoutSpec(
+            centeringOptions: ASCenterLayoutSpecCenteringOptions.X,
+            sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY,
+            child: ASStackLayoutSpec(
+                direction: .vertical,
+                spacing: 0,
+                justifyContent: .center,
+                alignItems: .center,
+                children: [usernameInset, passwordInset, loginInset, agreeInset, vLine, forgetCenterLayout]
+            )
+        )
 
     }
 
@@ -62,7 +84,8 @@ extension LoginViewController {
         vLine.isHidden = isHidden
     }
 
-    @objc func forgetPress() {
+    @objc
+    func forgetPress() {
         print("forget press")
         showAlert(title: "XD", msg: "NOT IMPLEMENT YET -_-")
         // toggleState(UILoginState.FillInformation)
@@ -108,7 +131,11 @@ extension LoginViewController {
         ] as [NSAttributedString.Key: Any]
         button.setAttributedTitle(NSAttributedString(string: title, attributes: attr), for: UIControl.State.normal)
 
-        button.addTarget(self, action: #selector(userAgreementPress), forControlEvents: ASControlNodeEvent.touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(userAgreementPress),
+            forControlEvents: ASControlNodeEvent.touchUpInside
+        )
 
         return button
     }
@@ -120,19 +147,29 @@ extension LoginViewController {
         let attr_tint: [NSAttributedString.Key: Any] = [
             NSAttributedString.Key.foregroundColor: PttColors.shark.color,
             NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1
-            )
+                                                             )
         ]
 
-        button.setTitle(title, with: .preferredFont(forTextStyle: .caption1),
-                 with: PttColors.tangerine.color, for: .normal)
+        button.setTitle(
+            title,
+            with: .preferredFont(forTextStyle: .caption1),
+            with: PttColors.tangerine.color,
+            for: .normal
+        )
         button.setBackgroundImage(UIImage.backgroundImg(from: .clear), for: UIControl.State.normal)
 
         button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.selected)
-        button.setAttributedTitle(NSAttributedString(string: title, attributes: attr_tint), for: UIControl.State.selected)
+        button.setAttributedTitle(
+            NSAttributedString(string: title, attributes: attr_tint),
+            for: UIControl.State.selected
+        )
 
         // override the disable state
         button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.disabled)
-        button.setAttributedTitle(NSAttributedString(string: title, attributes: attr_tint), for: UIControl.State.disabled)
+        button.setAttributedTitle(
+            NSAttributedString(string: title, attributes: attr_tint),
+            for: UIControl.State.disabled
+        )
 
         button.addTarget(self, action: #selector(loginPress), forControlEvents: ASControlNodeEvent.touchUpInside)
 
@@ -147,7 +184,8 @@ extension LoginViewController {
         return button
     }
 
-    @objc func loginPress() {
+    @objc
+    func loginPress() {
         print("login press")
         self.hideKeyboard()
         var account = ""

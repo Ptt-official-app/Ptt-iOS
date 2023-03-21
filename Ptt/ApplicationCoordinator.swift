@@ -19,9 +19,12 @@ private enum LaunchInstructor {
         isAutorized: Bool = isAutorized) -> LaunchInstructor {
 
         switch (tutorialWasShown, isAutorized) {
-        case (true, false), (false, false): return .auth
-        case (false, true): return .onboarding
-        case (true, true): return .main
+        case (true, false), (false, false):
+            return .auth
+        case (false, true):
+            return .onboarding
+        case (true, true):
+            return .main
         }
     }
 }
@@ -41,9 +44,12 @@ final class ApplicationCoordinator: BaseCoordinator {
 
     override func start() {
         switch instructor {
-        case .onboarding: runOnboardingFlow()
-        case .auth: runAuthFlow()
-        case .main: runMainFlow()
+        case .onboarding:
+            runOnboardingFlow()
+        case .auth:
+            runAuthFlow()
+        case .main:
+            runMainFlow()
         }
     }
 

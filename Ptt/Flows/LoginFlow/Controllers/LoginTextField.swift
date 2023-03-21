@@ -90,7 +90,6 @@ class LoginTextField: UITextField {
             self.rightView = self.btnTogglePassword
         case .Email:
             keyboardType = .emailAddress
-            break
         }
 
         self.background = UIImage.backgroundImg(from: PttColors.shark.color)
@@ -117,7 +116,8 @@ class LoginTextField: UITextField {
 
     }
 
-    @objc func togglePassword() {
+    @objc
+    func togglePassword() {
         print("toggle in ui event")
         if let btn = self.btnTogglePassword {
             btn.isSelected = !btn.isSelected

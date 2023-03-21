@@ -18,10 +18,18 @@ final class ButtonNode: ASButtonNode {
     var title: String? {
         didSet {
             guard let title = title else { return }
-            setTitle(title, with: .preferredFont(forTextStyle: .caption1),
-                     with: PttColors.codGray.color, for: .normal)
-            setTitle(title, with: .preferredFont(forTextStyle: .caption1),
-                     with: tintColor, for: .disabled)
+            setTitle(
+                title,
+                with: .preferredFont(forTextStyle: .caption1),
+                with: PttColors.codGray.color,
+                for: .normal
+            )
+            setTitle(
+                title,
+                with: .preferredFont(forTextStyle: .caption1),
+                with: tintColor,
+                for: .disabled
+            )
         }
     }
 

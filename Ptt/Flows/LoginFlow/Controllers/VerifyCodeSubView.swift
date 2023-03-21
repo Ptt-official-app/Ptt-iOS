@@ -1,4 +1,4 @@
-//
+//  swiftlint:disable:this file_name
 //  VerifyCodeSubView.swift
 //  Ptt
 //
@@ -13,14 +13,6 @@ import UIKit
 extension LoginViewController {
 
     func initVerifyCodeViews() {
-//        lbVerifyCodeTitle
-//        tfVerifyCode
-//        lbVerifyCodeResponse
-//        lbVerifyCodeTimer
-//        btnVerifyCodeBack
-//        btnVerifyCodeNotReceive
-//
-//
         lbVerifyCodeTitle.style.preferredSize = CGSize(width: global_width, height: 66)
         tfVerifyCode.style.preferredSize = CGSize(width: global_width, height: 30)
 
@@ -30,31 +22,40 @@ extension LoginViewController {
         btnVerifyCodeBack.style.preferredSize = CGSize(width: global_width / 2, height: 30)
         btnVerifyCodeNotReceive.style.preferredSize = CGSize(width: global_width / 2, height: 30)
 
-        let tfVerifyCodeInset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0), child: tfVerifyCode)
+        let tfVerifyCodeInset = ASInsetLayoutSpec(
+            insets: UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0),
+            child: tfVerifyCode
+        )
 
         let horiLine1 = ASAbsoluteLayoutSpec(children: [lbVerifyCodeResponse, lbVerifyCodeTimer])
         horiLine1.style.preferredSize = CGSize(width: global_width, height: 44)
-//        let horiLine1 = ASAbs(direction: .horizontal,
-//                                                   spacing: 0,
-//                                                    justifyContent: .center,
-//                                          alignItems: .end,
-//                                                   children: [lbVerifyCodeResponse, lbVerifyCodeTimer])
 
-        let horiLine2 = ASStackLayoutSpec(direction: .horizontal,
-                                                   spacing: 0,
-                                                   justifyContent: .center,
-                                                   alignItems: .center,
-                                                   children: [btnVerifyCodeBack, btnVerifyCodeNotReceive])
+        let horiLine2 = ASStackLayoutSpec(
+            direction: .horizontal,
+            spacing: 0,
+            justifyContent: .center,
+            alignItems: .center,
+            children: [btnVerifyCodeBack, btnVerifyCodeNotReceive]
+        )
 
-        let horiLine2Inset = ASInsetLayoutSpec(insets: UIEdgeInsets(top: 32, left: 0, bottom: 0, right: 0), child: horiLine2)
+        let horiLine2Inset = ASInsetLayoutSpec(
+            insets: UIEdgeInsets(top: 32, left: 0, bottom: 0, right: 0),
+            child: horiLine2
+        )
 
-        let vertLine = ASStackLayoutSpec(direction: .vertical,
-                                                   spacing: 0,
-                                                   justifyContent: .center,
-                                                   alignItems: .center,
-                                                   children: [lbVerifyCodeTitle, tfVerifyCodeInset, horiLine1, horiLine2Inset])
+        let vertLine = ASStackLayoutSpec(
+            direction: .vertical,
+            spacing: 0,
+            justifyContent: .center,
+            alignItems: .center,
+            children: [lbVerifyCodeTitle, tfVerifyCodeInset, horiLine1, horiLine2Inset]
+        )
 
-        verifyStackSpec = ASCenterLayoutSpec(centeringOptions: ASCenterLayoutSpecCenteringOptions.X, sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY, child: vertLine)
+        verifyStackSpec = ASCenterLayoutSpec(
+            centeringOptions: ASCenterLayoutSpecCenteringOptions.X,
+            sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY,
+            child: vertLine
+        )
 
         self.node.addSubnode(lbVerifyCodeTitle)
         self.node.addSubnode(tfVerifyCode)
@@ -88,7 +89,10 @@ extension LoginViewController {
                     switch result {
                     case .failure(let error):
                         print(error)
-                        self.lbVerifyCodeResponse.attributedText = NSAttributedString(string: error.message, attributes: nil)
+                        self.lbVerifyCodeResponse.attributedText = NSAttributedString(
+                            string: error.message,
+                            attributes: nil
+                        )
                     case .success(let result):
                         print(result)
                         self.onRegisterSuccess(result: result)
@@ -105,12 +109,14 @@ extension LoginViewController {
 
     }
 
-    @objc func onVerifyCodeBack() {
+    @objc
+    func onVerifyCodeBack() {
         print("onVerifyCodeBack")
         toggleState(.AttemptRegister)
     }
 
-    @objc func onNotReceive() {
+    @objc
+    func onNotReceive() {
         print("not Receive")
         showAlert(title: L10n.error, msg: "NOT IMPLEMENT YET QQ")
     }
@@ -122,7 +128,7 @@ extension LoginViewController {
         paragraphStyle.paragraphSpacing = 2
         paragraphStyle.lineSpacing = 0
         let attributes = [
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.subheadline), // UIFont.boldSystemFont(ofSize: 24),
+            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.subheadline),
             NSAttributedString.Key.foregroundColor: self.text_color,
             NSAttributedString.Key.paragraphStyle: paragraphStyle
         ]
