@@ -12,6 +12,7 @@ protocol BoardListUIProtocol: AnyObject {
     func show(error: Error)
     func listDidUpdate()
     func favoriteBoardsDidUpdate()
+    func inValidUser()
 }
 
 extension BoardListViewModel {
@@ -93,7 +94,14 @@ extension BoardListViewModel {
             if !favoriteStartIndex.isEmpty {
                 await fetchFavoriteBoardsRecursive()
             }
-        } catch {}
+        } catch {
+            if let apiError = error as? APIError,
+               case let .requestFailed(statusCode, _) = apiError,
+               statusCode == 403,
+               listType == .favorite {
+                uiDelegate?.inValidUser()
+            }
+        }
     }
 
     private func fetchPopularBoards() async {

@@ -15,7 +15,7 @@ enum APIError: Error, LocalizedError {
     case loginTokenNotExist
     case notExpectedHTTPStatus(String)
     /// Error returns by backend
-    case requestFailed(String)
+    case requestFailed(Int, String)
     case responseNotExist
     case urlError
 
@@ -31,8 +31,8 @@ enum APIError: Error, LocalizedError {
             return "Login token doesn't exist"
         case .notExpectedHTTPStatus(let message):
             return message
-        case .requestFailed(let message):
-            return message
+        case let .requestFailed(statusCode, message):
+            return "\(statusCode) - \(message)"
         case .responseNotExist:
             return "Response doesn't exist"
         case .urlError:
