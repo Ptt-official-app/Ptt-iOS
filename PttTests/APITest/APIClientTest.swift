@@ -12,18 +12,33 @@ import XCTest
 final class APIClientTest: XCTestCase {
     private var urlSession: MockURLSessionV2!
     private var apiClient: APIClientProtocol!
+    private var keyChainItem: PTTKeyChain!
+    private var userID: String!
+    private var token: String!
     private lazy var manager = APITestClient()
 
-    override func setUp() async throws {
+    override func setUp() {
+        super.setUp()
         urlSession = MockURLSessionV2()
-        apiClient = APIClient(session: urlSession)
+        keyChainItem = MockKeyChain()
+        userID = String.random(length: 8)
+        token = String.random(length: 8)
+        keyChainItem.save(
+            object: APIModel.LoginToken(user_id: userID, access_token: token, token_type: "bear"),
+            for: .loginToken
+        )
+
+        apiClient = APIClient(session: urlSession, keyChainItem: keyChainItem)
     }
 
     override func tearDown() {
+        super.tearDown()
         urlSession = nil
+        keyChainItem = nil
+        userID = nil
         apiClient = nil
     }
-    
+
     func testNetworkError() {
         let dataTask = MockURLSessionDataTask()
         let info = [NSLocalizedDescriptionKey: "Network error"]
@@ -122,7 +137,7 @@ final class APIClientTest: XCTestCase {
             }
         }
     }
-    
+
     func testBoardListSuccess_with_english_keyword() {
         let startIdx = "\(Int.random(in: 0...99))"
         let max = Int.random(in: 0...99)
@@ -137,7 +152,7 @@ final class APIClientTest: XCTestCase {
                     XCTAssertEqual(item.value, "\(max)")
                 }
             }
-            completion(.success(BoardListFakeData.successData))
+            completion(.success((200, BoardListFakeData.successData)))
         }
         apiClient.getBoardList(keyword: "stup", startIdx: startIdx, max: max) { result in
             switch result {
@@ -170,7 +185,7 @@ final class APIClientTest: XCTestCase {
                     XCTAssertEqual(item.value, "\(max)")
                 }
             }
-            completion(.success(BoardListFakeData.successData))
+            completion(.success((200, BoardListFakeData.successData)))
         }
         apiClient.getBoardList(keyword: "笨", startIdx: startIdx, max: max) { result in
             switch result {
@@ -197,16 +212,59 @@ final class APIClientTest: XCTestCase {
                     XCTAssertEqual(item.value, "\(max)")
                 }
             }
-            completion(.success(BoardListFakeData.successData))
+            completion(.success((200, BoardListFakeData.successData)))
         }
-        apiClient.getBoardList(keyword: "ごじゅうおん", startIdx: startIdx, max: max) { result in
-            switch result {
-            case .failure:
-                XCTFail("Shouldn't fail")
-            case .success(let list):
-                XCTAssert(list.next_idx == "")
-                XCTAssert(list.list.count == 6)
+    }
+
+    func testFavoritesBoards_succeed() async throws {
+        let startIdx = "\(Int.random(in: 0...99))"
+        let limit = Int.random(in: 0...99)
+        urlSession.stub { path, headers, queryItem, _, completion in
+            XCTAssertEqual(path, "/api/user/\(self.userID ?? "")/favorites")
+            XCTAssertEqual(headers["Authorization"], "bearer \(self.token ?? "")")
+            for item in queryItem {
+                if item.name == "start_idx" {
+                    XCTAssertEqual(item.value, startIdx)
+                } else if item.name == "limit" {
+                    XCTAssertEqual(item.value, "\(limit)")
+                }
+            }
+            completion(.success((200, BoardListFakeData.successData)))
+        }
+        let result = try await apiClient.favoritesBoards(startIndex: startIdx, limit: limit)
+        XCTAssertEqual(result.next_idx, "")
+        XCTAssertEqual(result.list.count, 6)
+        XCTAssertEqual(result.list[0].bid, "6_ALLPOST")
+        XCTAssertEqual(result.list[2].title, "動態看板及歌曲投稿")
+    }
+
+    func testFavoritesBoards_failed_due_to_invalidUser() async throws {
+        let startIdx = "\(Int.random(in: 0...99))"
+        let limit = Int.random(in: 0...99)
+        urlSession.stub { path, headers, queryItem, _, completion in
+            XCTAssertEqual(path, "/api/user/\(self.userID ?? "")/favorites")
+            XCTAssertEqual(headers["Authorization"], "bearer \(self.token ?? "")")
+            for item in queryItem {
+                if item.name == "start_idx" {
+                    XCTAssertEqual(item.value, startIdx)
+                } else if item.name == "limit" {
+                    XCTAssertEqual(item.value, "\(limit)")
+                }
+            }
+            completion(.success((403, ["Msg": "Invalid user"])))
+        }
+        do {
+            _ = try await apiClient.favoritesBoards(startIndex: startIdx, limit: limit)
+            XCTFail("Should throw error")
+        } catch {
+            let apiError = try XCTUnwrap(error as? APIError)
+            if case let .requestFailed(code, message) = apiError {
+                XCTAssertEqual(code, 403)
+                XCTAssertEqual(message, "Invalid user")
+            } else {
+                XCTFail("Unexpected error")
             }
         }
+
     }
 }

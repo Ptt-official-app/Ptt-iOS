@@ -58,7 +58,7 @@ final class ApplicationCoordinator: BaseCoordinator {
         // uncomment to force logout
         // _ = LoginKeyChainItem.shared.removeToken()
 
-        let loginToken: APIModel.LoginToken? = KeyChainItem.readObject(for: .loginToken)
+        let loginToken: APIModel.LoginToken? = KeyChainItem.shared.readObject(for: .loginToken)
         if loginToken != nil {
             isAutorized = true
             // TODO: check token Expire from internet
