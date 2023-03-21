@@ -268,4 +268,18 @@ final class APIClientTest: XCTestCase {
         }
 
     }
+
+    func testPopularBoards_succeed() async throws {
+        urlSession.stub { path, headers, queryItem, _, completion in
+            XCTAssertEqual(path, "/api/boards/popular")
+            XCTAssertEqual(headers.count, 0)
+            XCTAssertEqual(queryItem.count, 0)
+            completion(.success((200, BoardListFakeData.successData)))
+        }
+        let result = try await apiClient.popularBoards()
+        XCTAssertEqual(result.next_idx, "")
+        XCTAssertEqual(result.list.count, 6)
+        XCTAssertEqual(result.list[0].bid, "6_ALLPOST")
+        XCTAssertEqual(result.list[2].title, "動態看板及歌曲投稿")
+    }
 }

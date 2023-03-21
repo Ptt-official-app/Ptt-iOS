@@ -459,12 +459,7 @@ extension APIClient: APIClientProtocol {
                 return result
             }
         } catch {
-            if let apiError = error as? APIError {
-                throw apiError
-            } else {
-                let message = message(of: error)
-                throw APIError.decodingError(message)
-            }
+            throw transferCatch(error: error)
         }
     }
 
@@ -487,9 +482,8 @@ extension APIClient: APIClientProtocol {
                 let result = try decoder.decode(APIModel.BoardInfoList.self, from: resultData)
                 return result
             }
-        } catch (let decodingError) {
-            let message = message(of: decodingError)
-            throw APIError.decodingError(message)
+        } catch {
+            throw transferCatch(error: error)
         }
     }
 }
@@ -572,6 +566,15 @@ extension APIClient {
         }
 
         return message
+    }
+
+    private func transferCatch(error: Error) -> Error {
+        if let apiError = error as? APIError {
+            return apiError
+        } else {
+            let message = message(of: error)
+            return APIError.decodingError(message)
+        }
     }
 
     struct MyRegex {
