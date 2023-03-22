@@ -9,58 +9,10 @@
 import Foundation
 @testable import Ptt
 
-class MockURLSession: URLSessionProtocol {
-    private let error: Error?
-    private let mockDataTask: MockURLSessionDataTask
-    private let fakeData: Data?
-    private let statusCode: Int
-
-    init(mockDataTask: MockURLSessionDataTask, fakeData: Data? = nil, error: Error? = nil, statusCode: Int = 200) {
-        self.error = error
-        self.mockDataTask = mockDataTask
-        self.fakeData = fakeData
-        self.statusCode = statusCode
-    }
-
-    func dataTask(with request: URLRequest, completionHandler: @escaping DataTaskResult) -> URLSessionDataTaskProtocol {
-        if let _error = self.error {
-            completionHandler(nil, nil, _error)
-            return self.mockDataTask
-        }
-
-        if let _data = self.fakeData {
-            let response = self.mockHttpURLResponse(request: request)
-            completionHandler(_data, response, nil)
-            return self.mockDataTask
-        }
-
-        let response = self.mockHttpURLResponse(request: request)
-        completionHandler(nil, response, nil)
-        return self.mockDataTask
-    }
-
-    func dataTask(with url: URL, completionHandler: @escaping DataTaskResult) -> URLSessionDataTaskProtocol {
-        let req = URLRequest(url: url)
-        return self.dataTask(with: req, completionHandler: completionHandler)
-    }
-
-    func data(for request: URLRequest) async throws -> (Data, URLResponse) {
-        if let _error = self.error {
-            throw _error
-        }
-
-        let response = self.mockHttpURLResponse(request: request)
-        if let _data = self.fakeData {
-            return (_data, response)
-        }
-        throw NSError(domain: "ptt.cc", code: 999)
-    }
-}
-
-final class MockURLSessionV2: URLSessionProtocol {
-    private var handler: ((String, [String: String], [URLQueryItem], Data?, ((Result<(Int, [AnyHashable: Any]), APIError>) -> Void)) -> Void)?
+final class MockURLSession: URLSessionProtocol {
+    private var handler: ((String, [String: String], [URLQueryItem], Data?, ((Result<(Int, [AnyHashable: Any]), APIError>) -> Void)) throws -> Void)?
     // (path, headers, queryParams, body, completion)
-    func stub(_ stubHandler: @escaping (String, [String: String], [URLQueryItem], Data?, ((Result<(Int, [AnyHashable: Any]), APIError>) -> Void)) -> Void) {
+    func stub(_ stubHandler: @escaping (String, [String: String], [URLQueryItem], Data?, ((Result<(Int, [AnyHashable: Any]), APIError>) -> Void)) throws -> Void) {
         handler = stubHandler
     }
 
@@ -78,15 +30,19 @@ final class MockURLSessionV2: URLSessionProtocol {
         let queryItems = urlComponent.queryItems ?? []
         let body = request.httpBody
         let response = mockHttpURLResponse(request: request)
-        handler?(path, headers, queryItems, body, { result in
-            switch result {
-            case .success(let tuple):
-                let data = try? JSONSerialization.data(withJSONObject: tuple.1)
-                completionHandler(data, response, nil)
-            case .failure(let error):
-                completionHandler(nil, response, error)
-            }
-        })
+        do {
+            try handler?(path, headers, queryItems, body, { result in
+                switch result {
+                case .success(let tuple):
+                    let data = try? JSONSerialization.data(withJSONObject: tuple.1)
+                    completionHandler(data, response, nil)
+                case .failure(let error):
+                    completionHandler(nil, response, error)
+                }
+            })
+        } catch {
+            completionHandler(nil, response, error)
+        }
         return MockURLSessionDataTask()
     }
 
@@ -108,16 +64,20 @@ final class MockURLSessionV2: URLSessionProtocol {
             let headers = request.allHTTPHeaderFields ?? [:]
             let queryItems = urlComponent.queryItems ?? []
             let body = request.httpBody
-            handler?(path, headers, queryItems, body, { result in
-                switch result {
-                case .success(let tuple):
-                    let data = try? JSONSerialization.data(withJSONObject: tuple.1)
-                    let response = mockHttpURLResponse(request: request, code: tuple.0)
-                    continuation.resume(with: .success((data ?? Data(), response)))
-                case .failure(let error):
-                    continuation.resume(with: .failure(error))
-                }
-            })
+            do {
+                try handler?(path, headers, queryItems, body, { result in
+                    switch result {
+                    case .success(let tuple):
+                        let data = try? JSONSerialization.data(withJSONObject: tuple.1)
+                        let response = mockHttpURLResponse(request: request, code: tuple.0)
+                        continuation.resume(with: .success((data ?? Data(), response)))
+                    case .failure(let error):
+                        continuation.resume(with: .failure(error))
+                    }
+                })
+            } catch {
+                continuation.resume(throwing: error)
+            }
         })
     }
 
@@ -128,15 +88,5 @@ final class MockURLSessionV2: URLSessionProtocol {
             httpVersion: "HTTP/1.1",
             headerFields: nil
         )!
-    }
-}
-
-// MARK: Private
-extension MockURLSession {
-
-    private func mockHttpURLResponse(request: URLRequest) -> URLResponse {
-        return HTTPURLResponse(url: request.url!,
-                               statusCode: self.statusCode,
-                               httpVersion: "HTTP/1.1", headerFields: nil)!
     }
 }

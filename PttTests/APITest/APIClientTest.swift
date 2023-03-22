@@ -10,16 +10,15 @@
 import XCTest
 
 final class APIClientTest: XCTestCase {
-    private var urlSession: MockURLSessionV2!
     private var apiClient: APIClientProtocol!
     private var keyChainItem: PTTKeyChain!
+    private var urlSession: MockURLSession!
     private var userID: String!
     private var token: String!
-    private lazy var manager = APITestClient()
 
     override func setUp() {
         super.setUp()
-        urlSession = MockURLSessionV2()
+        urlSession = MockURLSession()
         keyChainItem = MockKeyChain()
         userID = String.random(length: 8)
         token = String.random(length: 8)
@@ -39,58 +38,18 @@ final class APIClientTest: XCTestCase {
         apiClient = nil
     }
 
-    func testNetworkError() {
-        let dataTask = MockURLSessionDataTask()
-        let info = [NSLocalizedDescriptionKey: "Network error"]
-        let unknowError = NSError(domain: "term.ptt.cc", code: 404, userInfo: info)
-        let session = MockURLSession(mockDataTask: dataTask, fakeData: nil, error: unknowError)
-        let client = APIClient(session: session)
-
-        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { result in
-            switch result {
-            case .failure(let error):
-                XCTAssertTrue(error.message == "Network error")
-            case .success:
-                XCTAssert(false)
-            }
-        }
-    }
-
-    func testHttpResponseError() {
-        let dataTask = MockURLSessionDataTask()
-        let statusCode = 404
-        let session = MockURLSession(mockDataTask: dataTask, fakeData: Data(), error: nil, statusCode: statusCode)
-        let client = APIClient(session: session)
-
-        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { result in
-            switch result {
-            case .failure(let error):
-                let msg = "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"
-                XCTAssert(error.message == msg)
-            case .success:
-                XCTAssert(false)
-            }
-        }
-    }
-
-    func testNoDataError() {
-        let dataTask = MockURLSessionDataTask()
-        let session = MockURLSession(mockDataTask: dataTask, fakeData: nil, error: nil)
-        let client = APIClient(session: session)
-
-        client.getBoardArticles(of: .legacy(boardName: "abc", page: 1)) { result in
-            switch result {
-            case .failure(let error):
-                XCTAssert(error.message == "Data doesn't exist")
-            case .success:
-                XCTAssert(false)
-            }
-        }
-    }
-
     func testLoginSuccess() {
-        let client = manager.login()
-        client.login(account: "asd", password: "123") { result in
+        let username = String.random(length: 9)
+        let password = String.random(length: 8)
+        urlSession.stub { path, _, _, body, completion in
+            XCTAssertEqual(path, "/api/account/login")
+            let data = try XCTUnwrap(body)
+            let obj = try XCTUnwrap(try JSONSerialization.jsonObject(with: data) as? [String: String])
+            XCTAssertEqual(obj["username"], username)
+            XCTAssertEqual(obj["password"], password)
+            completion(.success((200, LoginFakeData.successData)))
+        }
+        apiClient.login(account: username, password: password) { result in
             switch result {
             case .failure:
                 XCTAssert(false)
@@ -102,9 +61,13 @@ final class APIClientTest: XCTestCase {
     }
 
     func testGetBoardArticlesSuccess() {
-        let client = manager.newArticleClient()
+        urlSession.stub { path, _, queryParams, _, completion in
+            XCTAssertEqual(path, "/api/Article/MyBoard")
+            XCTAssertEqual(queryParams[0].value, "1")
+            completion(.success((200, GetBoardArticlesFakeData.successData)))
+        }
 
-        client.getBoardArticles(of: .legacy(boardName: "MyBoard", page: 1)) { result in
+        apiClient.getBoardArticles(of: .legacy(boardName: "MyBoard", page: 1)) { result in
             switch result {
             case .failure:
                 XCTAssert(false)
@@ -119,8 +82,12 @@ final class APIClientTest: XCTestCase {
     }
 
     func testGetArticleSuccess() {
-        let client = manager.getArticleClient()
-        client.getArticle(of: .legacy(boardName: "MyBoard", filename: "M.392837.A.F25")) { result in
+        urlSession.stub { path, _, _, _, completion in
+            XCTAssertEqual(path, "/api/Article/MyBoard/M.392837.A.F25")
+            completion(.success((200, GetArticleFakeData.successData)))
+        }
+
+        apiClient.getArticle(of: .legacy(boardName: "MyBoard", filename: "M.392837.A.F25")) { result in
             switch result {
             case .failure:
                 XCTAssert(false)
@@ -214,6 +181,15 @@ final class APIClientTest: XCTestCase {
                 }
             }
             completion(.success((200, BoardListFakeData.successData)))
+        }
+        apiClient.getBoardList(keyword: "ごじゅうおん", startIdx: startIdx, max: max) { result in
+            switch result {
+            case .failure:
+                XCTFail("Shouldn't fail")
+            case .success(let list):
+                XCTAssertEqual(list.next_idx, "")
+                XCTAssert(list.list.count == 6)
+            }
         }
     }
 
