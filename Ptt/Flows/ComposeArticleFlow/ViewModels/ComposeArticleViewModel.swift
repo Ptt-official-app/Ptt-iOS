@@ -11,8 +11,6 @@ import Foundation
 final class ComposeArticleViewModel {
     let apiClient: APIClientProtocol
     let boardName: String
-    // TODO: `posttype` in https://doc.devptt.dev/#/board/get_api_board__bid_
-    // But `posttype` is a string, will be updated to `posttypes`
     let postTypes: [String]
     private(set) var selectedPostType: String = ""
 

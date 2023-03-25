@@ -43,15 +43,16 @@ protocol APIClientProtocol {
     ///   - max: max number of the returned list, requiring <= 300
     ///   - completion: the list of board information
     func getBoardList(keyword: String, startIdx: String, max: Int, completion: @escaping (BoardListResult) -> Void)
-    
+
     func createArticle(boardId: String, article: APIModel.CreateArticle, completion: @escaping (CreateArticleResult) -> Void)
-    
+
     /// Get popular article list data
     /// - Parameters:
     ///   - startIdx: query string, empty string if fetch from the beginning
     ///   - limit: max number of the returned list, requiring <= 200
     ///   - desc: descending (or ascending if false)
     func getPopularArticles(startIdx: String, limit: Int, desc: Bool, completion: @escaping (PopularArticlesResult) -> Void)
+    func boardDetail(boardID: String) async throws -> APIModel.BoardDetail
     func favoritesBoards(startIndex: String, limit: Int) async throws -> APIModel.BoardInfoList
     func popularBoards() async throws -> APIModel.BoardInfoList
 }

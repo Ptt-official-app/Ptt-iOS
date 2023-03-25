@@ -258,4 +258,16 @@ final class APIClientTest: XCTestCase {
         XCTAssertEqual(result.list[0].bid, "6_ALLPOST")
         XCTAssertEqual(result.list[2].title, "動態看板及歌曲投稿")
     }
+
+    func testBoardDetail_succeed() async throws {
+        let boardID = String.random(length: 4)
+        urlSession.stub { path, _, _, _, completion in
+            XCTAssertEqual(path, "/api/board/\(boardID)")
+            completion(.success((200, BoardDetailFakeData.successData)))
+        }
+        let result = try await apiClient.boardDetail(boardID: boardID)
+        XCTAssertEqual(result.boardID, "PttApp")
+        XCTAssertEqual(result.title, "測試與建議回饋的集散地")
+        XCTAssertEqual(result.postTypes[2], "蘋果")
+    }
 }

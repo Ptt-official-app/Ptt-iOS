@@ -427,6 +427,30 @@ extension APIClient: APIClientProtocol {
         task.resume()
     }
 
+    func boardDetail(boardID: String) async throws -> APIModel.BoardDetail {
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/board/\(boardID)"
+
+        guard let url = urlComponent.url else {  throw APIError.urlError }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.GET.rawValue
+
+        do {
+            let response = try await session.data(for: request)
+            let result = processResponseWithErrorMSG(data: response.0, urlResponse: response.1, error: nil)
+            switch result {
+            case .failure(let apiError):
+                throw apiError
+            case .success(let resultData):
+                let result = try decoder.decode(APIModel.BoardDetail.self, from: resultData)
+                return result
+            }
+        } catch {
+            throw transferCatch(error: error)
+        }
+    }
+
     func favoritesBoards(startIndex: String, limit: Int = 200) async throws -> APIModel.BoardInfoList {
         guard let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
             throw APIError.loginTokenNotExist
