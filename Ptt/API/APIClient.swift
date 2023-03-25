@@ -430,25 +430,11 @@ extension APIClient: APIClientProtocol {
     func boardDetail(boardID: String) async throws -> APIModel.BoardDetail {
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/board/\(boardID)"
-
         guard let url = urlComponent.url else {  throw APIError.urlError }
 
         var request = URLRequest(url: url)
         request.httpMethod = Method.GET.rawValue
-
-        do {
-            let response = try await session.data(for: request)
-            let result = processResponseWithErrorMSG(data: response.0, urlResponse: response.1, error: nil)
-            switch result {
-            case .failure(let apiError):
-                throw apiError
-            case .success(let resultData):
-                let result = try decoder.decode(APIModel.BoardDetail.self, from: resultData)
-                return result
-            }
-        } catch {
-            throw transferCatch(error: error)
-        }
+        return try await doRequest(request: request)
     }
 
     func favoritesBoards(startIndex: String, limit: Int = 200) async throws -> APIModel.BoardInfoList {
@@ -464,14 +450,28 @@ extension APIClient: APIClientProtocol {
             URLQueryItem(name: "limit", value: "\(limit)")
         ]
 
-        guard let url = urlComponent.url else {
-            throw APIError.urlError
-        }
+        guard let url = urlComponent.url else { throw APIError.urlError }
 
         var request = URLRequest(url: url)
         request.httpMethod = Method.GET.rawValue
         request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
+        return try await doRequest(request: request)
+    }
 
+    func popularBoards() async throws -> APIModel.BoardInfoList {
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/boards/popular"
+        guard let url = urlComponent.url else { throw APIError.urlError }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.GET.rawValue
+        return try await doRequest(request: request)
+    }
+}
+
+// MARK: Private helper function
+extension APIClient {
+    private func doRequest<T: Decodable>(request: URLRequest) async throws -> T {
         do {
             let response = try await session.data(for: request)
             let result = processResponseWithErrorMSG(data: response.0, urlResponse: response.1, error: nil)
@@ -479,41 +479,13 @@ extension APIClient: APIClientProtocol {
             case .failure(let apiError):
                 throw apiError
             case .success(let resultData):
-                let result = try decoder.decode(APIModel.BoardInfoList.self, from: resultData)
+                let result = try decoder.decode(T.self, from: resultData)
                 return result
             }
         } catch {
             throw transferCatch(error: error)
         }
     }
-
-    func popularBoards() async throws -> APIModel.BoardInfoList {
-        var urlComponent = rootURLComponents
-        urlComponent.path = "/api/boards/popular"
-        guard let url = urlComponent.url else {
-            throw APIError.urlError
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = Method.GET.rawValue
-        do {
-            let response = try await session.data(for: request)
-            let result = processResponse(data: response.0, urlResponse: response.1, error: nil)
-            switch result {
-            case .failure(let apiError):
-                throw apiError
-            case .success(let resultData):
-                let result = try decoder.decode(APIModel.BoardInfoList.self, from: resultData)
-                return result
-            }
-        } catch {
-            throw transferCatch(error: error)
-        }
-    }
-}
-
-// MARK: Private helper function
-extension APIClient {
     private func processResponse(data: Data?, urlResponse: URLResponse?, error: Error?) -> ProcessResult {
         if let error = error {
             return .failure(.httpError(error))
