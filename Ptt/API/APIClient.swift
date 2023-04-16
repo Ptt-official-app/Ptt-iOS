@@ -445,7 +445,7 @@ extension APIClient: APIClientProtocol {
 
         do {
             let response = try await URLSession.shared.data(for: request)
-            let result = processResponse(data: response.0, urlResponse: response.1, error: nil)
+            let result = processResponseWithErrorMSG(data: response.0, urlResponse: response.1, error: nil)
             switch result {
             case .failure(let apiError):
                 throw apiError
@@ -453,9 +453,13 @@ extension APIClient: APIClientProtocol {
                 let result = try decoder.decode(APIModel.BoardInfoList.self, from: resultData)
                 return result
             }
-        } catch (let decodingError) {
-            let message = self.message(of: decodingError)
-            throw APIError.decodingError(message)
+        } catch {
+            if error is APIError {
+                throw error
+            } else {
+                let message = self.message(of: error)
+                throw APIError.decodingError(message)
+            }
         }
     }
 
@@ -513,12 +517,20 @@ extension APIClient {
      Temp for get Register/AttmentRegister Error msg
      */
     private func processResponseWithErrorMSG(data: Data?, urlResponse: URLResponse?, error: Error?) -> ProcessResult {
-        
+
+        guard let httpURLResponse = urlResponse as? HTTPURLResponse else {
+            return .failure(.responseNotExist)
+        }
+
+        let statusCode = httpURLResponse.statusCode
         do {
             if let d = data {
                 let errorDict = try decoder.decode(APIModel.ErrorMsg.self, from: d)
                 let error_msg = errorDict.Msg
-                return .failure(.requestFailed(error_msg))
+                return .failure(.requestFailed(statusCode, error_msg))
+            } else if statusCode != 200 {
+                let message = "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"
+                return .failure(.notExpectedHTTPStatus(message))
             }
         } catch {
             print("Decode error:", error)
@@ -526,16 +538,6 @@ extension APIClient {
 
         if let error = error {
             return .failure(.httpError(error))
-        }
-
-        guard let httpURLResponse = urlResponse as? HTTPURLResponse else {
-            return .failure(.responseNotExist)
-        }
-
-        let statusCode = httpURLResponse.statusCode
-        if statusCode != 200 {
-            let message = "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"
-            return .failure(.notExpectedHTTPStatus(message))
         }
 
         guard let resultData = data else {

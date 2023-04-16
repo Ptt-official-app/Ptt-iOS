@@ -43,7 +43,7 @@ private extension BoardListCoordinator {
             self.runBoardFlow(withBoardName: boardName)
         }
 
-        boardListView.onLogout = { [unowned self] () in
+        boardListView.onLogout = { [unowned self] in
             self.removeDependency(self)
             self.finshFlow?()
         }

@@ -165,6 +165,12 @@ extension BoardListTVC: BoardListUIProtocol {
             self.boardSearchVC.update(favoriteBoardNames: self.viewModel.favoriteBoardNames)
         }
     }
+
+    func inValidUser() {
+        DispatchQueue.main.async {
+            self.debug_logout()
+        }
+    }
 }
 
 extension BoardListTVC {
