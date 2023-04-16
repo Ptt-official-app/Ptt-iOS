@@ -18,12 +18,14 @@ final class BoardListTVC: UITableViewController, BoardListView {
     var onLogout: (() -> Void)?
 
     private let viewModel: BoardListViewModel
+    private let keyChainItem: PTTKeyChain
     private let boardSearchVC: BoardSearchViewController
     private let searchController: UISearchController
     private var scrollDirection: Direction = .unknown
 
-    init(viewModel: BoardListViewModel) {
+    init(viewModel: BoardListViewModel, keyChainItem: PTTKeyChain = KeyChainItem.shared) {
         self.viewModel = viewModel
+        self.keyChainItem = keyChainItem
         self.boardSearchVC = BoardSearchViewController(apiClient: viewModel.apiClient)
         self.searchController = UISearchController(searchResultsController: boardSearchVC)
         super.init(style: .plain)
@@ -123,7 +125,7 @@ extension BoardListTVC {
         print("Debug logout button press")
 
         DispatchQueue.main.async {
-            KeyChainItem.delete(for: .loginToken)
+            self.keyChainItem.delete(for: .loginToken)
             self.onLogout?()
         }
     }

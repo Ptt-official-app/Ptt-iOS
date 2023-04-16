@@ -52,9 +52,14 @@ struct APIClient {
     private let decoder = JSONDecoder()
 
     private let session: URLSessionProtocol
+    private let keyChainItem: PTTKeyChain
 
-    init(session: URLSessionProtocol = URLSession.shared) {
+    init(
+        session: URLSessionProtocol = URLSession.shared,
+        keyChainItem: PTTKeyChain = KeyChainItem.shared
+    ) {
         self.session = session
+        self.keyChainItem = keyChainItem
     }
 }
 
@@ -316,7 +321,7 @@ extension APIClient: APIClientProtocol {
             URLQueryItem(name: "limit", value: "\(max)")
         ]
         guard let url = urlComponent.url,
-              let loginObj: APIModel.LoginToken = KeyChainItem.readObject(for: .loginToken) else {
+              let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
             assertionFailure()
             return
         }
@@ -342,14 +347,14 @@ extension APIClient: APIClientProtocol {
         }
         task.resume()
     }
-    
+
     func createArticle(boardId: String, article: APIModel.CreateArticle, completion: @escaping (CreateArticleResult) -> Void) {
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/board/" + boardId + "/article"
 
         guard let url = urlComponent.url,
               let jsonBody = try? JSONEncoder().encode(article),
-              let loginToken: APIModel.LoginToken = KeyChainItem.readObject(for: .loginToken) else {
+              let loginToken: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
             assertionFailure()
             return
         }
@@ -423,7 +428,7 @@ extension APIClient: APIClientProtocol {
     }
 
     func favoritesBoards(startIndex: String, limit: Int = 200) async throws -> APIModel.BoardInfoList {
-        guard let loginObj: APIModel.LoginToken = KeyChainItem.readObject(for: .loginToken) else {
+        guard let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
             throw APIError.loginTokenNotExist
         }
         var urlComponent = rootURLComponents
@@ -444,7 +449,7 @@ extension APIClient: APIClientProtocol {
         request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
 
         do {
-            let response = try await URLSession.shared.data(for: request)
+            let response = try await session.data(for: request)
             let result = processResponseWithErrorMSG(data: response.0, urlResponse: response.1, error: nil)
             switch result {
             case .failure(let apiError):
@@ -454,12 +459,7 @@ extension APIClient: APIClientProtocol {
                 return result
             }
         } catch {
-            if error is APIError {
-                throw error
-            } else {
-                let message = self.message(of: error)
-                throw APIError.decodingError(message)
-            }
+            throw transferCatch(error: error)
         }
     }
 
@@ -482,9 +482,8 @@ extension APIClient: APIClientProtocol {
                 let result = try decoder.decode(APIModel.BoardInfoList.self, from: resultData)
                 return result
             }
-        } catch (let decodingError) {
-            let message = message(of: decodingError)
-            throw APIError.decodingError(message)
+        } catch {
+            throw transferCatch(error: error)
         }
     }
 }
@@ -567,6 +566,15 @@ extension APIClient {
         }
 
         return message
+    }
+
+    private func transferCatch(error: Error) -> Error {
+        if let apiError = error as? APIError {
+            return apiError
+        } else {
+            let message = message(of: error)
+            return APIError.decodingError(message)
+        }
     }
 
     struct MyRegex {

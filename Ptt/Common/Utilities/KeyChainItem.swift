@@ -8,6 +8,24 @@
 
 import Foundation
 
+protocol PTTKeyChain {
+    @discardableResult
+    func save(text: String, for key: KeyChainItem.Key) -> Bool
+
+    @discardableResult
+    func save(object: Codable, for key: KeyChainItem.Key) -> Bool
+
+    @discardableResult
+    func save(data: Data, for key: KeyChainItem.Key) -> Bool
+
+    func readText(for key: KeyChainItem.Key) -> String?
+    func readObject<T: Decodable>(for key: KeyChainItem.Key) -> T?
+    func readData(for key: KeyChainItem.Key) -> Data?
+
+    @discardableResult
+    func delete(for key: KeyChainItem.Key) -> Bool
+}
+
 extension KeyChainItem {
     enum Key: String {
         case loginToken
@@ -15,16 +33,18 @@ extension KeyChainItem {
     }
 }
 
-final class KeyChainItem {
+final class KeyChainItem: PTTKeyChain {
+    static var shared = KeyChainItem()
+
     // MARK: - Save
     @discardableResult
-    static func save(text: String, for key: Key) -> Bool {
+    func save(text: String, for key: Key) -> Bool {
         let data = Data(text.utf8)
         return save(data: data, for: key)
     }
 
     @discardableResult
-    static func save(object: Codable, for key: Key) -> Bool {
+    func save(object: Codable, for key: Key) -> Bool {
         do {
             let data = try JSONEncoder().encode(object)
             return save(data: data, for: key)
@@ -34,7 +54,7 @@ final class KeyChainItem {
     }
 
     @discardableResult
-    static func save(data: Data, for key: Key) -> Bool {
+    func save(data: Data, for key: Key) -> Bool {
         delete(for: key)
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
@@ -47,12 +67,12 @@ final class KeyChainItem {
     }
 
     // MARK: - Read
-    static func readText(for key: Key) -> String? {
+    func readText(for key: Key) -> String? {
         guard let data = readData(for: key) else { return nil }
         return String(data: data, encoding: .utf8)
     }
 
-    static func readObject<T: Decodable>(for key: Key) -> T? {
+    func readObject<T: Decodable>(for key: Key) -> T? {
         guard let data = readData(for: key) else { return nil }
         do {
             let obj = try JSONDecoder().decode(T.self, from: data)
@@ -62,7 +82,7 @@ final class KeyChainItem {
         }
     }
 
-    static func readData(for key: Key) -> Data? {
+    func readData(for key: Key) -> Data? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key.rawValue,
@@ -78,7 +98,7 @@ final class KeyChainItem {
 
     // MARK: - Delete
     @discardableResult
-    static func delete(for key: Key) -> Bool {
+    func delete(for key: Key) -> Bool {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key.rawValue
