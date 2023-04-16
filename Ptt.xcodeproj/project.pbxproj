@@ -60,6 +60,8 @@
 		3EE9356229CB2C1000DCEC81 /* GetArticleFakeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE9356129CB2C1000DCEC81 /* GetArticleFakeData.swift */; };
 		3EE9356429CB2E3200DCEC81 /* GetBoardArticlesFakeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE9356329CB2E3200DCEC81 /* GetBoardArticlesFakeData.swift */; };
 		3EE9356629CB2F0800DCEC81 /* LoginFakeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE9356529CB2F0800DCEC81 /* LoginFakeData.swift */; };
+		3EE9357129CF248300DCEC81 /* BoardDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE9357029CF248300DCEC81 /* BoardDetail.swift */; };
+		3EE9357329CF292700DCEC81 /* BoardDetailFakeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE9357229CF292700DCEC81 /* BoardDetailFakeData.swift */; };
 		3EF1A9C8276CE4CE0058EF2C /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF1A9C7276CE4CE0058EF2C /* Localization.swift */; };
 		3EF1A9CD276CEA2E0058EF2C /* ColorAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EF1A9CC276CEA2E0058EF2C /* ColorAssets.xcassets */; };
 		3EF1A9CF276CEAAE0058EF2C /* PttColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF1A9CE276CEAAE0058EF2C /* PttColors.swift */; };
@@ -186,6 +188,8 @@
 		3EE9356129CB2C1000DCEC81 /* GetArticleFakeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetArticleFakeData.swift; sourceTree = "<group>"; };
 		3EE9356329CB2E3200DCEC81 /* GetBoardArticlesFakeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetBoardArticlesFakeData.swift; sourceTree = "<group>"; };
 		3EE9356529CB2F0800DCEC81 /* LoginFakeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFakeData.swift; sourceTree = "<group>"; };
+		3EE9357029CF248300DCEC81 /* BoardDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardDetail.swift; sourceTree = "<group>"; };
+		3EE9357229CF292700DCEC81 /* BoardDetailFakeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardDetailFakeData.swift; sourceTree = "<group>"; };
 		3EF1A9C7276CE4CE0058EF2C /* Localization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		3EF1A9CC276CEA2E0058EF2C /* ColorAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ColorAssets.xcassets; sourceTree = "<group>"; };
 		3EF1A9CE276CEAAE0058EF2C /* PttColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PttColors.swift; sourceTree = "<group>"; };
@@ -304,6 +308,7 @@
 				3EE9356129CB2C1000DCEC81 /* GetArticleFakeData.swift */,
 				3EE9356329CB2E3200DCEC81 /* GetBoardArticlesFakeData.swift */,
 				3EE9356529CB2F0800DCEC81 /* LoginFakeData.swift */,
+				3EE9357229CF292700DCEC81 /* BoardDetailFakeData.swift */,
 			);
 			path = FakeData;
 			sourceTree = "<group>";
@@ -370,6 +375,7 @@
 				CD6C1C1826AD783100EBFEA9 /* CreateArticle.swift */,
 				944209D9279C2462002B2B7A /* Register.swift */,
 				944209DB279C3566002B2B7A /* ErrorMsg.swift */,
+				3EE9357029CF248300DCEC81 /* BoardDetail.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -988,6 +994,7 @@
 				944527C02769844F00B6B54F /* AttemptRegister.swift in Sources */,
 				3E9FE306275D01C5002E144F /* PopularArticlesSceneFactoryProtocol.swift in Sources */,
 				3EE352E5276DDC8300C2CE67 /* TimeInterval+Extension.swift in Sources */,
+				3EE9357129CF248300DCEC81 /* BoardDetail.swift in Sources */,
 				3EC2CB2D29BB8DAC00E70A45 /* Direction.swift in Sources */,
 				EA41D65D243EF51A0052F4A1 /* FBPageViewController.swift in Sources */,
 				CD6C1C1926AD783100EBFEA9 /* CreateArticle.swift in Sources */,
@@ -1081,6 +1088,7 @@
 			files = (
 				3EA6F1B429B37CB4005D8B09 /* BoardListFakeData.swift in Sources */,
 				3E0101A925669DEE00D39FAD /* MockURLSessionDataTask.swift in Sources */,
+				3EE9357329CF292700DCEC81 /* BoardDetailFakeData.swift in Sources */,
 				3E0101A325669DDB00D39FAD /* MockURLSession.swift in Sources */,
 				EA475F8C23C4834C000867FE /* PttTests.swift in Sources */,
 				EAE0839D27686657009DE954 /* ArticleTest.swift in Sources */,

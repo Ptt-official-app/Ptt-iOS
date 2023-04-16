@@ -36,8 +36,9 @@ private extension BoardCoordinator {
             self?.showArticleView(withBoardArticle: boardArticle)
         }
 
-        boardView.composeArticle = { [weak self] boardName in
-            self?.showComposeArticleView(withBoardName: boardName)
+        boardView.composeArticle = { [weak self] boardName, postTypes in
+            let types = postTypes.filter { !$0.isEmpty }
+            self?.showComposeArticleView(withBoardName: boardName, postTypes: types)
         }
 
         router.push(boardView, animated: true, hideBottomBar: true) { [weak self] in
@@ -50,8 +51,8 @@ private extension BoardCoordinator {
         router.push(articleView)
     }
 
-    func showComposeArticleView(withBoardName boardName: String) {
-        let composeArticleView = factory.makeComposeArticleView(withBoardName: boardName)
+    func showComposeArticleView(withBoardName boardName: String, postTypes: [String]) {
+        let composeArticleView = factory.makeComposeArticleView(withBoardName: boardName, postTypes: postTypes)
         let nav = UINavigationController(rootViewController: composeArticleView)
         nav.modalPresentationStyle = .fullScreen
         router.present(nav)

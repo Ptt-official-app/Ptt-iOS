@@ -17,13 +17,13 @@ struct BoardArticle {
 
 protocol BoardView: BaseView {
     var onArticleSelect: ((BoardArticle) -> Void)? { get set }
-    var composeArticle: ((String) -> Void)? {get set}
+    var composeArticle: ((String, [String]) -> Void)? {get set}
 }
 
 final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSwipeable, BoardView {
 
     var onArticleSelect: ((BoardArticle) -> Void)?
-    var composeArticle: ((String) -> Void)?
+    var composeArticle: ((String, [String]) -> Void)?
 
     private let boardNode = BoardNode()
     private var tableNode: ASTableNode {
@@ -43,6 +43,7 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
 
     private var boardName: String
     private var board: APIModel.BoardModel?
+    private var boardDetail: APIModel.BoardDetail?
     private var isRequesting = false
     private var receivedPage: Int = 0
     private let cellReuseIdentifier = "BoardArticleCell"
@@ -87,7 +88,7 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
         toolbarNode.moreNode.addTarget(self, action: #selector(more), forControlEvents: .touchUpInside)
 
         NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name("didPostNewArticle"), object: nil)
-
+        requestBoardDetail()
         refresh()
     }
 
@@ -166,6 +167,12 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
         }
     }
 
+    private func requestBoardDetail() {
+        Task {
+            self.boardDetail = try await apiClient.boardDetail(boardID: boardName)
+        }
+    }
+
     // MARK: Button actions
 
     @objc private func refresh() {
@@ -187,7 +194,7 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
     }
 
     @objc private func compose() {
-        composeArticle?(boardName)
+        composeArticle?(boardName, boardDetail?.postTypes ?? [])
     }
 
     @objc private func more() {
