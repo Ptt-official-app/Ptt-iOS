@@ -12,16 +12,23 @@ import UIKit
 final class SceneFactory: LoginSceneFactoryProtocol,
                           FBPageSceneFactoryProtocol,
                           PopularArticlesSceneFactoryProtocol,
-                          BoardListSceneFactoryProtocol {
-    
+                          BoardListSceneFactoryProtocol,
+                          ProfileSceneFactoryProtocol {
+
     func makeLoginView() -> LoginView {
         let loginViewController = LoginViewController()
         return loginViewController
     }
-    
+
     func makeFBPageView() -> FBPageView {
         let fbPageViewController = FBPageViewController()
         return fbPageViewController
+    }
+
+    func makeProfileView() -> ProfileView {
+        let uiView = ProfileUIView()
+        let vc = ProfileVC(rootView: uiView)
+        return vc
     }
 
     func makePopularArticlesView() -> PopularArticlesView {

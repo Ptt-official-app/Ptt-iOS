@@ -16,4 +16,5 @@ protocol CoordinatorFactoryProtocol {
         navigationController: UINavigationController?,
         listType: BoardListViewModel.ListType
     ) -> Coordinatorable
+    func makeProfileCoordinator(navigationController: UINavigationController?) -> Coordinatorable
 }

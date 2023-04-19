@@ -43,6 +43,14 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
         return coordinator
     }
 
+    func makeProfileCoordinator(navigationController: UINavigationController?) -> Coordinatorable {
+        ProfileCoordinator(
+            router: router(navigationController),
+            factory: SceneFactory(),
+            coordinatoryFactory: CoordinatorFactory()
+        )
+    }
+
     func makeLoginCoordinator(router: Router) -> Coordinatorable {
         let coordinator = LoginCoordinator(
             router: router,
