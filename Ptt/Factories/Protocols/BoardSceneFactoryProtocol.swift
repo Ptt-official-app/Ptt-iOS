@@ -11,5 +11,5 @@ import UIKit
 protocol BoardSceneFactoryProtocol {
     func makeBoardView(withBoardName boardName: String) -> BoardView
     func makeArticleView(withBoardArticle boardArticle: BoardArticle) -> ArticleView
-    func makeComposeArticleView(withBoardName boardName: String) -> UIViewController
+    func makeComposeArticleView(withBoardName boardName: String, postTypes: [String]) -> UIViewController
 }

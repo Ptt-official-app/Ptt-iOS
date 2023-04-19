@@ -47,19 +47,8 @@ final class SceneFactory: LoginSceneFactoryProtocol,
         return SingleArticleViewController(article: boardArticle)
     }
 
-    func makeComposeArticleView(withBoardName boardName: String) -> UIViewController {
-        let types = [
-            "無",
-            "問題",
-            "討論",
-            "心情",
-            "閒聊",
-            "灑花",
-            "難過",
-            "公告",
-            "新聞"
-        ]
-        let vm = ComposeArticleViewModel(boardName: boardName, postTypes: types)
+    func makeComposeArticleView(withBoardName boardName: String, postTypes: [String]) -> UIViewController {
+        let vm = ComposeArticleViewModel(boardName: boardName, postTypes: postTypes)
         return ComposeArticleViewController(viewModel: vm)
     }
 

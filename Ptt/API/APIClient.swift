@@ -52,9 +52,14 @@ struct APIClient {
     private let decoder = JSONDecoder()
 
     private let session: URLSessionProtocol
+    private let keyChainItem: PTTKeyChain
 
-    init(session: URLSessionProtocol = URLSession.shared) {
+    init(
+        session: URLSessionProtocol = URLSession.shared,
+        keyChainItem: PTTKeyChain = KeyChainItem.shared
+    ) {
         self.session = session
+        self.keyChainItem = keyChainItem
     }
 }
 
@@ -316,7 +321,7 @@ extension APIClient: APIClientProtocol {
             URLQueryItem(name: "limit", value: "\(max)")
         ]
         guard let url = urlComponent.url,
-              let loginObj: APIModel.LoginToken = KeyChainItem.readObject(for: .loginToken) else {
+              let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
             assertionFailure()
             return
         }
@@ -342,14 +347,14 @@ extension APIClient: APIClientProtocol {
         }
         task.resume()
     }
-    
+
     func createArticle(boardId: String, article: APIModel.CreateArticle, completion: @escaping (CreateArticleResult) -> Void) {
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/board/" + boardId + "/article"
 
         guard let url = urlComponent.url,
               let jsonBody = try? JSONEncoder().encode(article),
-              let loginToken: APIModel.LoginToken = KeyChainItem.readObject(for: .loginToken) else {
+              let loginToken: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
             assertionFailure()
             return
         }
@@ -422,8 +427,18 @@ extension APIClient: APIClientProtocol {
         task.resume()
     }
 
+    func boardDetail(boardID: String) async throws -> APIModel.BoardDetail {
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/board/\(boardID)"
+        guard let url = urlComponent.url else {  throw APIError.urlError }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.GET.rawValue
+        return try await doRequest(request: request)
+    }
+
     func favoritesBoards(startIndex: String, limit: Int = 200) async throws -> APIModel.BoardInfoList {
-        guard let loginObj: APIModel.LoginToken = KeyChainItem.readObject(for: .loginToken) else {
+        guard let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
             throw APIError.loginTokenNotExist
         }
         var urlComponent = rootURLComponents
@@ -435,58 +450,42 @@ extension APIClient: APIClientProtocol {
             URLQueryItem(name: "limit", value: "\(limit)")
         ]
 
-        guard let url = urlComponent.url else {
-            throw APIError.urlError
-        }
+        guard let url = urlComponent.url else { throw APIError.urlError }
 
         var request = URLRequest(url: url)
         request.httpMethod = Method.GET.rawValue
         request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
-
-        do {
-            let response = try await URLSession.shared.data(for: request)
-            let result = processResponse(data: response.0, urlResponse: response.1, error: nil)
-            switch result {
-            case .failure(let apiError):
-                throw apiError
-            case .success(let resultData):
-                let result = try decoder.decode(APIModel.BoardInfoList.self, from: resultData)
-                return result
-            }
-        } catch (let decodingError) {
-            let message = self.message(of: decodingError)
-            throw APIError.decodingError(message)
-        }
+        return try await doRequest(request: request)
     }
 
     func popularBoards() async throws -> APIModel.BoardInfoList {
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/boards/popular"
-        guard let url = urlComponent.url else {
-            throw APIError.urlError
-        }
+        guard let url = urlComponent.url else { throw APIError.urlError }
 
         var request = URLRequest(url: url)
         request.httpMethod = Method.GET.rawValue
-        do {
-            let response = try await session.data(for: request)
-            let result = processResponse(data: response.0, urlResponse: response.1, error: nil)
-            switch result {
-            case .failure(let apiError):
-                throw apiError
-            case .success(let resultData):
-                let result = try decoder.decode(APIModel.BoardInfoList.self, from: resultData)
-                return result
-            }
-        } catch (let decodingError) {
-            let message = message(of: decodingError)
-            throw APIError.decodingError(message)
-        }
+        return try await doRequest(request: request)
     }
 }
 
 // MARK: Private helper function
 extension APIClient {
+    private func doRequest<T: Decodable>(request: URLRequest) async throws -> T {
+        do {
+            let response = try await session.data(for: request)
+            let result = processResponseWithErrorMSG(data: response.0, urlResponse: response.1, error: nil)
+            switch result {
+            case .failure(let apiError):
+                throw apiError
+            case .success(let resultData):
+                let result = try decoder.decode(T.self, from: resultData)
+                return result
+            }
+        } catch {
+            throw transferCatch(error: error)
+        }
+    }
     private func processResponse(data: Data?, urlResponse: URLResponse?, error: Error?) -> ProcessResult {
         if let error = error {
             return .failure(.httpError(error))
@@ -513,12 +512,20 @@ extension APIClient {
      Temp for get Register/AttmentRegister Error msg
      */
     private func processResponseWithErrorMSG(data: Data?, urlResponse: URLResponse?, error: Error?) -> ProcessResult {
-        
+
+        guard let httpURLResponse = urlResponse as? HTTPURLResponse else {
+            return .failure(.responseNotExist)
+        }
+
+        let statusCode = httpURLResponse.statusCode
         do {
             if let d = data {
                 let errorDict = try decoder.decode(APIModel.ErrorMsg.self, from: d)
                 let error_msg = errorDict.Msg
-                return .failure(.requestFailed(error_msg))
+                return .failure(.requestFailed(statusCode, error_msg))
+            } else if statusCode != 200 {
+                let message = "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"
+                return .failure(.notExpectedHTTPStatus(message))
             }
         } catch {
             print("Decode error:", error)
@@ -526,16 +533,6 @@ extension APIClient {
 
         if let error = error {
             return .failure(.httpError(error))
-        }
-
-        guard let httpURLResponse = urlResponse as? HTTPURLResponse else {
-            return .failure(.responseNotExist)
-        }
-
-        let statusCode = httpURLResponse.statusCode
-        if statusCode != 200 {
-            let message = "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"
-            return .failure(.notExpectedHTTPStatus(message))
         }
 
         guard let resultData = data else {
@@ -565,6 +562,15 @@ extension APIClient {
         }
 
         return message
+    }
+
+    private func transferCatch(error: Error) -> Error {
+        if let apiError = error as? APIError {
+            return apiError
+        } else {
+            let message = message(of: error)
+            return APIError.decodingError(message)
+        }
     }
 
     struct MyRegex {

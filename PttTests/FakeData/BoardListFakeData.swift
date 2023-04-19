@@ -107,9 +107,7 @@ enum BoardListFakeData {
                 "type": "◎",
                 "class": "嘰哩",
                 "nuser": 0,
-                "moderators": [
-
-                ],
+                "moderators": [],
                 "reason": "",
                 "read": true,
                 "total": 3,

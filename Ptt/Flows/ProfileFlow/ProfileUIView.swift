@@ -1,5 +1,5 @@
 //
-//  ProfileView.swift
+//  ProfileUIView.swift
 //  Ptt
 //
 //  Created by AnsonChen on 2023/3/22.
@@ -7,8 +7,6 @@
 //
 
 import SwiftUI
-
-
 
 struct ProfileUIView: View {
     var body: some View {
