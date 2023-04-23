@@ -13,7 +13,7 @@ final class SceneFactory: LoginSceneFactoryProtocol,
                           FBPageSceneFactoryProtocol,
                           PopularArticlesSceneFactoryProtocol,
                           BoardListSceneFactoryProtocol,
-                          ProfileSceneFactoryProtocol {
+                          UserInfoSceneFactoryProtocol {
 
     func makeLoginView() -> LoginView {
         let loginViewController = LoginViewController()
@@ -25,9 +25,9 @@ final class SceneFactory: LoginSceneFactoryProtocol,
         return fbPageViewController
     }
 
-    func makeProfileView() -> ProfileView {
-        let uiView = ProfileUIView()
-        let vc = ProfileVC(rootView: uiView)
+    func makeUserInfoView() -> UserInfoView {
+        let uiView = UserInfoUIView(viewModel: UserInfoViewModel())
+        let vc = UserInfoVC(rootView: uiView)
         return vc
     }
 

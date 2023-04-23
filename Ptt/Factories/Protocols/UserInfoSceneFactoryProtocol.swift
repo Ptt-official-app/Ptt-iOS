@@ -1,5 +1,5 @@
 //
-//  ProfileSceneFactoryProtocol.swift
+//  UserInfoSceneFactoryProtocol.swift
 //  Ptt
 //
 //  Created by AnsonChen on 2023/3/22.
@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol ProfileSceneFactoryProtocol {
-    func makeProfileView() -> ProfileView
+protocol UserInfoSceneFactoryProtocol {
+    func makeUserInfoView() -> UserInfoView
 }

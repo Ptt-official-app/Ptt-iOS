@@ -91,3 +91,12 @@
 "PostTypeIsEmpty" = "Post type is empty";
 "CreatePostConfirmMessage" = "Do you want to submit this post?";
 "submit" = "Submit";
+
+"Profile" = "Profile";
+"HistoryArticles" = "Articles";
+"HistoryComments" = "Comments";
+"LoginDays" = "Login days";
+"ValidPosts" = "Valid posts";
+"Economy" = "Economy";
+"BadPosts" = "Bad posts";
+"LastLoginIP" = "Last IP";

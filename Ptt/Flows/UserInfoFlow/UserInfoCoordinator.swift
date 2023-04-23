@@ -1,5 +1,5 @@
 //
-//  PorfileCoordinator.swift
+//  UserInfoCoordinator.swift
 //  Ptt
 //
 //  Created by AnsonChen on 2023/3/22.
@@ -8,15 +8,15 @@
 
 import Foundation
 
-class ProfileCoordinator: BaseCoordinator {
+class UserInfoCoordinator: BaseCoordinator {
 
-    private let factory: ProfileSceneFactoryProtocol
+    private let factory: UserInfoSceneFactoryProtocol
     private let coordinatoryFactory: CoordinatorFactoryProtocol
     private let router: Routerable
 
     init(
         router: Routerable,
-        factory: ProfileSceneFactoryProtocol,
+        factory: UserInfoSceneFactoryProtocol,
         coordinatoryFactory: CoordinatorFactoryProtocol
     ) {
         self.router = router
@@ -25,16 +25,16 @@ class ProfileCoordinator: BaseCoordinator {
     }
 
     override func start() {
-        showProfileView()
+        showUserInfoView()
     }
 }
 
 // MARK: - Private
 
-private extension ProfileCoordinator {
+private extension UserInfoCoordinator {
 
-    func showProfileView() {
-        let boardListView = factory.makeProfileView()
+    func showUserInfoView() {
+        let view = factory.makeUserInfoView()
 
 //        boardListView.onBoardSelect = { [unowned self] boardName in
 //            self.runBoardFlow(withBoardName: boardName)
@@ -45,6 +45,6 @@ private extension ProfileCoordinator {
 //            self.finshFlow?()
 //        }
 
-        router.setRootModule(boardListView)
+        router.setRootModule(view)
     }
 }
