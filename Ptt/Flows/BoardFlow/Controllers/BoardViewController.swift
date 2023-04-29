@@ -269,7 +269,7 @@ private class BoardToolbar: UIToolbar {
         frame = CGRect(x: 0,
                        y: superview.bounds.height - superview.safeAreaInsets.bottom - height,
                        width: superview.bounds.width,
-                       height: superview.safeAreaInsets.bottom + height)
+                       height: height)
     }
 }
 
