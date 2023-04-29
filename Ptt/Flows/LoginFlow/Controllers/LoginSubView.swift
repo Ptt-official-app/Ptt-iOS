@@ -155,8 +155,8 @@ extension LoginViewController {
 
         self.btnLogin.isEnabled = false
         APIClient.shared.login(account: account, password: passwd) { result in
-            self.btnLogin.isEnabled = true
             DispatchQueue.main.async(execute: {
+                self.btnLogin.isEnabled = true
                 print("login using", account, " result", result)
                 switch result {
                 case .failure(let error):
