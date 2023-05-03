@@ -29,6 +29,7 @@ final class BoardListTVC: UITableViewController, BoardListView {
         self.boardSearchVC = BoardSearchViewController(apiClient: viewModel.apiClient)
         self.searchController = UISearchController(searchResultsController: boardSearchVC)
         super.init(style: .plain)
+        boardSearchVC.delegate = viewModel
     }
 
     required init?(coder: NSCoder) {

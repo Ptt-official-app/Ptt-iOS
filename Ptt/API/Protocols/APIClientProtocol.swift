@@ -54,5 +54,6 @@ protocol APIClientProtocol {
     func getPopularArticles(startIdx: String, limit: Int, desc: Bool, completion: @escaping (PopularArticlesResult) -> Void)
     func boardDetail(boardID: String) async throws -> APIModel.BoardDetail
     func favoritesBoards(startIndex: String, limit: Int) async throws -> APIModel.BoardInfoList
+    func addBoardToFavorite(levelIndex: String, bid: String) async throws -> APIModel.BoardInfo
     func popularBoards() async throws -> APIModel.BoardInfoList
 }

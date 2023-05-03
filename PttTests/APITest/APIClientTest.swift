@@ -130,11 +130,11 @@ final class APIClientTest: XCTestCase {
                 XCTAssertEqual(list.next_idx, "")
                 XCTAssert(list.list.count == 6)
                 let info = list.list[0]
-                XCTAssert(info.bid == "6_ALLPOST")
-                XCTAssert(info.brdname == "ALLPOST")
-                XCTAssert(info.title == "跨板式LOCAL新文章")
-                XCTAssert(info.flag == 32)
-                XCTAssert(info.nuser == 0)
+                XCTAssert(info.bid == "Baseball")
+                XCTAssert(info.brdname == "Baseball")
+                XCTAssert(info.title == "[棒球] 板主選舉投票中")
+                XCTAssert(info.flag.contains(.cpLog))
+                XCTAssert(info.nuser == 14)
             }
         }
     }
@@ -211,8 +211,8 @@ final class APIClientTest: XCTestCase {
         let result = try await apiClient.favoritesBoards(startIndex: startIdx, limit: limit)
         XCTAssertEqual(result.next_idx, "")
         XCTAssertEqual(result.list.count, 6)
-        XCTAssertEqual(result.list[0].bid, "6_ALLPOST")
-        XCTAssertEqual(result.list[2].title, "動態看板及歌曲投稿")
+        XCTAssertEqual(result.list[0].bid, "Baseball")
+        XCTAssertEqual(result.list[2].title, "[NBA] Dwight Howard 來台打球")
     }
 
     func testFavoritesBoards_failed_due_to_invalidUser() async throws {
@@ -245,6 +245,26 @@ final class APIClientTest: XCTestCase {
 
     }
 
+    func testAddBoardToFavorite() async throws {
+        let levelIndex = String.random(length: 8)
+        let bid = String.random(length: 4)
+        urlSession.stub { path, headers, _, body, completion in
+            XCTAssertEqual(path, "/api/user/\(self.userID ?? "")/favorites/addboard")
+            XCTAssertEqual(headers["Authorization"], "bearer \(self.token ?? "")")
+            let data = try XCTUnwrap(body)
+            let dict = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: String])
+            XCTAssertEqual(dict["bid"], bid)
+            XCTAssertEqual(dict["level_idx"], levelIndex)
+            completion(.success((200, BoardSummaryFakeData.successData)))
+        }
+        let result = try await apiClient.addBoardToFavorite(levelIndex: levelIndex, bid: bid)
+        XCTAssertEqual(result.bid, "G-Basketball")
+        XCTAssertTrue(result.flag.contains(.noBoo))
+        XCTAssertTrue(result.flag.contains(.cpLog))
+        XCTAssertTrue(result.flag.contains(.ipLogRecommend))
+        XCTAssertEqual(result.title, "女生打籃球籃球女生打打女生籃球")
+    }
+
     func testPopularBoards_succeed() async throws {
         urlSession.stub { path, headers, queryItem, _, completion in
             XCTAssertEqual(path, "/api/boards/popular")
@@ -255,8 +275,8 @@ final class APIClientTest: XCTestCase {
         let result = try await apiClient.popularBoards()
         XCTAssertEqual(result.next_idx, "")
         XCTAssertEqual(result.list.count, 6)
-        XCTAssertEqual(result.list[0].bid, "6_ALLPOST")
-        XCTAssertEqual(result.list[2].title, "動態看板及歌曲投稿")
+        XCTAssertEqual(result.list[0].bid, "Baseball")
+        XCTAssertEqual(result.list[2].title, "[NBA] Dwight Howard 來台打球")
     }
 
     func testBoardDetail_succeed() async throws {

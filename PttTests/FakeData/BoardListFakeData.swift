@@ -10,110 +10,134 @@ enum BoardListFakeData {
     static var successData: [String: Any] = [
         "list": [
             [
-                "bid": "6_ALLPOST",
-                "brdname": "ALLPOST",
-                "title": "跨板式LOCAL新文章",
-                "flag": 32,
+                "bid": "Baseball",
+                "brdname": "Baseball",
+                "title": "[棒球] 板主選舉投票中",
+                "flag": 2097152,
                 "type": "◎",
-                "class": "嘰哩",
-                "nuser": 0,
+                "class": "棒球",
+                "nuser": 14,
                 "moderators": [
-
+                    "test1"
                 ],
                 "reason": "",
-                "read": false,
-                "total": 0,
+                "read": true,
+                "fav": false,
+                "total": 19522,
                 "last_post_time": 0,
-                "stat_attr": 0,
-                "level_idx": ""
+                "stat_attr": 2,
+                "url": "/board/Baseball/articles",
+                "gid": 0,
+                "pttbid": 13703,
+                "idx": ""
             ],
             [
-                "bid": "11_EditExp",
-                "brdname": "EditExp",
-                "title": "範本精靈投稿區",
-                "flag": 0,
+                "bid": "C_Chat",
+                "brdname": "C_Chat",
+                "title": "[希洽] 恭喜艾爾登法環榮獲GOTY",
+                "flag": 2097152,
                 "type": "◎",
-                "class": "嘰哩",
-                "nuser": 0,
+                "class": "閒談",
+                "nuser": 13,
                 "moderators": [
-
+                    "test1"
                 ],
                 "reason": "",
-                "read": false,
-                "total": 0,
+                "read": true,
+                "fav": false,
+                "total": 15965,
                 "last_post_time": 0,
-                "stat_attr": 0,
-                "level_idx": ""
+                "stat_attr": 2,
+                "url": "/board/C_Chat/articles",
+                "gid": 0,
+                "pttbid": 14067,
+                "idx": ""
             ],
             [
-                "bid": "8_Note",
-                "brdname": "Note",
-                "title": "動態看板及歌曲投稿",
-                "flag": 0,
+                "bid": "NBA",
+                "brdname": "NBA",
+                "title": "[NBA] Dwight Howard 來台打球",
+                "flag": 2097152,
                 "type": "◎",
-                "class": "嘰哩",
-                "nuser": 0,
+                "class": "NBA.",
+                "nuser": 11,
                 "moderators": [
-
+                    "test1"
                 ],
                 "reason": "",
-                "read": false,
-                "total": 0,
+                "read": true,
+                "fav": false,
+                "total": 1543,
                 "last_post_time": 0,
-                "stat_attr": 0,
-                "level_idx": ""
+                "stat_attr": 2,
+                "url": "/board/NBA/articles",
+                "gid": 0,
+                "pttbid": 13810,
+                "idx": ""
             ],
             [
-                "bid": "9_Record",
-                "brdname": "Record",
-                "title": "我們的成果",
-                "flag": 32,
+                "bid": "Test",
+                "brdname": "Test",
+                "title": "[測試] 每週定期清除本板文章",
+                "flag": 2097152,
                 "type": "◎",
                 "class": "嘰哩",
-                "nuser": 0,
+                "nuser": 10,
                 "moderators": [
-
+                    "test1"
                 ],
                 "reason": "",
-                "read": false,
-                "total": 1,
+                "read": true,
+                "fav": false,
+                "total": 30,
                 "last_post_time": 0,
-                "stat_attr": 0,
-                "level_idx": ""
+                "stat_attr": 2,
+                "url": "/board/Test/articles",
+                "gid": 0,
+                "pttbid": 2569,
+                "idx": ""
             ],
             [
-                "bid": "1_SYSOP",
-                "brdname": "SYSOP",
-                "title": "站長好!",
-                "flag": 32,
+                "bid": "PttApp",
+                "brdname": "PttApp",
+                "title": "測試與建議回饋的集散地",
+                "flag": 10551296,
                 "type": "◎",
-                "class": "嘰哩",
-                "nuser": 0,
+                "class": "官方",
+                "nuser": 9,
                 "moderators": [
-
+                    "teemocogs"
                 ],
                 "reason": "",
-                "read": false,
-                "total": 0,
+                "read": true,
+                "fav": false,
+                "total": 14,
                 "last_post_time": 0,
-                "stat_attr": 0,
-                "level_idx": ""
+                "stat_attr": 2,
+                "url": "/board/PttApp/articles",
+                "gid": 0,
+                "pttbid": 14468,
+                "idx": ""
             ],
             [
-                "bid": "10_WhoAmI",
+                "bid": "WhoAmI",
                 "brdname": "WhoAmI",
                 "title": "呵呵，猜猜我是誰！",
                 "flag": 0,
                 "type": "◎",
                 "class": "嘰哩",
-                "nuser": 0,
+                "nuser": 9,
                 "moderators": [],
                 "reason": "",
                 "read": true,
-                "total": 3,
+                "fav": false,
+                "total": 7,
                 "last_post_time": 0,
-                "stat_attr": 0,
-                "level_idx": ""
+                "stat_attr": 2,
+                "url": "/board/WhoAmI/articles",
+                "gid": 5,
+                "pttbid": 10,
+                "idx": ""
             ]
         ],
         "next_idx": ""

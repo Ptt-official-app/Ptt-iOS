@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol BoardSearchDelegate: AnyObject {
+    func boardDidAddToFavorite(info: APIModel.BoardInfo)
+}
+
 final class BoardSearchViewController: UITableViewController {
     private let apiClient: APIClientProtocol
     private var favoriteBoardNames: [String] = []
@@ -15,6 +19,7 @@ final class BoardSearchViewController: UITableViewController {
     private var startIdx = ""
     private var scrollDirection: Direction = .unknown
     private var keyword = ""
+    weak var delegate: BoardSearchDelegate?
 
     init(apiClient: APIClientProtocol = APIClient.shared) {
         self.apiClient = apiClient
@@ -44,6 +49,7 @@ final class BoardSearchViewController: UITableViewController {
         tableView.reloadData()
     }
 
+    // MARK: - TableView delegate
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         boards.count
     }
@@ -66,14 +72,11 @@ final class BoardSearchViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let data = boards[indexPath.row]
-        if let index = favoriteBoardNames.firstIndex(of: data.brdname) {
-            favoriteBoardNames.remove(at: index)
+        if let _ = favoriteBoardNames.firstIndex(of: data.brdname) {
+            // Remove board from favorite
         } else {
-            favoriteBoardNames.append(data.brdname)
+            addBoardToFavorite(board: data, indexPath: indexPath)
         }
-        tableView.beginUpdates()
-        tableView.reloadRows(at: [indexPath], with: .automatic)
-        tableView.endUpdates()
     }
 
     override func tableView(
@@ -96,6 +99,7 @@ final class BoardSearchViewController: UITableViewController {
     }
 }
 
+// MARK: - API
 extension BoardSearchViewController {
     private func getBoardList(keyword: String) {
         self.keyword = keyword
@@ -117,5 +121,34 @@ extension BoardSearchViewController {
                 }
             }
         }
+    }
+
+    private func addBoardToFavorite(board: APIModel.BoardInfo, indexPath: IndexPath) {
+        Task {
+            do {
+                let levelIndex = board.level_idx ?? ""
+                let response = try await apiClient.addBoardToFavorite(levelIndex: levelIndex, bid: board.bid)
+                delegate?.boardDidAddToFavorite(info: response)
+                await MainActor.run {
+                    favoriteBoardNames.append(board.brdname)
+                    tableView.beginUpdates()
+                    tableView.reloadRows(at: [indexPath], with: .automatic)
+                    tableView.endUpdates()
+                }
+            } catch {
+                await MainActor.run(body: {
+                    showError(message: error.localizedDescription)
+                })
+            }
+        }
+    }
+}
+
+extension BoardSearchViewController {
+    private func showError(message: String) {
+        let alert = UIAlertController(title: L10n.error, message: message, preferredStyle: .alert)
+        let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
+        alert.addAction(confirm)
+        self.present(alert, animated: true, completion: nil)
     }
 }
