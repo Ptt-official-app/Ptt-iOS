@@ -96,16 +96,44 @@ extension APIModel {
         }
     }
 
+    /// https://github.com/Ptt-official-app/go-pttbbs/blob/main/ptttype/file_mode.go#L8
     struct FileMode: OptionSet, Codable {
         let rawValue: UInt
 
         static let none = FileMode([])
+        /// local saved, non-mail
         static let local = FileMode(rawValue: 0x01)
+        /// already, mail only
         static let read = FileMode(rawValue: 0x01)
+
+        /// non-mail + mail
         static let marked = FileMode(rawValue: 0x02)
+
+        /// non-mail
         static let digest = FileMode(rawValue: 0x04)
+        /// mail only
         static let replied = FileMode(rawValue: 0x04)
-        // TODO, document has duplicated value, checking with BE
+
+        /// push bottom, non-mail
+        static let bottom = FileMode(rawValue: 0x08)
+        /// multi send, mail only
+        static let multi = FileMode(rawValue: 0x08)
+
+        /// Problem solved, sysop/BM non-mail only
+        static let solved = FileMode(rawValue: 0x10)
+
+        /// Hide, in announce
+        static let hide = FileMode(rawValue: 0x20)
+        /// bid, in non-announce
+        static let bid = FileMode(rawValue: 0x20)
+
+        /// BM only, in announce
+        static let vm = FileMode(rawValue: 0x40)
+        /// For vote, in non-announce
+        static let vote = FileMode(rawValue: 0x40)
+
+        /// Anonymous file
+        static let anonymous = FileMode(rawValue: 0x80)
     }
 
     /// https://github.com/Ptt-official-app/go-pttbbs/blob/v0.16.2/ptttype/subject_type.go

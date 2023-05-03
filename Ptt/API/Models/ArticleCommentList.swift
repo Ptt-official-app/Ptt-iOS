@@ -119,7 +119,5 @@ extension APIModel {
         case reply
         case edit
         case deleted
-        case basic
-        case basicDate
     }
 }
