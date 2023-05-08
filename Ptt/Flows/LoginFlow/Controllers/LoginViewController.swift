@@ -26,7 +26,8 @@ final class LoginViewController: UIViewController, LoginView {
     private let scrollView = UIScrollView()
     let switchContentView = UIView()
     let global_width: CGFloat = 265
-
+    var state:UILoginState = .login
+    
     private func init_layout() {
         view.ptt_add(subviews: [scrollView])
         NSLayoutConstraint.activate(
@@ -98,6 +99,7 @@ final class LoginViewController: UIViewController, LoginView {
     }
 
     func toggleState(_ state: UILoginState) {
+        self.state = state
         switch state {
         case .login:
             print("Toggle State Login")
@@ -442,15 +444,14 @@ extension LoginViewController: UITextFieldDelegate {
         let screenHeight = Int(self.view.bounds.height)
 
         // 31 = login~forget height
-        let keyboardHeight = lastKeyboardHeight + Int(self.btnForget.frame.height + self.btnLogin.frame.height + 31)
+        var keyboardHeight = lastKeyboardHeight - Int(self.btnForget.frame.height + self.btnLogin.frame.height + 31)
+        if self.state == .attemptRegister {
+            keyboardHeight = lastKeyboardHeight - Int(self.btnAttemptRegister.frame.height + 20)
+        }
 
         let margin_to_keyboard = 10
-        let diff = Int(btnLogin.frame.origin.y) - (screenHeight - keyboardHeight) + margin_to_keyboard
-
-        if diff > 0 {
-            let point = CGPoint(x: 0, y: Int(diff) )
-            self.scrollView.setContentOffset(point, animated: true)
-        }
+        let diff = Int(btnLogin.frame.origin.y) - keyboardHeight + margin_to_keyboard
+        self.scrollView.frame.origin.y += CGFloat(diff)
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -478,8 +479,10 @@ extension LoginViewController: UITextFieldDelegate {
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
-        let point = CGPoint(x: 0, y: 0)
-        self.scrollView.setContentOffset(point, animated: true)
+        UIView.animate(withDuration: 0.3, animations: {
+            self.view.layoutIfNeeded() // add this
+            self.scrollView.frame.origin.y = CGFloat(0)
+        })
     }
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
