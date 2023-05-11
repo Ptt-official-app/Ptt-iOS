@@ -774,7 +774,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EA475F9323C4834C000867FE /* Build configuration list for PBXNativeTarget "PttTests" */;
 			buildPhases = (
-				912D926E93907D87D492B266 /* [CP] Check Pods Manifest.lock */,
 				EA475F8323C4834C000867FE /* Sources */,
 				EA475F8423C4834C000867FE /* Frameworks */,
 				EA475F8523C4834C000867FE /* Resources */,
@@ -892,28 +891,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "PATH=${PATH}:/opt/homebrew/bin/\nfunction generate() {\n  cd ${SRCROOT}/BuildTools \n  swiftgen config run\n}\n\nif which swiftgen > /dev/null; then\n  generate\nelse\n  brew bundle\n  generate\nfi\n";
-		};
-		912D926E93907D87D492B266 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-PttTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
