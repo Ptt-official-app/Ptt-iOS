@@ -33,8 +33,11 @@ extension APIModel {
         let `class`: String
 
         static func adapter(model: GoPttBBSBrdArticle) -> BoardArticle {
-            // TODO:
-            return BoardArticle(title: "[" + model.`class` + "]" + model.title, date: "\(model.create_time)", author: model.owner, boardID: model.bid, articleID: model.aid)
+            return BoardArticle(title: "[" + model.`class` + "]" + model.title,
+                                date: Date(timeIntervalSince1970: model.create_time).toBoardDateString(),
+                                author: model.owner,
+                                boardID: model.bid,
+                                articleID: model.aid)
         }
 
         func adapter() -> BoardArticle {

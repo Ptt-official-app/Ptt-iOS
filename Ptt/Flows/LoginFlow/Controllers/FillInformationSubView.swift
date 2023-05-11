@@ -5,72 +5,50 @@
 //  Created by You Gang Kuo on 2022/1/23.
 //  Copyright © 2022 Ptt. All rights reserved.
 //
-import AsyncDisplayKit
-import Foundation
+
 import UIKit
 
 extension LoginViewController {
 
     func initFillInformationViews() {
-        lbFillTitle.style.preferredSize = CGSize(width: global_width, height: 55)
+        var constraints = [NSLayoutConstraint]()
 
-        tfFillRealName.style.preferredSize = CGSize(width: global_width / 2, height: 30)
-        tfFillBirthday.style.preferredSize = CGSize(width: global_width / 2, height: 30)
-        tfFillAddress.style.preferredSize = CGSize(width: global_width, height: 30)
+        let horiLine1 = UIView()
+        horiLine1.ptt_add(subviews: [tfFillRealName, tfFillBirthday])
+        let spacing1: CGFloat = 10
+        let metrics1 = ["w": global_width / 2 - spacing1, "s": spacing1]
+        let viewsDict1 = ["tfFillRealName": tfFillRealName, "tfFillBirthday": tfFillBirthday]
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[tfFillRealName(w)]-(>=s)-[tfFillBirthday(w)]|", metrics: metrics1, views: viewsDict1)
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:[tfFillRealName(30)]", metrics: nil, views: viewsDict1)
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:[tfFillBirthday(30)]", metrics: nil, views: viewsDict1)
 
-        lbNeedReason.style.preferredSize = CGSize(width: global_width / 2, height: 30)
-        btnOpenAccount.style.preferredSize = CGSize(width: global_width / 2, height: 30)
+        let horiLine2 = UIView()
+        horiLine2.ptt_add(subviews: [lbNeedReason, btnOpenAccount])
+        let metrics2 = ["w": global_width / 2]
+        let viewsDict2 = ["lbNeedReason": lbNeedReason, "btnOpenAccount": btnOpenAccount]
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:[lbNeedReason(w)][btnOpenAccount(w)]|", metrics: metrics2, views: viewsDict2)
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:[lbNeedReason(30)]", metrics: nil, views: viewsDict2)
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:[btnOpenAccount(30)]", metrics: nil, views: viewsDict2)
 
-        let horiLine1 = ASStackLayoutSpec(
-            direction: .horizontal,
-            spacing: 0,
-            justifyContent: .center,
-            alignItems: .center,
-            children: [tfFillRealName, tfFillBirthday]
-        )
-        let addressInset = ASInsetLayoutSpec(
-            insets: UIEdgeInsets(top: 32, left: 0, bottom: 32, right: 0),
-            child: tfFillAddress
-        )
-
-        let horiLine2 = ASStackLayoutSpec(
-            direction: .horizontal,
-            spacing: 0,
-            justifyContent: .center,
-            alignItems: .center,
-            children: [lbNeedReason, btnOpenAccount]
-        )
-
-        let vertLine = ASStackLayoutSpec(
-            direction: .vertical,
-            spacing: 0,
-            justifyContent: .center,
-            alignItems: .center,
-            children: [lbFillTitle, horiLine1, addressInset, horiLine2]
-        )
-
-        fillInformationStackSpec = ASCenterLayoutSpec(
-            centeringOptions: ASCenterLayoutSpecCenteringOptions.X,
-            sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY,
-            child: vertLine
-        )
-
-        self.node.addSubnode(lbFillTitle)
-        self.node.addSubnode(tfFillRealName)
-        self.node.addSubnode(tfFillBirthday)
-        self.node.addSubnode(tfFillAddress)
-        self.node.addSubnode(lbNeedReason)
-        self.node.addSubnode(btnOpenAccount)
+        let viewsDict = ["lbFillTitle": lbFillTitle, "horiLine1": horiLine1, "tfFillAddress": tfFillAddress, "horiLine2": horiLine2]
+        let views = [lbFillTitle, horiLine1, tfFillAddress, horiLine2]
+        switchContentView.ptt_add(subviews: views)
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[lbFillTitle(55)]-(30)-[horiLine1(30)]-(30)-[tfFillAddress(30)]-(30)-[horiLine2(30)]", metrics: nil, views: viewsDict)
+        for view in views {
+            constraints.append(view.leadingAnchor.constraint(equalTo: switchContentView.leadingAnchor))
+            constraints.append(view.trailingAnchor.constraint(equalTo: switchContentView.trailingAnchor))
+        }
+        NSLayoutConstraint.activate(constraints)
     }
 
     @objc
     func openAccountPress() {
         print("open account press")
         showAlert(title: "施工中", msg: "測試中未完成，但你剛剛的帳號可以登入了，請試試看")
-        (tfUsername.view as! LoginTextField).text = (tfRegisterUsername.view as! LoginTextField).text
-        (tfPassword.view as! LoginTextField).text = (tfRegisterPassword.view as! LoginTextField).text
-        toggleState(UILoginState.Login)
-        textFieldDidChange(textField: tfUsername.view as! UITextField)
+        tfUsername.text = tfRegisterUsername.text
+        tfPassword.text = tfRegisterPassword.text
+        toggleState(UILoginState.login)
+        textFieldDidChange(textField: tfUsername)
     }
 
     func toggleFillInformationView(isHidden: Bool) {
@@ -82,8 +60,9 @@ extension LoginViewController {
         btnOpenAccount.isHidden = isHidden
     }
 
-    func getlbFillTitle() -> ASTextNode {
-        let label = ASTextNode()
+    func getlbFillTitle() -> UILabel {
+        let label = UILabel()
+        label.numberOfLines = 0
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .left
         paragraphStyle.paragraphSpacing = 2
@@ -99,40 +78,33 @@ extension LoginViewController {
         return label
     }
 
-    func gettfFillRealName() -> ASDisplayNode {
-        return ASDisplayNode { () -> UIView in
-            let tf = LoginTextField(type: TextFieldType.Username)
-            tf.title = L10n.realName
-
-            tf.delegate = self
-            tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
-            return tf
-        }
+    func gettfFillRealName() -> LoginTextField {
+        let tf = LoginTextField(type: TextFieldType.username)
+        tf.title = L10n.realName
+        tf.delegate = self
+        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+        return tf
     }
 
-    func gettfFillBirthday() -> ASDisplayNode {
-        return ASDisplayNode { () -> UIView in
-            let tf = LoginTextField(type: TextFieldType.Username)
-            tf.title = L10n.birthday
-            tf.delegate = self
-            tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
-            return tf
-        }
+    func gettfFillBirthday() -> LoginTextField {
+        let tf = LoginTextField(type: TextFieldType.username)
+        tf.title = L10n.birthday
+        tf.keyboardType = .numberPad
+        tf.delegate = self
+        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+        return tf
     }
 
-    func gettfFillAddress() -> ASDisplayNode {
-        return ASDisplayNode { () -> UIView in
-            let tf = LoginTextField(type: TextFieldType.Username)
-            tf.title = L10n.address
-
-            tf.delegate = self
-            tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
-            return tf
-        }
+    func gettfFillAddress() -> LoginTextField {
+        let tf = LoginTextField(type: TextFieldType.username)
+        tf.title = L10n.address
+        tf.delegate = self
+        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+        return tf
     }
 
-    func getlbNeedReason() -> ASButtonNode {
-        let button = ASButtonNode()
+    func getlbNeedReason() -> UIButton {
+        let button = UIButton()
         let title = L10n.whyNeedPersonalInfo
 
         button.contentHorizontalAlignment = .left
@@ -143,13 +115,13 @@ extension LoginViewController {
         ] as [NSAttributedString.Key: Any]
         button.setAttributedTitle(NSAttributedString(string: title, attributes: attr), for: UIControl.State.normal)
 
-        button.addTarget(self, action: #selector(onNotReceive), forControlEvents: ASControlNodeEvent.touchUpInside)
+        button.addTarget(self, action: #selector(onNotReceive), for: .touchUpInside)
 
         return button
     }
 
-    func getbtnOpenAccount() -> ASButtonNode {
-        let button = ButtonNode(type: .primary)
+    func getbtnOpenAccount() -> LoginButton {
+        let button = LoginButton(type: .primary)
         let title = L10n.openAccount
 
         let attr = [
@@ -159,7 +131,7 @@ extension LoginViewController {
         ] as [NSAttributedString.Key: Any]
         button.setAttributedTitle(NSAttributedString(string: title, attributes: attr), for: UIControl.State.normal)
 
-        button.addTarget(self, action: #selector(openAccountPress), forControlEvents: ASControlNodeEvent.touchUpInside)
+        button.addTarget(self, action: #selector(openAccountPress), for: .touchUpInside)
 
         return button
     }

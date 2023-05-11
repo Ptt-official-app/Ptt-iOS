@@ -81,7 +81,7 @@ extension APIModel {
 
             let fullArticle = FullArticle(
                 title: "[" + model.`class` + "]" + model.title,
-                date: Date(timeIntervalSince1970: model.create_time).toDateString(),
+                date: Date(timeIntervalSince1970: model.create_time).toArticleDateString(),
                 author: model.owner,
                 board: model.brdname,
                 nickname: "",

@@ -201,9 +201,11 @@ extension APIClient: APIClientProtocol {
             urlComponent = goPttBBSURLComponents
             urlComponent.path = "/api/board/\(bid)/articles"
             // Percent encoding is automatically done with RFC 3986
-            urlComponent.queryItems = [
-                URLQueryItem(name: "start_idx", value: startIdx)
-            ]
+            if let startIdx {
+                urlComponent.queryItems = [
+                    URLQueryItem(name: "start_idx", value: startIdx)
+                ]
+            }
         case .go_bbs(boardID: let boardID):
             urlComponent = goBBSURLComponents
             urlComponent.path = "/v1/boards/\(boardID)/articles"
