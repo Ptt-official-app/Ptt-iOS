@@ -26,7 +26,7 @@ extension APIModel {
                 let article = GoPttBBSBrdArticle.adapter(model: item)
                 articleList.append(article)
             }
-            return BoardModel(page: nil, next: nil, articleList: articleList)
+            return BoardModel(page: nil, next: model.next_idx, articleList: articleList)
         }
     }
 

@@ -6,17 +6,16 @@
 //  Copyright © 2022 Ptt. All rights reserved.
 //
 
-import AsyncDisplayKit
-import Foundation
+import UIKit
 
 enum TextFieldType {
-    case Username, Password, Email
+    case username, password, email
 }
 
 class LoginTextField: UITextField {
 
-    var type: TextFieldType = .Username
-    var lbResponse: UILabel?
+    var type: TextFieldType = .username
+    lazy var lbResponse = responseLabel()
     var btnTogglePassword: UIButton?
 
     var title: String? {
@@ -28,18 +27,6 @@ class LoginTextField: UITextField {
                 NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
             ]
             self.attributedPlaceholder = NSAttributedString(string: title, attributes: attr)
-        }
-    }
-
-    override var frame: CGRect {
-        didSet {
-            // print("ltf frame did set:", frame)
-
-            if self.type == .Password {
-                self.lbResponse?.frame = CGRect(x: 0, y: 0, width: self.frame.width - 16 - 16, height: 30)
-            } else {
-                self.lbResponse?.frame = CGRect(x: 0, y: 0, width: self.frame.width - 16, height: 30)
-            }
         }
     }
 
@@ -77,18 +64,26 @@ class LoginTextField: UITextField {
     }
 
     func _init() {
-        lbResponse = self.responseLabel()
+        ptt_add(subviews: [lbResponse])
+        var constraints = [NSLayoutConstraint]()
+        constraints.append(lbResponse.centerYAnchor.constraint(equalTo: self.centerYAnchor))
+        if type == .password {
+            constraints.append(lbResponse.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16 * 2))
+        } else {
+            constraints.append(lbResponse.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16))
+        }
+        NSLayoutConstraint.activate(constraints)
 
         self.keyboardType = .asciiCapable
         switch type {
-        case .Username:
+        case .username:
             break
-        case .Password:
+        case .password:
             self.isSecureTextEntry = true
             self.rightViewMode = .always
             self.btnTogglePassword = getButton()
             self.rightView = self.btnTogglePassword
-        case .Email:
+        case .email:
             keyboardType = .emailAddress
         }
 
@@ -101,19 +96,17 @@ class LoginTextField: UITextField {
 
         self.autocapitalizationType = .none
         self.autocorrectionType = .no
-
-        self.addSubview(self.lbResponse!)
     }
 
     func warning(msg: String?) {
         if let m = msg {
-            lbResponse?.text = m
+            lbResponse.text = m
             self.layer.borderWidth = 1
         } else {
-            lbResponse?.text = ""
+            lbResponse.text = ""
             self.layer.borderWidth = 0
         }
-
+        lbResponse.sizeToFit()
     }
 
     @objc
@@ -144,9 +137,6 @@ class LoginTextField: UITextField {
         let label = UILabel()
         label.textColor = PttColors.tangerine.color
         label.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
-
-        // TODO: adjust size by frame did set
-        label.frame = CGRect(x: 0, y: 0, width: self.frame.width - 16, height: 30)
         label.textAlignment = .right
         label.isUserInteractionEnabled = false
         return label

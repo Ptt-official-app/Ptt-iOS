@@ -6,7 +6,6 @@
 //  Copyright © 2020 Ptt. All rights reserved.
 //
 
-import AsyncDisplayKit
 import SafariServices
 import UIKit
 
@@ -17,27 +16,17 @@ struct BoardArticle {
 
 protocol BoardView: BaseView {
     var onArticleSelect: ((BoardArticle) -> Void)? { get set }
-    var composeArticle: ((String, [String]) -> Void)? {get set}
+    var composeArticle: ((String, [String]) -> Void)? { get set }
 }
 
-final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSwipeable, BoardView {
+final class BoardViewController: UIViewController, FullscreenSwipeable, BoardView {
 
     var onArticleSelect: ((BoardArticle) -> Void)?
     var composeArticle: ((String, [String]) -> Void)?
 
-    private let boardNode = BoardNode()
-    private var tableNode: ASTableNode {
-        return boardNode.tableNode
-    }
-    private var tableView: UITableView {
-        return tableNode.view
-    }
-    private var activityIndicator: UIActivityIndicatorView {
-        return boardNode.activityIndicatorNode.view as! UIActivityIndicatorView
-    }
-    private var toolbarNode: ToolbarNode {
-        return boardNode.bottomToolbarNode.toolbarAreaNode
-    }
+    private let tableView = UITableView(frame: CGRect.zero, style: .plain)
+    private let activityIndicator = UIActivityIndicatorView(style: .medium)
+    private let toolbar = BoardToolbar()
 
     private let apiClient: APIClientProtocol
 
@@ -45,13 +34,14 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
     private var board: APIModel.BoardModel?
     private var boardDetail: APIModel.BoardDetail?
     private var isRequesting = false
-    private var receivedPage: Int = 0
+    private var nextIndex: String?
     private let cellReuseIdentifier = "BoardArticleCell"
 
     init(boardName: String, apiClient: APIClientProtocol = APIClient.shared) {
         self.apiClient = apiClient
         self.boardName = boardName
-        super.init(node: boardNode)
+        super.init(nibName: nil, bundle: nil)
+
         hidesBottomBarWhenPushed = true
     }
 
@@ -65,31 +55,52 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
         title = boardName
         enableFullscreenSwipeBack()
 
-        tableNode.dataSource = self
-        tableNode.delegate = self
-        if #available(iOS 13.0, *) {
-        } else {
-            tableView.indicatorStyle = .white
-        }
+        tableView.backgroundColor = GlobalAppearance.backgroundColor
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.prefetchDataSource = self
         tableView.separatorStyle = .none
-        let edgeInsetsForToolbar = UIEdgeInsets(top: 0, left: 0, bottom: toolbarNode.toolbarHeight, right: 0)
+        tableView.register(BoardCell.self, forCellReuseIdentifier: "BoardCell")
+
+        let edgeInsetsForToolbar = UIEdgeInsets(top: 0, left: 0, bottom: toolbar.height, right: 0)
         tableView.contentInset = edgeInsetsForToolbar
         tableView.scrollIndicatorInsets = edgeInsetsForToolbar
 
-        if #available(iOS 10.0, *) {
-            let refreshControl = UIRefreshControl()
-            refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
-            tableView.refreshControl = refreshControl
-        }
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        tableView.refreshControl = refreshControl
 
-        toolbarNode.refreshNode.addTarget(self, action: #selector(refresh), forControlEvents: .touchUpInside)
-        toolbarNode.searchNode.addTarget(self, action: #selector(search), forControlEvents: .touchUpInside)
-        toolbarNode.composeNode.addTarget(self, action: #selector(compose), forControlEvents: .touchUpInside)
-        toolbarNode.moreNode.addTarget(self, action: #selector(more), forControlEvents: .touchUpInside)
+        view.ptt_add(subviews: [tableView, activityIndicator])
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            activityIndicator.topAnchor.constraint(equalTo: view.topAnchor, constant: 80.0),
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+
+        view.addSubview(toolbar)
+        toolbar.ptt_setFrame()
+        let refreshButtonItem = UIBarButtonItem(image: StyleKit.imageOfRefresh(), style: .plain, target: self, action: #selector(refresh))
+        let searchButtonItem = UIBarButtonItem(image: StyleKit.imageOfSearch(), style: .plain, target: self, action: #selector(search))
+        let composeButtonItem = UIBarButtonItem(image: StyleKit.imageOfCompose(), style: .plain, target: self, action: #selector(compose))
+        let moreButtonItem = UIBarButtonItem(image: StyleKit.imageOfMoreH(), style: .plain, target: self, action: #selector(refresh))
+        // TODO: Only add working buttons, for now.
+        let flexible1 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let flexible2 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let flexible3 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        toolbar.items = [flexible1, refreshButtonItem, flexible2, composeButtonItem, flexible3]
 
         NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name("didPostNewArticle"), object: nil)
         requestBoardDetail()
         refresh()
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+
+        toolbar.ptt_setFrame()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -99,70 +110,58 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
         }
     }
 
-    private func requestArticles(page: Int, context: ASBatchContext) {
+    private func requestArticles(startIndex: String?) {
         if self.isRequesting {
             return
         }
+        // End of articles
+        if let startIndex, startIndex.isEmpty {
+            return
+        }
         self.isRequesting = true
-        context.beginBatchFetching()
 
-        self.apiClient.getBoardArticles(of: .go_pttbbs(bid: boardName, startIdx: "")) { result in
+        self.apiClient.getBoardArticles(of: .go_pttbbs(bid: boardName, startIdx: startIndex)) { result in
             switch result {
             case .failure(error: let apiError):
-                context.cancelBatchFetching()
-                DispatchQueue.main.async {
+                DispatchQueue.main.async(execute: {
                     let alert = UIAlertController(title: L10n.error, message: apiError.message, preferredStyle: .alert)
                     let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
                     alert.addAction(confirm)
                     self.present(alert, animated: true, completion: {
                         self.activityIndicator.stopAnimating()
-                        if #available(iOS 10.0, *) {
-                            if let refreshControl = self.tableView.refreshControl, refreshControl.isRefreshing {
-                                refreshControl.endRefreshing()
-                            }
-                        }
-                    })
-                    self.isRequesting = false
-                }
-                return
-            case .success(board: let board):
-                if self.board == nil {
-                    self.receivedPage = page
-                    self.board = board
-                    var indexPaths = [IndexPath]()
-                    for (index, _) in board.articleList.enumerated() {
-                        indexPaths.append(IndexPath(row: index, section: 0))
-                    }
-                    DispatchQueue.main.async {
-                        self.tableNode.insertRows(at: indexPaths, with: .none)
-                        context.completeBatchFetching(true)
-                    }
-                } else {
-                    // Only allow adding next page data, once
-                    if page == self.receivedPage + 1 {
-                        self.receivedPage = page
-                        var indexPaths = [IndexPath]()
-                        if let oldCount = self.board?.articleList.count {
-                            for (index, _) in board.articleList.enumerated() {
-                                indexPaths.append(IndexPath(row: index + oldCount, section: 0))
-                            }
-                        }
-                        self.board?.articleList += board.articleList
-                        DispatchQueue.main.async {
-                            self.tableNode.insertRows(at: indexPaths, with: .none)
-                            context.completeBatchFetching(true)
-                        }
-                    }
-                }
-                self.isRequesting = false
-                DispatchQueue.main.async {
-                    self.activityIndicator.stopAnimating()
-                    if #available(iOS 10.0, *) {
                         if let refreshControl = self.tableView.refreshControl, refreshControl.isRefreshing {
                             refreshControl.endRefreshing()
                         }
+                    })
+                    self.isRequesting = false
+                })
+                return
+            case .success(board: let board):
+                self.nextIndex = board.next
+                if self.board == nil {
+                    self.board = board
+                    DispatchQueue.main.async(execute: {
+                        self.tableView.reloadData()
+                    })
+                } else {
+                    var indexPaths = [IndexPath]()
+                    if let oldCount = self.board?.articleList.count {
+                        for index in board.articleList.indices {
+                            indexPaths.append(IndexPath(row: index + oldCount, section: 0))
+                        }
                     }
+                    self.board?.articleList += board.articleList
+                    DispatchQueue.main.async(execute: {
+                        self.tableView.insertRows(at: indexPaths, with: .none)
+                    })
                 }
+                self.isRequesting = false
+                DispatchQueue.main.async(execute: {
+                    self.activityIndicator.stopAnimating()
+                    if let refreshControl = self.tableView.refreshControl, refreshControl.isRefreshing {
+                        refreshControl.endRefreshing()
+                    }
+                })
             }
         }
     }
@@ -174,83 +173,62 @@ final class BoardViewController: ASDKViewController<ASDisplayNode>, FullscreenSw
     }
 
     // MARK: Button actions
-
-    @objc private func refresh() {
+    @objc
+    private func refresh() {
         self.board = nil
-        self.receivedPage = 0
-        tableNode.reloadData()
-        if #available(iOS 10.0, *) {
-            if let refreshControl = tableView.refreshControl {
-                if !refreshControl.isRefreshing {
-                    activityIndicator.startAnimating()
-                }
-            }
-        } else {
-            activityIndicator.startAnimating()
-        }
+        self.nextIndex = nil
+        self.tableView.reloadData()
+        requestArticles(startIndex: nil)
+        activityIndicator.startAnimating()
     }
 
-    @objc private func search() {
+    @objc
+     private func search() {
     }
 
-    @objc private func compose() {
+    @objc
+     private func compose() {
         composeArticle?(boardName, boardDetail?.postTypes ?? [])
     }
 
-    @objc private func more() {
+    @objc
+     private func more() {
     }
 }
 
-// MARK: - ASTableDataSource
+// MARK: - UITableViewDataSource
 
-extension BoardViewController: ASTableDataSource {
+extension BoardViewController: UITableViewDataSource {
 
-    func tableNode(_ tableNode: ASTableNode, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let board = self.board else {
             return 0
         }
         return board.articleList.count
     }
 
-    func tableNode(_ tableNode: ASTableNode, nodeBlockForRowAt indexPath: IndexPath) -> ASCellNodeBlock {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = indexPath.row
         guard let board = self.board, row < board.articleList.count else {
-            let nodeBlock: ASCellNodeBlock = {
-                return ASCellNode()
-            }
-            return nodeBlock
+            return UITableViewCell()
         }
         let article = board.articleList[row]
-        let nodeBlock: ASCellNodeBlock = {
-            let cell = BoardCellNode(article: article)
-            if row % 2 == 0 {
-                if #available(iOS 11.0, *) {
-                    cell.backgroundColor = PttColors.shark.color
-                } else {
-                    cell.backgroundColor = UIColor(red: 28 / 255, green: 28 / 255, blue: 31 / 255, alpha: 1.0)
-                }
-            } else {
-                cell.backgroundColor = GlobalAppearance.backgroundColor
-            }
-            return cell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "BoardCell", for: indexPath) as! BoardCell
+        cell.article = article
+        if row % 2 == 0 {
+            cell.backgroundColor = PttColors.shark.color
+        } else {
+            cell.backgroundColor = GlobalAppearance.backgroundColor
         }
-        return nodeBlock
+        return cell
     }
 }
 
-// MARK: ASTableDelegate
+// MARK: UITableViewDelegate
 
-extension BoardViewController: ASTableDelegate {
+extension BoardViewController: UITableViewDelegate {
 
-    func shouldBatchFetch(for tableNode: ASTableNode) -> Bool {
-        return true
-    }
-
-    func tableNode(_ tableNode: ASTableNode, willBeginBatchFetchWith context: ASBatchContext) {
-        requestArticles(page: receivedPage + 1, context: context)
-    }
-
-    func tableNode(_ tableNode: ASTableNode, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let row = indexPath.row
         guard let board = self.board, row < board.articleList.count else {
             return
@@ -260,107 +238,45 @@ extension BoardViewController: ASTableDelegate {
     }
 }
 
+// MARK: UITableDelegate
+
+extension BoardViewController: UITableViewDataSourcePrefetching {
+
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        guard let board = self.board, let lastIndexPath = indexPaths.last else {
+            return
+        }
+        let receivedLastRowIndex = board.articleList.count - 1
+        let prefetchRangeBeforeEnd = 20
+        if lastIndexPath.row + prefetchRangeBeforeEnd > receivedLastRowIndex {
+            requestArticles(startIndex: self.nextIndex)
+        }
+    }
+}
+
 // MARK: -
 
-private class BoardNode: ASDisplayNode {
+private class BoardToolbar: UIToolbar {
 
-    let tableNode = ASTableNode(style: .plain)
-    let activityIndicatorNode = ASDisplayNode { () -> UIView in
-        let activityIndicator = UIActivityIndicatorView()
-        activityIndicator.color = .lightGray
-        return activityIndicator
-    }
-    let bottomToolbarNode = BottomToolbarNode()
+    let height = 49.0
 
-    override init() {
-        super.init()
-
-        automaticallyManagesSubnodes = true
-        tableNode.backgroundColor = GlobalAppearance.backgroundColor
-    }
-
-    override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
-        let insets = UIEdgeInsets(top: .infinity,
-                                  left: 0,
-                                  bottom: 0,
-                                  right: 0)
-        let toolbarInsetSpec = ASInsetLayoutSpec(insets: insets, child: bottomToolbarNode)
-        let tableNodeSpec = ASOverlayLayoutSpec(child: tableNode, overlay: toolbarInsetSpec)
-        return ASOverlayLayoutSpec(child: tableNodeSpec, overlay: activityIndicatorNode)
-    }
-}
-
-private class BottomToolbarNode: ASDisplayNode {
-
-    private let topBorderNode = ASDisplayNode()
-    let toolbarAreaNode = ToolbarNode()
-    private let safeAreaNode = ASDisplayNode()
-
-    override init() {
-        super.init()
-
-        automaticallyManagesSubnodes = true
-        automaticallyRelayoutOnSafeAreaChanges = true
-
-        topBorderNode.backgroundColor = UIColor(red: 0.23, green: 0.23, blue: 0.23, alpha: 1.00)    // #3A3A3A
-        topBorderNode.style.height = ASDimensionMake(0.5)
-        safeAreaNode.backgroundColor = GlobalAppearance.backgroundColor
-    }
-
-    override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
-        let safeAreaInsets = self.safeAreaInsets
-        safeAreaNode.style.height = ASDimensionMake(safeAreaInsets.top + safeAreaInsets.bottom)
-        return ASStackLayoutSpec(direction: .vertical, spacing: 0, justifyContent: .center, alignItems: .stretch, children: [topBorderNode, toolbarAreaNode, safeAreaNode])
-    }
-}
-
-private class ToolbarNode: ASDisplayNode {
-
-    let refreshNode = ASButtonNode()
-    let searchNode = ASButtonNode()
-    let composeNode = ASButtonNode()
-    let moreNode = ASButtonNode()
-    let toolbarHeight: CGFloat = 49.0
-
-    override init() {
-        super.init()
-
-        automaticallyManagesSubnodes = true
-        style.height = ASDimensionMake(toolbarHeight)
-        backgroundColor = GlobalAppearance.backgroundColor
-
-        refreshNode.setImage(StyleKit.imageOfRefresh().withRenderingMode(.alwaysOriginal), for: .normal)
-        refreshNode.setImage(StyleKit.imageOfRefresh().withRenderingMode(.alwaysTemplate), for: .highlighted)
-        refreshNode.accessibilityLabel = L10n.refresh
-        searchNode.setImage(StyleKit.imageOfSearch().withRenderingMode(.alwaysOriginal), for: .normal)
-        searchNode.setImage(StyleKit.imageOfSearch().withRenderingMode(.alwaysTemplate), for: .highlighted)
-        searchNode.accessibilityLabel = L10n.search
-        composeNode.setImage(StyleKit.imageOfCompose().withRenderingMode(.alwaysOriginal), for: .normal)
-        composeNode.setImage(StyleKit.imageOfCompose().withRenderingMode(.alwaysTemplate), for: .highlighted)
-        composeNode.accessibilityLabel = L10n.compose
-        moreNode.setImage(StyleKit.imageOfMoreH().withRenderingMode(.alwaysOriginal), for: .normal)
-        moreNode.setImage(StyleKit.imageOfMoreH().withRenderingMode(.alwaysTemplate), for: .highlighted)
-        moreNode.accessibilityLabel = L10n.moreActions
-        for buttonNode in [refreshNode, searchNode, composeNode, moreNode] {
-            buttonNode.style.width = ASDimensionMake(toolbarHeight + 30)
-            buttonNode.style.height = ASDimensionMake(toolbarHeight)
+    /// UIToolbar would give out lots of auto layout warnings. Set frame manally instead.
+    func ptt_setFrame() {
+        guard let superview else {
+            assertionFailure("not added to parent view yet")
+            return
         }
-    }
-
-    override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
-        return ASStackLayoutSpec(direction: .horizontal, spacing: 10, justifyContent: .center, alignItems: .stretch, children: [refreshNode, searchNode, composeNode, moreNode])
+        frame = CGRect(x: 0,
+                       y: superview.bounds.height - superview.safeAreaInsets.bottom - height,
+                       width: superview.bounds.width,
+                       height: height)
     }
 }
 
-private class BoardCellNode: ASCellNode {
+private class BoardCell: UITableViewCell {
 
     private var titleAttributes: [NSAttributedString.Key: Any] {
-        let textColor: UIColor
-        if #available(iOS 11.0, *) {
-            textColor = PttColors.paleGrey.color
-        } else {
-            textColor = UIColor(red: 240 / 255, green: 240 / 255, blue: 247 / 255, alpha: 1.0)
-        }
+        let textColor = PttColors.paleGrey.color
         let attrs: [NSAttributedString.Key: Any] =
             [.font: UIFont.preferredFont(forTextStyle: .title3),
              .foregroundColor: textColor]
@@ -373,62 +289,54 @@ private class BoardCellNode: ASCellNode {
              .foregroundColor: textColor]
         return attrs
     }
-    private let categoryImageNode = ASImageNode()
-    private let categoryNode = ASTextNode()
-    private let clockImageNode = ASImageNode()
-    private let dateNode = ASTextNode()
-    private let authorImageNode = ASImageNode()
-    private let authorNameNode = ASTextNode()
+    private let categoryImageView = UIImageView()
+    private let categoryLabel = UILabel()
+    private let clockImageView = UIImageView()
+    private let dateLabel = UILabel()
+    private let authorImageView = UIImageView()
+    private let authorNameLabel = UILabel()
 
-    private let titleNode = ASTextNode()
-    private let moreButtonNode = ASButtonNode()
-
-    init(article: APIModel.BoardArticle) {
-        super.init()
-
-        automaticallyManagesSubnodes = true
-
-        if let category = article.category {
-            categoryNode.attributedText = NSAttributedString(string: category, attributes: metadataAttributes)
+    private let titleLabel = UILabel()
+    private let moreButton = UIButton()
+    var article: APIModel.BoardArticle? = nil {
+        didSet {
+            if let article, let category = article.category {
+                categoryLabel.attributedText = NSAttributedString(string: category, attributes: metadataAttributes)
+                dateLabel.attributedText = NSAttributedString(string: article.date, attributes: metadataAttributes)
+                authorNameLabel.attributedText = NSAttributedString(string: article.author, attributes: metadataAttributes)
+                titleLabel.attributedText = NSAttributedString(string: article.titleWithoutCategory, attributes: titleAttributes)
+            }
         }
-        dateNode.attributedText = NSAttributedString(string: article.date, attributes: metadataAttributes)
-        authorNameNode.attributedText = NSAttributedString(string: article.author, attributes: metadataAttributes)
-        titleNode.attributedText = NSAttributedString(string: article.titleWithoutCategory, attributes: titleAttributes)
-
-        categoryImageNode.image = StyleKit.imageOfCategory()
-        clockImageNode.image = StyleKit.imageOfClock()
-        authorImageNode.image = StyleKit.imageOfAuthor()
-
-        moreButtonNode.setImage(StyleKit.imageOfMoreV(), for: .normal)
-        moreButtonNode.accessibilityLabel = L10n.moreActions
     }
 
-    override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
-        let categoryStackSpec = ASStackLayoutSpec(direction: .horizontal,
-                                                  spacing: 7,
-                                                  justifyContent: .start,
-                                                  alignItems: .center,
-                                                  children: [categoryImageNode, categoryNode])
-        let dateStackSpec = ASStackLayoutSpec(direction: .horizontal,
-                                              spacing: 7,
-                                              justifyContent: .start,
-                                              alignItems: .center,
-                                              children: [clockImageNode, dateNode])
-        let authorStackSpec = ASStackLayoutSpec(direction: .horizontal,
-                                                spacing: 7,
-                                                justifyContent: .start,
-                                                alignItems: .center,
-                                                children: [authorImageNode, authorNameNode])
-        let metadataStackSpec = ASStackLayoutSpec(direction: .horizontal,
-                                                  spacing: 14,
-                                                  justifyContent: .start,
-                                                  alignItems: .start,
-                                                  children: [categoryStackSpec, dateStackSpec, authorStackSpec])
-        let contentStackSpec = ASStackLayoutSpec(direction: .vertical,
-                                                 spacing: 6,
-                                                 justifyContent: .start,
-                                                 alignItems: .start,
-                                                 children: [metadataStackSpec, titleNode])
-        return ASInsetLayoutSpec(insets: UIEdgeInsets(top: 14, left: 20, bottom: 14, right: 10), child: contentStackSpec)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        titleLabel.numberOfLines = 2
+        categoryImageView.image = StyleKit.imageOfCategory()
+        clockImageView.image = StyleKit.imageOfClock()
+        authorImageView.image = StyleKit.imageOfAuthor()
+
+        moreButton.setImage(StyleKit.imageOfMoreV(), for: .normal)
+        moreButton.accessibilityLabel = L10n.moreActions
+
+        contentView.ptt_add(subviews: [categoryImageView, categoryLabel, clockImageView, dateLabel, authorImageView, authorNameLabel, titleLabel])
+        let viewsDict = ["categoryImageView": categoryImageView, "categoryLabel": categoryLabel, "clockImageView": clockImageView, "dateLabel": dateLabel, "authorImageView": authorImageView, "authorNameLabel": authorNameLabel, "titleLabel": titleLabel]
+        NSLayoutConstraint.activate(
+            NSLayoutConstraint.constraints(withVisualFormat: "V:|-(20)-[categoryImageView]-[titleLabel]-(15)-|", metrics: nil, views: viewsDict) +
+            NSLayoutConstraint.constraints(withVisualFormat: "H:|-[categoryImageView]-[categoryLabel]-[clockImageView]-[dateLabel]-[authorImageView]-[authorNameLabel]", metrics: nil, views: viewsDict) +
+            NSLayoutConstraint.constraints(withVisualFormat: "H:|-[titleLabel]-|", metrics: nil, views: viewsDict) +
+            [
+                categoryLabel.centerYAnchor.constraint(equalTo: categoryImageView.centerYAnchor),
+                clockImageView.centerYAnchor.constraint(equalTo: categoryImageView.centerYAnchor),
+                dateLabel.centerYAnchor.constraint(equalTo: categoryImageView.centerYAnchor),
+                authorImageView.centerYAnchor.constraint(equalTo: categoryImageView.centerYAnchor),
+                authorNameLabel.centerYAnchor.constraint(equalTo: categoryImageView.centerYAnchor)
+            ]
+        )
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

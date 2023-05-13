@@ -6,69 +6,24 @@
 //  Copyright © 2022 Ptt. All rights reserved.
 //
 
-import AsyncDisplayKit
-import Foundation
 import UIKit
 
 extension LoginViewController {
 
     func initLoginViews() {
-        // login:
-
-        let usernameInset = ASInsetLayoutSpec(
-            insets: UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0),
-            child: tfUsername
-        )
-        let passwordInset = ASInsetLayoutSpec(
-            insets: UIEdgeInsets(top: 0, left: 0, bottom: 56, right: 0),
-            child: tfPassword
-        )
-        let agreeInset = ASInsetLayoutSpec(
-            insets: UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0),
-            child: btnUserAgreement
-        )
-        let loginInset = ASInsetLayoutSpec(
-            insets: UIEdgeInsets(top: 0, left: 0, bottom: 25, right: 0),
-            child: btnLogin
-        )
-
-        let forgetInset = ASInsetLayoutSpec(
-            insets: UIEdgeInsets(top: 30, left: 0, bottom: 0, right: 0),
-            child: btnForget
-        )
-        let forgetCenterLayout = ASInsetLayoutSpec(
-            insets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0),
-            child: forgetInset
-        )
-
-        // login
-        lbTitle.style.preferredSize = CGSize(width: global_width, height: 58 + 63)
-        tfUsername.style.preferredSize = CGSize(width: global_width, height: 30)
-        tfPassword.style.preferredSize = CGSize(width: global_width, height: 30)
-        btnLogin.style.preferredSize = CGSize(width: global_width, height: 30)
-        btnForget.style.preferredSize = CGSize(width: global_width, height: 30)
-        btnUserAgreement.style.preferredSize = CGSize(width: global_width, height: 30)
-        vLine.style.preferredSize = CGSize(width: CGFloat(global_width), height: 0.5)
-
-        self.node.addSubnode(self.tfUsername)
-        self.node.addSubnode(self.tfPassword)
-        self.node.addSubnode(self.btnForget)
-        self.node.addSubnode(self.btnUserAgreement)
-        self.node.addSubnode(self.vLine)
-        self.node.bounds = CGRect(x: 0, y: 0, width: 100, height: 100)
-
-        loginStackSpec = ASCenterLayoutSpec(
-            centeringOptions: ASCenterLayoutSpecCenteringOptions.X,
-            sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY,
-            child: ASStackLayoutSpec(
-                direction: .vertical,
-                spacing: 0,
-                justifyContent: .center,
-                alignItems: .center,
-                children: [usernameInset, passwordInset, loginInset, agreeInset, vLine, forgetCenterLayout]
-            )
-        )
-
+        let viewsDict = ["tfUsername": tfUsername, "tfPassword": tfPassword, "btnLogin": btnLogin, "btnUserAgreement": btnUserAgreement, "vLine": vLine, "btnForget": btnForget]
+        let loginViews = [tfUsername, tfPassword, btnLogin, btnUserAgreement, vLine, btnForget]
+        switchContentView.ptt_add(subviews: loginViews)
+        let metrics = ["h": 30]
+        var constraints = [NSLayoutConstraint]()
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[tfUsername(h)]-(30)-[tfPassword(h)]-(35)-[btnLogin(h)]-(25)-[btnUserAgreement(h)]-(50)-[vLine(0.5)]-(25)-[btnForget(h)]", metrics: metrics, views: viewsDict)
+        for view in loginViews {
+            constraints += [
+                view.leadingAnchor.constraint(equalTo: switchContentView.leadingAnchor),
+                view.trailingAnchor.constraint(equalTo: switchContentView.trailingAnchor)
+            ]
+        }
+        NSLayoutConstraint.activate(constraints)
     }
 
     func toggleLoginView(isHidden: Bool) {
@@ -91,37 +46,28 @@ extension LoginViewController {
         // toggleState(UILoginState.FillInformation)
     }
 
-    func gettfUsername() -> ASDisplayNode {
-        return ASDisplayNode { () -> UIView in
-            let textField: LoginTextField = LoginTextField(type: .Username)
-            textField.title = L10n.username
-            textField.delegate = self
-            textField.returnKeyType = .next
-
-            textField.keyboardType = .asciiCapable
-
-            textField.addTarget(self, action: #selector(self.textFieldDidChange(textField:)), for: .editingChanged)
-            return textField
-        }
+    func gettfUsername() -> LoginTextField {
+        let textField: LoginTextField = LoginTextField(type: .username)
+        textField.title = L10n.username
+        textField.delegate = self
+        textField.returnKeyType = .next
+        textField.keyboardType = .asciiCapable
+        textField.addTarget(self, action: #selector(self.textFieldDidChange(textField:)), for: .editingChanged)
+        return textField
     }
 
-    func gettfPassword() -> ASDisplayNode {
-        return ASDisplayNode { () -> UIView in
-            let textField: LoginTextField = LoginTextField(type: .Password)
-
-            textField.title = L10n.password
-
-            textField.isSecureTextEntry = true
-            textField.returnKeyType = .send
-
-            textField.delegate = self
-            textField.addTarget(self, action: #selector(self.textFieldDidChange(textField:)), for: .editingChanged)
-            return textField
-        }
+    func gettfPassword() -> LoginTextField {
+        let textField: LoginTextField = LoginTextField(type: .password)
+        textField.title = L10n.password
+        textField.isSecureTextEntry = true
+        textField.returnKeyType = .send
+        textField.delegate = self
+        textField.addTarget(self, action: #selector(self.textFieldDidChange(textField:)), for: .editingChanged)
+        return textField
     }
 
-    func getbtnUserAgreement() -> ASButtonNode {
-        let button = ASButtonNode()
+    func getbtnUserAgreement() -> UIButton {
+        let button = UIButton()
         let title = L10n.agreeWhenYouUseApp
 
         let attr = [
@@ -134,14 +80,14 @@ extension LoginViewController {
         button.addTarget(
             self,
             action: #selector(userAgreementPress),
-            forControlEvents: ASControlNodeEvent.touchUpInside
+            for: .touchUpInside
         )
 
         return button
     }
 
-    func getbtnLogin() -> ASButtonNode {
-        let button = ButtonNode(type: .primary)
+    func getbtnLogin() -> LoginButton {
+        let button = LoginButton(type: .primary)
         let title = L10n.login
 
         let attr_tint: [NSAttributedString.Key: Any] = [
@@ -150,12 +96,9 @@ extension LoginViewController {
                                                              )
         ]
 
-        button.setTitle(
-            title,
-            with: .preferredFont(forTextStyle: .caption1),
-            with: PttColors.tangerine.color,
-            for: .normal
-        )
+        button.titleLabel?.font = .preferredFont(forTextStyle: .caption1)
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(PttColors.tangerine.color, for: .normal)
         button.setBackgroundImage(UIImage.backgroundImg(from: .clear), for: UIControl.State.normal)
 
         button.setBackgroundImage(UIImage.backgroundImg(from: PttColors.tangerine.color), for: UIControl.State.selected)
@@ -171,15 +114,15 @@ extension LoginViewController {
             for: UIControl.State.disabled
         )
 
-        button.addTarget(self, action: #selector(loginPress), forControlEvents: ASControlNodeEvent.touchUpInside)
+        button.addTarget(self, action: #selector(loginPress), for: .touchUpInside)
 
         return button
     }
 
-    func getbtnForget() -> ASButtonNode {
-        let button = ButtonNode(type: .secondary)
+    func getbtnForget() -> LoginButton {
+        let button = LoginButton(type: .secondary)
         button.title = L10n.forget
-        button.addTarget(self, action: #selector(forgetPress), forControlEvents: ASControlNodeEvent.touchUpInside)
+        button.addTarget(self, action: #selector(forgetPress), for: .touchUpInside)
 
         return button
     }
@@ -191,33 +134,29 @@ extension LoginViewController {
         var account = ""
         var passwd = ""
 
-        if let tf = self.tfUsername.view as? UITextField, let tfText = tf.text {
+        if let tfText = self.tfUsername.text {
             account = tfText
         }
-        if let tf = self.tfPassword.view as? UITextField, let tfText = tf.text {
+        if let tfText = self.tfPassword.text {
             passwd = tfText
         }
 
         // block by btnLogin.isEnabled
         // todo: fix
-        if  account.isEmpty {
-            if let tf = self.tfUsername.view as? LoginTextField {
-                tf.warning(msg: L10n.notFinish)
-            }
+        if account.isEmpty {
+            self.tfUsername.warning(msg: L10n.notFinish)
             return
         }
 
         if passwd.isEmpty {
-            if let tf = self.tfPassword.view as? LoginTextField {
-                tf.warning(msg: L10n.notFinish)
-            }
+            self.tfPassword.warning(msg: L10n.notFinish)
             return
         }
 
         self.btnLogin.isEnabled = false
         APIClient.shared.login(account: account, password: passwd) { result in
-            self.btnLogin.isEnabled = true
-            DispatchQueue.main.async {
+            DispatchQueue.main.async(execute: {
+                self.btnLogin.isEnabled = true
                 print("login using", account, " result", result)
                 switch result {
                 case .failure(let error):
@@ -228,7 +167,7 @@ extension LoginViewController {
                     KeyChainItem.shared.save(object: token, for: .loginToken)
                     self.onLoginSuccess(token: token.access_token)
                 }
-            }
+            })
         }
     }
 }

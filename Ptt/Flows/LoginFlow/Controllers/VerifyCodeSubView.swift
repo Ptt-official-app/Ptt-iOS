@@ -6,63 +6,38 @@
 //  Copyright © 2022 Ptt. All rights reserved.
 //
 
-import AsyncDisplayKit
-import Foundation
 import UIKit
 
 extension LoginViewController {
 
     func initVerifyCodeViews() {
-        lbVerifyCodeTitle.style.preferredSize = CGSize(width: global_width, height: 66)
-        tfVerifyCode.style.preferredSize = CGSize(width: global_width, height: 30)
+        var constraints = [NSLayoutConstraint]()
 
-        lbVerifyCodeResponse.style.preferredSize = CGSize(width: global_width, height: 44)
-        lbVerifyCodeTimer.style.preferredSize = CGSize(width: global_width, height: 44)
+        let horiLine1 = UIView()
+        horiLine1.ptt_add(subviews: [lbVerifyCodeResponse, lbVerifyCodeTimer])
+        let viewsDict1 = ["lbVerifyCodeResponse": lbVerifyCodeResponse, "lbVerifyCodeTimer": lbVerifyCodeTimer]
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:[lbVerifyCodeResponse]-[lbVerifyCodeTimer]|", metrics: nil, views: viewsDict1)
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:[lbVerifyCodeResponse(44)]", metrics: nil, views: viewsDict1)
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:[lbVerifyCodeTimer(44)]", metrics: nil, views: viewsDict1)
 
-        btnVerifyCodeBack.style.preferredSize = CGSize(width: global_width / 2, height: 30)
-        btnVerifyCodeNotReceive.style.preferredSize = CGSize(width: global_width / 2, height: 30)
+        let horiLine2 = UIView()
+        horiLine2.ptt_add(subviews: [btnVerifyCodeBack, btnVerifyCodeNotReceive])
+        let viewsDict2 = ["btnVerifyCodeBack": btnVerifyCodeBack, "btnVerifyCodeNotReceive": btnVerifyCodeNotReceive]
+        let metrics = ["halfW": global_width / 2]
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:[btnVerifyCodeBack(halfW)][btnVerifyCodeNotReceive(halfW)]|", metrics: metrics, views: viewsDict2)
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:[btnVerifyCodeBack(30)]", metrics: nil, views: viewsDict2)
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:[btnVerifyCodeNotReceive(30)]", metrics: nil, views: viewsDict2)
 
-        let tfVerifyCodeInset = ASInsetLayoutSpec(
-            insets: UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0),
-            child: tfVerifyCode
-        )
+        let viewsDict = ["lbVerifyCodeTitle": lbVerifyCodeTitle, "tfVerifyCode": tfVerifyCode, "horiLine1": horiLine1, "horiLine2": horiLine2]
+        let views = [lbVerifyCodeTitle, tfVerifyCode, horiLine1, horiLine2]
+        switchContentView.ptt_add(subviews: views)
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[lbVerifyCodeTitle(66)]-(20)-[tfVerifyCode(30)]-[horiLine1(44)]-(32)-[horiLine2(30)]", metrics: nil, views: viewsDict)
+        for view in views {
+            constraints.append(view.leadingAnchor.constraint(equalTo: switchContentView.leadingAnchor))
+            constraints.append(view.trailingAnchor.constraint(equalTo: switchContentView.trailingAnchor))
+        }
 
-        let horiLine1 = ASAbsoluteLayoutSpec(children: [lbVerifyCodeResponse, lbVerifyCodeTimer])
-        horiLine1.style.preferredSize = CGSize(width: global_width, height: 44)
-
-        let horiLine2 = ASStackLayoutSpec(
-            direction: .horizontal,
-            spacing: 0,
-            justifyContent: .center,
-            alignItems: .center,
-            children: [btnVerifyCodeBack, btnVerifyCodeNotReceive]
-        )
-
-        let horiLine2Inset = ASInsetLayoutSpec(
-            insets: UIEdgeInsets(top: 32, left: 0, bottom: 0, right: 0),
-            child: horiLine2
-        )
-
-        let vertLine = ASStackLayoutSpec(
-            direction: .vertical,
-            spacing: 0,
-            justifyContent: .center,
-            alignItems: .center,
-            children: [lbVerifyCodeTitle, tfVerifyCodeInset, horiLine1, horiLine2Inset]
-        )
-
-        verifyStackSpec = ASCenterLayoutSpec(
-            centeringOptions: ASCenterLayoutSpecCenteringOptions.X,
-            sizingOptions: ASCenterLayoutSpecSizingOptions.minimumY,
-            child: vertLine
-        )
-
-        self.node.addSubnode(lbVerifyCodeTitle)
-        self.node.addSubnode(tfVerifyCode)
-        self.node.addSubnode(lbVerifyCodeResponse)
-        self.node.addSubnode(lbVerifyCodeTimer)
-        self.node.addSubnode(btnVerifyCodeBack)
-        self.node.addSubnode(btnVerifyCodeNotReceive)
+        NSLayoutConstraint.activate(constraints)
     }
 
     func toggleVerifyCodeView(isHidden: Bool) {
@@ -75,30 +50,26 @@ extension LoginViewController {
     }
 
     func onVerifyCodeFill() {
-        let tf = tfVerifyCode.view as! LoginTextField
+        let tf = tfVerifyCode
         tf.isEnabled = false
-        if let user = (self.tfRegisterUsername.view as! LoginTextField).text,
-           let email = (self.tfRegisterUsername.view as! LoginTextField).text,
-           let password = (self.tfRegisterUsername.view as! LoginTextField).text,
-           let token = (self.tfVerifyCode.view as! LoginTextField).text {
+        if let user = self.tfRegisterUsername.text,
+           let email = self.tfRegisterUsername.text,
+           let password = self.tfRegisterUsername.text,
+           let token = self.tfVerifyCode.text {
             APIClient.shared.register(account: user, email: email, password: password, token: token) { result in
-                DispatchQueue.main.async {
+                DispatchQueue.main.async(execute: {
                     tf.isEnabled = true
-                    (self.tfVerifyCode.view as! LoginTextField).text = ""
+                    self.tfVerifyCode.text = ""
 
                     switch result {
                     case .failure(let error):
-                        print(error)
-                        self.lbVerifyCodeResponse.attributedText = NSAttributedString(
-                            string: error.message,
-                            attributes: nil
-                        )
+                        self.lbVerifyCodeResponse.text = error.message
                     case .success(let result):
                         print(result)
                         self.onRegisterSuccess(result: result)
-                        self.toggleState(.FillInformation)
+                        self.toggleState(.fillInformation)
                     }
-                }
+                })
             }
         } else {
             showAlert(title: L10n.error, msg: "ERROR data missing-_- ")
@@ -112,7 +83,7 @@ extension LoginViewController {
     @objc
     func onVerifyCodeBack() {
         print("onVerifyCodeBack")
-        toggleState(.AttemptRegister)
+        toggleState(.attemptRegister)
     }
 
     @objc
@@ -121,8 +92,9 @@ extension LoginViewController {
         showAlert(title: L10n.error, msg: "NOT IMPLEMENT YET QQ")
     }
 
-    func getlbVerifyCodeTitle() -> ASTextNode {
-        let label = ASTextNode()
+    func getlbVerifyCodeTitle() -> UILabel {
+        let label = UILabel()
+        label.numberOfLines = 0
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .left
         paragraphStyle.paragraphSpacing = 2
@@ -138,36 +110,25 @@ extension LoginViewController {
         return label
     }
 
-    func gettfVerifyCode() -> ASDisplayNode {
-        return ASDisplayNode { () -> UIView in
-            let tf = LoginTextField(type: TextFieldType.Username)
-            tf.title = L10n.verifyCode
-
-            tf.keyboardType = .numberPad
-            tf.delegate = self
-            tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
-            return tf
-        }
+    func gettfVerifyCode() -> LoginTextField {
+        let tf = LoginTextField(type: TextFieldType.username)
+        tf.title = L10n.verifyCode
+        tf.keyboardType = .numberPad
+        tf.textContentType = .oneTimeCode
+        tf.delegate = self
+        tf.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
+        return tf
     }
 
-    func getlbVerifyCodeResponse() -> ASTextNode {
-        let label = ASTextNode()
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.alignment = .center
-        paragraphStyle.paragraphSpacing = 2
-        paragraphStyle.lineSpacing = 0
-        let attributes = [
-            NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1),
-            NSAttributedString.Key.foregroundColor: PttColors.tangerine.color,
-            NSAttributedString.Key.paragraphStyle: paragraphStyle
-        ]
-
-        label.attributedText = NSAttributedString(string: "", attributes: attributes)
+    func getlbVerifyCodeResponse() -> UILabel {
+        let label = UILabel()
+        label.textColor = PttColors.tangerine.color
+        label.font = .preferredFont(forTextStyle: .caption1)
         return label
     }
 
-    func getlbVerifyCodeTimer() -> ASTextNode {
-        let label = ASTextNode()
+    func getlbVerifyCodeTimer() -> UILabel {
+        let label = UILabel()
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .right
         paragraphStyle.paragraphSpacing = 2
@@ -183,17 +144,17 @@ extension LoginViewController {
         return label
     }
 
-    func getbtnVerifyCodeBack() -> ASButtonNode {
-        let button = ButtonNode(type: .secondary)
+    func getbtnVerifyCodeBack() -> LoginButton {
+        let button = LoginButton(type: .secondary)
         button.title = L10n.backToRegister
 
-        button.addTarget(self, action: #selector(onVerifyCodeBack), forControlEvents: ASControlNodeEvent.touchUpInside)
+        button.addTarget(self, action: #selector(onVerifyCodeBack), for: .touchUpInside)
 
         return button
     }
 
-    func getbtnVerifyCodeNotReceive() -> ASButtonNode {
-        let button = ASButtonNode()
+    func getbtnVerifyCodeNotReceive() -> UIButton {
+        let button = UIButton()
         let title = L10n.notReceiveYet
 
         let attr = [
@@ -203,7 +164,7 @@ extension LoginViewController {
         ] as [NSAttributedString.Key: Any]
         button.setAttributedTitle(NSAttributedString(string: title, attributes: attr), for: UIControl.State.normal)
 
-        button.addTarget(self, action: #selector(onNotReceive), forControlEvents: ASControlNodeEvent.touchUpInside)
+        button.addTarget(self, action: #selector(onNotReceive), for: .touchUpInside)
 
         return button
     }

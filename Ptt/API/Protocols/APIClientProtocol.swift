@@ -9,7 +9,7 @@
 import Foundation
 
 enum BoardArticlesParams {
-    case go_pttbbs(bid: String, startIdx: String)
+    case go_pttbbs(bid: String, startIdx: String?)
     case go_bbs(boardID: String)    // pagination not implemented yet
     case legacy(boardName: String, page: Int)
 }
