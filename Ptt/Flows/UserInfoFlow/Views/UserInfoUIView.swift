@@ -31,9 +31,10 @@ struct UserInfoUIView: View {
             default:
                 Spacer()
             }
-            Spacer(minLength: safeAreaInsets.bottom + tabBarHeight)
+            Spacer()
         }
         .padding(.top, safeAreaInsets.top)
+        .padding(.bottom, safeAreaInsets.bottom + tabBarHeight)
         .background(PttColors.codGray.swiftUIColor)
         .edgesIgnoringSafeArea([.top, .bottom])
         .onAppear(perform: viewModel.fetchData)
