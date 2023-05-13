@@ -35,7 +35,7 @@ private struct ArticleCell: View {
                     .rotation3DEffect(.degrees(0), axis: (x: 1, y: 0, z: 0))
                     .frame(width: 11, height: 11)
                     .foregroundColor(PttColors.blueGrey.swiftUIColor)
-                Text(article.modified.toDateString())
+                Text(article.modified.toBoardDateString())
                     .font(.system(size: 12, weight: .bold))
                     .foregroundColor(PttColors.blueGrey.swiftUIColor)
             }

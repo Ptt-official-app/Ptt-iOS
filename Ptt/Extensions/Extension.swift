@@ -54,11 +54,29 @@ extension UILabel {
     }
 }
 
+// Cache Formatters for Efficiency.
+// See: https://sarunw.com/posts/how-expensive-is-dateformatter/
+// https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/DataFormatting/Articles/dfDateFormatting10_4.html#//apple_ref/doc/uid/TP40002369-SW10
 extension Date {
-    func toDateString() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEE MMM dd HH:mm:ss yyyy" // Specify your format that you want
-        return dateFormatter.string(from: self as Date)
+
+    private static let articleDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEE MMM dd HH:mm:ss yyyy"
+        return formatter
+    }()
+
+    private static let boardDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM-dd"
+        return formatter
+    }()
+
+    func toArticleDateString() -> String {
+        return Date.articleDateFormatter.string(from: self)
+    }
+
+    func toBoardDateString() -> String {
+        return Date.boardDateFormatter.string(from: self)
     }
 }
 
