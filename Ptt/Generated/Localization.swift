@@ -30,6 +30,8 @@ enum L10n {
   static let articleTitleIsEmpty = L10n.tr("Localizable", "ArticleTitleIsEmpty")
   /// Back to Register
   static let backToRegister = L10n.tr("Localizable", "BackToRegister")
+  /// Bad posts
+  static let badPosts = L10n.tr("Localizable", "BadPosts")
   /// Birthday
   static let birthday = L10n.tr("Localizable", "Birthday")
   /// Cancel
@@ -54,6 +56,8 @@ enum L10n {
   static let customizationMode = L10n.tr("Localizable", "Customization Mode")
   /// Dark
   static let dark = L10n.tr("Localizable", "Dark")
+  /// Economy
+  static let economy = L10n.tr("Localizable", "Economy")
   /// Edit
   static let editArticle = L10n.tr("Localizable", "EditArticle")
   /// Email
@@ -68,6 +72,10 @@ enum L10n {
   static let forget = L10n.tr("Localizable", "Forget")
   /// from favorite.
   static let fromFavorite = L10n.tr("Localizable", "from favorite.")
+  /// Articles
+  static let historyArticles = L10n.tr("Localizable", "HistoryArticles")
+  /// Comments
+  static let historyComments = L10n.tr("Localizable", "HistoryComments")
   /// Hot Topics
   static let hotTopics = L10n.tr("Localizable", "Hot Topics")
   /// In favorite
@@ -78,12 +86,16 @@ enum L10n {
   static let inputArticleTitle = L10n.tr("Localizable", "InputArticleTitle")
   /// Just now
   static let justNow = L10n.tr("Localizable", "Just now")
+  /// Last IP
+  static let lastLoginIP = L10n.tr("Localizable", "LastLoginIP")
   /// Leave it blank for default value
   static let leaveItBlankForDefaultValue = L10n.tr("Localizable", "Leave it blank for default value")
   /// Light
   static let light = L10n.tr("Localizable", "Light")
   /// Login
   static let login = L10n.tr("Localizable", "Login")
+  /// Login days
+  static let loginDays = L10n.tr("Localizable", "LoginDays")
   /// More actions
   static let moreActions = L10n.tr("Localizable", "More actions")
   /// Next
@@ -114,6 +126,8 @@ enum L10n {
   static let postTypeIsEmpty = L10n.tr("Localizable", "PostTypeIsEmpty")
   /// Post type
   static let postTypeSelection = L10n.tr("Localizable", "PostTypeSelection")
+  /// Profile
+  static let profile = L10n.tr("Localizable", "Profile")
   /// Profile
   static let profilePage = L10n.tr("Localizable", "Profile Page")
   /// PTT FB Page
@@ -152,6 +166,8 @@ enum L10n {
   static let userId = L10n.tr("Localizable", "User Id")
   /// Username
   static let username = L10n.tr("Localizable", "Username")
+  /// Valid posts
+  static let validPosts = L10n.tr("Localizable", "ValidPosts")
   /// Verify Code
   static let verifyCode = L10n.tr("Localizable", "VerifyCode")
   /// Version

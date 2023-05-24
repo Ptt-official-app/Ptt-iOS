@@ -55,4 +55,7 @@ protocol APIClientProtocol {
     func boardDetail(boardID: String) async throws -> APIModel.BoardDetail
     func favoritesBoards(startIndex: String, limit: Int) async throws -> APIModel.BoardInfoList
     func popularBoards() async throws -> APIModel.BoardInfoList
+    func getProfile(userID: String) async throws -> APIModel.Profile
+    func getUserArticles(userID: String, startIndex: String) async throws -> APIModel.ArticleList
+    func getUserComment(userID: String, startIndex: String) async throws -> APIModel.ArticleCommentList
 }

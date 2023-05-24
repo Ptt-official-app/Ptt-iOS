@@ -92,3 +92,12 @@
 "PostTypeIsEmpty" = "請選擇分類";
 "CreatePostConfirmMessage" = "確認發佈文章?";
 "submit" = "發佈";
+
+"Profile" = "個人資訊";
+"HistoryArticles" = "歷史文章";
+"HistoryComments" = "歷史留言";
+"LoginDays" = "累積登入";
+"ValidPosts" = "有效文章";
+"Economy" = "經濟狀況";
+"BadPosts" = "劣退文章";
+"LastLoginIP" = "上次上站";
