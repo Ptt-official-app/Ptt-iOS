@@ -62,3 +62,28 @@ enum BoardDetailFakeData {
         "idx": ""
     ]
 }
+
+enum BoardSummaryFakeData {
+    static let successData: [String: Any] = [
+        "bid": "G-Basketball",
+        "brdname": "G-Basketball",
+        "title": "女生打籃球籃球女生打打女生籃球",
+        "flag": 10551296,
+        "type": "◎",
+        "class": "籃球",
+        "nuser": 0,
+        "moderators": [
+          "test1"
+        ],
+        "reason": "",
+        "read": false,
+        "fav": false,
+        "total": 0,
+        "last_post_time": 0,
+        "stat_attr": 1,
+        "url": "/board/G-Basketball/articles",
+        "gid": 44,
+        "pttbid": 13651,
+        "idx": "4"
+    ]
+}

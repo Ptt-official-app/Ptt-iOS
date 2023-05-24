@@ -115,3 +115,10 @@ extension BoardListViewModel {
         }
     }
 }
+
+extension BoardListViewModel: BoardSearchDelegate {
+    func boardDidAddToFavorite(info: APIModel.BoardInfo) {
+        list.append(info)
+        uiDelegate?.listDidUpdate()
+    }
+}

@@ -460,6 +460,30 @@ extension APIClient: APIClientProtocol {
         return try await doRequest(request: request)
     }
 
+    func addBoardToFavorite(levelIndex: String, bid: String) async throws -> APIModel.BoardInfo {
+        guard let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
+            throw APIError.loginTokenNotExist
+        }
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/user/\(loginObj.user_id)/favorites/addboard"
+
+        let bodyDic = [
+            "level_idx": levelIndex,
+            "bid": bid
+        ]
+
+        guard let url = urlComponent.url,
+              let jsonBody = try? JSONSerialization.data(withJSONObject: bodyDic) else {
+            throw APIError.urlError
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.POST.rawValue
+        request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
+        request.httpBody = jsonBody
+        return try await doRequest(request: request)
+    }
+
     func popularBoards() async throws -> APIModel.BoardInfoList {
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/boards/popular"
