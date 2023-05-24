@@ -81,10 +81,9 @@ private extension TabBarCoordinator {
             }
             coordinator.start()
         case .profile:
-            // TBD
-            let fbPageCoordinator = self.coordinatorFactory.makeFBPageCoordinator(navigationController: navController)
-            self.addDependency(fbPageCoordinator)
-            fbPageCoordinator.start()
+            let coordinator = coordinatorFactory.makeUserInfoCoordinator(navigationController: navController)
+            addDependency(coordinator)
+            coordinator.start()
         case .settings:
             let settingsViewController: SettingsViewController
             if #available(iOS 13.0, *) {

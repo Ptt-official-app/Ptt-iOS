@@ -31,7 +31,7 @@ enum TabBarPage {
             return nil
         }
     }
-    
+
     var pageOrderNumber: Int {
         switch self {
         case .popular:
@@ -46,7 +46,7 @@ enum TabBarPage {
             return 4
         }
     }
-    
+
     var pageTitleValue: String {
         switch self {
         case .popular:
@@ -62,7 +62,7 @@ enum TabBarPage {
 
         }
     }
-    
+
     var pageIconImage: UIImage {
         switch self {
         case .popular:

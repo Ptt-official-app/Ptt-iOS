@@ -493,6 +493,56 @@ extension APIClient: APIClientProtocol {
         request.httpMethod = Method.GET.rawValue
         return try await doRequest(request: request)
     }
+
+    func getProfile(userID: String) async throws -> APIModel.Profile {
+        guard let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
+            throw APIError.loginTokenNotExist
+        }
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/user/\(userID)"
+        guard let url = urlComponent.url else { throw APIError.urlError }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.GET.rawValue
+        request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
+        return try await doRequest(request: request)
+    }
+
+    func getUserArticles(userID: String, startIndex: String = "") async throws -> APIModel.ArticleList {
+        guard let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
+            throw APIError.loginTokenNotExist
+        }
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/user/\(userID)/articles"
+        urlComponent.queryItems = [
+            URLQueryItem(name: "user_id", value: userID),
+            URLQueryItem(name: "start_idx", value: startIndex)
+        ]
+        guard let url = urlComponent.url else { throw APIError.urlError }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.GET.rawValue
+        request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
+        return try await doRequest(request: request)
+    }
+
+    func getUserComment(userID: String, startIndex: String = "") async throws -> APIModel.ArticleCommentList {
+        guard let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
+            throw APIError.loginTokenNotExist
+        }
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/user/\(userID)/comments"
+        urlComponent.queryItems = [
+            URLQueryItem(name: "user_id", value: userID),
+            URLQueryItem(name: "start_idx", value: startIndex)
+        ]
+        guard let url = urlComponent.url else { throw APIError.urlError }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.GET.rawValue
+        request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
+        return try await doRequest(request: request)
+    }
 }
 
 // MARK: Private helper function
@@ -544,17 +594,13 @@ extension APIClient {
         }
 
         let statusCode = httpURLResponse.statusCode
-        do {
-            if let d = data {
-                let errorDict = try decoder.decode(APIModel.ErrorMsg.self, from: d)
-                let error_msg = errorDict.Msg
-                return .failure(.requestFailed(statusCode, error_msg))
-            } else if statusCode != 200 {
-                let message = "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"
-                return .failure(.notExpectedHTTPStatus(message))
-            }
-        } catch {
-            print("Decode error:", error)
+        if let d = data,
+           let errorDict = try? decoder.decode(APIModel.ErrorMsg.self, from: d) {
+            let error_msg = errorDict.Msg
+            return .failure(.requestFailed(statusCode, error_msg))
+        } else if statusCode != 200 {
+            let message = "\(statusCode) \(HTTPURLResponse.localizedString(forStatusCode: statusCode))"
+            return .failure(.notExpectedHTTPStatus(message))
         }
 
         if let error = error {

@@ -8,51 +8,58 @@
 #elseif os(tvOS) || os(watchOS)
   import UIKit
 #endif
+#if canImport(SwiftUI)
+  import SwiftUI
+#endif
+
+// Deprecated typealiases
+@available(*, deprecated, renamed: "ColorAsset.Color", message: "This typealias will be removed in SwiftGen 7.0")
+internal typealias AssetColorTypeAlias = ColorAsset.Color
 
 // swiftlint:disable superfluous_disable_command file_length implicit_return
 
 // MARK: - Asset Catalogs
 
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
-enum PttColors {
-  static let black = ColorAsset(name: "black")
-  static let blueGrey = ColorAsset(name: "blueGrey")
-  static let brightLilac = ColorAsset(name: "brightLilac")
-  static let charcoalGrey = ColorAsset(name: "charcoalGrey")
-  static let codGray = ColorAsset(name: "codGray")
-  static let coral = ColorAsset(name: "coral")
-  static let dandelion = ColorAsset(name: "dandelion")
-  static let darkGrey = ColorAsset(name: "darkGrey")
-  static let darkMint = ColorAsset(name: "darkMint")
-  static let darkPeriwinkle = ColorAsset(name: "darkPeriwinkle")
-  static let deepSkyBlue = ColorAsset(name: "deepSkyBlue")
-  static let frenchGray = ColorAsset(name: "frenchGray")
-  static let lightBlueGrey = ColorAsset(name: "lightBlueGrey")
-  static let paleGrey = ColorAsset(name: "paleGrey")
-  static let paleLilac = ColorAsset(name: "paleLilac")
-  static let palePurple = ColorAsset(name: "palePurple")
-  static let reddishPink = ColorAsset(name: "reddishPink")
-  static let robinSEgg = ColorAsset(name: "robinSEgg")
-  static let shark = ColorAsset(name: "shark")
-  static let slateGrey = ColorAsset(name: "slateGrey")
-  static let tangerine = ColorAsset(name: "tangerine")
-  static let tuna = ColorAsset(name: "tuna")
+internal enum PttColors {
+  internal static let black = ColorAsset(name: "black")
+  internal static let blueGrey = ColorAsset(name: "blueGrey")
+  internal static let brightLilac = ColorAsset(name: "brightLilac")
+  internal static let charcoalGrey = ColorAsset(name: "charcoalGrey")
+  internal static let codGray = ColorAsset(name: "codGray")
+  internal static let coral = ColorAsset(name: "coral")
+  internal static let dandelion = ColorAsset(name: "dandelion")
+  internal static let darkGrey = ColorAsset(name: "darkGrey")
+  internal static let darkMint = ColorAsset(name: "darkMint")
+  internal static let darkPeriwinkle = ColorAsset(name: "darkPeriwinkle")
+  internal static let deepSkyBlue = ColorAsset(name: "deepSkyBlue")
+  internal static let frenchGray = ColorAsset(name: "frenchGray")
+  internal static let lightBlueGrey = ColorAsset(name: "lightBlueGrey")
+  internal static let paleGrey = ColorAsset(name: "paleGrey")
+  internal static let paleLilac = ColorAsset(name: "paleLilac")
+  internal static let palePurple = ColorAsset(name: "palePurple")
+  internal static let reddishPink = ColorAsset(name: "reddishPink")
+  internal static let robinSEgg = ColorAsset(name: "robinSEgg")
+  internal static let shark = ColorAsset(name: "shark")
+  internal static let slateGrey = ColorAsset(name: "slateGrey")
+  internal static let tangerine = ColorAsset(name: "tangerine")
+  internal static let tuna = ColorAsset(name: "tuna")
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name
 
 // MARK: - Implementation Details
 
-final class ColorAsset {
-  fileprivate(set) var name: String
+internal final class ColorAsset {
+  internal fileprivate(set) var name: String
 
   #if os(macOS)
-  typealias Color = NSColor
+  internal typealias Color = NSColor
   #elseif os(iOS) || os(tvOS) || os(watchOS)
-  typealias Color = UIColor
+  internal typealias Color = UIColor
   #endif
 
   @available(iOS 11.0, tvOS 11.0, watchOS 4.0, macOS 10.13, *)
-  private(set) lazy var color: Color = {
+  internal private(set) lazy var color: Color = {
     guard let color = Color(asset: self) else {
       fatalError("Unable to load color asset named \(name).")
     }
@@ -61,7 +68,7 @@ final class ColorAsset {
 
   #if os(iOS) || os(tvOS)
   @available(iOS 11.0, tvOS 11.0, *)
-  func color(compatibleWith traitCollection: UITraitCollection) -> Color {
+  internal func color(compatibleWith traitCollection: UITraitCollection) -> Color {
     let bundle = BundleToken.bundle
     guard let color = Color(named: name, in: bundle, compatibleWith: traitCollection) else {
       fatalError("Unable to load color asset named \(name).")
@@ -70,12 +77,19 @@ final class ColorAsset {
   }
   #endif
 
+  #if canImport(SwiftUI)
+  @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+  internal private(set) lazy var swiftUIColor: SwiftUI.Color = {
+    SwiftUI.Color(asset: self)
+  }()
+  #endif
+
   fileprivate init(name: String) {
     self.name = name
   }
 }
 
-extension ColorAsset.Color {
+internal extension ColorAsset.Color {
   @available(iOS 11.0, tvOS 11.0, watchOS 4.0, macOS 10.13, *)
   convenience init?(asset: ColorAsset) {
     let bundle = BundleToken.bundle
@@ -89,6 +103,16 @@ extension ColorAsset.Color {
   }
 }
 
+#if canImport(SwiftUI)
+@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+internal extension SwiftUI.Color {
+  init(asset: ColorAsset) {
+    let bundle = BundleToken.bundle
+    self.init(asset.name, bundle: bundle)
+  }
+}
+#endif
+
 // swiftlint:disable convenience_type
 private final class BundleToken {
   static let bundle: Bundle = {
@@ -100,4 +124,3 @@ private final class BundleToken {
   }()
 }
 // swiftlint:enable convenience_type
-

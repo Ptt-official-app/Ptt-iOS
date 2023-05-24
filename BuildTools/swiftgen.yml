@@ -8,7 +8,7 @@ strings:
 xcassets:
   - inputs: ColorAssets.xcassets
     outputs:
-      - templatePath: color-swift5-template.stencil
+      - templateName: swift5
         output: PttColors.swift
         params:
           enumName: PttColors

@@ -15,26 +15,26 @@ extension APIModel {
         /// The first dimension means line, the first line, the second line ...etc
         /// The second dimension means content property
         let content: [[ContentProperty]]
-        
+
         init(className: String, title: String, content: [[ContentProperty]]) {
             `class` = className
             self.title = title
             self.content = content
         }
     }
-    
+
     final class ContentProperty: Codable {
         let text: String
         let color0: Color
         let color1: Color
-        
+
         init(text: String, color0: Color = Color(), color1: Color? = nil) {
             self.text = text
             self.color0 = color0
             self.color1 = color1 ?? color0
         }
     }
-    
+
     final class Color: Codable {
         let foreground: Int
         let background: Int
@@ -43,7 +43,7 @@ extension APIModel {
         /// `true`, the text will be reseted to black background, white foreground
         /// Default value is `false`
         let reset: Bool
-        
+
         init(
             foreground: ANSIColor = .white,
             background: ANSIColor = .black,
