@@ -94,7 +94,6 @@ final class BoardListTVC: UITableViewController, BoardListView {
     ) {
         if editingStyle == .delete {
             viewModel.removeBoard(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
 

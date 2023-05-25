@@ -10,6 +10,7 @@ import UIKit
 
 protocol BoardSearchDelegate: AnyObject {
     func boardDidAddToFavorite(info: APIModel.BoardInfo)
+    func boardDidDeleteFromFavorite(info: APIModel.BoardInfo)
 }
 
 final class BoardSearchViewController: UITableViewController {
@@ -73,7 +74,7 @@ final class BoardSearchViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         let data = boards[indexPath.row]
         if let _ = favoriteBoardNames.firstIndex(of: data.brdname) {
-            // Remove board from favorite
+            deleteBoardFromFavorite(board: data, indexPath: indexPath)
         } else {
             addBoardToFavorite(board: data, indexPath: indexPath)
         }
@@ -131,6 +132,29 @@ extension BoardSearchViewController {
                 delegate?.boardDidAddToFavorite(info: response)
                 await MainActor.run {
                     favoriteBoardNames.append(board.brdname)
+                    tableView.beginUpdates()
+                    tableView.reloadRows(at: [indexPath], with: .automatic)
+                    tableView.endUpdates()
+                }
+            } catch {
+                await MainActor.run(body: {
+                    showError(message: error.localizedDescription)
+                })
+            }
+        }
+    }
+
+    private func deleteBoardFromFavorite(board: APIModel.BoardInfo, indexPath: IndexPath) {
+        Task {
+            do {
+                _ = try await apiClient.deleteBoardFromFavorite(
+                    levelIndex: board.level_idx ?? "",
+                    index: board.idx
+                )
+                // Failure will throw catch
+                delegate?.boardDidDeleteFromFavorite(info: board)
+                await MainActor.run {
+                    favoriteBoardNames.remove(at: indexPath.row)
                     tableView.beginUpdates()
                     tableView.reloadRows(at: [indexPath], with: .automatic)
                     tableView.endUpdates()

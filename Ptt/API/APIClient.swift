@@ -49,7 +49,11 @@ struct APIClient {
         return urlComponent
     }
 
-    private let decoder = JSONDecoder()
+    private var decoder: JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .secondsSince1970
+        return decoder
+    }
 
     private let session: URLSessionProtocol
     private let keyChainItem: PTTKeyChain
@@ -482,6 +486,31 @@ extension APIClient: APIClientProtocol {
         request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
         request.httpBody = jsonBody
         return try await doRequest(request: request)
+    }
+
+    func deleteBoardFromFavorite(levelIndex: String, index: String) async throws -> Bool {
+        guard let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
+            throw APIError.loginTokenNotExist
+        }
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/user/\(loginObj.user_id)/favorites/delete"
+
+        let bodyDic = [
+            "level_idx": levelIndex,
+            "idx": index
+        ]
+
+        guard let url = urlComponent.url,
+              let jsonBody = try? JSONSerialization.data(withJSONObject: bodyDic) else {
+            throw APIError.urlError
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.POST.rawValue
+        request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
+        request.httpBody = jsonBody
+        let response: [String: Bool] = try await doRequest(request: request)
+        return response["success"] ?? false
     }
 
     func popularBoards() async throws -> APIModel.BoardInfoList {

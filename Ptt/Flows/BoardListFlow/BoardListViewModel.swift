@@ -71,7 +71,22 @@ final class BoardListViewModel {
     }
 
     func removeBoard(at index: Int) {
-        list.remove(at: index)
+        Task {
+            let board = list[index]
+            do {
+                let isSuccess = try await apiClient.deleteBoardFromFavorite(
+                    levelIndex: board.level_idx ?? "",
+                    index: board.idx
+                )
+                // Failure will throw catch
+                list.remove(at: index)
+                favoriteBoards = list
+                uiDelegate?.favoriteBoardsDidUpdate()
+                uiDelegate?.listDidUpdate()
+            } catch {
+                uiDelegate?.show(error: error)
+            }
+        }
     }
 
     func moveBoard(from source: Int, to target: Int) {
@@ -119,6 +134,11 @@ extension BoardListViewModel {
 extension BoardListViewModel: BoardSearchDelegate {
     func boardDidAddToFavorite(info: APIModel.BoardInfo) {
         list.append(info)
+        uiDelegate?.listDidUpdate()
+    }
+
+    func boardDidDeleteFromFavorite(info: APIModel.BoardInfo) {
+        list.removeAll(where: { $0.bid == info.bid })
         uiDelegate?.listDidUpdate()
     }
 }

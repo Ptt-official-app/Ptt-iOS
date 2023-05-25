@@ -265,6 +265,43 @@ final class APIClientTest: XCTestCase {
         XCTAssertEqual(result.title, "女生打籃球籃球女生打打女生籃球")
     }
 
+    func testDeleteBoardFromFavorite_succeed() async throws {
+        let levelIndex = String.random(length: 8)
+        let index = String.random(length: 3)
+        urlSession.stub { path, headers, _, body, completion in
+            XCTAssertEqual(path, "/api/user/\(self.userID ?? "")/favorites/delete")
+            XCTAssertEqual(headers["Authorization"], "bearer \(self.token ?? "")")
+            let data = try XCTUnwrap(body)
+            let dict = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: String])
+            XCTAssertEqual(dict["idx"], index)
+            XCTAssertEqual(dict["level_idx"], levelIndex)
+            completion(.success((200, ["success": true])))
+        }
+        let result = try await apiClient.deleteBoardFromFavorite(levelIndex: levelIndex, index: index)
+        XCTAssertTrue(result)
+    }
+
+    func testDeleteBoardFromFavorite_failure() async throws {
+        let levelIndex = String.random(length: 8)
+        let index = String.random(length: 3)
+        urlSession.stub { path, headers, _, body, completion in
+            XCTAssertEqual(path, "/api/user/\(self.userID ?? "")/favorites/delete")
+            XCTAssertEqual(headers["Authorization"], "bearer \(self.token ?? "")")
+            let data = try XCTUnwrap(body)
+            let dict = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: String])
+            XCTAssertEqual(dict["idx"], index)
+            XCTAssertEqual(dict["level_idx"], levelIndex)
+            completion(.success((500, ["Msg": "error message"])))
+        }
+        do {
+            _ = try await apiClient.deleteBoardFromFavorite(levelIndex: levelIndex, index: index)
+            XCTFail("Shouldn't success")
+        } catch {
+            XCTAssertEqual(error.localizedDescription, "500 - error message")
+        }
+
+    }
+
     func testPopularBoards_succeed() async throws {
         urlSession.stub { path, headers, queryItem, _, completion in
             XCTAssertEqual(path, "/api/boards/popular")
@@ -289,5 +326,82 @@ final class APIClientTest: XCTestCase {
         XCTAssertEqual(result.boardID, "PttApp")
         XCTAssertEqual(result.title, "測試與建議回饋的集散地")
         XCTAssertEqual(result.postTypes[2], "蘋果")
+    }
+
+    func testProfile_succeed() async throws {
+        let userID = String.random(length: 5)
+        urlSession.stub { path, _, _, _, completion in
+            XCTAssertEqual(path, "/api/user/\(userID)")
+            completion(.success((200, ProfileFakeData.successData)))
+        }
+        let result = try await apiClient.getProfile(userID: userID)
+        XCTAssertEqual(result.userID, "fakeUserID")
+        XCTAssertEqual(result.nickName, "我是暱稱")
+        XCTAssertEqual(result.firstLogin, Date(timeIntervalSince1970: 1676384013))
+        let goRecord = try XCTUnwrap(result.gameRecords.first(where: { $0.type == .go }))
+        XCTAssertEqual(goRecord.win, 9)
+        XCTAssertEqual(goRecord.lose, 8)
+        XCTAssertEqual(goRecord.tie, 7)
+    }
+
+    func testUserArticles_succeed() async throws {
+        let userID = String.random(length: 7)
+        let startIndex = String.random(length: 2)
+        urlSession.stub { path, _, queries, _, completion in
+            XCTAssertEqual(path, "/api/user/\(userID)/articles")
+            for query in queries {
+                let key = query.name
+                if key == "user_id" {
+                    XCTAssertEqual(query.value, userID)
+                } else if key == "start_idx" {
+                    XCTAssertEqual(query.value, startIndex)
+                } else {
+                    XCTFail("What is this?")
+                }
+            }
+            completion(.success((200, UserArticlesFakeData.successData)))
+        }
+        let result = try await apiClient.getUserArticles(userID: userID, startIndex: startIndex)
+        XCTAssertEqual(result.next_idx, "aaa")
+        XCTAssertEqual(result.list.count, 2)
+        let article = try XCTUnwrap(result.list.first)
+        XCTAssertEqual(article.bid, "ALLPOST")
+        XCTAssertEqual(article.createTime, Date(timeIntervalSince1970: 1678005674))
+        XCTAssertEqual(article.mode, .local)
+    }
+
+    func testUserComments_succeed() async throws {
+        let userID = String.random(length: 7)
+        let startIndex = String.random(length: 2)
+        urlSession.stub { path, _, queries, _, completion in
+            XCTAssertEqual(path, "/api/user/\(userID)/comments")
+            for query in queries {
+                let key = query.name
+                if key == "user_id" {
+                    XCTAssertEqual(query.value, userID)
+                } else if key == "start_idx" {
+                    XCTAssertEqual(query.value, startIndex)
+                } else if key == "limit" {
+                    XCTAssertEqual(query.value, "200")
+                } else {
+                    XCTFail("What is this?")
+                }
+            }
+            completion(.success((200, UserCommentFakeData.successData)))
+        }
+        let result = try await apiClient.getUserComment(userID: userID, startIndex: startIndex)
+        XCTAssertEqual(result.next_idx, "bbb")
+        XCTAssertEqual(result.list.count, 2)
+        let comment = try XCTUnwrap(result.list.first)
+        XCTAssertEqual(comment.aid, "M.1677601372.A.E11")
+        XCTAssertEqual(comment.modified, Date(timeIntervalSince1970: 1677601371))
+        XCTAssertEqual(comment.title, "中文測試(Test)")
+        let content = comment.comment
+        XCTAssertEqual(content.count, 1)
+        let lineOneContent = try XCTUnwrap(content.first)
+        let contentElement = try XCTUnwrap(lineOneContent.first)
+        XCTAssertEqual(contentElement.text, "這是箭頭")
+        XCTAssertEqual(ANSIColor(rawValue: contentElement.color0.background, isForeground: false), .black)
+        XCTAssertEqual(ANSIColor(rawValue: contentElement.color1.foreground, isForeground: true), .blue)
     }
 }
