@@ -164,7 +164,7 @@ extension BoardListTVC: BoardListUIProtocol {
 
     func favoriteBoardsDidUpdate() {
         DispatchQueue.main.async {
-            self.boardSearchVC.update(favoriteBoardNames: self.viewModel.favoriteBoardNames)
+            self.boardSearchVC.update(favoriteBoards: self.viewModel.favoriteBoards)
         }
     }
 

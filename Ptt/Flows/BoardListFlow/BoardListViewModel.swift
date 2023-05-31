@@ -26,17 +26,13 @@ final class BoardListViewModel {
     let apiClient: APIClientProtocol
     private var startIndex = ""
     private(set) var list: [APIModel.BoardInfo] = []
-    private var favoriteBoards: [APIModel.BoardInfo] = []
+    private(set) var favoriteBoards: [APIModel.BoardInfo] = []
     private var favoriteStartIndex = ""
     weak var uiDelegate: BoardListUIProtocol?
 
     init(listType: ListType, apiClient: APIClientProtocol = APIClient.shared) {
         self.listType = listType
         self.apiClient = apiClient
-    }
-
-    var favoriteBoardNames: [String] {
-        favoriteBoards.map(\.brdname)
     }
 
     func fetchListData() {

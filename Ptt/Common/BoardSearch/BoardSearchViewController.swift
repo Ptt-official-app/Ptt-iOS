@@ -15,7 +15,7 @@ protocol BoardSearchDelegate: AnyObject {
 
 final class BoardSearchViewController: UITableViewController {
     private let apiClient: APIClientProtocol
-    private var favoriteBoardNames: [String] = []
+    private var favoriteBoards: [APIModel.BoardInfo] = []
     private var boards: [APIModel.BoardInfo] = []
     private var startIdx = ""
     private var scrollDirection: Direction = .unknown
@@ -45,8 +45,8 @@ final class BoardSearchViewController: UITableViewController {
         getBoardList(keyword: keyword)
     }
 
-    func update(favoriteBoardNames: [String]) {
-        self.favoriteBoardNames = favoriteBoardNames
+    func update(favoriteBoards: [APIModel.BoardInfo]) {
+        self.favoriteBoards = favoriteBoards
         tableView.reloadData()
     }
 
@@ -65,7 +65,7 @@ final class BoardSearchViewController: UITableViewController {
             return UITableViewCell()
         }
         let data = boards[indexPath.row]
-        let isFavorite = favoriteBoardNames.contains(data.brdname)
+        let isFavorite = favoriteBoards.contains(where: { $0.brdname == data.brdname })
         cell.config(boardName: data.brdname, isFavorite: isFavorite)
         return cell
     }
@@ -73,8 +73,8 @@ final class BoardSearchViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let data = boards[indexPath.row]
-        if let _ = favoriteBoardNames.firstIndex(of: data.brdname) {
-            deleteBoardFromFavorite(board: data, indexPath: indexPath)
+        if let idx = favoriteBoards.firstIndex(where: { $0.brdname == data.brdname }) {
+            deleteBoardFromFavorite(board: favoriteBoards[idx], indexPath: indexPath)
         } else {
             addBoardToFavorite(board: data, indexPath: indexPath)
         }
@@ -131,7 +131,7 @@ extension BoardSearchViewController {
                 let response = try await apiClient.addBoardToFavorite(levelIndex: levelIndex, bid: board.bid)
                 delegate?.boardDidAddToFavorite(info: response)
                 await MainActor.run {
-                    favoriteBoardNames.append(board.brdname)
+                    favoriteBoards.append(response)
                     tableView.beginUpdates()
                     tableView.reloadRows(at: [indexPath], with: .automatic)
                     tableView.endUpdates()
@@ -154,7 +154,7 @@ extension BoardSearchViewController {
                 // Failure will throw catch
                 delegate?.boardDidDeleteFromFavorite(info: board)
                 await MainActor.run {
-                    favoriteBoardNames.remove(at: indexPath.row)
+                    favoriteBoards.removeAll(where: { $0.brdname == board.brdname })
                     tableView.beginUpdates()
                     tableView.reloadRows(at: [indexPath], with: .automatic)
                     tableView.endUpdates()
