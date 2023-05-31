@@ -26,7 +26,8 @@ class TabBarCoordinator: BaseCoordinator, TabBarCoordinatorProtocol {
 
     override func start() {
         // Let's define which pages do we want to add into tab bar
-        let pages: [TabBarPage] = [.popular, .favorite, .popularArticles, .profile, .settings]
+        // Disable .popularArticles, for now
+        let pages: [TabBarPage] = [.popular, .favorite, .profile, .settings]
             .sorted(by: { $0.pageOrderNumber < $1.pageOrderNumber })
         // Initialization of ViewControllers or these pages
         let controllers: [UINavigationController] = pages.map({ getTabController($0) })

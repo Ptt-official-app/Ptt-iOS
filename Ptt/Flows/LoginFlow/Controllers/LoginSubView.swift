@@ -24,6 +24,11 @@ extension LoginViewController {
             ]
         }
         NSLayoutConstraint.activate(constraints)
+
+        // Disable btnUserAgreement and btnForget, for now
+        btnUserAgreement.isHidden = true
+        vLine.isHidden = true
+        btnForget.isHidden = true
     }
 
     func toggleLoginView(isHidden: Bool) {

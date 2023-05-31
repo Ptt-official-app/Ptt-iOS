@@ -39,7 +39,8 @@ extension BoardSearchCell {
         selectionStyle = .none
         setUpContainer()
         setUpBoardNameLabel()
-        setUpFavoriteButton()
+        // Disable adding and removing favorite, for now
+//        setUpFavoriteButton()
     }
 
     private func setUpContainer() {

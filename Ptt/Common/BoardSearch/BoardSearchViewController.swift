@@ -71,6 +71,9 @@ final class BoardSearchViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        // Disable editing, for now
+        // TBD: expected behavior should be showBoardView()
+        return
         let data = boards[indexPath.row]
         if let _ = favoriteBoardNames.firstIndex(of: data.brdname) {
             // Remove board from favorite

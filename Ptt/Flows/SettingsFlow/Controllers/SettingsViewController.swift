@@ -14,7 +14,7 @@ private enum SettingsSection: Int, CaseIterable {
 }
 
 private enum SettingsMainRow: Int, CaseIterable {
-    case appearance, address, cache
+    case cache, appearance, address
 }
 
 private enum SettingsAboutRow: Int, CaseIterable {
@@ -81,7 +81,9 @@ final class SettingsViewController: UITableViewController {
         }
         switch sectionType {
         case .main:
-            return SettingsMainRow.allCases.count
+            // Disable appearance and address, for now
+            return 1
+//            return SettingsMainRow.allCases.count
         case .about:
             return SettingsAboutRow.allCases.count
         }

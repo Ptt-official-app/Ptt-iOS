@@ -183,7 +183,8 @@ extension BoardListTVC {
         switch viewModel.listType {
         case .favorite:
             title = L10n.favoriteBoards
-            navigationItem.setRightBarButton(editButtonItem, animated: true)
+            // Disable editing for favorite, for now
+//            navigationItem.setRightBarButton(editButtonItem, animated: true)
             let logoutBarItem = UIBarButtonItem(
                 title: "Logout",
                 style: .plain,
