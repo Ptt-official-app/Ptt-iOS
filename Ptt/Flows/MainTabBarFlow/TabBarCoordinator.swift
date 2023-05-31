@@ -10,6 +10,7 @@ import UIKit
 
 protocol TabBarCoordinatorProtocol {
     var tabBarView: TabBarView { get set }
+
     func selectPage(_ page: TabBarPage)
     func setSelectedIndex(_ index: Int)
     func currentPage() -> TabBarPage?
@@ -46,8 +47,7 @@ class TabBarCoordinator: BaseCoordinator, TabBarCoordinatorProtocol {
     }
 
     func setSelectedIndex(_ index: Int) {
-        guard let page = TabBarPage.init(index: index) else { return }
-        
+        guard let page = TabBarPage(index: index) else { return }
         tabBarView.selectedIndex = page.pageOrderNumber
     }
 }
@@ -67,7 +67,6 @@ private extension TabBarCoordinator {
         navController.tabBarItem = UITabBarItem(title: page.pageTitleValue,
                                                 image: page.pageIconImage,
                                                 tag: page.pageOrderNumber)
-        
         switch page {
         case .favorite:
             let coordinator = coordinatorFactory.makeBoardListCoordinator(

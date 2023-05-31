@@ -26,7 +26,7 @@ final class LoginViewController: UIViewController, LoginView {
     private let scrollView = UIScrollView()
     let switchContentView = UIView()
     let global_width: CGFloat = 265
-    var state:UILoginState = .login
+    var state: UILoginState = .login
     
     private func init_layout() {
         view.ptt_add(subviews: [scrollView])
