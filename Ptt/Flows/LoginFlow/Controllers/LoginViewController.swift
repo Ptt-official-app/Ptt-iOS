@@ -24,10 +24,11 @@ final class LoginViewController: UIViewController, LoginView {
     }
 
     private let scrollView = UIScrollView()
+    private let mainContentView = UIView()
     let switchContentView = UIView()
     let global_width: CGFloat = 265
-    var state:UILoginState = .login
-    
+    var state: UILoginState = .login
+
     private func init_layout() {
         view.ptt_add(subviews: [scrollView])
         NSLayoutConstraint.activate(
@@ -35,19 +36,21 @@ final class LoginViewController: UIViewController, LoginView {
             NSLayoutConstraint.constraints(withVisualFormat: "V:|[scrollView]|", metrics: nil, views: ["scrollView": scrollView])
         )
 
-        let centerView = UIView()
-        scrollView.ptt_add(subviews: [centerView])
+        scrollView.ptt_add(subviews: [mainContentView])
         NSLayoutConstraint.activate([
-            centerView.widthAnchor.constraint(equalToConstant: global_width),
-            centerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            centerView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            mainContentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: 50),
+            mainContentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            mainContentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: 50),
+            mainContentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -50),
+            mainContentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor, constant: -100)
         ])
-        centerView.ptt_add(subviews: [lbTitle, leftFuncStack, lbRegisterProgress, switchContentView])
+        mainContentView.ptt_add(subviews: [lbTitle, leftFuncStack, lbRegisterProgress, switchContentView])
         let viewsDictionary = ["lbTitle": lbTitle,
                                "leftFuncStack": leftFuncStack, "lbRegisterProgress": lbRegisterProgress,
                                "switchContentView": switchContentView]
         var constraints = [NSLayoutConstraint]()
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[lbTitle(100)]-[leftFuncStack(44)]-(50)-[switchContentView]|", metrics: nil, views: viewsDictionary)
+        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[lbTitle]|", metrics: nil, views: viewsDictionary)
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[leftFuncStack]-[lbRegisterProgress]|", metrics: nil, views: viewsDictionary)
         constraints += [lbRegisterProgress.centerYAnchor.constraint(equalTo: leftFuncStack.centerYAnchor)]
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[switchContentView]|", metrics: nil, views: viewsDictionary)
@@ -64,15 +67,7 @@ final class LoginViewController: UIViewController, LoginView {
         return [tfUsername, tfPassword,
                 tfRegisterUsername, tfRegisterEmail, tfRegisterPassword,
                 tfVerifyCode,
-                tfFillRealName, tfFillBirthday, tfFillAddress ]
-    }
-
-    @objc
-    func hideKeyboard() {
-        let tfList = getTextFieldList()
-        for tf in tfList {
-            tf.endEditing(true)
-        }
+                tfFillRealName, tfFillBirthday, tfFillAddress]
     }
 
     func bind_event() {
@@ -86,10 +81,6 @@ final class LoginViewController: UIViewController, LoginView {
             action: #selector(switchTypeRegister),
             for: .touchUpInside
         )
-
-        let tap = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
-        self.view.addGestureRecognizer(tap)
-
     }
 
     @objc
@@ -159,6 +150,11 @@ final class LoginViewController: UIViewController, LoginView {
         print("login view did load")
         self.bind_event()
         toggleState(.login)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        let tapGestureRecognizer = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
+        view.addGestureRecognizer(tapGestureRecognizer)
     }
 
     init() {
@@ -170,23 +166,8 @@ final class LoginViewController: UIViewController, LoginView {
         self.scrollView.showsVerticalScrollIndicator = false
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillShow),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(
-            self,
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     func gotoRegisterWebview() {
@@ -205,7 +186,8 @@ final class LoginViewController: UIViewController, LoginView {
             btnTypeLogin.isSelected = true
             toggleState(.login)
         }
-        self.hideKeyboard()
+
+        view.endEditing(true)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -430,30 +412,6 @@ final class LoginViewController: UIViewController, LoginView {
 }
 
 extension LoginViewController: UITextFieldDelegate {
-
-    @objc
-    func keyboardWillShow(_ notification: Notification) {
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
-            let keyboardHeight = keyboardRectangle.height
-            scrollViewToFitKeyboard(Int(keyboardHeight))
-        }
-    }
-
-    func scrollViewToFitKeyboard(_ lastKeyboardHeight: Int) {
-        let screenHeight = Int(self.view.bounds.height)
-
-        // 31 = login~forget height
-        var keyboardHeight = lastKeyboardHeight - Int(self.btnForget.frame.height + self.btnLogin.frame.height + 31)
-        if self.state == .attemptRegister {
-            keyboardHeight = lastKeyboardHeight - Int(self.btnAttemptRegister.frame.height + 20)
-        }
-
-        let margin_to_keyboard = 10
-        let diff = Int(btnLogin.frame.origin.y) - keyboardHeight + margin_to_keyboard
-        self.scrollView.frame.origin.y += CGFloat(diff)
-    }
-
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         switch textField {
         case tfUsername:
@@ -476,13 +434,6 @@ extension LoginViewController: UITextFieldDelegate {
             break
         }
         return true
-    }
-
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.layoutIfNeeded() // add this
-            self.scrollView.frame.origin.y = CGFloat(0)
-        })
     }
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -519,6 +470,40 @@ extension LoginViewController: UITextFieldDelegate {
             print("start the register process with text.count = 6")
             self.onVerifyCodeFill()
         }
+    }
+}
+
+// Notifications
+extension LoginViewController {
+    @objc
+    func adjustForKeyboard(notification: Notification) {
+        guard let keyboardValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+
+        let keyboardScreenEndFrame = keyboardValue.cgRectValue
+        let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, from: view.window)
+
+        if notification.name == UIResponder.keyboardWillHideNotification {
+            scrollView.contentInset = .zero
+        } else {
+            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardViewEndFrame.height - view.safeAreaInsets.bottom, right: 0)
+
+            var visibleFrame: CGRect?
+
+            switch state {
+            case .login:
+                visibleFrame = switchContentView.convert(btnUserAgreement.frame, to: scrollView)
+            case .attemptRegister:
+                visibleFrame = switchContentView.convert(btnRegisterUserAgreement.frame, to: scrollView)
+            default:
+                visibleFrame = nil
+            }
+
+            if let rect = visibleFrame {
+                scrollView.scrollRectToVisible(rect, animated: true)
+            }
+        }
+
+        scrollView.scrollIndicatorInsets = scrollView.contentInset
     }
 }
 
