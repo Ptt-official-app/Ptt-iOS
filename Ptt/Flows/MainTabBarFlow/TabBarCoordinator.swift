@@ -27,11 +27,16 @@ class TabBarCoordinator: BaseCoordinator, TabBarCoordinatorProtocol {
 
     override func start() {
         // Let's define which pages do we want to add into tab bar
-        // Disable .popularArticles, for now
-        let pages: [TabBarPage] = [.popular, .favorite, .profile, .settings]
-            .sorted(by: { $0.pageOrderNumber < $1.pageOrderNumber })
+        let pages: [TabBarPage]
+#if DEVELOP // Disable .popularArticles, for now
+        pages = [.popular, .favorite, .popularArticles, .profile, .settings]
+#else
+        pages = [.popular, .favorite, .profile, .settings]
+#endif
         // Initialization of ViewControllers or these pages
-        let controllers: [UINavigationController] = pages.map({ getTabController($0) })
+        let controllers: [UINavigationController] = pages
+            .sorted(by: { $0.pageOrderNumber < $1.pageOrderNumber })
+            .map({ getTabController($0) })
 
         prepareTabBarController(withTabControllers: controllers)
     }

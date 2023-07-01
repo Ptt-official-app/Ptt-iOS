@@ -214,9 +214,6 @@
 		3EF5410629FD0FFA0086205A /* UserArticlesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserArticlesView.swift; sourceTree = "<group>"; };
 		3EF5410829FD20810086205A /* ArticleCommentList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCommentList.swift; sourceTree = "<group>"; };
 		3EF5410A29FD442D0086205A /* UserCommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCommentsView.swift; sourceTree = "<group>"; };
-		46B9993AD4E3522178E28D0D /* Pods-Ptt.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ptt.debug.xcconfig"; path = "Target Support Files/Pods-Ptt/Pods-Ptt.debug.xcconfig"; sourceTree = "<group>"; };
-		80D0972759B39673EF30B8DB /* Pods-Ptt.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ptt.release.xcconfig"; path = "Target Support Files/Pods-Ptt/Pods-Ptt.release.xcconfig"; sourceTree = "<group>"; };
-		8A0F49F3FB80A16A715149ED /* Pods-PttTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PttTests.release.xcconfig"; path = "Target Support Files/Pods-PttTests/Pods-PttTests.release.xcconfig"; sourceTree = "<group>"; };
 		9411EDA525A0AEC30005ADCB /* LoginCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCoordinator.swift; sourceTree = "<group>"; };
 		9411EDA925A0B03C0005ADCB /* LoginSceneFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSceneFactoryProtocol.swift; sourceTree = "<group>"; };
 		944209D5279B029C002B2B7A /* ErrorSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorSubView.swift; sourceTree = "<group>"; };
@@ -1056,7 +1053,7 @@
 				CD6C1C1E26B779A500EBFEA9 /* LoadingView.swift in Sources */,
 				3EA6F1BA29B388AF005D8B09 /* ComposeArticleView.swift in Sources */,
 				3E655290255960CF0026290B /* APIError.swift in Sources */,
-				EA05B18B277312D5004C13A8 /* ButtonNode.swift in Sources */,
+				EA05B18B277312D5004C13A8 /* LoginButton.swift in Sources */,
 				3EE9356B29CB369100DCEC81 /* UserInfoSceneFactoryProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1248,6 +1245,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = cc.ptt.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG DEVELOP";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

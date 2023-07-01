@@ -78,9 +78,11 @@ final class SettingsViewController: UITableViewController {
         }
         switch sectionType {
         case .main:
-            // Disable appearance and address, for now
+#if DEVELOP // Disable appearance and address, for now
+            return SettingsMainRow.allCases.count
+#else
             return 1
-//            return SettingsMainRow.allCases.count
+#endif
         case .about:
             return SettingsAboutRow.allCases.count
         }
