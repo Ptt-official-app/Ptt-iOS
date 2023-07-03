@@ -56,7 +56,6 @@ final class BoardListViewModel {
 
     func pullDownToRefresh() {
         startIndex = ""
-        list = []
         fetchListData()
     }
 
@@ -107,7 +106,11 @@ extension BoardListViewModel {
     private func fetchPopularBoards() async {
         do {
             let response = try await apiClient.popularBoards()
-            list += response.list
+            if startIndex == "" {
+                list = response.list
+            } else {
+                list += response.list
+            }
             startIndex = response.next_idx ?? ""
             uiDelegate?.listDidUpdate()
         } catch {
