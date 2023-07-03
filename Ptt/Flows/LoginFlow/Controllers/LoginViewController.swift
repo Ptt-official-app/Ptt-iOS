@@ -489,17 +489,19 @@ extension LoginViewController {
 
             var visibleFrame: CGRect?
 
+            // TODO: Checking the visibility of user agreement button for adjusting scrollview visible area temporarily, should be removed later when the agreement feature is ready
             switch state {
             case .login:
-                visibleFrame = switchContentView.convert(btnUserAgreement.frame, to: scrollView)
+                visibleFrame = btnUserAgreement.isHidden ? btnLogin.frame : btnUserAgreement.frame
             case .attemptRegister:
-                visibleFrame = switchContentView.convert(btnRegisterUserAgreement.frame, to: scrollView)
+                visibleFrame = btnRegisterUserAgreement.isHidden ? btnAttemptRegister.frame : btnRegisterUserAgreement.frame
             default:
                 visibleFrame = nil
             }
 
             if let rect = visibleFrame {
-                scrollView.scrollRectToVisible(rect, animated: true)
+                let convertedFrame = switchContentView.convert(rect, to: scrollView)
+                scrollView.scrollRectToVisible(convertedFrame, animated: true)
             }
         }
 
