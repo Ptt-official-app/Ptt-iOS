@@ -10,6 +10,7 @@ import UIKit
 
 protocol TabBarCoordinatorProtocol {
     var tabBarView: TabBarView { get set }
+
     func selectPage(_ page: TabBarPage)
     func setSelectedIndex(_ index: Int)
     func currentPage() -> TabBarPage?
@@ -26,10 +27,16 @@ class TabBarCoordinator: BaseCoordinator, TabBarCoordinatorProtocol {
 
     override func start() {
         // Let's define which pages do we want to add into tab bar
-        let pages: [TabBarPage] = [.popular, .favorite, .popularArticles, .profile, .settings]
-            .sorted(by: { $0.pageOrderNumber < $1.pageOrderNumber })
+        let pages: [TabBarPage]
+#if DEVELOP // Disable .popularArticles, for now
+        pages = [.popular, .favorite, .popularArticles, .profile, .settings]
+#else
+        pages = [.popular, .favorite, .profile, .settings]
+#endif
         // Initialization of ViewControllers or these pages
-        let controllers: [UINavigationController] = pages.map({ getTabController($0) })
+        let controllers: [UINavigationController] = pages
+            .sorted(by: { $0.pageOrderNumber < $1.pageOrderNumber })
+            .map({ getTabController($0) })
 
         prepareTabBarController(withTabControllers: controllers)
     }
@@ -45,8 +52,7 @@ class TabBarCoordinator: BaseCoordinator, TabBarCoordinatorProtocol {
     }
 
     func setSelectedIndex(_ index: Int) {
-        guard let page = TabBarPage.init(index: index) else { return }
-        
+        guard let page = TabBarPage(index: index) else { return }
         tabBarView.selectedIndex = page.pageOrderNumber
     }
 }
@@ -66,7 +72,6 @@ private extension TabBarCoordinator {
         navController.tabBarItem = UITabBarItem(title: page.pageTitleValue,
                                                 image: page.pageIconImage,
                                                 tag: page.pageOrderNumber)
-        
         switch page {
         case .favorite:
             let coordinator = coordinatorFactory.makeBoardListCoordinator(

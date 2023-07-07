@@ -26,7 +26,7 @@ final class LoginViewController: UIViewController, LoginView {
     private let scrollView = UIScrollView()
     let switchContentView = UIView()
     let global_width: CGFloat = 265
-    var state:UILoginState = .login
+    var state: UILoginState = .login
     
     private func init_layout() {
         view.ptt_add(subviews: [scrollView])
@@ -52,6 +52,11 @@ final class LoginViewController: UIViewController, LoginView {
         constraints += [lbRegisterProgress.centerYAnchor.constraint(equalTo: leftFuncStack.centerYAnchor)]
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[switchContentView]|", metrics: nil, views: viewsDictionary)
         NSLayoutConstraint.activate(constraints)
+
+#if DEVELOP // Disable registering, for now
+#else
+        leftFuncStack.isHidden = true
+#endif
 
         initErrorViews()
         initVerifyCodeViews()
