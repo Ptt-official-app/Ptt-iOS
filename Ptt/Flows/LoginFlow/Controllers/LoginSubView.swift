@@ -137,7 +137,7 @@ extension LoginViewController {
     @objc
     func loginPress() {
         print("login press")
-        self.hideKeyboard()
+        view.endEditing(true)
         var account = ""
         var passwd = ""
 
