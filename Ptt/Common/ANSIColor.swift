@@ -81,4 +81,21 @@ enum ANSIColor: CaseIterable {
             return UIColor.white
         }
     }
+
+    init?(rawValue: Int, isForeground: Bool) {
+        for color in ANSIColor.allCases {
+            if isForeground {
+                if color.foreground == rawValue {
+                    self = color
+                    return
+                }
+            } else {
+                if color.background == rawValue {
+                    self = color
+                    return
+                }
+            }
+        }
+        return nil
+    }
 }

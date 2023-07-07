@@ -94,7 +94,6 @@ final class BoardListTVC: UITableViewController, BoardListView {
     ) {
         if editingStyle == .delete {
             viewModel.removeBoard(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
 
@@ -165,7 +164,7 @@ extension BoardListTVC: BoardListUIProtocol {
 
     func favoriteBoardsDidUpdate() {
         DispatchQueue.main.async {
-            self.boardSearchVC.update(favoriteBoardNames: self.viewModel.favoriteBoardNames)
+            self.boardSearchVC.update(favoriteBoards: self.viewModel.favoriteBoards)
         }
     }
 

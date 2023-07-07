@@ -8,6 +8,7 @@ disabled_rules:
   - force_cast
   - line_length
   - function_body_length
+  - number_separator
 
 opt_in_rules:
   - file_name
