@@ -14,7 +14,7 @@ private enum SettingsSection: Int, CaseIterable {
 }
 
 private enum SettingsMainRow: Int, CaseIterable {
-    case appearance, address, cache
+    case cache, appearance, address
 }
 
 private enum SettingsAboutRow: Int, CaseIterable {
@@ -34,10 +34,6 @@ final class SettingsViewController: UITableViewController {
         }
         view.backgroundColor = GlobalAppearance.backgroundColor
 
-        if #available(iOS 13.0, *) {
-        } else {
-            tableView.separatorStyle = .none
-        }
         tableView.register(SettingsTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
 
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeAppearanceMode), name: NotificationName.value(of: .didChangeAppearanceMode), object: nil)
@@ -51,7 +47,8 @@ final class SettingsViewController: UITableViewController {
         }
     }
 
-    @objc private func didChangeAppearanceMode() {
+    @objc
+    private func didChangeAppearanceMode() {
         let indexPath = IndexPath(row: SettingsMainRow.appearance.rawValue,
                                   section: SettingsSection.main.rawValue)
         tableView.reloadRows(at: [indexPath], with: .automatic)
@@ -81,7 +78,11 @@ final class SettingsViewController: UITableViewController {
         }
         switch sectionType {
         case .main:
+#if DEVELOP // Disable appearance and address, for now
             return SettingsMainRow.allCases.count
+#else
+            return 1
+#endif
         case .about:
             return SettingsAboutRow.allCases.count
         }
@@ -158,13 +159,13 @@ final class SettingsViewController: UITableViewController {
                 tableView.deselectRow(at: indexPath, animated: true)
                 let prompt = UIAlertController(title: L10n.changeSiteAddress,
                                                message: L10n.leaveItBlankForDefaultValue,
-                                              preferredStyle: .alert)
+                                               preferredStyle: .alert)
                 prompt.addTextField { textField in
                     textField.placeholder = UserDefaultsManager.addressDefaultForDisplay
                 }
                 let confirm = UIAlertAction(title: L10n.confirm, style: .default) { _ in
                     guard var text = prompt.textFields?.first?.text else { return }
-                    if text == "" {
+                    if text.isEmpty {
                         text = UserDefaultsManager.addressDefaultForDisplay
                     }
                     let success = UserDefaultsManager.set(address: text)
@@ -183,7 +184,6 @@ final class SettingsViewController: UITableViewController {
                 prompt.addAction(confirm)
                 prompt.addAction(cancel)
                 present(prompt, animated: true, completion: nil)
-                break
             case .cache:
                 tableView.deselectRow(at: indexPath, animated: true)
                 let alert = UIAlertController(title: L10n.areYouSureToClearCache, message: nil, preferredStyle: .alert)

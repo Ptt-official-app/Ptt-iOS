@@ -56,6 +56,11 @@ final class LoginViewController: UIViewController, LoginView {
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[switchContentView]|", metrics: nil, views: viewsDictionary)
         NSLayoutConstraint.activate(constraints)
 
+#if DEVELOP // Disable registering, for now
+#else
+        leftFuncStack.isHidden = true
+#endif
+
         initErrorViews()
         initVerifyCodeViews()
         initLoginViews() // init loginStackSpec and login views

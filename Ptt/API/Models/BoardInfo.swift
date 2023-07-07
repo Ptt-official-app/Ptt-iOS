@@ -38,6 +38,7 @@ extension APIModel {
         let stat_attr: BoardStat
         /// folder 的 level-idx
         var level_idx: String?
+        var idx: String
         /// 已讀這個板的最新文章.
         let read: Bool
         /// 我的最愛.
@@ -58,6 +59,7 @@ extension APIModel {
             self.last_post_time = 0
             self.stat_attr = .invalid
             self.fav = false
+            self.idx = "0"
         }
     }
 

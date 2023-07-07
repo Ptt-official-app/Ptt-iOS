@@ -94,7 +94,6 @@ final class BoardListTVC: UITableViewController, BoardListView {
     ) {
         if editingStyle == .delete {
             viewModel.removeBoard(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
 
@@ -165,7 +164,7 @@ extension BoardListTVC: BoardListUIProtocol {
 
     func favoriteBoardsDidUpdate() {
         DispatchQueue.main.async {
-            self.boardSearchVC.update(favoriteBoardNames: self.viewModel.favoriteBoardNames)
+            self.boardSearchVC.update(favoriteBoards: self.viewModel.favoriteBoards)
         }
     }
 
@@ -183,7 +182,9 @@ extension BoardListTVC {
         switch viewModel.listType {
         case .favorite:
             title = L10n.favoriteBoards
+#if DEVELOP // Disable editing for favorite, for now
             navigationItem.setRightBarButton(editButtonItem, animated: true)
+#endif
             let logoutBarItem = UIBarButtonItem(
                 title: "Logout",
                 style: .plain,
