@@ -52,11 +52,8 @@ final class BoardListTVC: UITableViewController, BoardListView {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard
-            let cell = tableView.dequeueReusableCell(
-                withIdentifier: BoardsTableViewCell.cellID,
-                for: indexPath
-            ) as? BoardsTableViewCell
+        guard let cell =
+            tableView.dequeueReusableCell(withIdentifier: BoardsTableViewCell.cellID, for: indexPath) as? BoardsTableViewCell, indexPath.row < viewModel.list.count
         else {
             return UITableViewCell()
         }
