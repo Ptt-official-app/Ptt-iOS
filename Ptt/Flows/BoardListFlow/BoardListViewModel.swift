@@ -36,17 +36,19 @@ final class BoardListViewModel {
     }
 
     func fetchListData() {
-        if case .popular = listType {
+        switch listType {
+        case .popular:
             Task { await fetchPopularBoards() }
-        }
-        Task {
-            await fetchAllFavoriteBoards()
-            if case .favorite = listType {
-                list = favoriteBoards
-                startIndex = favoriteStartIndex
-                uiDelegate?.listDidUpdate()
+        case .favorite:
+            Task {
+                await fetchAllFavoriteBoards()
+                if case .favorite = listType {
+                    list = favoriteBoards
+                    startIndex = favoriteStartIndex
+                    uiDelegate?.listDidUpdate()
+                }
+                uiDelegate?.favoriteBoardsDidUpdate()
             }
-            uiDelegate?.favoriteBoardsDidUpdate()
         }
     }
 
