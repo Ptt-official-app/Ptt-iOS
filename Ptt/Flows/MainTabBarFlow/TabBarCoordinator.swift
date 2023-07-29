@@ -33,6 +33,9 @@ class TabBarCoordinator: BaseCoordinator, TabBarCoordinatorProtocol {
 #else
         pages = [.popular, .favorite, .profile, .settings]
 #endif
+        Task {
+            try? await FavoriteBoardManager.shared.fetchAllFavoriteBoards()
+        }
         // Initialization of ViewControllers or these pages
         let controllers: [UINavigationController] = pages
             .sorted(by: { $0.pageOrderNumber < $1.pageOrderNumber })
