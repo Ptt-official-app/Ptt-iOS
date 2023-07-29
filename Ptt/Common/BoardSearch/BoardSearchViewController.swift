@@ -26,13 +26,7 @@ final class BoardSearchViewController: UITableViewController {
         self.apiClient = apiClient
         self.favoriteBoardsManager = favoriteBoardsManager
         super.init(style: .plain)
-
-        self.cancellable = favoriteBoardsManager.boards
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] boards in
-                self?.favoriteBoards = boards ?? []
-                self?.tableView.reloadData()
-            })
+        observeFavoriteBoards()
     }
 
     required init?(coder: NSCoder) {
@@ -162,5 +156,21 @@ extension BoardSearchViewController {
         let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
         alert.addAction(confirm)
         self.present(alert, animated: true, completion: nil)
+    }
+
+    private func observeFavoriteBoards() {
+        cancellable = favoriteBoardsManager.boards
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure:
+                    self?.observeFavoriteBoards()
+                default:
+                    break
+                }
+            }, receiveValue: { [weak self] boards in
+                self?.favoriteBoards = boards ?? []
+                self?.tableView.reloadData()
+            })
     }
 }

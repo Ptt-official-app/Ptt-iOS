@@ -158,6 +158,12 @@ extension BoardListTVC: BoardListUIProtocol {
         }
     }
 
+    func stopRefreshing() {
+        DispatchQueue.main.async {
+            self.tableView.refreshControl?.endRefreshing()
+        }
+    }
+
     func inValidUser() {
         DispatchQueue.main.async {
             self.debug_logout()

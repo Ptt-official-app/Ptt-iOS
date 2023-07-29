@@ -12,6 +12,7 @@ import Foundation
 protocol BoardListUIProtocol: AnyObject {
     func show(error: Error)
     func listDidUpdate()
+    func stopRefreshing()
     func inValidUser()
 }
 
@@ -24,12 +25,15 @@ extension BoardListViewModel {
 final class BoardListViewModel {
     let listType: ListType
     let apiClient: APIClientProtocol
-    let favoriteBoardManager: FavoriteBoardManagerProtocol
+    private let favoriteBoardManager: FavoriteBoardManagerProtocol
     private var cancellable: AnyCancellable?
     private var startIndex = ""
     private(set) var list: [APIModel.BoardInfo] = [] {
         didSet {
-            guard oldValue != list else { return }
+            guard oldValue != list else {
+                uiDelegate?.stopRefreshing()
+                return
+            }
             uiDelegate?.listDidUpdate()
         }
     }
@@ -110,7 +114,7 @@ extension BoardListViewModel {
         }
     }
 
-    private func handlePossibleTokenExpire(error: Error?) {
+    private func handlePossibleTokenExpire(error: Error) {
         if let apiError = error as? APIError,
            case let .requestFailed(statusCode, _) = apiError,
            statusCode == 403,
@@ -120,16 +124,17 @@ extension BoardListViewModel {
     }
 
     private func observeFavoriteBoard() {
-        self.cancellable = favoriteBoardManager.boards.sink { [weak self] boards in
-            guard let boards = boards else {
-                Task { [weak self] in
-                    let error = await favoriteBoardManager.getFetchError()
-                    self?.handlePossibleTokenExpire(error: error)
-                }
-                return
+        cancellable = favoriteBoardManager.boards.sink { [weak self] completion in
+            switch completion {
+            case .failure(let error):
+                self?.handlePossibleTokenExpire(error: error)
+                self?.observeFavoriteBoard()
+            default:
+                break
             }
+        } receiveValue: { [weak self] boards in
             if case .favorite = self?.listType {
-                self?.list = boards
+                self?.list = boards ?? []
             }
         }
     }

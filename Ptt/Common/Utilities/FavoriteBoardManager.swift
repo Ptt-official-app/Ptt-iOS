@@ -10,17 +10,15 @@ import Combine
 import Foundation
 
 protocol FavoriteBoardManagerProtocol {
-    var boards: CurrentValueSubject<[APIModel.BoardInfo]?, Never> { get }
+    var boards: CurrentValueSubject<[APIModel.BoardInfo]?, Error> { get }
 
     func addBoardToFavorite(board: APIModel.BoardInfo) async throws
     func deleteBoardFromFavorite(board: APIModel.BoardInfo) async throws
     func fetchAllFavoriteBoards() async throws
-    func getFetchError() async -> Error?
 }
 
 actor FavoriteBoardDataStore {
     var favoritedBoards: [APIModel.BoardInfo]?
-    var fetchError: Error?
     var favoriteStartIndex = ""
     var isFetching = false
 
@@ -44,10 +42,6 @@ actor FavoriteBoardDataStore {
         self.favoriteStartIndex = favoriteStartIndex
     }
 
-    func update(fetchError: Error?) {
-        self.fetchError = fetchError
-    }
-
     func update(isFetching: Bool) {
         self.isFetching = isFetching
     }
@@ -57,7 +51,7 @@ final class FavoriteBoardManager: FavoriteBoardManagerProtocol {
     static let shared: FavoriteBoardManager = .init()
     let apiClient: APIClientProtocol
     let dataStore: FavoriteBoardDataStore
-    let boards = CurrentValueSubject<[APIModel.BoardInfo]?, Never>(nil)
+    let boards = CurrentValueSubject<[APIModel.BoardInfo]?, Error>(nil)
 
     init(apiClient: APIClientProtocol = APIClient.shared) {
         self.apiClient = apiClient
@@ -93,13 +87,10 @@ final class FavoriteBoardManager: FavoriteBoardManagerProtocol {
             }
             await dataStore.setFavoriteBoards(boards: favoriteBoards)
             await boards.send(dataStore.favoritedBoards)
-            await dataStore.update(fetchError: nil)
             await dataStore.update(isFetching: false)
         } catch {
+            boards.send(completion: .failure(error))
             await dataStore.update(isFetching: false)
-            await dataStore.update(fetchError: error)
-            // To trigger sink after getting api error
-            await boards.send(dataStore.favoritedBoards)
         }
     }
 
@@ -108,9 +99,5 @@ final class FavoriteBoardManager: FavoriteBoardManagerProtocol {
         let response = try await apiClient.favoritesBoards(startIndex: index, limit: 200)
         await dataStore.update(favoriteStartIndex: response.next_idx ?? "")
         return response.list
-    }
-
-    func getFetchError() async -> Error? {
-        await dataStore.fetchError
     }
 }
