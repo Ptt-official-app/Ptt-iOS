@@ -106,4 +106,18 @@ final class KeyChainItem: PTTKeyChain {
         let status = SecItemDelete(query as CFDictionary)
         return status == errSecSuccess
     }
+
+    func clear() {
+        let secItemClasses = [
+            kSecClassGenericPassword,
+            kSecClassInternetPassword,
+            kSecClassCertificate,
+            kSecClassKey,
+            kSecClassIdentity
+        ]
+        for secItemClass in secItemClasses {
+            let dictionary = [kSecClass as String:secItemClass]
+            SecItemDelete(dictionary as CFDictionary)
+        }
+    }
 }

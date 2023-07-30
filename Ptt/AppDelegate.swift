@@ -24,6 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        clearKeychainAfterFreshInstall()
         return true
     }
 
@@ -57,5 +58,13 @@ private extension AppDelegate {
             router: Router(rootController: self.rootController),
             coordinatorFactory: CoordinatorFactory()
         )
+    }
+
+    func clearKeychainAfterFreshInstall() {
+        let freshInstall: Bool = !(UserDefaultItem.getValue(for: .alreadyInstalled) ?? false)
+        if freshInstall {
+            KeyChainItem.shared.clear()
+            UserDefaultItem.set(value: true, for: .alreadyInstalled)
+        }
     }
 }
