@@ -15,6 +15,7 @@ final class APIClientTest: XCTestCase {
     private var urlSession: MockURLSession!
     private var userID: String!
     private var token: String!
+    private var refreshToken: String!
 
     override func setUp() {
         super.setUp()
@@ -22,8 +23,14 @@ final class APIClientTest: XCTestCase {
         keyChainItem = MockKeyChain()
         userID = String.random(length: 8)
         token = String.random(length: 8)
+        refreshToken = String.random(length: 8)
         keyChainItem.save(
-            object: APIModel.LoginToken(user_id: userID, access_token: token, token_type: "bear"),
+            object: APIModel.LoginToken(
+                user_id: userID,
+                access_token: token,
+                token_type: "bear",
+                refresh_token: refreshToken
+            ),
             for: .loginToken
         )
 
@@ -36,6 +43,8 @@ final class APIClientTest: XCTestCase {
         keyChainItem = nil
         userID = nil
         apiClient = nil
+        refreshToken = nil
+        token = nil
     }
 
     func testLoginSuccess() {
@@ -56,6 +65,45 @@ final class APIClientTest: XCTestCase {
             case .success(let token):
                 XCTAssert(token.access_token == "fake token")
                 XCTAssert(token.token_type == "fake type")
+            }
+        }
+    }
+
+    func testRefreshToken_successCase() async throws {
+        urlSession.stub { path, header, _, body, completion in
+            XCTAssertEqual(path, "/api/account/refresh")
+            let authToken = try XCTUnwrap(header["Authorization"])
+            XCTAssertEqual(authToken, "bearer \(self.token!)")
+            let data = try XCTUnwrap(body)
+            let obj = try XCTUnwrap(try JSONSerialization.jsonObject(with: data) as? [String: String])
+            XCTAssertEqual(obj["refresh_token"], self.refreshToken)
+            let responseDict = [
+                "user_id": "tester",
+                "access_token": "newToken",
+                "token_type": "bearer",
+                "refresh_token": "new refreshToken"
+            ]
+            completion(.success((200, responseDict)))
+        }
+        try await apiClient.refreshToken()
+        let newToken: APIModel.LoginToken = try XCTUnwrap(keyChainItem.readObject(for: .loginToken))
+        XCTAssertEqual(newToken.access_token, "newToken")
+        XCTAssertEqual(newToken.refresh_token, "new refreshToken")
+    }
+
+    func testRefreshToken_failureCase() async throws {
+        urlSession.stub { _, _, _, _, completion in
+            completion(.success((400, ["Msg": "invalid params"])))
+        }
+        do {
+            try await apiClient.refreshToken()
+        } catch {
+            let apiError = try XCTUnwrap(error as? APIError)
+            if case let .requestFailed(code, message) = apiError {
+                XCTAssertEqual(code, 400)
+                XCTAssertEqual(message, "invalid params")
+            } else {
+                XCTFail("Unexpected error")
             }
         }
     }

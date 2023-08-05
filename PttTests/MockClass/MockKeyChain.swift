@@ -10,6 +10,7 @@ import Foundation
 @testable import Ptt
 
 final class MockKeyChain: PTTKeyChain {
+
     private var dict: [KeyChainItem.Key: Any] = [:]
     private var isSaveSuccess = true
 
@@ -49,5 +50,9 @@ final class MockKeyChain: PTTKeyChain {
     func delete(for key: Ptt.KeyChainItem.Key) -> Bool {
         dict.removeValue(forKey: key)
         return true
+    }
+
+    func clear() {
+        dict = [:]
     }
 }

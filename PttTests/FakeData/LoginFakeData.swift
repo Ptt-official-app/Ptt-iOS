@@ -12,6 +12,7 @@ enum LoginFakeData {
     static let successData: [String: Any] = [
         "user_id": "fake id",
         "access_token": "fake token",
-        "token_type": "fake type"
+        "token_type": "fake type",
+        "refresh_token": "fake refresh token"
     ]
 }
