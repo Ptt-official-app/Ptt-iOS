@@ -24,6 +24,7 @@ protocol PTTKeyChain {
 
     @discardableResult
     func delete(for key: KeyChainItem.Key) -> Bool
+    func clear()
 }
 
 extension KeyChainItem {

@@ -32,14 +32,23 @@ private enum LaunchInstructor {
 final class ApplicationCoordinator: BaseCoordinator {
     private let coordinatorFactory: CoordinatorFactory
     private let router: Router
+    private let apiClient: APIClientProtocol
+    private let keyChainItem: PTTKeyChain
 
     private var instructor: LaunchInstructor {
         return LaunchInstructor.configure()
     }
 
-    init(router: Router, coordinatorFactory: CoordinatorFactory) {
+    init(
+        router: Router,
+        coordinatorFactory: CoordinatorFactory,
+        apiClient: APIClientProtocol = APIClient.shared,
+        keyChainItem: PTTKeyChain = KeyChainItem.shared
+    ) {
         self.router = router
         self.coordinatorFactory = coordinatorFactory
+        self.apiClient = apiClient
+        self.keyChainItem = keyChainItem
     }
 
     override func start() {
@@ -58,22 +67,24 @@ final class ApplicationCoordinator: BaseCoordinator {
         // uncomment to force logout
         // _ = LoginKeyChainItem.shared.removeToken()
 
-        let loginToken: APIModel.LoginToken? = KeyChainItem.shared.readObject(for: .loginToken)
-        if loginToken != nil {
-            isAutorized = true
-            // TODO: check token Expire from internet
-            runMainFlow()
-        } else {
-            isAutorized = false
-
-            let loginCoordinator = coordinatorFactory.makeLoginCoordinator(router: self.router)
-            (loginCoordinator as? LoginCoordinator)?.finshFlow = { [unowned self] in
-                // authed
-                self.removeDependency(self)
-                start()
+        guard KeyChainItem.shared.readData(for: .loginToken) != nil else {
+            runLoginFlow()
+            return
+        }
+        Task {
+            do {
+                try await apiClient.refreshToken()
+                await MainActor.run(body: {
+                    isAutorized = true
+                    runMainFlow()
+                })
+            } catch {
+                // Refresh token failed
+                keyChainItem.clear()
+                await MainActor.run(body: {
+                    runLoginFlow()
+                })
             }
-            self.addDependency(loginCoordinator)
-            loginCoordinator.start()
         }
     }
 
@@ -101,5 +112,18 @@ final class ApplicationCoordinator: BaseCoordinator {
         }
         router.setRootModule(module, hideBar: true, animated: true)
         coordinator.start()
+    }
+
+    private func runLoginFlow() {
+        isAutorized = false
+
+        let loginCoordinator = coordinatorFactory.makeLoginCoordinator(router: self.router)
+        (loginCoordinator as? LoginCoordinator)?.finshFlow = { [unowned self] in
+            // authed
+            self.removeDependency(self)
+            start()
+        }
+        self.addDependency(loginCoordinator)
+        loginCoordinator.start()
     }
 }

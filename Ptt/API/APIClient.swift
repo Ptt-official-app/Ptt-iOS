@@ -97,13 +97,37 @@ extension APIClient: APIClientProtocol {
                 do {
                     let token = try self.decoder.decode(APIModel.LoginToken.self, from: resultData)
                     completion(.success(token))
-                } catch (let decodingError) {
-                    let message = self.message(of: decodingError)
+                } catch {
+                    let message = self.message(of: error)
                     completion(.failure(.decodingError(message)))
                 }
             }
         }
         task.resume()
+    }
+
+    func refreshToken() async throws {
+        guard let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
+            throw APIError.loginTokenNotExist
+        }
+        let bodyDic = [
+            "client_id": "test_client_id",
+            "client_secret": "test_client_secret",
+            "refresh_token": loginObj.refresh_token
+        ]
+
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/account/refresh"
+        guard let url = urlComponent.url,
+              let jsonBody = try? JSONSerialization.data(withJSONObject: bodyDic) else {
+            throw APIError.urlError
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.POST.rawValue
+        request.httpBody = jsonBody
+        request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
+        let response: APIModel.LoginToken = try await doRequest(request: request)
+        keyChainItem.save(object: response, for: .loginToken)
     }
 
     /**

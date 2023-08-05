@@ -30,8 +30,9 @@ protocol APIClientProtocol {
     typealias ProcessResult = Result<Data, APIError>
     typealias CreateArticleResult = Result<APIModel.CreateArticleResponse, APIError>
     typealias PopularArticlesResult = Result<APIModel.GoPttBBSBoard, APIError>
-    
+
     func login(account: String, password: String, completion: @escaping (LoginResult) -> Void)
+    func refreshToken() async throws
 
     func getBoardArticles(of params: BoardArticlesParams, completion: @escaping (GetBoardArticlesResult) -> Void)
     func getArticle(of params: ArticleParams, completion: @escaping (GetArticleResult) -> Void)
