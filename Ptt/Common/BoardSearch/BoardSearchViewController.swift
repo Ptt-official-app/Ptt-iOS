@@ -42,7 +42,6 @@ final class BoardSearchViewController: UITableViewController {
 
     func search(keyword: String) {
         startIdx = ""
-        boards = []
         getBoardList(keyword: keyword)
     }
 
@@ -127,7 +126,7 @@ extension BoardSearchViewController {
                     if let index = response.next_idx {
                         self?.startIdx = index
                     }
-                    self?.boards += response.list
+                    self?.boards = response.list
                     self?.tableView.reloadData()
                 }
             }
