@@ -10,6 +10,7 @@ import Foundation
 
 protocol BoardListUIProtocol: AnyObject {
     func show(error: Error)
+    func selectBoard(info: APIModel.BoardInfo)
     func listDidUpdate()
     func favoriteBoardsDidUpdate()
     func inValidUser()
@@ -131,6 +132,10 @@ extension BoardListViewModel {
 }
 
 extension BoardListViewModel: BoardSearchDelegate {
+    func boardDidSelect(info: APIModel.BoardInfo) {
+        uiDelegate?.selectBoard(info: info)
+    }
+
     func boardDidAddToFavorite(info: APIModel.BoardInfo) {
         list.append(info)
         uiDelegate?.listDidUpdate()

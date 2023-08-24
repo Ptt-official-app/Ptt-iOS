@@ -9,6 +9,7 @@
 import UIKit
 
 protocol BoardSearchDelegate: AnyObject {
+    func boardDidSelect(info: APIModel.BoardInfo)
     func boardDidAddToFavorite(info: APIModel.BoardInfo)
     func boardDidDeleteFromFavorite(info: APIModel.BoardInfo)
 }
@@ -72,16 +73,21 @@ final class BoardSearchViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-#if DEVELOP // Disable editing, for now
+        // Based on "Ptt 官方 app 測試小組" unofficial survey in 2023-08-14,
+        // voting for expected behavior is
+        // 8:0 for showBoardView : addBoardToFavorite
+        let boardInfo = boards[indexPath.row]
+        delegate?.boardDidSelect(info: boardInfo)
+
+        // Reserved editing feature when tapping favoriteButton
+        /*
         let data = boards[indexPath.row]
         if let idx = favoriteBoards.firstIndex(where: { $0.brdname == data.brdname }) {
             deleteBoardFromFavorite(board: favoriteBoards[idx], indexPath: indexPath)
         } else {
             addBoardToFavorite(board: data, indexPath: indexPath)
         }
-#else
-        // TBD: expected behavior should be showBoardView()
-#endif
+         */
     }
 
     override func tableView(

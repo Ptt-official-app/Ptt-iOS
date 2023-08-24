@@ -152,6 +152,12 @@ extension BoardListTVC: BoardListUIProtocol {
         }
     }
 
+    func selectBoard(info: APIModel.BoardInfo) {
+        DispatchQueue.main.async {
+            self.onBoardSelect?(info.brdname)
+        }
+    }
+
     func listDidUpdate() {
         DispatchQueue.main.async {
             self.tableView.refreshControl?.endRefreshing()
