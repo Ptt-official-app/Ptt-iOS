@@ -6,6 +6,8 @@
 //  Copyright © 2023 Ptt. All rights reserved.
 //
 
+@testable import Ptt
+
 enum BoardListFakeData {
     static var successData: [String: Any] = [
         "list": [
@@ -142,4 +144,16 @@ enum BoardListFakeData {
         ],
         "next_idx": ""
     ]
+
+    static func mockSuccessData(nextIdx: String, numOfBoards: Int) -> [String: Any] {
+        let boards = [Int](1...numOfBoards).map { _ in
+            return (try? APIModel.BoardInfo(brdname: String.random(length: 7), title: String.random(length: 3))
+                .asDictionary()) ?? [:]
+        }
+
+        return [
+            "list": boards,
+            "next_idx": nextIdx
+        ]
+    }
 }

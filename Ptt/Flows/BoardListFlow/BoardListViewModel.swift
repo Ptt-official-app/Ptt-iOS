@@ -6,12 +6,13 @@
 //  Copyright © 2023 Ptt. All rights reserved.
 //
 
+import Combine
 import Foundation
 
 protocol BoardListUIProtocol: AnyObject {
     func show(error: Error)
     func listDidUpdate()
-    func favoriteBoardsDidUpdate()
+    func stopRefreshing()
     func inValidUser()
 }
 
@@ -24,35 +25,51 @@ extension BoardListViewModel {
 final class BoardListViewModel {
     let listType: ListType
     let apiClient: APIClientProtocol
+    private let favoriteBoardManager: FavoriteBoardManagerProtocol
+    private var cancellable: AnyCancellable?
     private var startIndex = ""
-    private(set) var list: [APIModel.BoardInfo] = []
-    private(set) var favoriteBoards: [APIModel.BoardInfo] = []
-    private var favoriteStartIndex = ""
+    private(set) var list: [APIModel.BoardInfo] = [] {
+        didSet {
+            guard oldValue != list else {
+                uiDelegate?.stopRefreshing()
+                return
+            }
+            uiDelegate?.listDidUpdate()
+        }
+    }
     weak var uiDelegate: BoardListUIProtocol?
 
-    init(listType: ListType, apiClient: APIClientProtocol = APIClient.shared) {
+    init(
+        listType: ListType,
+        apiClient: APIClientProtocol = APIClient.shared,
+        favoriteBoardManager: FavoriteBoardManagerProtocol = FavoriteBoardManager.shared
+    ) {
         self.listType = listType
         self.apiClient = apiClient
+        self.favoriteBoardManager = favoriteBoardManager
+        observeFavoriteBoard()
     }
 
-    func fetchListData() {
+    func fetchPopularBoards() {
         if case .popular = listType {
             Task { await fetchPopularBoards() }
-        }
-        Task {
-            await fetchAllFavoriteBoards()
-            if case .favorite = listType {
-                list = favoriteBoards
-                startIndex = favoriteStartIndex
-                uiDelegate?.listDidUpdate()
-            }
-            uiDelegate?.favoriteBoardsDidUpdate()
         }
     }
 
     func pullDownToRefresh() {
-        startIndex = ""
-        fetchListData()
+        switch listType {
+        case .favorite:
+            Task {
+                do {
+                    try await favoriteBoardManager.fetchAllFavoriteBoards()
+                } catch {
+                    uiDelegate?.show(error: error)
+                }
+            }
+        case.popular:
+            startIndex = ""
+            fetchPopularBoards()
+        }
     }
 
     func fetchMoreData() {
@@ -69,15 +86,7 @@ final class BoardListViewModel {
         Task {
             let board = list[index]
             do {
-                let isSuccess = try await apiClient.deleteBoardFromFavorite(
-                    levelIndex: board.level_idx ?? "",
-                    index: board.idx
-                )
-                // Failure will throw catch
-                list.remove(at: index)
-                favoriteBoards = list
-                uiDelegate?.favoriteBoardsDidUpdate()
-                uiDelegate?.listDidUpdate()
+                try await favoriteBoardManager.deleteBoardFromFavorite(board: board)
             } catch {
                 uiDelegate?.show(error: error)
             }
@@ -91,53 +100,42 @@ final class BoardListViewModel {
 }
 
 extension BoardListViewModel {
-    func fetchAllFavoriteBoards() async {
-        favoriteBoards = []
-        await fetchFavoriteBoardsRecursive()
-    }
-
-    private func fetchFavoriteBoardsRecursive() async {
-        do {
-            let response = try await apiClient.favoritesBoards(startIndex: favoriteStartIndex, limit: 200)
-            favoriteBoards += response.list
-            favoriteStartIndex = response.next_idx ?? ""
-            if !favoriteStartIndex.isEmpty {
-                await fetchFavoriteBoardsRecursive()
-            }
-        } catch {
-            if let apiError = error as? APIError,
-               case let .requestFailed(statusCode, _) = apiError,
-               statusCode == 403,
-               listType == .favorite {
-                uiDelegate?.inValidUser()
-            }
-        }
-    }
-
     private func fetchPopularBoards() async {
         do {
             let response = try await apiClient.popularBoards()
-            if startIndex == "" {
+            if startIndex.isEmpty {
                 list = response.list
             } else {
                 list += response.list
             }
             startIndex = response.next_idx ?? ""
-            uiDelegate?.listDidUpdate()
         } catch {
             uiDelegate?.show(error: error)
         }
     }
-}
 
-extension BoardListViewModel: BoardSearchDelegate {
-    func boardDidAddToFavorite(info: APIModel.BoardInfo) {
-        list.append(info)
-        uiDelegate?.listDidUpdate()
+    private func handlePossibleTokenExpire(error: Error) {
+        if let apiError = error as? APIError,
+           case let .requestFailed(statusCode, _) = apiError,
+           statusCode == 403,
+           listType == .favorite {
+            uiDelegate?.inValidUser()
+        }
     }
 
-    func boardDidDeleteFromFavorite(info: APIModel.BoardInfo) {
-        list.removeAll(where: { $0.bid == info.bid })
-        uiDelegate?.listDidUpdate()
+    private func observeFavoriteBoard() {
+        cancellable = favoriteBoardManager.boards.sink { [weak self] completion in
+            switch completion {
+            case .failure(let error):
+                self?.handlePossibleTokenExpire(error: error)
+                self?.observeFavoriteBoard()
+            default:
+                break
+            }
+        } receiveValue: { [weak self] boards in
+            if case .favorite = self?.listType {
+                self?.list = boards ?? []
+            }
+        }
     }
 }

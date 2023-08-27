@@ -15,7 +15,7 @@ extension APIModel {
         var next_idx: String?
     }
 
-    struct BoardInfo: Codable {
+    struct BoardInfo: Codable, Equatable {
         /// system-defined board-id
         let bid: String
         /// user-defined board-name (英文板名)

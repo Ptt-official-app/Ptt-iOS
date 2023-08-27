@@ -6,25 +6,27 @@
 //  Copyright © 2023 Ptt. All rights reserved.
 //
 
+import Combine
 import UIKit
-
-protocol BoardSearchDelegate: AnyObject {
-    func boardDidAddToFavorite(info: APIModel.BoardInfo)
-    func boardDidDeleteFromFavorite(info: APIModel.BoardInfo)
-}
 
 final class BoardSearchViewController: UITableViewController {
     private let apiClient: APIClientProtocol
+    private let favoriteBoardsManager: FavoriteBoardManagerProtocol
+    private var cancellable: AnyCancellable?
     private var favoriteBoards: [APIModel.BoardInfo] = []
     private var boards: [APIModel.BoardInfo] = []
     private var startIdx = ""
     private var scrollDirection: Direction = .unknown
     private var keyword = ""
-    weak var delegate: BoardSearchDelegate?
 
-    init(apiClient: APIClientProtocol = APIClient.shared) {
+    init(
+        apiClient: APIClientProtocol = APIClient.shared,
+        favoriteBoardsManager: FavoriteBoardManagerProtocol = FavoriteBoardManager.shared
+    ) {
         self.apiClient = apiClient
+        self.favoriteBoardsManager = favoriteBoardsManager
         super.init(style: .plain)
+        observeFavoriteBoards()
     }
 
     required init?(coder: NSCoder) {
@@ -43,11 +45,6 @@ final class BoardSearchViewController: UITableViewController {
         startIdx = ""
         boards = []
         getBoardList(keyword: keyword)
-    }
-
-    func update(favoriteBoards: [APIModel.BoardInfo]) {
-        self.favoriteBoards = favoriteBoards
-        tableView.reloadData()
     }
 
     // MARK: - TableView delegate
@@ -131,15 +128,7 @@ extension BoardSearchViewController {
     private func addBoardToFavorite(board: APIModel.BoardInfo, indexPath: IndexPath) {
         Task {
             do {
-                let levelIndex = board.level_idx ?? ""
-                let response = try await apiClient.addBoardToFavorite(levelIndex: levelIndex, bid: board.bid)
-                delegate?.boardDidAddToFavorite(info: response)
-                await MainActor.run {
-                    favoriteBoards.append(response)
-                    tableView.beginUpdates()
-                    tableView.reloadRows(at: [indexPath], with: .automatic)
-                    tableView.endUpdates()
-                }
+                try await favoriteBoardsManager.addBoardToFavorite(board: board)
             } catch {
                 await MainActor.run(body: {
                     showError(message: error.localizedDescription)
@@ -151,18 +140,7 @@ extension BoardSearchViewController {
     private func deleteBoardFromFavorite(board: APIModel.BoardInfo, indexPath: IndexPath) {
         Task {
             do {
-                _ = try await apiClient.deleteBoardFromFavorite(
-                    levelIndex: board.level_idx ?? "",
-                    index: board.idx
-                )
-                // Failure will throw catch
-                delegate?.boardDidDeleteFromFavorite(info: board)
-                await MainActor.run {
-                    favoriteBoards.removeAll(where: { $0.brdname == board.brdname })
-                    tableView.beginUpdates()
-                    tableView.reloadRows(at: [indexPath], with: .automatic)
-                    tableView.endUpdates()
-                }
+                try await favoriteBoardsManager.deleteBoardFromFavorite(board: board)
             } catch {
                 await MainActor.run(body: {
                     showError(message: error.localizedDescription)
@@ -178,5 +156,21 @@ extension BoardSearchViewController {
         let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
         alert.addAction(confirm)
         self.present(alert, animated: true, completion: nil)
+    }
+
+    private func observeFavoriteBoards() {
+        cancellable = favoriteBoardsManager.boards
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure:
+                    self?.observeFavoriteBoards()
+                default:
+                    break
+                }
+            }, receiveValue: { [weak self] boards in
+                self?.favoriteBoards = boards ?? []
+                self?.tableView.reloadData()
+            })
     }
 }

@@ -29,7 +29,6 @@ final class BoardListTVC: UITableViewController, BoardListView {
         self.boardSearchVC = BoardSearchViewController(apiClient: viewModel.apiClient)
         self.searchController = UISearchController(searchResultsController: boardSearchVC)
         super.init(style: .plain)
-        boardSearchVC.delegate = viewModel
     }
 
     required init?(coder: NSCoder) {
@@ -39,7 +38,7 @@ final class BoardListTVC: UITableViewController, BoardListView {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
-        viewModel.fetchListData()
+        viewModel.fetchPopularBoards()
     }
 
     // MARK: - Table view data source
@@ -159,9 +158,9 @@ extension BoardListTVC: BoardListUIProtocol {
         }
     }
 
-    func favoriteBoardsDidUpdate() {
+    func stopRefreshing() {
         DispatchQueue.main.async {
-            self.boardSearchVC.update(favoriteBoards: self.viewModel.favoriteBoards)
+            self.tableView.refreshControl?.endRefreshing()
         }
     }
 
