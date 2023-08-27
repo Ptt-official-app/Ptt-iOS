@@ -10,7 +10,6 @@ import Foundation
 import SwiftUI
 
 final class UserInfoViewModel: ObservableObject {
-    @Published var avatar: UIImage
     @Published var account: String = "PttUser"
     @Published var name: String = "鄉民一號"
     @Published var currentSegment: Int = 0
@@ -43,7 +42,6 @@ final class UserInfoViewModel: ObservableObject {
         self.keyChain = keyChain
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .medium
-        avatar = UIImage(named: "AppIcon")!
     }
 
     func fetchData() {

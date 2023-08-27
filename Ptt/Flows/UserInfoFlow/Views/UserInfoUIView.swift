@@ -66,11 +66,12 @@ struct UserInfoUIView: View {
     private var headerView: some View {
         VStack(spacing: 0) {
             ZStack {
-                Image(uiImage: viewModel.avatar)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 60, height: 60)
-                    .clipShape(Circle())
+                // Disabled, no avatar for now.
+//                Image(uiImage: viewModel.avatar)
+//                    .resizable()
+//                    .aspectRatio(contentMode: .fit)
+//                    .frame(width: 60, height: 60)
+//                    .clipShape(Circle())
                 // Disable, can't edit right now
 //                HStack {
 //                    Spacer()
