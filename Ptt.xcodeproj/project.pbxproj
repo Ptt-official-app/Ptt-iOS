@@ -45,6 +45,7 @@
 		3EA6F1B829B386F1005D8B09 /* ComposeArticleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA6F1B729B386F1005D8B09 /* ComposeArticleViewModel.swift */; };
 		3EA6F1BA29B388AF005D8B09 /* ComposeArticleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA6F1B929B388AF005D8B09 /* ComposeArticleView.swift */; };
 		3EB974B82A7685B8003A8F29 /* UserDefaultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB974B72A7685B8003A8F29 /* UserDefaultItem.swift */; };
+		3EB974B62A75CEEC003A8F29 /* Codable+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB974B52A75CEEC003A8F29 /* Codable+Extension.swift */; };
 		3EC2CB2229BB53AC00E70A45 /* BoardsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EC2CB2129BB53AC00E70A45 /* BoardsTableViewCell.swift */; };
 		3EC2CB2429BB542C00E70A45 /* UITableViewCell+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EC2CB2329BB542C00E70A45 /* UITableViewCell+Extension.swift */; };
 		3EC2CB2629BB57B000E70A45 /* UserNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EC2CB2529BB57B000E70A45 /* UserNumberView.swift */; };
@@ -58,6 +59,8 @@
 		3EC2CB4E29C888B800E70A45 /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EC2CB4D29C888B800E70A45 /* NotificationName.swift */; };
 		3EC2CB5029C88AF900E70A45 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EC2CB4F29C88AF900E70A45 /* String+Extension.swift */; };
 		3ECAD05D2762766A00F50A91 /* NumberExtensionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ECAD05C2762766A00F50A91 /* NumberExtensionTest.swift */; };
+		3ED0485C2A7461F9004E78BD /* FavoriteBoardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED0485B2A7461F9004E78BD /* FavoriteBoardManager.swift */; };
+		3ED0485E2A75C3EB004E78BD /* FavoriteBoardManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED0485D2A75C3EB004E78BD /* FavoriteBoardManagerTest.swift */; };
 		3ED16B3E25713D64004A33E0 /* APITestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED16B3D25713D64004A33E0 /* APITestClient.swift */; };
 		3EDDC6DF29B453E000173F9F /* PostTypeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDDC6DE29B453E000173F9F /* PostTypeSelectionView.swift */; };
 		3EDDC6E129B4841B00173F9F /* ANSIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDDC6E029B4841B00173F9F /* ANSIColor.swift */; };
@@ -186,6 +189,7 @@
 		3EA6F1B729B386F1005D8B09 /* ComposeArticleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeArticleViewModel.swift; sourceTree = "<group>"; };
 		3EA6F1B929B388AF005D8B09 /* ComposeArticleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeArticleView.swift; sourceTree = "<group>"; };
 		3EB974B72A7685B8003A8F29 /* UserDefaultItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultItem.swift; sourceTree = "<group>"; };
+		3EB974B52A75CEEC003A8F29 /* Codable+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Codable+Extension.swift"; sourceTree = "<group>"; };
 		3EC2CB2129BB53AC00E70A45 /* BoardsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardsTableViewCell.swift; sourceTree = "<group>"; };
 		3EC2CB2329BB542C00E70A45 /* UITableViewCell+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extension.swift"; sourceTree = "<group>"; };
 		3EC2CB2529BB57B000E70A45 /* UserNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNumberView.swift; sourceTree = "<group>"; };
@@ -199,6 +203,8 @@
 		3EC2CB4D29C888B800E70A45 /* NotificationName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
 		3EC2CB4F29C88AF900E70A45 /* String+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		3ECAD05C2762766A00F50A91 /* NumberExtensionTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberExtensionTest.swift; sourceTree = "<group>"; };
+		3ED0485B2A7461F9004E78BD /* FavoriteBoardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteBoardManager.swift; sourceTree = "<group>"; };
+		3ED0485D2A75C3EB004E78BD /* FavoriteBoardManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteBoardManagerTest.swift; sourceTree = "<group>"; };
 		3ED16B3D25713D64004A33E0 /* APITestClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITestClient.swift; sourceTree = "<group>"; };
 		3EDDC6DE29B453E000173F9F /* PostTypeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTypeSelectionView.swift; sourceTree = "<group>"; };
 		3EDDC6E029B4841B00173F9F /* ANSIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ANSIColor.swift; sourceTree = "<group>"; };
@@ -344,6 +350,7 @@
 				94EB641925AD2FF800BF69AB /* KeyChainItem.swift */,
 				3EC2CB2C29BB8DAC00E70A45 /* Direction.swift */,
 				3EB974B72A7685B8003A8F29 /* UserDefaultItem.swift */,
+				3ED0485B2A7461F9004E78BD /* FavoriteBoardManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -352,6 +359,7 @@
 			isa = PBXGroup;
 			children = (
 				3E15F019299E567B00651809 /* KeyChainItemTests.swift */,
+				3ED0485D2A75C3EB004E78BD /* FavoriteBoardManagerTest.swift */,
 			);
 			path = CommonTest;
 			sourceTree = "<group>";
@@ -628,6 +636,7 @@
 				3EE352E4276DDC8300C2CE67 /* TimeInterval+Extension.swift */,
 				3EC2CB2329BB542C00E70A45 /* UITableViewCell+Extension.swift */,
 				3E5A356329F555B200502407 /* UIApplication+SafeArea.swift */,
+				3EB974B52A75CEEC003A8F29 /* Codable+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -984,6 +993,7 @@
 				3E65527125595F0D0026290B /* BoardInfo.swift in Sources */,
 				9411EDAA25A0B03C0005ADCB /* LoginSceneFactoryProtocol.swift in Sources */,
 				9B564C28256A9D7800787FD7 /* Coordinatorable.swift in Sources */,
+				3EB974B62A75CEEC003A8F29 /* Codable+Extension.swift in Sources */,
 				944209D6279B029C002B2B7A /* ErrorSubView.swift in Sources */,
 				3EF5410929FD20810086205A /* ArticleCommentList.swift in Sources */,
 				9B564C2F256A9EAC00787FD7 /* Presentable.swift in Sources */,
@@ -1015,6 +1025,7 @@
 				3EC2CB2629BB57B000E70A45 /* UserNumberView.swift in Sources */,
 				3EC2CB2B29BB643F00E70A45 /* BoardSearchCell.swift in Sources */,
 				3EC2CB4E29C888B800E70A45 /* NotificationName.swift in Sources */,
+				3ED0485C2A7461F9004E78BD /* FavoriteBoardManager.swift in Sources */,
 				3E1694392761260500F19B8E /* PopularArticleCell.swift in Sources */,
 				94AA091F278AE1E900AD3525 /* LoginSubView.swift in Sources */,
 				3E9FE303275CFEDC002E144F /* PopularArticlesCoordinator.swift in Sources */,
@@ -1091,6 +1102,7 @@
 				3EE9355D29C9E7E400DCEC81 /* MockKeyChain.swift in Sources */,
 				3EE9356429CB2E3200DCEC81 /* GetBoardArticlesFakeData.swift in Sources */,
 				3E31EC492A1F8B73002D15E7 /* UserCommentFakeData.swift in Sources */,
+				3ED0485E2A75C3EB004E78BD /* FavoriteBoardManagerTest.swift in Sources */,
 				3EE352E7276DDF1000C2CE67 /* TimeIntervalExtensionTest.swift in Sources */,
 				3E15F01A299E567B00651809 /* KeyChainItemTests.swift in Sources */,
 				3EE9356229CB2C1000DCEC81 /* GetArticleFakeData.swift in Sources */,
@@ -1251,7 +1263,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 3ZNSUU6BW4;
 				INFOPLIST_FILE = Ptt/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -1275,7 +1287,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 3ZNSUU6BW4;
 				INFOPLIST_FILE = Ptt/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
