@@ -9,6 +9,10 @@
 import Combine
 import UIKit
 
+protocol BoardSearchViewProtocol: AnyObject {
+    func showBoard(boardName: String)
+}
+
 final class BoardSearchViewController: UITableViewController {
     private let apiClient: APIClientProtocol
     private let favoriteBoardsManager: FavoriteBoardManagerProtocol
@@ -18,6 +22,7 @@ final class BoardSearchViewController: UITableViewController {
     private var startIdx = ""
     private var scrollDirection: Direction = .unknown
     private var keyword = ""
+    weak var delegate: BoardSearchViewProtocol?
 
     init(
         apiClient: APIClientProtocol = APIClient.shared,
@@ -63,22 +68,14 @@ final class BoardSearchViewController: UITableViewController {
         }
         let data = boards[indexPath.row]
         let isFavorite = favoriteBoards.contains(where: { $0.brdname == data.brdname })
-        cell.config(boardName: data.brdname, isFavorite: isFavorite)
+        cell.config(boardName: data.brdname, isFavorite: isFavorite, boardID: data.bid, delegate: self)
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-#if DEVELOP // Disable editing, for now
         let data = boards[indexPath.row]
-        if let idx = favoriteBoards.firstIndex(where: { $0.brdname == data.brdname }) {
-            deleteBoardFromFavorite(board: favoriteBoards[idx], indexPath: indexPath)
-        } else {
-            addBoardToFavorite(board: data, indexPath: indexPath)
-        }
-#else
-        // TBD: expected behavior should be showBoardView()
-#endif
+        delegate?.showBoard(boardName: data.brdname)
     }
 
     override func tableView(
@@ -172,5 +169,18 @@ extension BoardSearchViewController {
                 self?.favoriteBoards = boards ?? []
                 self?.tableView.reloadData()
             })
+    }
+}
+
+extension BoardSearchViewController: BoardSearchCellProtocol {
+    func clickFavoriteButton(boardID: String, changeToFavorite: Bool) {
+        guard let index = boards.firstIndex(where: { $0.bid == boardID }) else { return }
+        let data = boards[index]
+        let indexPath = IndexPath(row: index, section: 0)
+        if changeToFavorite {
+            addBoardToFavorite(board: data, indexPath: indexPath)
+        } else {
+            deleteBoardFromFavorite(board: data, indexPath: indexPath)
+        }
     }
 }
