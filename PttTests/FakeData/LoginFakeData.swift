@@ -13,6 +13,8 @@ enum LoginFakeData {
         "user_id": "fake id",
         "access_token": "fake token",
         "token_type": "fake type",
-        "refresh_token": "fake refresh token"
+        "refresh_token": "fake refresh token",
+        "access_expire": 1692627894,
+        "refresh_expire": 1695627894
     ]
 }

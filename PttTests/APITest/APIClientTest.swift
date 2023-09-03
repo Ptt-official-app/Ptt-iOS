@@ -29,7 +29,9 @@ final class APIClientTest: XCTestCase {
                 user_id: userID,
                 access_token: token,
                 token_type: "bear",
-                refresh_token: refreshToken
+                refresh_token: refreshToken,
+                access_expire: Date(timeInterval: 3000, since: Date()),
+                refresh_expire: Date(timeIntervalSinceNow: 8000)
             ),
             for: .loginToken
         )
@@ -77,11 +79,13 @@ final class APIClientTest: XCTestCase {
             let data = try XCTUnwrap(body)
             let obj = try XCTUnwrap(try JSONSerialization.jsonObject(with: data) as? [String: String])
             XCTAssertEqual(obj["refresh_token"], self.refreshToken)
-            let responseDict = [
+            let responseDict: [String : Any] = [
                 "user_id": "tester",
                 "access_token": "newToken",
                 "token_type": "bearer",
-                "refresh_token": "new refreshToken"
+                "refresh_token": "new refreshToken",
+                "access_expire": 1692627894,
+                "refresh_expire": 1695627894
             ]
             completion(.success((200, responseDict)))
         }

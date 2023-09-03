@@ -63,28 +63,21 @@ final class ApplicationCoordinator: BaseCoordinator {
     }
 
     private func runAuthFlow() {
-        // TODO: 登入流程放這邊
         // uncomment to force logout
         // _ = LoginKeyChainItem.shared.removeToken()
 
-        guard KeyChainItem.shared.readData(for: .loginToken) != nil else {
+        guard let loginToken: APIModel.LoginToken = KeyChainItem.shared.readObject(for: .loginToken) else {
             runLoginFlow()
             return
         }
-        Task {
-            do {
-                try await apiClient.refreshToken()
-                await MainActor.run(body: {
-                    isAutorized = true
-                    runMainFlow()
-                })
-            } catch {
-                // Refresh token failed
-                keyChainItem.clear()
-                await MainActor.run(body: {
-                    runLoginFlow()
-                })
-            }
+        switch loginToken.tokenStatus {
+        case .normal:
+            isAutorized = true
+            runMainFlow()
+        case .refreshToken:
+            runRefreshFlow()
+        case .reLogIn:
+            runLoginFlow()
         }
     }
 
@@ -125,5 +118,23 @@ final class ApplicationCoordinator: BaseCoordinator {
         }
         self.addDependency(loginCoordinator)
         loginCoordinator.start()
+    }
+
+    private func runRefreshFlow() {
+        Task {
+            do {
+                try await apiClient.refreshToken()
+                await MainActor.run(body: {
+                    isAutorized = true
+                    runMainFlow()
+                })
+            } catch {
+                // Refresh token failed
+                keyChainItem.clear()
+                await MainActor.run(body: {
+                    runLoginFlow()
+                })
+            }
+        }
     }
 }

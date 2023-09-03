@@ -23,7 +23,14 @@ final class FavoriteBoardManagerTest: XCTestCase {
         urlSession = MockURLSession()
         keyChainItem = MockKeyChain()
         keyChainItem.save(
-            object: APIModel.LoginToken(user_id: userID, access_token: "fakeToken", token_type: "bear"),
+            object: APIModel.LoginToken(
+                user_id: userID,
+                access_token: "fakeToken",
+                token_type: "bear",
+                refresh_token: "fakeRefreshToken",
+                access_expire: Date(),
+                refresh_expire: Date()
+            ),
             for: .loginToken
         )
 
