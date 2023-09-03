@@ -135,7 +135,7 @@ extension BoardListTVC {
 
 extension BoardListTVC: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text, !searchText.isEmpty else { return }
+        guard let searchText = searchController.searchBar.text else { return }
         boardSearchVC.search(keyword: searchText)
     }
 }

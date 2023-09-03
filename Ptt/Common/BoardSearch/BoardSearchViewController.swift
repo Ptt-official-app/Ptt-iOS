@@ -47,9 +47,14 @@ final class BoardSearchViewController: UITableViewController {
     }
 
     func search(keyword: String) {
+        self.keyword = keyword
         startIdx = ""
         boards = []
-        getBoardList(keyword: keyword)
+        if keyword.isEmpty {
+            tableView.reloadData()
+        } else {
+            getBoardList(keyword: keyword)
+        }
     }
 
     // MARK: - TableView delegate
@@ -101,8 +106,9 @@ final class BoardSearchViewController: UITableViewController {
 // MARK: - API
 extension BoardSearchViewController {
     private func getBoardList(keyword: String) {
-        self.keyword = keyword
         apiClient.getBoardList(keyword: keyword, startIdx: startIdx, max: 200) { [weak self] result in
+            // To prevent race condition 
+            guard keyword == self?.keyword else { return }
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let error):
