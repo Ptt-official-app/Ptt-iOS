@@ -43,7 +43,10 @@ final class KeyChainItemTests: XCTestCase {
         let obj = APIModel.LoginToken(
             user_id: String.random(length: 5),
             access_token: String.random(length: 9),
-            token_type: String.random(length: 4)
+            token_type: String.random(length: 4),
+            refresh_token: String.random(length: 9),
+            access_expire: Date(),
+            refresh_expire: Date()
         )
         sut.save(object: obj, for: .unitTest)
         let cache: APIModel.LoginToken = try XCTUnwrap(sut.readObject(for: .unitTest))
