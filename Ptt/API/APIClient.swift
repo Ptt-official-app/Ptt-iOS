@@ -57,14 +57,17 @@ final class APIClient {
 
     private let session: URLSessionProtocol
     private let keyChainItem: PTTKeyChain
+    private let notificationCenter: NotificationCenter
     private var tokenTask: Task<APIModel.LoginToken, Error>?
 
     init(
         session: URLSessionProtocol = URLSession.shared,
-        keyChainItem: PTTKeyChain = KeyChainItem.shared
+        keyChainItem: PTTKeyChain = KeyChainItem.shared,
+        notificationCenter: NotificationCenter = .default
     ) {
         self.session = session
         self.keyChainItem = keyChainItem
+        self.notificationCenter = notificationCenter
     }
 }
 
@@ -86,6 +89,9 @@ extension APIClient: APIClientProtocol {
                 )
                 return newObj
             case .reLogIn:
+                await MainActor.run(body: {
+                    notificationCenter.post(name: .shouldReLogin, object: nil)
+                })
                 throw APIError.reLogin
             }
         }
@@ -355,9 +361,8 @@ extension APIClient: APIClientProtocol {
     func getBoardList(
         keyword: String = "",
         startIdx: String = "",
-        max: Int = 200,
-        completion: @escaping (BoardListResult) -> Void
-    ) {
+        max: Int = 200
+    ) async throws -> APIModel.BoardInfoList {
         let matcherEnglish = MyRegex("^[a-zA-Z]+$")
         let matcherChinese = MyRegex("^[\\u4e00-\\u9fa5]+$")
         var urlComponent = rootURLComponents
@@ -375,41 +380,26 @@ extension APIClient: APIClientProtocol {
         ]
         guard let url = urlComponent.url,
               let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
-            assertionFailure()
-            return
+            throw APIError.urlError
         }
 
         var request = URLRequest(url: url)
         request.httpMethod = Method.GET.rawValue
         request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
-
-        let task = self.session.dataTask(with: request) { data, urlResponse, error in
-            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
-            switch result {
-            case .failure(let apiError):
-                completion(.failure(apiError))
-            case .success(let resultData):
-                do {
-                    let list = try self.decoder.decode(APIModel.BoardInfoList.self, from: resultData)
-                    completion(.success(list))
-                } catch (let decodingError) {
-                    let message = self.message(of: decodingError)
-                    completion(.failure(.decodingError(message)))
-                }
-            }
-        }
-        task.resume()
+        return try await doRequest(request: request)
     }
 
-    func createArticle(boardId: String, article: APIModel.CreateArticle, completion: @escaping (CreateArticleResult) -> Void) {
+    func createArticle(
+        boardId: String,
+        article: APIModel.CreateArticle
+    ) async throws -> APIModel.CreateArticleResponse {
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/board/" + boardId + "/article"
 
         guard let url = urlComponent.url,
               let jsonBody = try? JSONEncoder().encode(article),
               let loginToken: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
-            assertionFailure()
-            return
+            throw APIError.urlError
         }
 
         var request = URLRequest(url: url)
@@ -418,23 +408,7 @@ extension APIClient: APIClientProtocol {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("Bearer \(loginToken.access_token)", forHTTPHeaderField: "Authorization")
-
-        let task = self.session.dataTask(with: request) { data, urlResponse, error in
-            let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
-            switch result {
-            case .failure(let apiError):
-                completion(.failure(apiError))
-            case .success(let resultData):
-                do {
-                    let response = try self.decoder.decode(APIModel.CreateArticleResponse.self, from: resultData)
-                    completion(.success(response))
-                } catch (let decodingError) {
-                    let message = self.message(of: decodingError)
-                    completion(.failure(.decodingError(message)))
-                }
-            }
-        }
-        task.resume()
+        return try await doRequest(request: request)
     }
 
     func getPopularArticles(

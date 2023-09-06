@@ -105,22 +105,24 @@ final class BoardSearchViewController: UITableViewController {
 extension BoardSearchViewController {
     private func getBoardList(keyword: String) {
         self.keyword = keyword
-        apiClient.getBoardList(keyword: keyword, startIdx: startIdx, max: 200) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .failure(let error):
-                    let message = error.localizedDescription
-                    let alert = UIAlertController(title: L10n.error, message: message, preferredStyle: .alert)
-                    let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
-                    alert.addAction(confirm)
-                    self?.present(alert, animated: true, completion: nil)
-                case .success(let response):
-                    if let index = response.next_idx {
-                        self?.startIdx = index
-                    }
-                    self?.boards += response.list
-                    self?.tableView.reloadData()
+        Task {
+            do {
+                let response = try await apiClient.getBoardList(keyword: keyword, startIdx: startIdx, max: 200)
+                if let index = response.next_idx {
+                    self.startIdx = index
                 }
+                self.boards += response.list
+                await MainActor.run(body: {
+                    tableView.reloadData()
+                })
+            } catch {
+                let message = error.localizedDescription
+                let alert = UIAlertController(title: L10n.error, message: message, preferredStyle: .alert)
+                let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
+                alert.addAction(confirm)
+                await MainActor.run(body: {
+                    present(alert, animated: true, completion: nil)
+                })
             }
         }
     }

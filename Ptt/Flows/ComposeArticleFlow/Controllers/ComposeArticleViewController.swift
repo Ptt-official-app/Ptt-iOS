@@ -210,18 +210,20 @@ extension ComposeArticleViewController {
         showLoading(shouldShow: false)
         let title = customView.titleField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let content = customView.contentTextView.text ?? ""
-        viewModel.createPost(title: title, content: content, completion: { [weak self] result in
-            DispatchQueue.main.async {
-                self?.showLoading(shouldShow: true)
-                switch result {
-                case .failure(let error):
-                    self?.showErrorAlert(title: L10n.error, message: error.message)
-                case .success:
+        Task {
+            do {
+                _ = try await viewModel.createPost(title: title, content: content)
+                await MainActor.run(body: {
                     NotificationCenter.default.post(name: .didPostNewArticle, object: nil)
-                    self?.back()
-                }
+                    back()
+                })
+            } catch {
+                guard let apiError = error as? APIError else { return }
+                await MainActor.run(body: {
+                    showErrorAlert(title: L10n.error, message: apiError.message)
+                })
             }
-        })
+        }
     }
 }
 

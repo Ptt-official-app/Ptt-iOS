@@ -24,14 +24,11 @@ final class ComposeArticleViewModel {
         selectedPostType = postType
     }
 
-    func createPost(
-        title: String,
-        content: String,
-        completion: @escaping (APIClientProtocol.CreateArticleResult) -> Void
-    ) {
+    func createPost(title: String, content: String) async throws -> APIModel.CreateArticleResponse {
         let parsedContent = parse(content: content)
         let article = APIModel.CreateArticle(className: selectedPostType, title: title, content: parsedContent)
-        apiClient.createArticle(boardId: boardName, article: article, completion: completion)
+        let response = try await apiClient.createArticle(boardId: boardName, article: article)
+        return response
     }
 }
 

@@ -32,14 +32,20 @@ private enum LaunchInstructor {
 final class ApplicationCoordinator: BaseCoordinator {
     private let coordinatorFactory: CoordinatorFactory
     private let router: Router
+    private let notificationCenter: NotificationCenter
 
     private var instructor: LaunchInstructor {
         return LaunchInstructor.configure()
     }
 
-    init(router: Router, coordinatorFactory: CoordinatorFactory) {
+    init(
+        router: Router,
+        coordinatorFactory: CoordinatorFactory,
+        notificationCenter: NotificationCenter = .default
+    ) {
         self.router = router
         self.coordinatorFactory = coordinatorFactory
+        self.notificationCenter = notificationCenter
     }
 
     override func start() {
@@ -51,6 +57,7 @@ final class ApplicationCoordinator: BaseCoordinator {
         case .main:
             runMainFlow()
         }
+        observeNotification()
     }
 
     private func runAuthFlow() {
@@ -65,15 +72,7 @@ final class ApplicationCoordinator: BaseCoordinator {
             runMainFlow()
         } else {
             isAutorized = false
-
-            let loginCoordinator = coordinatorFactory.makeLoginCoordinator(router: self.router)
-            (loginCoordinator as? LoginCoordinator)?.finshFlow = { [unowned self] in
-                // authed
-                self.removeDependency(self)
-                start()
-            }
-            self.addDependency(loginCoordinator)
-            loginCoordinator.start()
+            runLoginFlow()
         }
     }
 
@@ -101,5 +100,31 @@ final class ApplicationCoordinator: BaseCoordinator {
         }
         router.setRootModule(module, hideBar: true, animated: true)
         coordinator.start()
+    }
+
+    private func runLoginFlow() {
+        let loginCoordinator = coordinatorFactory.makeLoginCoordinator(router: self.router)
+        (loginCoordinator as? LoginCoordinator)?.finshFlow = { [unowned self] in
+            // authed
+            self.removeDependency(self)
+            start()
+        }
+        self.addDependency(loginCoordinator)
+        loginCoordinator.start()
+    }
+
+    private func observeNotification() {
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(self.receiveShouldReLogin),
+            name: .shouldReLogin,
+            object: nil
+        )
+    }
+
+    @objc
+    private func receiveShouldReLogin() {
+        isAutorized = false
+        runLoginFlow()
     }
 }
