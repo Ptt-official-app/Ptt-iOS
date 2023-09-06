@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct APIClient {
+final class APIClient {
     private enum Method: String {
         case GET
         case POST
@@ -57,6 +57,7 @@ struct APIClient {
 
     private let session: URLSessionProtocol
     private let keyChainItem: PTTKeyChain
+    private var tokenTask: Task<APIModel.LoginToken, Error>?
 
     init(
         session: URLSessionProtocol = URLSession.shared,
@@ -69,6 +70,52 @@ struct APIClient {
 
 // MARK: Public api function
 extension APIClient: APIClientProtocol {
+
+    func fetchTokenObject() async throws -> APIModel.LoginToken {
+        tokenTask = Task { () -> APIModel.LoginToken in
+            guard let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
+                throw APIError.loginTokenNotExist
+            }
+            switch loginObj.tokenStatus {
+            case .normal:
+                return loginObj
+            case .refreshToken:
+                let newObj = try await self.refreshToken(
+                    accessToken: loginObj.access_token,
+                    refreshToken: loginObj.refresh_token
+                )
+                return newObj
+            case .reLogIn:
+                throw APIError.reLogin
+            }
+        }
+        guard let tokenObject = try await tokenTask?.value else {
+            throw APIError.loginTokenNotExist
+        }
+        return tokenObject
+    }
+
+    func refreshToken(accessToken: String, refreshToken: String) async throws -> APIModel.LoginToken {
+        let bodyDic = [
+            "client_id": "test_client_id",
+            "client_secret": "test_client_secret",
+            "refresh_token": refreshToken
+        ]
+
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/account/refresh"
+        guard let url = urlComponent.url,
+              let jsonBody = try? JSONSerialization.data(withJSONObject: bodyDic) else {
+            throw APIError.urlError
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.POST.rawValue
+        request.httpBody = jsonBody
+        request.setValue("bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        let response: APIModel.LoginToken = try await doRequest(request: request)
+        keyChainItem.save(object: response, for: .loginToken)
+        return response
+    }
 
     func login(account: String, password: String, completion: @escaping (LoginResult) -> Void) {
         let bodyDic = ["client_id": "test_client_id",
@@ -444,9 +491,7 @@ extension APIClient: APIClientProtocol {
     }
 
     func favoritesBoards(startIndex: String, limit: Int = 200) async throws -> APIModel.BoardInfoList {
-        guard let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
-            throw APIError.loginTokenNotExist
-        }
+        let loginObj = try await fetchTokenObject()
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/user/\(loginObj.user_id)/favorites"
 
@@ -465,9 +510,7 @@ extension APIClient: APIClientProtocol {
     }
 
     func addBoardToFavorite(levelIndex: String, bid: String) async throws -> APIModel.BoardInfo {
-        guard let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
-            throw APIError.loginTokenNotExist
-        }
+        let loginObj = try await fetchTokenObject()
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/user/\(loginObj.user_id)/favorites/addboard"
 
@@ -489,9 +532,7 @@ extension APIClient: APIClientProtocol {
     }
 
     func deleteBoardFromFavorite(levelIndex: String, index: String) async throws -> Bool {
-        guard let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
-            throw APIError.loginTokenNotExist
-        }
+        let loginObj = try await fetchTokenObject()
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/user/\(loginObj.user_id)/favorites/delete"
 
@@ -524,9 +565,7 @@ extension APIClient: APIClientProtocol {
     }
 
     func getProfile(userID: String) async throws -> APIModel.Profile {
-        guard let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
-            throw APIError.loginTokenNotExist
-        }
+        let loginObj = try await fetchTokenObject()
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/user/\(userID)"
         guard let url = urlComponent.url else { throw APIError.urlError }
@@ -538,9 +577,7 @@ extension APIClient: APIClientProtocol {
     }
 
     func getUserArticles(userID: String, startIndex: String = "") async throws -> APIModel.ArticleList {
-        guard let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
-            throw APIError.loginTokenNotExist
-        }
+        let loginObj = try await fetchTokenObject()
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/user/\(userID)/articles"
         urlComponent.queryItems = [
@@ -556,9 +593,7 @@ extension APIClient: APIClientProtocol {
     }
 
     func getUserComment(userID: String, startIndex: String = "") async throws -> APIModel.ArticleCommentList {
-        guard let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
-            throw APIError.loginTokenNotExist
-        }
+        let loginObj = try await fetchTokenObject()
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/user/\(userID)/comments"
         urlComponent.queryItems = [
