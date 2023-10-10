@@ -29,6 +29,7 @@ final class BoardListTVC: UITableViewController, BoardListView {
         self.boardSearchVC = BoardSearchViewController(apiClient: viewModel.apiClient)
         self.searchController = UISearchController(searchResultsController: boardSearchVC)
         super.init(style: .plain)
+        self.boardSearchVC.delegate = self
     }
 
     required init?(coder: NSCoder) {
@@ -134,7 +135,7 @@ extension BoardListTVC {
 
 extension BoardListTVC: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text, !searchText.isEmpty else { return }
+        guard let searchText = searchController.searchBar.text else { return }
         boardSearchVC.search(keyword: searchText)
     }
 }
@@ -213,5 +214,11 @@ extension BoardListTVC {
         searchController.searchBar.searchTextField.textColor = PttColors.paleGrey.color
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
+    }
+}
+
+extension BoardListTVC: BoardSearchViewProtocol {
+    func showBoard(boardName: String) {
+        onBoardSelect?(boardName)
     }
 }
