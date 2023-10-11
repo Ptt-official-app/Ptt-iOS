@@ -70,12 +70,13 @@ final class FavoriteBoardManagerTest: XCTestCase {
         Task {
             stubAddFavoriteBoards(isError: false, board: boards[0])
             try await sut.addBoardToFavorite(board: boards[0])
+
+            Task {
+                stubAddFavoriteBoards(isError: false, board: boards[1])
+                try await sut.addBoardToFavorite(board: boards[1])
+            }
         }
 
-        Task {
-            stubAddFavoriteBoards(isError: false, board: boards[1])
-            try await sut.addBoardToFavorite(board: boards[1])
-        }
         await fulfillment(of: [ex])
     }
 
