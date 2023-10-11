@@ -23,7 +23,14 @@ final class APIClientTest: XCTestCase {
         userID = String.random(length: 8)
         token = String.random(length: 8)
         keyChainItem.save(
-            object: APIModel.LoginToken(user_id: userID, access_token: token, token_type: "bear"),
+            object: APIModel.LoginToken(
+                user_id: userID,
+                access_token: token,
+                token_type: "bear",
+                refresh_token: "fake",
+                access_expire: Date(timeIntervalSinceNow: 30),
+                refresh_expire: Date(timeIntervalSinceNow: 120)
+            ),
             for: .loginToken
         )
 
@@ -106,7 +113,7 @@ final class APIClientTest: XCTestCase {
         }
     }
 
-    func testBoardListSuccess_with_english_keyword() {
+    func testBoardListSuccess_with_english_keyword() async throws {
         let startIdx = "\(Int.random(in: 0...99))"
         let max = Int.random(in: 0...99)
         urlSession.stub { path, _, queryItem, _, completion in
@@ -122,24 +129,18 @@ final class APIClientTest: XCTestCase {
             }
             completion(.success((200, BoardListFakeData.successData)))
         }
-        apiClient.getBoardList(keyword: "stup", startIdx: startIdx, max: max) { result in
-            switch result {
-            case .failure:
-                XCTFail("Shouldn't fail")
-            case .success(let list):
-                XCTAssertEqual(list.next_idx, "")
-                XCTAssert(list.list.count == 6)
-                let info = list.list[0]
-                XCTAssert(info.bid == "Baseball")
-                XCTAssert(info.brdname == "Baseball")
-                XCTAssert(info.title == "[棒球] 板主選舉投票中")
-                XCTAssert(info.flag.contains(.cpLog))
-                XCTAssert(info.nuser == 14)
-            }
-        }
+        let list = try await apiClient.getBoardList(keyword: "stup", startIdx: startIdx, max: max)
+        XCTAssertEqual(list.next_idx, "")
+        XCTAssert(list.list.count == 6)
+        let info = list.list[0]
+        XCTAssert(info.bid == "Baseball")
+        XCTAssert(info.brdname == "Baseball")
+        XCTAssert(info.title == "[棒球] 板主選舉投票中")
+        XCTAssert(info.flag.contains(.cpLog))
+        XCTAssert(info.nuser == 14)
     }
 
-    func testBoardListSuccess_with_chinese_keyword() {
+    func testBoardListSuccess_with_chinese_keyword() async throws {
         let startIdx = "\(Int.random(in: 0...99))"
         let max = Int.random(in: 0...99)
         urlSession.stub { path, _, queryItem, _, completion in
@@ -155,18 +156,12 @@ final class APIClientTest: XCTestCase {
             }
             completion(.success((200, BoardListFakeData.successData)))
         }
-        apiClient.getBoardList(keyword: "笨", startIdx: startIdx, max: max) { result in
-            switch result {
-            case .failure:
-                XCTFail("Shouldn't fail")
-            case .success(let list):
-                XCTAssertEqual(list.next_idx, "")
-                XCTAssert(list.list.count == 6)
-            }
-        }
+        let list = try await apiClient.getBoardList(keyword: "笨", startIdx: startIdx, max: max)
+        XCTAssertEqual(list.next_idx, "")
+        XCTAssert(list.list.count == 6)
     }
 
-    func testBoardListSuccess_with_japanese_keyword() {
+    func testBoardListSuccess_with_japanese_keyword() async throws {
         let startIdx = "\(Int.random(in: 0...99))"
         let max = Int.random(in: 0...99)
         urlSession.stub { path, _, queryItem, _, completion in
@@ -182,15 +177,9 @@ final class APIClientTest: XCTestCase {
             }
             completion(.success((200, BoardListFakeData.successData)))
         }
-        apiClient.getBoardList(keyword: "ごじゅうおん", startIdx: startIdx, max: max) { result in
-            switch result {
-            case .failure:
-                XCTFail("Shouldn't fail")
-            case .success(let list):
-                XCTAssertEqual(list.next_idx, "")
-                XCTAssert(list.list.count == 6)
-            }
-        }
+        let list = try await apiClient.getBoardList(keyword: "ごじゅうおん", startIdx: startIdx, max: max)
+        XCTAssertEqual(list.next_idx, "")
+        XCTAssert(list.list.count == 6)
     }
 
     func testFavoritesBoards_succeed() async throws {

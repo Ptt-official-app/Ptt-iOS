@@ -26,9 +26,7 @@ protocol APIClientProtocol {
     typealias RegisterResult = Result<APIModel.Register, APIError>
     typealias GetBoardArticlesResult = Result<APIModel.BoardModel, APIError>
     typealias GetArticleResult = Result<Article, APIError>
-    typealias BoardListResult = Result<APIModel.BoardInfoList, APIError>
     typealias ProcessResult = Result<Data, APIError>
-    typealias CreateArticleResult = Result<APIModel.CreateArticleResponse, APIError>
     typealias PopularArticlesResult = Result<APIModel.GoPttBBSBoard, APIError>
     
     func login(account: String, password: String, completion: @escaping (LoginResult) -> Void)
@@ -41,10 +39,9 @@ protocol APIClientProtocol {
     ///   - keyword: query string, '' returns all boards
     ///   - startIdx: starting idx, '' if fetch from the beginning.
     ///   - max: max number of the returned list, requiring <= 300
-    ///   - completion: the list of board information
-    func getBoardList(keyword: String, startIdx: String, max: Int, completion: @escaping (BoardListResult) -> Void)
+    func getBoardList(keyword: String, startIdx: String, max: Int) async throws -> APIModel.BoardInfoList
 
-    func createArticle(boardId: String, article: APIModel.CreateArticle, completion: @escaping (CreateArticleResult) -> Void)
+    func createArticle(boardId: String, article: APIModel.CreateArticle) async throws -> APIModel.CreateArticleResponse
 
     /// Get popular article list data
     /// - Parameters:

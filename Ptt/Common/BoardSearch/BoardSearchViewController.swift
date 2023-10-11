@@ -106,24 +106,25 @@ final class BoardSearchViewController: UITableViewController {
 // MARK: - API
 extension BoardSearchViewController {
     private func getBoardList(keyword: String) {
-        apiClient.getBoardList(keyword: keyword, startIdx: startIdx, max: 200) { [weak self] result in
-            // To prevent race condition 
-            guard keyword == self?.keyword else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .failure(let error):
-                    let message = error.localizedDescription
-                    let alert = UIAlertController(title: L10n.error, message: message, preferredStyle: .alert)
-                    let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
-                    alert.addAction(confirm)
-                    self?.present(alert, animated: true, completion: nil)
-                case .success(let response):
-                    if let index = response.next_idx {
-                        self?.startIdx = index
-                    }
-                    self?.boards += response.list
-                    self?.tableView.reloadData()
+        self.keyword = keyword
+        Task {
+            do {
+                let response = try await apiClient.getBoardList(keyword: keyword, startIdx: startIdx, max: 200)
+                if let index = response.next_idx {
+                    self.startIdx = index
                 }
+                self.boards += response.list
+                await MainActor.run(body: {
+                    tableView.reloadData()
+                })
+            } catch {
+                let message = error.localizedDescription
+                let alert = UIAlertController(title: L10n.error, message: message, preferredStyle: .alert)
+                let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
+                alert.addAction(confirm)
+                await MainActor.run(body: {
+                    present(alert, animated: true, completion: nil)
+                })
             }
         }
     }

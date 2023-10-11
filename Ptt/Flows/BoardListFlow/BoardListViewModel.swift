@@ -127,8 +127,14 @@ extension BoardListViewModel {
         cancellable = favoriteBoardManager.boards.sink { [weak self] completion in
             switch completion {
             case .failure(let error):
-                self?.handlePossibleTokenExpire(error: error)
-                self?.observeFavoriteBoard()
+                guard let apiError = error as? APIError else { return }
+                switch apiError {
+                case .reLogin:
+                    return
+                default:
+                    self?.handlePossibleTokenExpire(error: error)
+                    self?.observeFavoriteBoard()
+                }
             default:
                 break
             }
