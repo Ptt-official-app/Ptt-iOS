@@ -2,7 +2,7 @@
 //  GeneralResponse.swift
 //  Ptt
 //
-//  Created by 陳建佑 on 2023/12/9.
+//  Created by Anson on 2023/12/9.
 //  Copyright © 2023 Ptt. All rights reserved.
 //
 
