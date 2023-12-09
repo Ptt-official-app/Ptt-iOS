@@ -428,6 +428,27 @@ extension APIClient: APIClientProtocol {
         return try await doRequest(request: request)
     }
 
+    func deleteArticle(boardID: String, articleIDs: [String]) async throws -> APIModel.GeneralResponse {
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/board/" + boardID + "/deletearticcles"
+
+        let dict  = ["aids": articleIDs]
+
+        guard let url = urlComponent.url,
+              let jsonBody = try? JSONSerialization.data(withJSONObject: dict),
+              let loginToken: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
+            throw APIError.urlError
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.POST.rawValue
+        request.httpBody = jsonBody
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("Bearer \(loginToken.access_token)", forHTTPHeaderField: "Authorization")
+        return try await doRequest(request: request)
+    }
+
     func getPopularArticles(
         startIdx: String,
         limit: Int,
