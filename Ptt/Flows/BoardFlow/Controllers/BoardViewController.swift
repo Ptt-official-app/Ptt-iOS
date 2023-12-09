@@ -93,7 +93,8 @@ final class BoardViewController: UIViewController, FullscreenSwipeable, BoardVie
         let flexible3 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         toolbar.items = [flexible1, refreshButtonItem, flexible2, composeButtonItem, flexible3]
 
-        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name("didPostNewArticle"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: .didPostNewArticle, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: .didDeleteArticle, object: nil)
         requestBoardDetail()
         refresh()
     }

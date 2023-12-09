@@ -10,6 +10,7 @@ import Foundation
 
 extension Notification.Name {
     static var didPostNewArticle = NSNotification.Name("didPostNewArticle")
+    static var didDeleteArticle = NSNotification.Name("didDeleteArticle")
     static var shouldReLogin = NSNotification.Name("shouldReLogin")
 }
 

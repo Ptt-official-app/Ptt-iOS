@@ -40,7 +40,7 @@ final class SingleArticleViewController: UITableViewController, FullscreenSwipea
         super.viewDidLoad()
         setupViews()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name("didPostNewArticle"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: .didPostNewArticle, object: nil)
 
         refresh()
     }
@@ -158,21 +158,6 @@ extension SingleArticleViewController {
         return loginToken.user_id == article?.author
     }
 
-    private func presentDeleteArticleConfirmation() {
-        let alert = UIAlertController(
-            title: L10n.deleteArticle,
-            message: L10n.areYouSureToDeleteIt,
-            preferredStyle: .alert
-        )
-
-        let deleteAction = UIAlertAction(title: L10n.delete, style: .default) { [weak self] _ in
-            self?.deleteArticle()
-        }
-        let cancel = UIAlertAction(title: L10n.cancel, style: .cancel)
-        [deleteAction, cancel].forEach(alert.addAction)
-        present(alert, animated: true)
-    }
-
     private func deleteArticle() {
         Task {
             guard let article else { return }
@@ -183,6 +168,7 @@ extension SingleArticleViewController {
             do {
                 let result = try await apiClient.deleteArticle(boardID: article.bid, articleIDs: [article.aid])
                 if result.success {
+                    NotificationCenter.default.post(name: .didDeleteArticle, object: nil)
                     navigationController?.popViewController(animated: true)
                 }
             } catch {
@@ -245,5 +231,20 @@ extension SingleArticleViewController {
         )
         item.tintColor = PttColors.slateGrey.color
         return item
+    }
+
+    private func presentDeleteArticleConfirmation() {
+        let alert = UIAlertController(
+            title: L10n.deleteArticle,
+            message: L10n.areYouSureToDeleteIt,
+            preferredStyle: .alert
+        )
+
+        let deleteAction = UIAlertAction(title: L10n.delete, style: .default) { [weak self] _ in
+            self?.deleteArticle()
+        }
+        let cancel = UIAlertAction(title: L10n.cancel, style: .cancel)
+        [deleteAction, cancel].forEach(alert.addAction)
+        present(alert, animated: true)
     }
 }
