@@ -9,6 +9,8 @@
 import Foundation
 
 protocol Article: Codable {
+    var aid: String { get }
+    var bid: String { get }
     var title: String { get }
     var date: String { get }
     var author: String { get }

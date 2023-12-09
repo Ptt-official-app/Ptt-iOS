@@ -430,9 +430,9 @@ extension APIClient: APIClientProtocol {
 
     func deleteArticle(boardID: String, articleIDs: [String]) async throws -> APIModel.GeneralResponse {
         var urlComponent = rootURLComponents
-        urlComponent.path = "/api/board/" + boardID + "/deletearticcles"
+        urlComponent.path = "/api/board/" + boardID + "/deletearticles"
 
-        let dict  = ["aids": articleIDs]
+        let dict = ["aids": articleIDs]
 
         guard let url = urlComponent.url,
               let jsonBody = try? JSONSerialization.data(withJSONObject: dict),

@@ -17,7 +17,7 @@ final class ArticleMetaDataCell: UITableViewCell {
     private let authorImageView = UIImageView()
     private let authorNameLabel = UILabel()
 
-    var article: APIModel.FullArticle? = nil {
+    var article: APIModel.FullArticle? {
         didSet {
             if let article {
                 if let category = article.category {

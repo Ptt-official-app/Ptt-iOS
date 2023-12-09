@@ -26,6 +26,8 @@ enum L10n {
   static let appearanceMode = L10n.tr("Localizable", "Appearance Mode")
   /// Are you sure to clear cache?
   static let areYouSureToClearCache = L10n.tr("Localizable", "Are you sure to clear cache?")
+  /// Are you sure to delete it?
+  static let areYouSureToDeleteIt = L10n.tr("Localizable", "Are you sure to delete it?")
   /// Title is empty
   static let articleTitleIsEmpty = L10n.tr("Localizable", "ArticleTitleIsEmpty")
   /// Back to Register
@@ -56,6 +58,10 @@ enum L10n {
   static let customizationMode = L10n.tr("Localizable", "Customization Mode")
   /// Dark
   static let dark = L10n.tr("Localizable", "Dark")
+  /// Delete
+  static let delete = L10n.tr("Localizable", "Delete")
+  /// Delete article
+  static let deleteArticle = L10n.tr("Localizable", "DeleteArticle")
   /// Economy
   static let economy = L10n.tr("Localizable", "Economy")
   /// Edit

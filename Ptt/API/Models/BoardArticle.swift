@@ -11,6 +11,8 @@ import Foundation
 extension APIModel {
 
     struct BoardArticle: Article {
+        let bid: String
+        let aid: String
         let title: String
         let date: String
         let author: String
@@ -33,7 +35,9 @@ extension APIModel {
         let `class`: String
 
         static func adapter(model: GoPttBBSBrdArticle) -> BoardArticle {
-            return BoardArticle(title: "[" + model.`class` + "]" + model.title,
+            return BoardArticle(bid: model.bid, 
+                                aid: model.aid,
+                                title: "[" + model.`class` + "]" + model.title,
                                 date: Date(timeIntervalSince1970: model.create_time).toBoardDateString(),
                                 author: model.owner,
                                 boardID: model.bid,
@@ -54,7 +58,7 @@ extension APIModel {
 
         static func adapter(model: GoBBSBrdArticle) -> BoardArticle {
             // TODO:
-            return BoardArticle(title: model.title, date: model.modified_time, author: model.owner, boardID: "", articleID: model.filename)
+            return BoardArticle(bid: "", aid: "", title: model.title, date: model.modified_time, author: model.owner, boardID: "", articleID: model.filename)
         }
     }
 
@@ -71,6 +75,8 @@ extension APIModel {
             let (boardName, filename) = APIModel.FullArticle.info(from: url)
             guard let boardName = boardName, let filename = filename else { return nil }
             let boardArticle = BoardArticle(
+                bid: "",
+                aid: "",
                 title: model.title,
                 date: model.date,
                 author: model.author,
