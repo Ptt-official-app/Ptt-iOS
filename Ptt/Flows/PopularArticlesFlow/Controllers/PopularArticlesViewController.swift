@@ -160,7 +160,9 @@ extension PopularArticlesViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         let info = self.viewModel.data[indexPath.row]
         let article = info.adapter()
+        // TODO: check flag
         onArticleSelected?(BoardArticle(article: article,
+                                        flag: .init(rawValue: 0),
                                         boardName: info.url.getBorderName()))
     }
 }

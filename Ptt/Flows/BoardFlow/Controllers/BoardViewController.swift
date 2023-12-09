@@ -11,6 +11,7 @@ import UIKit
 
 struct BoardArticle {
     let article: APIModel.BoardArticle
+    let flag: APIModel.BoardAttribute
     let boardName: String
 }
 
@@ -230,11 +231,14 @@ extension BoardViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let row = indexPath.row
-        guard let board = self.board, row < board.articleList.count else {
-            return
-        }
+        guard 
+            let board = self.board,
+            row < board.articleList.count,
+            let rawFlag = boardDetail?.flag
+        else { return }
+        let flag = APIModel.BoardAttribute(rawValue: UInt32(rawFlag))
         let article = board.articleList[row]
-        onArticleSelect?(BoardArticle(article: article, boardName: boardName))
+        onArticleSelect?(BoardArticle(article: article, flag: flag, boardName: boardName))
     }
 }
 

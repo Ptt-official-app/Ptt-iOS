@@ -176,13 +176,21 @@ extension SingleArticleViewController {
     private func deleteArticle() {
         Task {
             guard let article else { return }
+            await MainActor.run {
+                view.isUserInteractionEnabled = false
+                addLoadingView()
+            }
             do {
                 let result = try await apiClient.deleteArticle(boardID: article.bid, articleIDs: [article.aid])
                 if result.success {
                     navigationController?.popViewController(animated: true)
                 }
             } catch {
-
+                await MainActor.run {
+                    view.isUserInteractionEnabled = true
+                    removeLoadingView()
+                    presentErrorAlert(message: error.localizedDescription)
+                }
             }
         }
     }
@@ -222,7 +230,7 @@ extension SingleArticleViewController {
         let shareItem = makeBarButtonItem(imageName: "square.and.arrow.up", action: #selector(self.share))
         let moreItem = makeBarButtonItem(imageName: "ellipsis", action: #selector(self.more))
         var items = [flex, shareItem]
-        if amIAuthor() {
+        if amIAuthor() && !boardArticle.flag.contains(.noSelfDeletePost) {
             items.append(moreItem)
         }
         self.setToolbarItems(items, animated: false)
