@@ -75,7 +75,6 @@ final class BoardViewController: UIViewController, FullscreenSwipeable, BoardVie
             activityIndicator.topAnchor.constraint(equalTo: view.topAnchor, constant: 80.0),
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
-        setupToolBar()
 
         NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: .didPostNewArticle, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: .didDeleteArticle, object: nil)
@@ -85,6 +84,7 @@ final class BoardViewController: UIViewController, FullscreenSwipeable, BoardVie
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setupToolBar()
         if let selectedRow = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectedRow, animated: true)
         }
