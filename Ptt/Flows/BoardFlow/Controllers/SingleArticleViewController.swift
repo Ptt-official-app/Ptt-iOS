@@ -14,13 +14,19 @@ final class SingleArticleViewController: UITableViewController, FullscreenSwipea
     private let activityIndicator = UIActivityIndicatorView(style: .medium)
 
     private let apiClient: APIClientProtocol
+    private let keyChainItem: PTTKeyChain
 
     private let boardArticle: BoardArticle
     private var article: APIModel.FullArticle?
     private var isRequesting = false
 
-    init(article: BoardArticle, apiClient: APIClientProtocol = APIClient.shared) {
+    init(
+        article: BoardArticle,
+        keyChainItem: PTTKeyChain = KeyChainItem.shared,
+        apiClient: APIClientProtocol = APIClient.shared
+    ) {
         self.boardArticle = article
+        self.keyChainItem = keyChainItem
         self.apiClient = apiClient
         super.init(nibName: nil, bundle: nil)
         hidesBottomBarWhenPushed = true
@@ -32,28 +38,9 @@ final class SingleArticleViewController: UITableViewController, FullscreenSwipea
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
 
-        title = boardArticle.article.title
-        enableFullscreenSwipeBack()
-
-        tableView.backgroundColor = PttColors.black.color
-        tableView.separatorStyle = .none
-        tableView.dataSource = self
-        tableView.allowsSelection = false
-        tableView.register(ArticleMetaDataCell.self, forCellReuseIdentifier: "ArticleMetaDataCell")
-        tableView.register(ArticleContentCell.self, forCellReuseIdentifier: "ArticleContentCell")
-
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        tableView.refreshControl = refreshControl
-
-        tableView.ptt_add(subviews: [activityIndicator])
-        NSLayoutConstraint.activate([
-            activityIndicator.topAnchor.constraint(equalTo: tableView.topAnchor, constant: 80.0),
-            activityIndicator.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
-        ])
-
-        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name("didPostNewArticle"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: .didPostNewArticle, object: nil)
 
         refresh()
     }
@@ -85,6 +72,7 @@ final class SingleArticleViewController: UITableViewController, FullscreenSwipea
                 }
                 self.article = article
                 DispatchQueue.main.async(execute: {
+                    self.setupBottomToolBar()
                     self.tableView.reloadData()
                     self.activityIndicator.stopAnimating()
                     if let refreshControl = self.tableView.refreshControl, refreshControl.isRefreshing {
@@ -93,35 +81,6 @@ final class SingleArticleViewController: UITableViewController, FullscreenSwipea
                 })
             }
         }
-    }
-
-    // MARK: Button actions
-
-    @objc
-    private func refresh() {
-        self.article = nil
-        requestArticle()
-        if let refreshControl = tableView.refreshControl {
-            if !refreshControl.isRefreshing {
-                activityIndicator.startAnimating()
-            }
-        }
-    }
-
-    @objc
-    private func upvote() {
-    }
-
-    @objc
-    private func reply() {
-    }
-
-    @objc
-    private func share() {
-    }
-
-    @objc
-    private func more() {
     }
 }
 
@@ -152,92 +111,140 @@ extension SingleArticleViewController {
     }
 }
 
-private final class ArticleMetaDataCell: UITableViewCell {
-
-    private let categoryImageView = UIImageView()
-    private let categoryLabel = UILabel()
-    private let clockImageView = UIImageView()
-    private let dateLabel = UILabel()
-    private let authorImageView = UIImageView()
-    private let authorNameLabel = UILabel()
-
-    var article: APIModel.FullArticle? = nil {
-        didSet {
-            if let article {
-                if let category = article.category {
-                    categoryLabel.text = "\(article.board) / \(category)"
-                } else {
-                    categoryLabel.text = article.board
-                }
-                dateLabel.text = article.date
-                authorNameLabel.text = "\(article.author) (\(article.nickname))"
+// MARK: - Actions
+extension SingleArticleViewController {
+    @objc
+    private func refresh() {
+        self.article = nil
+        requestArticle()
+        if let refreshControl = tableView.refreshControl {
+            if !refreshControl.isRefreshing {
+                activityIndicator.startAnimating()
             }
         }
     }
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-
-        categoryImageView.image = StyleKit.imageOfBoardCategory()
-        clockImageView.image = StyleKit.imageOfClock()
-        authorImageView.image = StyleKit.imageOfAuthor()
-
-        categoryLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
-        dateLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
-        authorNameLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
-        categoryLabel.textColor = .systemGray
-        dateLabel.textColor = .systemGray
-        authorNameLabel.textColor = .systemGray
-
-        contentView.ptt_add(subviews: [categoryImageView, categoryLabel, clockImageView, dateLabel, authorImageView, authorNameLabel])
-        let viewsDict = ["categoryImageView": categoryImageView, "categoryLabel": categoryLabel, "clockImageView": clockImageView, "dateLabel": dateLabel, "authorImageView": authorImageView, "authorNameLabel": authorNameLabel]
-        NSLayoutConstraint.activate(
-            NSLayoutConstraint.constraints(withVisualFormat: "V:|-[categoryImageView]-(10)-[authorImageView]-(10)-[clockImageView]-|", metrics: nil, views: viewsDict) +
-            NSLayoutConstraint.constraints(withVisualFormat: "H:|-(44)-[categoryImageView]-[categoryLabel]", metrics: nil, views: viewsDict) +
-            NSLayoutConstraint.constraints(withVisualFormat: "H:|-(44)-[authorImageView]-[authorNameLabel]", metrics: nil, views: viewsDict) +
-            NSLayoutConstraint.constraints(withVisualFormat: "H:|-(44)-[clockImageView]-[dateLabel]", metrics: nil, views: viewsDict) +
-            [categoryImageView.centerYAnchor.constraint(equalTo: categoryLabel.centerYAnchor),
-             authorImageView.centerYAnchor.constraint(equalTo: authorNameLabel.centerYAnchor),
-             clockImageView.centerYAnchor.constraint(equalTo: dateLabel.centerYAnchor)]
-        )
+    @objc
+    private func upvote() {
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    @objc
+    private func reply() {
+    }
+
+    @objc
+    private func share() {
+        guard let article else { return }
+        let item = [article.url]
+        let activityViewController = UIActivityViewController(activityItems: item, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = view
+
+        present(activityViewController, animated: true, completion: nil)
+    }
+
+    @objc
+    private func more() {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let deleteAction = UIAlertAction(title: L10n.deleteArticle, style: .default) { [weak self] _ in
+            self?.presentDeleteArticleConfirmation()
+        }
+        let cancel = UIAlertAction(title: L10n.cancel, style: .cancel)
+        [deleteAction, cancel].forEach(alert.addAction)
+        present(alert, animated: true)
+    }
+
+    private func amIAuthor() -> Bool {
+        guard let loginToken: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else { return false }
+        return loginToken.user_id == article?.author
+    }
+
+    private func deleteArticle() {
+        Task {
+            guard let article else { return }
+            await MainActor.run {
+                view.isUserInteractionEnabled = false
+                addLoadingView()
+            }
+            do {
+                let result = try await apiClient.deleteArticle(boardID: article.bid, articleIDs: [article.aid])
+                if result.success {
+                    NotificationCenter.default.post(name: .didDeleteArticle, object: nil)
+                    navigationController?.popViewController(animated: true)
+                }
+            } catch {
+                await MainActor.run {
+                    view.isUserInteractionEnabled = true
+                    removeLoadingView()
+                    presentErrorAlert(message: error.localizedDescription)
+                }
+            }
+        }
     }
 }
 
-private final class ArticleContentCell: UITableViewCell {
+// MARK: - View
+extension SingleArticleViewController {
+    private func setupViews() {
+        title = boardArticle.article.title
+        enableFullscreenSwipeBack()
 
-    private let contentTextView = UITextView()
-    var article: APIModel.FullArticle? = nil {
-        didSet {
-            if let article {
-                contentTextView.text = article.content
-            }
+        setupTableView()
+        navigationController?.isToolbarHidden = false
+    }
+
+    private func setupTableView() {
+        tableView.backgroundColor = PttColors.black.color
+        tableView.separatorStyle = .none
+        tableView.dataSource = self
+        tableView.allowsSelection = false
+        tableView.register(ArticleMetaDataCell.self, forCellReuseIdentifier: "ArticleMetaDataCell")
+        tableView.register(ArticleContentCell.self, forCellReuseIdentifier: "ArticleContentCell")
+
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        tableView.refreshControl = refreshControl
+
+        tableView.ptt_add(subviews: [activityIndicator])
+        NSLayoutConstraint.activate([
+            activityIndicator.topAnchor.constraint(equalTo: tableView.topAnchor, constant: 80.0),
+            activityIndicator.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
+        ])
+    }
+
+    private func setupBottomToolBar() {
+        let flex = UIBarButtonItem(systemItem: .flexibleSpace)
+        let shareItem = makeBarButtonItem(imageName: "square.and.arrow.up", action: #selector(self.share))
+        let moreItem = makeBarButtonItem(imageName: "ellipsis", action: #selector(self.more))
+        var items = [flex, shareItem]
+        if amIAuthor() && !boardArticle.flag.contains(.noSelfDeletePost) {
+            items.append(moreItem)
         }
+        self.setToolbarItems(items, animated: false)
     }
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-
-        contentTextView.backgroundColor = PttColors.codGray.color
-        contentTextView.font = UIFont.preferredFont(forTextStyle: .body)
-        contentTextView.textColor = PttColors.paleGrey.color
-        contentTextView.dataDetectorTypes = .all
-        contentTextView.isEditable = false
-        contentTextView.isScrollEnabled = false
-        // See: https://stackoverflow.com/a/28589384/3796488
-        contentTextView.accessibilityTraits = .staticText
-        contentView.ptt_add(subviews: [contentTextView])
-        let viewsDict = ["contentTextView": contentTextView]
-        NSLayoutConstraint.activate(
-            NSLayoutConstraint.constraints(withVisualFormat: "H:|-(24)-[contentTextView]-(24)-|", metrics: nil, views: viewsDict) +
-            NSLayoutConstraint.constraints(withVisualFormat: "V:|-(18)-[contentTextView]-(18)-|", metrics: nil, views: viewsDict)
+    private func makeBarButtonItem(imageName: String, action: Selector) -> UIBarButtonItem {
+        let item = UIBarButtonItem(
+            image: UIImage(systemName: imageName),
+            style: .plain,
+            target: self,
+            action: action
         )
+        item.tintColor = PttColors.slateGrey.color
+        return item
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    private func presentDeleteArticleConfirmation() {
+        let alert = UIAlertController(
+            title: L10n.deleteArticle,
+            message: L10n.areYouSureToDeleteIt,
+            preferredStyle: .alert
+        )
+
+        let deleteAction = UIAlertAction(title: L10n.delete, style: .default) { [weak self] _ in
+            self?.deleteArticle()
+        }
+        let cancel = UIAlertAction(title: L10n.cancel, style: .cancel)
+        [deleteAction, cancel].forEach(alert.addAction)
+        present(alert, animated: true)
     }
 }

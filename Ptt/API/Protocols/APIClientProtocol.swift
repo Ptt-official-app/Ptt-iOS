@@ -42,6 +42,7 @@ protocol APIClientProtocol {
     func getBoardList(keyword: String, startIdx: String, max: Int) async throws -> APIModel.BoardInfoList
 
     func createArticle(boardId: String, article: APIModel.CreateArticle) async throws -> APIModel.CreateArticleResponse
+    func deleteArticle(boardID: String, articleIDs: [String]) async throws -> APIModel.GeneralResponse
 
     /// Get popular article list data
     /// - Parameters:

@@ -11,6 +11,8 @@ import Foundation
 extension APIModel {
 
     struct FullArticle: Article {
+        let aid: String
+        let bid: String
         let title: String
         let date: String
         let author: String
@@ -59,9 +61,12 @@ extension APIModel {
     }
 
     struct GoPttBBSArticle: Codable {
+        let aid: String
+        let bid: String
         let title: String
         let create_time: TimeInterval
         let owner: String
+        let nickname: String
 
         let brdname: String
         let content: [[ContentProperty]]
@@ -80,11 +85,13 @@ extension APIModel {
             }
 
             let fullArticle = FullArticle(
+                aid: model.aid,
+                bid: model.bid,
                 title: "[" + model.`class` + "]" + model.title,
                 date: Date(timeIntervalSince1970: model.create_time).toArticleDateString(),
                 author: model.owner,
                 board: model.brdname,
-                nickname: "",
+                nickname: model.nickname,
                 content: arrangeContent,
                 comments: [APIModel.Comment](),
                 url: model.url
@@ -102,7 +109,7 @@ extension APIModel {
 
         static func adapter(model: GoBBSArticle) -> FullArticle {
             // TODO:
-            return FullArticle(title: "", date: "", author: "", board: "", nickname: "", content: "", comments: [APIModel.Comment](), url: "")
+            return FullArticle(aid: "", bid: "", title: "", date: "", author: "", board: "", nickname: "", content: "", comments: [APIModel.Comment](), url: "")
         }
     }
 
@@ -118,6 +125,8 @@ extension APIModel {
 
         static func adapter(model: LegacyArticle) -> FullArticle {
             let fullArticle = FullArticle(
+                aid: "",
+                bid: "",
                 title: model.title,
                 date: model.date,
                 author: model.author,

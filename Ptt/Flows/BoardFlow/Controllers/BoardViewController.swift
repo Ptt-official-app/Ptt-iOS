@@ -11,6 +11,7 @@ import UIKit
 
 struct BoardArticle {
     let article: APIModel.BoardArticle
+    let flag: APIModel.BoardAttribute
     let boardName: String
 }
 
@@ -26,7 +27,6 @@ final class BoardViewController: UIViewController, FullscreenSwipeable, BoardVie
 
     private let tableView = UITableView(frame: CGRect.zero, style: .plain)
     private let activityIndicator = UIActivityIndicatorView(style: .medium)
-    private let toolbar = BoardToolbar()
 
     private let apiClient: APIClientProtocol
 
@@ -62,10 +62,6 @@ final class BoardViewController: UIViewController, FullscreenSwipeable, BoardVie
         tableView.separatorStyle = .none
         tableView.register(BoardCell.self, forCellReuseIdentifier: "BoardCell")
 
-        let edgeInsetsForToolbar = UIEdgeInsets(top: 0, left: 0, bottom: toolbar.height, right: 0)
-        tableView.contentInset = edgeInsetsForToolbar
-        tableView.scrollIndicatorInsets = edgeInsetsForToolbar
-
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         tableView.refreshControl = refreshControl
@@ -80,34 +76,24 @@ final class BoardViewController: UIViewController, FullscreenSwipeable, BoardVie
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
 
-        view.addSubview(toolbar)
-        toolbar.ptt_setFrame()
-        let refreshButtonItem = UIBarButtonItem(image: StyleKit.imageOfRefresh(), style: .plain, target: self, action: #selector(refresh))
-        let searchButtonItem = UIBarButtonItem(image: StyleKit.imageOfSearch(), style: .plain, target: self, action: #selector(search))
-        let composeButtonItem = UIBarButtonItem(image: StyleKit.imageOfCompose(), style: .plain, target: self, action: #selector(compose))
-        let moreButtonItem = UIBarButtonItem(image: StyleKit.imageOfMoreH(), style: .plain, target: self, action: #selector(refresh))
-        // TODO: Only add working buttons, for now.
-        let flexible1 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let flexible2 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let flexible3 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        toolbar.items = [flexible1, refreshButtonItem, flexible2, composeButtonItem, flexible3]
-
-        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name("didPostNewArticle"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: .didPostNewArticle, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: .didDeleteArticle, object: nil)
         requestBoardDetail()
         refresh()
     }
 
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-
-        toolbar.ptt_setFrame()
-    }
-
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setupToolBar()
         if let selectedRow = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectedRow, animated: true)
         }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.isToolbarHidden = true
+        toolbarItems = []
     }
 
     private func requestArticles(startIndex: String?) {
@@ -172,6 +158,21 @@ final class BoardViewController: UIViewController, FullscreenSwipeable, BoardVie
         }
     }
 
+    private func setupToolBar() {
+        let refreshButtonItem = UIBarButtonItem(image: StyleKit.imageOfRefresh(), style: .plain, target: self, action: #selector(refresh))
+        let searchButtonItem = UIBarButtonItem(image: StyleKit.imageOfSearch(), style: .plain, target: self, action: #selector(search))
+        let composeButtonItem = UIBarButtonItem(image: StyleKit.imageOfCompose(), style: .plain, target: self, action: #selector(compose))
+        let moreButtonItem = UIBarButtonItem(image: StyleKit.imageOfMoreH(), style: .plain, target: self, action: #selector(refresh))
+        // TODO: Only add working buttons, for now.
+        let flexible1 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let flexible2 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let flexible3 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+
+        let items = [flexible1, refreshButtonItem, flexible2, composeButtonItem, flexible3]
+        navigationController?.isToolbarHidden = false
+        toolbarItems = items
+    }
+
     // MARK: Button actions
     @objc
     private func refresh() {
@@ -230,11 +231,14 @@ extension BoardViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let row = indexPath.row
-        guard let board = self.board, row < board.articleList.count else {
-            return
-        }
+        guard 
+            let board = self.board,
+            row < board.articleList.count,
+            let rawFlag = boardDetail?.flag
+        else { return }
+        let flag = APIModel.BoardAttribute(rawValue: UInt32(rawFlag))
         let article = board.articleList[row]
-        onArticleSelect?(BoardArticle(article: article, boardName: boardName))
+        onArticleSelect?(BoardArticle(article: article, flag: flag, boardName: boardName))
     }
 }
 
@@ -255,23 +259,6 @@ extension BoardViewController: UITableViewDataSourcePrefetching {
 }
 
 // MARK: -
-
-private class BoardToolbar: UIToolbar {
-
-    let height = 49.0
-
-    /// UIToolbar would give out lots of auto layout warnings. Set frame manally instead.
-    func ptt_setFrame() {
-        guard let superview else {
-            assertionFailure("not added to parent view yet")
-            return
-        }
-        frame = CGRect(x: 0,
-                       y: superview.bounds.height - superview.safeAreaInsets.bottom - height,
-                       width: superview.bounds.width,
-                       height: height)
-    }
-}
 
 private class BoardCell: UITableViewCell {
 

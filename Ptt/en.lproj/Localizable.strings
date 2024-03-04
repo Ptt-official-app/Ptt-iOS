@@ -82,6 +82,9 @@
 "Comment" = "Comment";
 "Reply" = "Reply";
 "Share" = "Share";
+"Are you sure to delete it?" = "Are you sure to delete it?";
+"DeleteArticle" = "Delete article";
+"Delete" = "Delete";
 
 "PostTypeSelection" = "Post type";
 "InputArticleTitle" = "Title";
