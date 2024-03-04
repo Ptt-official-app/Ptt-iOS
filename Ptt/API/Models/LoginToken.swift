@@ -27,7 +27,7 @@ extension APIModel {
             let now = Date()
             if access_expire > now {
                 return .normal
-            } else if now >= access_expire && now < refresh_expire {
+            } else if now >= access_expire && now < Date(timeInterval: -600, since: refresh_expire) {
                 return .refreshToken
             } else {
                 return .reLogIn

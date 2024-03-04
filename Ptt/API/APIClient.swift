@@ -101,6 +101,23 @@ extension APIClient: APIClientProtocol {
         return tokenObject
     }
 
+    func forceRefreshToken() async throws -> APIModel.LoginToken {
+        tokenTask = Task { () -> APIModel.LoginToken in
+            guard let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else {
+                throw APIError.loginTokenNotExist
+            }
+            let newObj = try await self.refreshToken(
+                accessToken: loginObj.access_token,
+                refreshToken: loginObj.refresh_token
+            )
+            return newObj
+        }
+        guard let tokenObject = try await tokenTask?.value else {
+            throw APIError.loginTokenNotExist
+        }
+        return tokenObject
+    }
+
     func refreshToken(accessToken: String, refreshToken: String) async throws -> APIModel.LoginToken {
         let bodyDic = [
             "client_id": "test_client_id",
@@ -529,12 +546,14 @@ extension APIClient: APIClientProtocol {
     }
 
     func popularBoards() async throws -> APIModel.BoardInfoList {
+        let loginObj = try await fetchTokenObject()
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/boards/popular"
         guard let url = urlComponent.url else { throw APIError.urlError }
 
         var request = URLRequest(url: url)
         request.httpMethod = Method.GET.rawValue
+        request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
         return try await doRequest(request: request)
     }
 
@@ -585,7 +604,7 @@ extension APIClient: APIClientProtocol {
 
 // MARK: Private helper function
 extension APIClient {
-    private func doRequest<T: Decodable>(request: URLRequest) async throws -> T {
+    private func doRequest<T: Decodable>(request: URLRequest, canRetry: Bool = true) async throws -> T {
         do {
             let response = try await session.data(for: request)
             let result = processResponseWithErrorMSG(data: response.0, urlResponse: response.1, error: nil)
@@ -593,13 +612,35 @@ extension APIClient {
             case .failure(let apiError):
                 throw apiError
             case .success(let resultData):
-                let result = try decoder.decode(T.self, from: resultData)
-                return result
+                guard try await isTokenExpired(resultData: resultData) else {
+                    // Expected flow
+                    let result = try decoder.decode(T.self, from: resultData)
+                    return result
+                }
+                // Handle token expired
+                if canRetry {
+                    let newTokenObject = try await forceRefreshToken()
+                    return try await doRequest(request: request, with: newTokenObject)
+                } else {
+                    throw APIError.reLogin
+                }
             }
         } catch {
             throw transferCatch(error: error)
         }
     }
+
+    private func doRequest<T: Decodable>(
+        request: URLRequest,
+        with newToken: APIModel.LoginToken
+    ) async throws -> T {
+        guard let newRequest = (request as NSURLRequest).mutableCopy() as? NSMutableURLRequest else {
+            throw APIError.reLogin
+        }
+        newRequest.setValue("bearer \(newToken.access_token)", forHTTPHeaderField: "Authorization")
+        return try await doRequest(request: request, canRetry: false)
+    }
+
     private func processResponse(data: Data?, urlResponse: URLResponse?, error: Error?) -> ProcessResult {
         if let error = error {
             return .failure(.httpError(error))
@@ -622,8 +663,14 @@ extension APIClient {
         return .success(resultData)
     }
 
+    private func isTokenExpired(resultData: Data) async throws -> Bool {
+        let jsonDict = try resultData.toDictionary()
+        guard let tokenUser = jsonDict?["tokenuser"] as? String else { return false }
+        return tokenUser == "guest"
+    }
+
     /**
-     Temp for get Register/AttmentRegister Error msg
+     Temp for get Register/AttemptRegister Error msg
      */
     private func processResponseWithErrorMSG(data: Data?, urlResponse: URLResponse?, error: Error?) -> ProcessResult {
 

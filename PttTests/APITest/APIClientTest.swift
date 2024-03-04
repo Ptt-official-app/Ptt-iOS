@@ -294,7 +294,7 @@ final class APIClientTest: XCTestCase {
     func testPopularBoards_succeed() async throws {
         urlSession.stub { path, headers, queryItem, _, completion in
             XCTAssertEqual(path, "/api/boards/popular")
-            XCTAssertEqual(headers.count, 0)
+            XCTAssertEqual(headers["Authorization"], "bearer \(self.token ?? "")")
             XCTAssertEqual(queryItem.count, 0)
             completion(.success((200, BoardListFakeData.successData)))
         }
