@@ -41,7 +41,7 @@ final class SingleArticleViewController: UITableViewController, FullscreenSwipea
         setupViews()
 
         NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: .didPostNewArticle, object: nil)
-
+//        navigationController?.isToolbarHidden = false
         refresh()
     }
 
