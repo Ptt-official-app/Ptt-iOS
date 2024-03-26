@@ -220,6 +220,7 @@ extension SingleArticleViewController {
             items.append(moreItem)
         }
         self.setToolbarItems(items, animated: false)
+        navigationController?.isToolbarHidden = false
     }
 
     private func makeBarButtonItem(imageName: String, action: Selector) -> UIBarButtonItem {
