@@ -41,6 +41,11 @@ final class BoardListTVC: UITableViewController, BoardListView {
         setUpView()
         viewModel.fetchPopularBoards()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.isToolbarHidden = true
+    }
 
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {

@@ -92,7 +92,6 @@ final class BoardViewController: UIViewController, FullscreenSwipeable, BoardVie
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        navigationController?.isToolbarHidden = true
         toolbarItems = []
     }
 

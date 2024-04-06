@@ -109,7 +109,7 @@
         "HOMEBREW_PREFIX": "/opt/homebrew",
         "Homebrew/homebrew-core": "api",
         "CLT": "15.3.0.0.1.1708646388",
-        "Xcode": "15.0.1",
+        "Xcode": "15.3",
         "macOS": "14.4.1"
       }
     }

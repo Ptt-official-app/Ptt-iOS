@@ -40,11 +40,15 @@ final class SceneFactory: LoginSceneFactoryProtocol,
     }
 
     func makeBoardView(withBoardName boardName: String) -> BoardView {
-        return BoardViewController(boardName: boardName)
+        let boardViewController = BoardViewController(boardName: boardName)
+        boardViewController.navigationController?.isToolbarHidden = true
+        return boardViewController
     }
 
     func makeArticleView(withBoardArticle boardArticle: BoardArticle) -> ArticleView {
-        return SingleArticleViewController(article: boardArticle)
+        let singleArticleViewController = SingleArticleViewController(article: boardArticle)
+        singleArticleViewController.navigationController?.isToolbarHidden = false
+        return singleArticleViewController
     }
 
     func makeComposeArticleView(withBoardName boardName: String, postTypes: [String]) -> UIViewController {
