@@ -4,15 +4,6 @@
 - We are using [Swiftlint](https://github.com/realm/SwiftLint) to enforce Swift style and conventions
 - We're using [PaintCode Plugin for Sketch](https://www.paintcodeapp.com/sketch) for vector image assets.
 
-
-# Quick Start
-* Clone or Download ZIP
-* Build with Xcode, and make sure you've installed [SwiftGen](https://github.com/SwiftGen/SwiftGen/tree/stable?tab=readme-ov-file#installation) and [Swiftlint](https://github.com/realm/SwiftLint).
-* If you encounter the error shown below when building, make sure there are no spaces in the path of the project folder.
-
-![](images/PhaseScriptExecutionfailed.png)
-
-
 # License
 
 Licensed under the GPLv3: https://www.gnu.org/licenses/gpl-3.0.html
