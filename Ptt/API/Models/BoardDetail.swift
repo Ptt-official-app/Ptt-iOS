@@ -18,7 +18,7 @@ extension APIModel {
         let type: String
         let `class`: String
         let numberOfUser: Int
-        let moderators: [String]
+        let moderators: [String]?
         let reason: String
         let read: Bool
         let total: Int
@@ -32,7 +32,7 @@ extension APIModel {
         let level: Int
         let lastSetTime: Int
         let linkPTTBoardID: Int
-        let postTypes: [String]
+        let postTypes: [String]?
         let endGamble: Int
         let pttBoardID: Int
 

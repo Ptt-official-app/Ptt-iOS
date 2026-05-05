@@ -47,7 +47,8 @@ final class BoardListViewModel {
         self.listType = listType
         self.apiClient = apiClient
         self.favoriteBoardManager = favoriteBoardManager
-        observeFavoriteBoard()
+        // why observing favorite board?
+//        observeFavoriteBoard()
     }
 
     func fetchPopularBoards() {

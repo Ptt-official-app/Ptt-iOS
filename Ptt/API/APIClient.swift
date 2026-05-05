@@ -28,7 +28,7 @@ final class APIClient {
     private var goPttBBSURLComponents: URLComponents {
         var urlComponent = URLComponents()
         urlComponent.scheme = "https"
-        urlComponent.host = "api.devptt.dev"
+        urlComponent.host = "api-staging.devptt.dev"
         return urlComponent
     }
 
@@ -40,6 +40,8 @@ final class APIClient {
     }
 
     private var rootURLComponents: URLComponents {
+        return goPttBBSURLComponents
+        // TODO: keep custom host?
         var urlComponent = URLComponents()
         urlComponent.scheme = "https"
         if let address = URL(string: UserDefaultsManager.address()) {
@@ -567,14 +569,22 @@ extension APIClient: APIClientProtocol {
     }
 
     func popularBoards() async throws -> APIModel.BoardInfoList {
+#if READ_ONLY
+#else
+        // DO NOT assume user is always logged in
         let loginObj = try await fetchTokenObject()
+#endif
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/boards/popular"
         guard let url = urlComponent.url else { throw APIError.urlError }
 
         var request = URLRequest(url: url)
         request.httpMethod = Method.GET.rawValue
+#if READ_ONLY
+#else
+        // DO NOT assume user is always logged in
         request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
+#endif
         return try await doRequest(request: request)
     }
 
@@ -633,6 +643,11 @@ extension APIClient {
             case .failure(let apiError):
                 throw apiError
             case .success(let resultData):
+#if READ_ONLY
+                // DO NOT assume user is always logged in
+                let result = try decoder.decode(T.self, from: resultData)
+                return result
+#endif
                 guard try await isTokenExpired(resultData: resultData) else {
                     // Expected flow
                     let result = try decoder.decode(T.self, from: resultData)

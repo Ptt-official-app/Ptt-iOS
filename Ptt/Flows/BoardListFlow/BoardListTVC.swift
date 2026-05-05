@@ -20,14 +20,22 @@ final class BoardListTVC: UITableViewController, BoardListView {
     private let viewModel: BoardListViewModel
     private let keyChainItem: PTTKeyChain
     private let boardSearchVC: BoardSearchViewController
+#if READ_ONLY
+    private let searchController: UISearchController?
+#else
     private let searchController: UISearchController
+#endif
     private var scrollDirection: Direction = .unknown
 
     init(viewModel: BoardListViewModel, keyChainItem: PTTKeyChain = KeyChainItem.shared) {
         self.viewModel = viewModel
         self.keyChainItem = keyChainItem
         self.boardSearchVC = BoardSearchViewController(apiClient: viewModel.apiClient)
+#if READ_ONLY
+        self.searchController = nil
+#else
         self.searchController = UISearchController(searchResultsController: boardSearchVC)
+#endif
         super.init(style: .plain)
         self.boardSearchVC.delegate = self
     }
@@ -214,9 +222,12 @@ extension BoardListTVC {
     }
 
     private func setUpSearchController() {
+#if READ_ONLY
+#else
         searchController.searchResultsUpdater = self
-        definesPresentationContext = true
         searchController.searchBar.searchTextField.textColor = PttColors.paleGrey.color
+#endif
+        definesPresentationContext = true
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
     }

@@ -65,6 +65,11 @@ final class ApplicationCoordinator: BaseCoordinator {
         // uncomment to force logout
         // _ = LoginKeyChainItem.shared.removeToken()
 
+#if READ_ONLY
+        runMainFlow()
+        return
+#endif
+
         let loginToken: APIModel.LoginToken? = KeyChainItem.shared.readObject(for: .loginToken)
         if loginToken != nil {
             isAutorized = true

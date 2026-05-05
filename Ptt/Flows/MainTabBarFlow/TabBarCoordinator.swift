@@ -28,7 +28,9 @@ class TabBarCoordinator: BaseCoordinator, TabBarCoordinatorProtocol {
     override func start() {
         // Let's define which pages do we want to add into tab bar
         let pages: [TabBarPage]
-#if DEVELOP // Disable .popularArticles, for now
+#if READ_ONLY
+        pages = [.popular]
+#elseif DEVELOP // Disable .popularArticles, for now
         pages = [.popular, .favorite, .popularArticles, .profile, .settings]
 #else
         pages = [.popular, .favorite, .profile, .settings]

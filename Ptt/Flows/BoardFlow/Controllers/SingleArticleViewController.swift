@@ -72,7 +72,10 @@ final class SingleArticleViewController: UITableViewController, FullscreenSwipea
                 }
                 self.article = article
                 DispatchQueue.main.async(execute: {
+#if READ_ONLY
+#else
                     self.setupBottomToolBar()
+#endif
                     self.tableView.reloadData()
                     self.activityIndicator.stopAnimating()
                     if let refreshControl = self.tableView.refreshControl, refreshControl.isRefreshing {
@@ -84,7 +87,7 @@ final class SingleArticleViewController: UITableViewController, FullscreenSwipea
     }
 }
 
-// MARK: - ASTableDataSource
+// MARK: - UITableDataSource
 
 extension SingleArticleViewController {
 

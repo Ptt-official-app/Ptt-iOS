@@ -167,7 +167,11 @@ final class BoardViewController: UIViewController, FullscreenSwipeable, BoardVie
         let flexible2 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let flexible3 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 
+#if READ_ONLY
+        let items = [refreshButtonItem]
+#else
         let items = [flexible1, refreshButtonItem, flexible2, composeButtonItem, flexible3]
+#endif
         navigationController?.isToolbarHidden = false
         toolbarItems = items
     }
@@ -233,6 +237,7 @@ extension BoardViewController: UITableViewDelegate {
         guard 
             let board = self.board,
             row < board.articleList.count,
+                // Why check flag before tapping single article?
             let rawFlag = boardDetail?.flag
         else { return }
         let flag = APIModel.BoardAttribute(rawValue: UInt32(rawFlag))
