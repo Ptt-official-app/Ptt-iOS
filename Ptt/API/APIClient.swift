@@ -631,6 +631,30 @@ extension APIClient: APIClientProtocol {
         request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
         return try await doRequest(request: request)
     }
+
+    func getArticleComments(
+        bid: String,
+        aid: String,
+        startIndex: String = ""
+    ) async throws -> APIModel.BoardArticleCommentList {
+        var urlComponent = rootURLComponents
+        urlComponent.path = "/api/board/\(bid)/article/\(aid)/comments"
+        urlComponent.queryItems = [
+            URLQueryItem(name: "start_idx", value: startIndex),
+            URLQueryItem(name: "desc", value: "false")
+        ]
+        guard let url = urlComponent.url else { throw APIError.urlError }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = Method.GET.rawValue
+#if READ_ONLY
+#else
+        if let loginObj: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) {
+            request.setValue("bearer \(loginObj.access_token)", forHTTPHeaderField: "Authorization")
+        }
+#endif
+        return try await doRequest(request: request)
+    }
 }
 
 // MARK: Private helper function

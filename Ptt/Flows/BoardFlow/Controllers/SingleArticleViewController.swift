@@ -9,7 +9,19 @@
 import SafariServices
 import UIKit
 
-final class SingleArticleViewController: UITableViewController, FullscreenSwipeable, ArticleView {
+final class SingleArticleViewController: UIViewController, FullscreenSwipeable, ArticleView {
+
+    private enum Section: Hashable {
+        case metadata
+        case content
+        case comments
+    }
+
+    private enum Item: Hashable {
+        case metadata
+        case content
+        case comment(String) // BoardArticleComment.idx
+    }
 
     private let activityIndicator = UIActivityIndicatorView(style: .medium)
 
@@ -18,7 +30,18 @@ final class SingleArticleViewController: UITableViewController, FullscreenSwipea
 
     private let boardArticle: BoardArticle
     private var article: APIModel.FullArticle?
+    private var comments: [APIModel.BoardArticleComment] = []
+    private var commentIndex: [String: APIModel.BoardArticleComment] = [:]
+    private var nextIdx: String = ""
+    private var hasMoreComments = true
     private var isRequesting = false
+    private var isLoadingMoreComments = false
+
+    private var collectionView: UICollectionView!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    private let refreshControl = UIRefreshControl()
+
+    private static let commentsPrefetchThreshold = 10
 
     init(
         article: BoardArticle,
@@ -39,6 +62,7 @@ final class SingleArticleViewController: UITableViewController, FullscreenSwipea
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
+        configureDataSource()
 
         NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: .didPostNewArticle, object: nil)
 
@@ -60,8 +84,8 @@ final class SingleArticleViewController: UITableViewController, FullscreenSwipea
                     alert.addAction(confirm)
                     self.present(alert, animated: true, completion: {
                         self.activityIndicator.stopAnimating()
-                        if let refreshControl = self.tableView.refreshControl, refreshControl.isRefreshing {
-                            refreshControl.endRefreshing()
+                        if self.refreshControl.isRefreshing {
+                            self.refreshControl.endRefreshing()
                         }
                     })
                 })
@@ -76,54 +100,145 @@ final class SingleArticleViewController: UITableViewController, FullscreenSwipea
 #else
                     self.setupBottomToolBar()
 #endif
-                    self.tableView.reloadData()
+                    self.applySnapshot()
                     self.activityIndicator.stopAnimating()
-                    if let refreshControl = self.tableView.refreshControl, refreshControl.isRefreshing {
-                        refreshControl.endRefreshing()
+                    if self.refreshControl.isRefreshing {
+                        self.refreshControl.endRefreshing()
                     }
+                    self.loadMoreCommentsIfNeeded()
                 })
             }
         }
     }
+
+    private func loadMoreCommentsIfNeeded() {
+        guard !isLoadingMoreComments, hasMoreComments else { return }
+        isLoadingMoreComments = true
+        let bid = boardArticle.article.boardID
+        let aid = boardArticle.article.articleID
+        let startIdx = nextIdx
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            defer { self.isLoadingMoreComments = false }
+            do {
+                let page = try await apiClient.getArticleComments(
+                    bid: bid,
+                    aid: aid,
+                    startIndex: startIdx
+                )
+                let newComments = page.list.filter { commentIndex[$0.idx] == nil }
+                for comment in newComments {
+                    commentIndex[comment.idx] = comment
+                }
+                comments.append(contentsOf: newComments)
+                if page.nextIdx.isEmpty || page.nextIdx == startIdx || newComments.isEmpty {
+                    hasMoreComments = false
+                } else {
+                    nextIdx = page.nextIdx
+                }
+                applySnapshot()
+            } catch {
+                // Comments are auxiliary; stop further attempts on error to avoid loops.
+                hasMoreComments = false
+            }
+        }
+    }
 }
 
-// MARK: - UITableDataSource
+// MARK: - Diffable data source
 
 extension SingleArticleViewController {
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+    private func configureDataSource() {
+        let metadataRegistration = UICollectionView.CellRegistration<ArticleMetaDataCell, Void> { [weak self] cell, _, _ in
+            cell.article = self?.article
+            var backgroundConfig = UIBackgroundConfiguration.listPlainCell()
+            backgroundConfig.backgroundColor = PttColors.black.color
+            cell.backgroundConfiguration = backgroundConfig
+        }
+
+        let contentRegistration = UICollectionView.CellRegistration<ArticleContentCell, Void> { [weak self] cell, _, _ in
+            cell.article = self?.article
+            var backgroundConfig = UIBackgroundConfiguration.listPlainCell()
+            backgroundConfig.backgroundColor = PttColors.codGray.color
+            cell.backgroundConfiguration = backgroundConfig
+        }
+
+        let commentRegistration = UICollectionView.CellRegistration<ArticleCommentCell, APIModel.BoardArticleComment> { cell, _, comment in
+            cell.comment = comment
+            var backgroundConfig = UIBackgroundConfiguration.listPlainCell()
+            backgroundConfig.backgroundColor = PttColors.codGray.color
+            cell.backgroundConfiguration = backgroundConfig
+        }
+
+        dataSource = UICollectionViewDiffableDataSource<Section, Item>(
+            collectionView: collectionView
+        ) { [weak self] collectionView, indexPath, item in
+            switch item {
+            case .metadata:
+                return collectionView.dequeueConfiguredReusableCell(using: metadataRegistration, for: indexPath, item: ())
+            case .content:
+                return collectionView.dequeueConfiguredReusableCell(using: contentRegistration, for: indexPath, item: ())
+            case .comment(let idx):
+                guard let comment = self?.commentIndex[idx] else { return UICollectionViewCell() }
+                return collectionView.dequeueConfiguredReusableCell(using: commentRegistration, for: indexPath, item: comment)
+            }
+        }
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let row = indexPath.row
-        guard let article = self.article else {
-            return UITableViewCell()
+    private func applySnapshot() {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        guard article != nil else {
+            dataSource.apply(snapshot, animatingDifferences: false)
+            return
         }
-        if row == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ArticleMetaDataCell", for: indexPath) as! ArticleMetaDataCell
-            cell.article = article
-            cell.backgroundColor = PttColors.black.color
-            return cell
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ArticleContentCell", for: indexPath) as! ArticleContentCell
-            cell.article = article
-            cell.backgroundColor = PttColors.codGray.color
-            return cell
+        snapshot.appendSections([.metadata, .content])
+        snapshot.appendItems([.metadata], toSection: .metadata)
+        snapshot.appendItems([.content], toSection: .content)
+        if !comments.isEmpty {
+            snapshot.appendSections([.comments])
+            snapshot.appendItems(comments.map { .comment($0.idx) }, toSection: .comments)
         }
+        dataSource.apply(snapshot, animatingDifferences: false)
+    }
+}
+
+// MARK: - Prefetching
+
+extension SingleArticleViewController: UICollectionViewDataSourcePrefetching {
+
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        guard hasMoreComments, !comments.isEmpty else { return }
+        let threshold = comments.count - Self.commentsPrefetchThreshold
+        let shouldLoadMore = indexPaths.contains { indexPath in
+            guard case .comment = dataSource.itemIdentifier(for: indexPath) else { return false }
+            return indexPath.item >= threshold
+        }
+        if shouldLoadMore {
+            loadMoreCommentsIfNeeded()
+        }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+        // No-op: pagination work is page-scoped, not per-item.
     }
 }
 
 // MARK: - Actions
+
 extension SingleArticleViewController {
     @objc
     private func refresh() {
         self.article = nil
+        self.comments = []
+        self.commentIndex = [:]
+        self.nextIdx = ""
+        self.hasMoreComments = true
+        self.isLoadingMoreComments = false
+        applySnapshot()
         requestArticle()
-        if let refreshControl = tableView.refreshControl {
-            if !refreshControl.isRefreshing {
-                activityIndicator.startAnimating()
-            }
+        if !refreshControl.isRefreshing {
+            activityIndicator.startAnimating()
         }
     }
 
@@ -186,31 +301,47 @@ extension SingleArticleViewController {
 }
 
 // MARK: - View
+
 extension SingleArticleViewController {
     private func setupViews() {
         title = boardArticle.article.title
         enableFullscreenSwipeBack()
 
-        setupTableView()
+        setupCollectionView()
+#if READ_ONLY
+        navigationController?.isToolbarHidden = true
+#else
         navigationController?.isToolbarHidden = false
+#endif
     }
 
-    private func setupTableView() {
-        tableView.backgroundColor = PttColors.black.color
-        tableView.separatorStyle = .none
-        tableView.dataSource = self
-        tableView.allowsSelection = false
-        tableView.register(ArticleMetaDataCell.self, forCellReuseIdentifier: "ArticleMetaDataCell")
-        tableView.register(ArticleContentCell.self, forCellReuseIdentifier: "ArticleContentCell")
+    private func setupCollectionView() {
+        let layout = UICollectionViewCompositionalLayout { _, layoutEnvironment in
+            var config = UICollectionLayoutListConfiguration(appearance: .plain)
+            config.backgroundColor = PttColors.black.color
+            config.showsSeparators = false
+            return NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
+        }
 
-        let refreshControl = UIRefreshControl()
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = PttColors.black.color
+        collectionView.allowsSelection = false
+        collectionView.isPrefetchingEnabled = true
+        collectionView.prefetchDataSource = self
+
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        tableView.refreshControl = refreshControl
+        collectionView.refreshControl = refreshControl
 
-        tableView.ptt_add(subviews: [activityIndicator])
+        view.addSubview(collectionView)
+        view.ptt_add(subviews: [activityIndicator])
         NSLayoutConstraint.activate([
-            activityIndicator.topAnchor.constraint(equalTo: tableView.topAnchor, constant: 80.0),
-            activityIndicator.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            activityIndicator.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80.0),
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
 

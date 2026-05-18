@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class ArticleMetaDataCell: UITableViewCell {
+final class ArticleMetaDataCell: UICollectionViewListCell {
 
     private let categoryImageView = UIImageView()
     private let categoryLabel = UILabel()
@@ -31,8 +31,8 @@ final class ArticleMetaDataCell: UITableViewCell {
         }
     }
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
 
         categoryImageView.image = StyleKit.imageOfBoardCategory()
         clockImageView.image = StyleKit.imageOfClock()

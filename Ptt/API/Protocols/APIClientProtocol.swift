@@ -28,7 +28,7 @@ protocol APIClientProtocol {
     typealias GetArticleResult = Result<Article, APIError>
     typealias ProcessResult = Result<Data, APIError>
     typealias PopularArticlesResult = Result<APIModel.GoPttBBSBoard, APIError>
-    
+
     func login(account: String, password: String, completion: @escaping (LoginResult) -> Void)
 
     func getBoardArticles(of params: BoardArticlesParams, completion: @escaping (GetBoardArticlesResult) -> Void)
@@ -58,4 +58,11 @@ protocol APIClientProtocol {
     func getProfile(userID: String) async throws -> APIModel.Profile
     func getUserArticles(userID: String, startIndex: String) async throws -> APIModel.ArticleList
     func getUserComment(userID: String, startIndex: String) async throws -> APIModel.ArticleCommentList
+    /// Read comments of an article.
+    /// - Parameter startIndex: '' if fetching from the beginning.
+    func getArticleComments(
+        bid: String,
+        aid: String,
+        startIndex: String
+    ) async throws -> APIModel.BoardArticleCommentList
 }

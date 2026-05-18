@@ -8,23 +8,24 @@
 
 import UIKit
 
-final class ArticleContentCell: UITableViewCell {
+final class ArticleContentCell: UICollectionViewListCell {
 
     private let contentTextView = UITextView()
-    var article: APIModel.FullArticle? = nil {
+
+    // Same green used in LegacyArticleViewController for ※-prefixed system lines.
+    private static let systemLineColor = UIColor(red: 0.00, green: 0.60, blue: 0.00, alpha: 1.00)
+
+    var article: APIModel.FullArticle? {
         didSet {
-            if let article {
-                contentTextView.text = article.content
-            }
+            guard let article else { return }
+            contentTextView.attributedText = Self.attributedText(for: article)
         }
     }
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
 
         contentTextView.backgroundColor = PttColors.codGray.color
-        contentTextView.font = UIFont.preferredFont(forTextStyle: .body)
-        contentTextView.textColor = PttColors.paleGrey.color
         contentTextView.dataDetectorTypes = .all
         contentTextView.isEditable = false
         contentTextView.isScrollEnabled = false
@@ -40,5 +41,33 @@ final class ArticleContentCell: UITableViewCell {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    private static func attributedText(for article: APIModel.FullArticle) -> NSAttributedString {
+        let bodyFont = UIFont.preferredFont(forTextStyle: .body)
+        let body = NSMutableAttributedString(
+            string: article.content,
+            attributes: [
+                .font: bodyFont,
+                .foregroundColor: PttColors.paleGrey.color
+            ]
+        )
+        body.append(NSAttributedString(
+            string: "--\r\n",
+            attributes: [
+                .font: bodyFont,
+                .foregroundColor: PttColors.paleGrey.color
+            ]
+        ))
+        if !article.ip.isEmpty {
+            body.append(NSAttributedString(
+                string: L10n.from + ": \(article.ip)",
+                attributes: [
+                    .font: bodyFont,
+                    .foregroundColor: systemLineColor
+                ]
+            ))
+        }
+        return body
     }
 }

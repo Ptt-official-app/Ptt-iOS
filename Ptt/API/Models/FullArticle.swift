@@ -21,6 +21,7 @@ extension APIModel {
         let nickname: String
         let content: String
         let comments: [Comment]
+        let ip: String
 
         let url: String
 
@@ -72,6 +73,7 @@ extension APIModel {
         let content: [[ContentProperty]]
         let url: String
         let `class`: String
+        let ip: String?
 
         static func adapter(model: GoPttBBSArticle) -> FullArticle {
             var arrangeContent = ""
@@ -94,6 +96,7 @@ extension APIModel {
                 nickname: model.nickname,
                 content: arrangeContent,
                 comments: [APIModel.Comment](),
+                ip: model.ip ?? "",
                 url: model.url
             )
             return fullArticle
@@ -109,7 +112,7 @@ extension APIModel {
 
         static func adapter(model: GoBBSArticle) -> FullArticle {
             // TODO:
-            return FullArticle(aid: "", bid: "", title: "", date: "", author: "", board: "", nickname: "", content: "", comments: [APIModel.Comment](), url: "")
+            return FullArticle(aid: "", bid: "", title: "", date: "", author: "", board: "", nickname: "", content: "", comments: [APIModel.Comment](), ip: "", url: "")
         }
     }
 
@@ -134,6 +137,7 @@ extension APIModel {
                 nickname: model.nickname,
                 content: model.content,
                 comments: model.comments,
+                ip: "",
                 url: model.href
             )
             return fullArticle

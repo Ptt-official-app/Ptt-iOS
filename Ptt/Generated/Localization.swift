@@ -76,6 +76,8 @@ enum L10n {
   static let fbPage = L10n.tr("Localizable", "FB Page")
   /// Forget Account / Password?
   static let forget = L10n.tr("Localizable", "Forget")
+  /// 來自
+  static let from = L10n.tr("Localizable", "From")
   /// from favorite.
   static let fromFavorite = L10n.tr("Localizable", "from favorite.")
   /// Articles

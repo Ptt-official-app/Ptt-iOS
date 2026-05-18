@@ -63,6 +63,8 @@
 "WrongPassword" = "Wrong Password";
 "AgreeWhenYouUseApp" = "AgreeWhenYouUseApp";
 
+"From" = "來自";
+
 /* VoiceOver */
 "In favorite" = "In favorite";
 "Not in favorite" = "Not in favorite";
