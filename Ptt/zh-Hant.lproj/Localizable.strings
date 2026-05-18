@@ -65,6 +65,10 @@
 
 "From" = "來自";
 
+"Over18Title" = "成人內容";
+"Over18Message" = "本看板可能包含成人內容，請問您年滿 18 歲嗎？";
+"Over18Confirm" = "是，我已年滿 18 歲";
+
 /* VoiceOver */
 "In favorite" = "已加入最愛";
 "Not in favorite" = "未加入最愛";

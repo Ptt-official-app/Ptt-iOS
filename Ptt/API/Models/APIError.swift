@@ -17,6 +17,8 @@ enum APIError: Error, LocalizedError {
     case reLogin
     /// Error returns by backend
     case requestFailed(Int, String)
+    /// Board requires the user to confirm they're 18 or older.
+    case requiresOver18
     case responseNotExist
     case urlError
 
@@ -36,6 +38,8 @@ enum APIError: Error, LocalizedError {
             return "Token is expired, please login again"
         case let .requestFailed(statusCode, message):
             return "\(statusCode) - \(message)"
+        case .requiresOver18:
+            return "This board requires age verification."
         case .responseNotExist:
             return "Response doesn't exist"
         case .urlError:

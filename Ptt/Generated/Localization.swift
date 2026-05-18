@@ -118,6 +118,12 @@ enum L10n {
   static let notRegisterAccount = L10n.tr("Localizable", "NotRegisterAccount")
   /// OpenAccount
   static let openAccount = L10n.tr("Localizable", "OpenAccount")
+  /// Yes, I am 18 or older
+  static let over18Confirm = L10n.tr("Localizable", "Over18Confirm")
+  /// This board may contain content for adults. Are you 18 or older?
+  static let over18Message = L10n.tr("Localizable", "Over18Message")
+  /// Adult Content
+  static let over18Title = L10n.tr("Localizable", "Over18Title")
   /// Password
   static let password = L10n.tr("Localizable", "Password")
   /// Please Fill Email

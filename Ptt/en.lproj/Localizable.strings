@@ -65,6 +65,10 @@
 
 "From" = "來自";
 
+"Over18Title" = "Adult Content";
+"Over18Message" = "This board may contain content for adults. Are you 18 or older?";
+"Over18Confirm" = "Yes, I am 18 or older";
+
 /* VoiceOver */
 "In favorite" = "In favorite";
 "Not in favorite" = "Not in favorite";

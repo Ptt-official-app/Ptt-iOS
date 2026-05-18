@@ -109,6 +109,11 @@ final class BoardViewController: UIViewController, FullscreenSwipeable, BoardVie
             switch result {
             case .failure(error: let apiError):
                 DispatchQueue.main.async(execute: {
+                    self.isRequesting = false
+                    if case .requiresOver18 = apiError {
+                        self.presentOver18Consent(retryStartIndex: startIndex)
+                        return
+                    }
                     let alert = UIAlertController(title: L10n.error, message: apiError.message, preferredStyle: .alert)
                     let confirm = UIAlertAction(title: L10n.confirm, style: .default, handler: nil)
                     alert.addAction(confirm)
@@ -118,7 +123,6 @@ final class BoardViewController: UIViewController, FullscreenSwipeable, BoardVie
                             refreshControl.endRefreshing()
                         }
                     })
-                    self.isRequesting = false
                 })
                 return
             case .success(board: let board):
@@ -155,6 +159,23 @@ final class BoardViewController: UIViewController, FullscreenSwipeable, BoardVie
         Task {
             self.boardDetail = try await apiClient.boardDetail(boardID: boardName)
         }
+    }
+
+    private func presentOver18Consent(retryStartIndex: String?) {
+        let alert = UIAlertController(
+            title: L10n.over18Title,
+            message: L10n.over18Message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: L10n.over18Confirm, style: .default) { [weak self] _ in
+            guard let self else { return }
+            self.apiClient.acknowledgeOver18()
+            self.requestArticles(startIndex: retryStartIndex)
+        })
+        alert.addAction(UIAlertAction(title: L10n.cancel, style: .cancel) { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        })
+        present(alert, animated: true)
     }
 
     private func setupToolBar() {

@@ -297,6 +297,12 @@ extension APIClient: APIClientProtocol {
             return
         }
         let task = self.session.dataTask(with: url) { data, urlResponse, error in
+            if let data,
+               let errorMsg = try? self.decoder.decode(APIModel.ErrorMsg.self, from: data),
+               errorMsg.Msg == "not over18" {
+                completion(.failure(.requiresOver18))
+                return
+            }
             let result = self.processResponse(data: data, urlResponse: urlResponse, error: error)
             switch result {
             case .failure(let apiError):
@@ -323,6 +329,25 @@ extension APIClient: APIClientProtocol {
             }
         }
         task.resume()
+    }
+
+    /// Stores an `over18=1` cookie that URLSession attaches to subsequent requests automatically
+    /// (URLSession.shared defaults to `httpShouldHandleCookies == true` and uses HTTPCookieStorage.shared).
+    ///
+    /// `.discard: "TRUE"` makes the cookie session-only per Apple's HTTPCookie docs: isSessionOnly is
+    /// "true if the cookie should be discarded at the end of the session (regardless of expiration date)."
+    /// HTTPCookiePropertyKey.discard's default is "FALSE" for v0 cookies (which this is, since `.version`
+    /// is unset), so we have to set it explicitly to get per-session behaviour.
+    func acknowledgeOver18() {
+        guard let host = goPttBBSURLComponents.host,
+              let cookie = HTTPCookie(properties: [
+                .name: "over18",
+                .value: "1",
+                .domain: host,
+                .path: "/",
+                .discard: "TRUE"
+              ]) else { return }
+        HTTPCookieStorage.shared.setCookie(cookie)
     }
 
     func getArticle(of params: ArticleParams, completion: @escaping (GetArticleResult) -> Void) {

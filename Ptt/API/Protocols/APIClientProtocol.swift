@@ -32,6 +32,9 @@ protocol APIClientProtocol {
     func login(account: String, password: String, completion: @escaping (LoginResult) -> Void)
 
     func getBoardArticles(of params: BoardArticlesParams, completion: @escaping (GetBoardArticlesResult) -> Void)
+    /// Sets the over18=1 cookie for the session. Call after the user has confirmed they're 18 or older,
+    /// then retry the failing request.
+    func acknowledgeOver18()
     func getArticle(of params: ArticleParams, completion: @escaping (GetArticleResult) -> Void)
 
     /// Get board list
