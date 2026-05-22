@@ -35,14 +35,15 @@ extension APIModel {
         var createTime: Date
         var sortTime: Date
         var owner: String
-        var content: [[ContentProperty]]
+        var content: [[ContentProperty]]?
         var ip: String?
         var host: String?
         var idx: String
         var tokenuser: String?
 
         var plainContent: String {
-            content.map { $0.map(\.text).joined() }.joined()
+            guard let content else { return "🐛" }
+            return content.map { $0.map(\.text).joined() }.joined(separator: "\n")
         }
 
         enum CodingKeys: String, CodingKey {

@@ -8,6 +8,7 @@
 
 import UIKit
 
+@available(iOS, deprecated: 26.0, message: "Fullscreen swipe-back is built-in since iOS 26. Use UINavigationController.interactiveContentPopGestureRecognizer instead.")
 protocol FullscreenSwipeable: UIViewController {
 
     func enableFullscreenSwipeBack()
@@ -16,6 +17,9 @@ protocol FullscreenSwipeable: UIViewController {
 extension FullscreenSwipeable {
 
     func enableFullscreenSwipeBack() {
+        if #available(iOS 26.0, *) {
+            return
+        }
         guard let target = self.navigationController?.interactivePopGestureRecognizer?.delegate else { return }
         let selector = NSSelectorFromString("handleNavigationTransition:")
         if target.responds(to: selector) {

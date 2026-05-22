@@ -111,7 +111,11 @@ final class BoardViewController: UIViewController, FullscreenSwipeable, BoardVie
                 DispatchQueue.main.async(execute: {
                     self.isRequesting = false
                     if case .requiresOver18 = apiError {
-                        self.presentOver18Consent(retryStartIndex: startIndex)
+                        self.activityIndicator.stopAnimating()
+                        if let refreshControl = self.tableView.refreshControl, refreshControl.isRefreshing {
+                            refreshControl.endRefreshing()
+                        }
+                        self.navigationController?.popViewController(animated: true)
                         return
                     }
                     let alert = UIAlertController(title: L10n.error, message: apiError.message, preferredStyle: .alert)
@@ -161,23 +165,6 @@ final class BoardViewController: UIViewController, FullscreenSwipeable, BoardVie
         }
     }
 
-    private func presentOver18Consent(retryStartIndex: String?) {
-        let alert = UIAlertController(
-            title: L10n.over18Title,
-            message: L10n.over18Message,
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: L10n.over18Confirm, style: .default) { [weak self] _ in
-            guard let self else { return }
-            self.apiClient.acknowledgeOver18()
-            self.requestArticles(startIndex: retryStartIndex)
-        })
-        alert.addAction(UIAlertAction(title: L10n.cancel, style: .cancel) { [weak self] _ in
-            self?.navigationController?.popViewController(animated: true)
-        })
-        present(alert, animated: true)
-    }
-
     private func setupToolBar() {
         let refreshButtonItem = UIBarButtonItem(image: StyleKit.imageOfRefresh(), style: .plain, target: self, action: #selector(refresh))
         let searchButtonItem = UIBarButtonItem(image: StyleKit.imageOfSearch(), style: .plain, target: self, action: #selector(search))
@@ -189,7 +176,7 @@ final class BoardViewController: UIViewController, FullscreenSwipeable, BoardVie
         let flexible3 = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 
 #if READ_ONLY
-        let items = [refreshButtonItem]
+        let items = [flexible1, refreshButtonItem, flexible2]
 #else
         let items = [flexible1, refreshButtonItem, flexible2, composeButtonItem, flexible3]
 #endif
@@ -308,23 +295,61 @@ private class BoardCell: UITableViewCell {
     private let authorImageView = UIImageView()
     private let authorNameLabel = UILabel()
 
+    private let recommendLabel = UILabel()
     private let titleLabel = UILabel()
     private let moreButton = UIButton()
     var article: APIModel.BoardArticle? = nil {
         didSet {
-            if let article, let category = article.category {
-                categoryLabel.attributedText = NSAttributedString(string: category, attributes: metadataAttributes)
-                dateLabel.attributedText = NSAttributedString(string: article.date, attributes: metadataAttributes)
-                authorNameLabel.attributedText = NSAttributedString(string: article.author, attributes: metadataAttributes)
-                titleLabel.attributedText = NSAttributedString(string: article.titleWithoutCategory, attributes: titleAttributes)
+            guard let article else {
+                categoryLabel.attributedText = nil
+                dateLabel.attributedText = nil
+                authorNameLabel.attributedText = nil
+                recommendLabel.attributedText = nil
+                titleLabel.attributedText = nil
+                return
             }
+            categoryLabel.attributedText = article.category.map {
+                NSAttributedString(string: $0, attributes: metadataAttributes)
+            }
+            dateLabel.attributedText = NSAttributedString(string: article.date, attributes: metadataAttributes)
+            authorNameLabel.attributedText = NSAttributedString(string: article.author, attributes: metadataAttributes)
+            recommendLabel.attributedText = recommendAttributedText(for: article.recommend)
+            titleLabel.attributedText = NSAttributedString(string: article.titleWithoutCategory, attributes: titleAttributes)
         }
+    }
+
+    private func recommendAttributedText(for recommend: Int) -> NSAttributedString {
+        guard recommend != 0 else {
+            return NSAttributedString(string: "")
+        }
+        let color: UIColor
+        let text: String
+        switch recommend {
+        case ..<0:
+            color = UIColor(red: 0x66/255, green: 0x66/255, blue: 0x66/255, alpha: 1)
+            text = String(recommend)
+        case 10..<100:
+            color = UIColor(red: 0xff/255, green: 0xff/255, blue: 0x66/255, alpha: 1)
+            text = String(recommend)
+        case 100...:
+            color = UIColor(red: 0xff/255, green: 0x66/255, blue: 0x66/255, alpha: 1)
+            text = "爆"
+        default:
+            color = UIColor(red: 0x66/255, green: 0xff/255, blue: 0x66/255, alpha: 1)
+            text = String(recommend)
+        }
+        var attrs = titleAttributes
+        attrs[.foregroundColor] = color
+        return NSAttributedString(string: text, attributes: attrs)
     }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         titleLabel.numberOfLines = 2
+        recommendLabel.textAlignment = .right
+        recommendLabel.adjustsFontSizeToFitWidth = true
+        recommendLabel.minimumScaleFactor = 0.5
         categoryImageView.image = StyleKit.imageOfCategory()
         clockImageView.image = StyleKit.imageOfClock()
         authorImageView.image = StyleKit.imageOfAuthor()
@@ -332,18 +357,20 @@ private class BoardCell: UITableViewCell {
         moreButton.setImage(StyleKit.imageOfMoreV(), for: .normal)
         moreButton.accessibilityLabel = L10n.moreActions
 
-        contentView.ptt_add(subviews: [categoryImageView, categoryLabel, clockImageView, dateLabel, authorImageView, authorNameLabel, titleLabel])
-        let viewsDict = ["categoryImageView": categoryImageView, "categoryLabel": categoryLabel, "clockImageView": clockImageView, "dateLabel": dateLabel, "authorImageView": authorImageView, "authorNameLabel": authorNameLabel, "titleLabel": titleLabel]
+        contentView.ptt_add(subviews: [categoryImageView, categoryLabel, clockImageView, dateLabel, authorImageView, authorNameLabel, recommendLabel, titleLabel])
+        let viewsDict = ["categoryImageView": categoryImageView, "categoryLabel": categoryLabel, "clockImageView": clockImageView, "dateLabel": dateLabel, "authorImageView": authorImageView, "authorNameLabel": authorNameLabel, "recommendLabel": recommendLabel, "titleLabel": titleLabel]
         NSLayoutConstraint.activate(
             NSLayoutConstraint.constraints(withVisualFormat: "V:|-(20)-[categoryImageView]-[titleLabel]-(15)-|", metrics: nil, views: viewsDict) +
             NSLayoutConstraint.constraints(withVisualFormat: "H:|-[categoryImageView]-[categoryLabel]-[clockImageView]-[dateLabel]-[authorImageView]-[authorNameLabel]", metrics: nil, views: viewsDict) +
-            NSLayoutConstraint.constraints(withVisualFormat: "H:|-[titleLabel]-|", metrics: nil, views: viewsDict) +
+            NSLayoutConstraint.constraints(withVisualFormat: "H:|-[recommendLabel]-[titleLabel]-|", metrics: nil, views: viewsDict) +
             [
                 categoryLabel.centerYAnchor.constraint(equalTo: categoryImageView.centerYAnchor),
                 clockImageView.centerYAnchor.constraint(equalTo: categoryImageView.centerYAnchor),
                 dateLabel.centerYAnchor.constraint(equalTo: categoryImageView.centerYAnchor),
                 authorImageView.centerYAnchor.constraint(equalTo: categoryImageView.centerYAnchor),
-                authorNameLabel.centerYAnchor.constraint(equalTo: categoryImageView.centerYAnchor)
+                authorNameLabel.centerYAnchor.constraint(equalTo: categoryImageView.centerYAnchor),
+                recommendLabel.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+                recommendLabel.widthAnchor.constraint(equalToConstant: 30)
             ]
         )
     }

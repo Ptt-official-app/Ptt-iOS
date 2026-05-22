@@ -21,6 +21,8 @@ final class ArticleCommentCell: UICollectionViewListCell {
         return formatter
     }()
 
+    private static let defaultContentColor = UIColor(red: 0.62, green: 0.59, blue: 0.16, alpha: 1.00) // #9D972A
+
     var comment: APIModel.BoardArticleComment? {
         didSet {
             guard let comment else { return }
@@ -28,6 +30,7 @@ final class ArticleCommentCell: UICollectionViewListCell {
             typeLabel.textColor = Self.color(for: comment.type)
             ownerLabel.text = comment.owner
             contentLabel.text = comment.plainContent
+            contentLabel.textColor = comment.type == .reply ? PttColors.paleGrey.color : Self.defaultContentColor
             timeLabel.text = Self.timeFormatter.string(from: comment.createTime)
         }
     }
@@ -44,14 +47,19 @@ final class ArticleCommentCell: UICollectionViewListCell {
         ownerLabel.font = boldFont
         ownerLabel.textColor = UIColor(red: 1.00, green: 0.99, blue: 0.48, alpha: 1.00) // #FFFC7A
         contentLabel.font = bodyFont
-        contentLabel.textColor = UIColor(red: 0.62, green: 0.59, blue: 0.16, alpha: 1.00) // #9D972A
-        contentLabel.numberOfLines = 0
+        contentLabel.textColor = Self.defaultContentColor
         timeLabel.font = UIFont.preferredFont(forTextStyle: .caption2)
         timeLabel.textColor = .systemGray
 
-        typeLabel.setContentHuggingPriority(.required, for: .horizontal)
-        ownerLabel.setContentHuggingPriority(.required, for: .horizontal)
-        timeLabel.setContentHuggingPriority(.required, for: .horizontal)
+        for label in [typeLabel, ownerLabel, contentLabel, timeLabel] {
+            label.numberOfLines = 0
+            label.lineBreakMode = .byWordWrapping
+            label.setContentCompressionResistancePriority(.required, for: .vertical)
+        }
+        for label in [typeLabel, ownerLabel, timeLabel] {
+            label.setContentHuggingPriority(.required, for: .horizontal)
+            label.setContentCompressionResistancePriority(.required, for: .horizontal)
+        }
 
         contentView.ptt_add(subviews: [typeLabel, ownerLabel, contentLabel, timeLabel])
         let margins = contentView.layoutMarginsGuide

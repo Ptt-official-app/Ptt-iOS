@@ -76,7 +76,30 @@ final class BoardListTVC: UITableViewController, BoardListView {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        onBoardSelect?(viewModel.list[indexPath.row].brdname)
+        let board = viewModel.list[indexPath.row]
+        if board.is_over_18 == true && !Over18State.isAcknowledged {
+            presentOver18Consent(for: board.brdname)
+        } else {
+            onBoardSelect?(board.brdname)
+        }
+    }
+
+    private func presentOver18Consent(for boardName: String) {
+        let alert = UIAlertController(
+            title: L10n.over18Title,
+            message: L10n.over18Message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: L10n.over18Confirm, style: .default) { [weak self] _ in
+            guard let self else { return }
+            self.viewModel.apiClient.acknowledgeOver18()
+            self.onBoardSelect?(boardName)
+        })
+        alert.addAction(UIAlertAction(title: L10n.cancel, style: .cancel) { [weak self] _ in
+            guard let self, let selectedRow = self.tableView.indexPathForSelectedRow else { return }
+            self.tableView.deselectRow(at: selectedRow, animated: true)
+        })
+        present(alert, animated: true)
     }
 
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

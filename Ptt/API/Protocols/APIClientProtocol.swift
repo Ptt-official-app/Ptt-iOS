@@ -66,6 +66,6 @@ protocol APIClientProtocol {
     func getArticleComments(
         bid: String,
         aid: String,
-        startIndex: String
+        startIndex: String?
     ) async throws -> APIModel.BoardArticleCommentList
 }

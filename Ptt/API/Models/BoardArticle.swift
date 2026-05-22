@@ -16,6 +16,7 @@ extension APIModel {
         let title: String
         let date: String
         let author: String
+        let recommend: Int
 
         let boardID: String
         let articleID: String
@@ -35,11 +36,12 @@ extension APIModel {
         let `class`: String
 
         static func adapter(model: GoPttBBSBrdArticle) -> BoardArticle {
-            return BoardArticle(bid: model.bid, 
+            return BoardArticle(bid: model.bid,
                                 aid: model.aid,
-                                title: "[" + model.`class` + "]" + model.title,
+                                title: model.`class`.isEmpty ? model.title : "[" + model.`class` + "]" + model.title,
                                 date: Date(timeIntervalSince1970: model.create_time).toBoardDateString(),
                                 author: model.owner,
+                                recommend: model.recommend,
                                 boardID: model.bid,
                                 articleID: model.aid)
         }
@@ -58,7 +60,7 @@ extension APIModel {
 
         static func adapter(model: GoBBSBrdArticle) -> BoardArticle {
             // TODO:
-            return BoardArticle(bid: "", aid: "", title: model.title, date: model.modified_time, author: model.owner, boardID: "", articleID: model.filename)
+            return BoardArticle(bid: "", aid: "", title: model.title, date: model.modified_time, author: model.owner, recommend: 0, boardID: "", articleID: model.filename)
         }
     }
 
@@ -80,6 +82,7 @@ extension APIModel {
                 title: model.title,
                 date: model.date,
                 author: model.author,
+                recommend: 0,
                 boardID: boardName,
                 articleID: filename
             )

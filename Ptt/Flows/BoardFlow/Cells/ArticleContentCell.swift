@@ -14,12 +14,17 @@ final class ArticleContentCell: UICollectionViewListCell {
 
     // Same green used in LegacyArticleViewController for ※-prefixed system lines.
     private static let systemLineColor = UIColor(red: 0.00, green: 0.60, blue: 0.00, alpha: 1.00)
+    private static let commentLineColor = UIColor(red: 0.00, green: 0.60, blue: 0.60, alpha: 1.00)
 
     var article: APIModel.FullArticle? {
         didSet {
             guard let article else { return }
             contentTextView.attributedText = Self.attributedText(for: article)
         }
+    }
+
+    func setLinkDelegate(_ delegate: UITextViewDelegate?) {
+        contentTextView.delegate = delegate
     }
 
     override init(frame: CGRect) {
@@ -52,6 +57,15 @@ final class ArticleContentCell: UICollectionViewListCell {
                 .foregroundColor: PttColors.paleGrey.color
             ]
         )
+        let nsContent = article.content as NSString
+        nsContent.enumerateSubstrings(in: NSRange(location: 0, length: nsContent.length), options: .byLines) { line, lineRange, _, _ in
+            guard let line else { return }
+            if line.hasPrefix("※") {
+                body.addAttribute(.foregroundColor, value: systemLineColor, range: lineRange)
+            } else if line.hasPrefix(": ") {
+                body.addAttribute(.foregroundColor, value: commentLineColor, range: lineRange)
+            }
+        }
         body.append(NSAttributedString(
             string: "--\r\n",
             attributes: [

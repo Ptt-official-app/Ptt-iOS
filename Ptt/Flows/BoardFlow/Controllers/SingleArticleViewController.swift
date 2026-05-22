@@ -32,7 +32,7 @@ final class SingleArticleViewController: UIViewController, FullscreenSwipeable, 
     private var article: APIModel.FullArticle?
     private var comments: [APIModel.BoardArticleComment] = []
     private var commentIndex: [String: APIModel.BoardArticleComment] = [:]
-    private var nextIdx: String = ""
+    private var nextIdx: String? = nil
     private var hasMoreComments = true
     private var isRequesting = false
     private var isLoadingMoreComments = false
@@ -130,7 +130,7 @@ final class SingleArticleViewController: UIViewController, FullscreenSwipeable, 
                 for comment in newComments {
                     commentIndex[comment.idx] = comment
                 }
-                comments.append(contentsOf: newComments)
+                comments.append(contentsOf: newComments.filter { $0.type != .edit })
                 if page.nextIdx.isEmpty || page.nextIdx == startIdx || newComments.isEmpty {
                     hasMoreComments = false
                 } else {
@@ -138,8 +138,8 @@ final class SingleArticleViewController: UIViewController, FullscreenSwipeable, 
                 }
                 applySnapshot()
             } catch {
-                // Comments are auxiliary; stop further attempts on error to avoid loops.
-                hasMoreComments = false
+                let message = (error as? APIError)?.message ?? error.localizedDescription
+                presentErrorAlert(message: message)
             }
         }
     }
@@ -159,6 +159,7 @@ extension SingleArticleViewController {
 
         let contentRegistration = UICollectionView.CellRegistration<ArticleContentCell, Void> { [weak self] cell, _, _ in
             cell.article = self?.article
+            cell.setLinkDelegate(self)
             var backgroundConfig = UIBackgroundConfiguration.listPlainCell()
             backgroundConfig.backgroundColor = PttColors.codGray.color
             cell.backgroundConfiguration = backgroundConfig
@@ -232,7 +233,7 @@ extension SingleArticleViewController {
         self.article = nil
         self.comments = []
         self.commentIndex = [:]
-        self.nextIdx = ""
+        self.nextIdx = nil
         self.hasMoreComments = true
         self.isLoadingMoreComments = false
         applySnapshot()
@@ -380,5 +381,23 @@ extension SingleArticleViewController {
         let cancel = UIAlertAction(title: L10n.cancel, style: .cancel)
         [deleteAction, cancel].forEach(alert.addAction)
         present(alert, animated: true)
+    }
+}
+
+extension SingleArticleViewController: UITextViewDelegate {
+    func textView(
+        _ textView: UITextView,
+        shouldInteractWith URL: URL,
+        in characterRange: NSRange,
+        interaction: UITextItemInteraction
+    ) -> Bool {
+        guard interaction == .invokeDefaultAction,
+              let scheme = URL.scheme?.lowercased(),
+              scheme == "http" || scheme == "https" else {
+            return true
+        }
+        let safari = SFSafariViewController(url: URL)
+        present(safari, animated: true)
+        return false
     }
 }

@@ -8,6 +8,12 @@
 
 import Foundation
 
+/// Process-wide flag indicating the user has acknowledged the over-18 prompt
+/// during the current app lifecycle. Reset on next launch.
+enum Over18State {
+    static var isAcknowledged: Bool = false
+}
+
 final class APIClient {
     private enum Method: String {
         case GET
@@ -28,7 +34,7 @@ final class APIClient {
     private var goPttBBSURLComponents: URLComponents {
         var urlComponent = URLComponents()
         urlComponent.scheme = "https"
-        urlComponent.host = "api-staging.devptt.dev"
+        urlComponent.host = "api.devptt.dev"
         return urlComponent
     }
 
@@ -51,11 +57,11 @@ final class APIClient {
         return urlComponent
     }
 
-    private var decoder: JSONDecoder {
+    private let decoder: JSONDecoder = {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .secondsSince1970
         return decoder
-    }
+    }()
 
     private let session: URLSessionProtocol
     private let keyChainItem: PTTKeyChain
@@ -348,6 +354,7 @@ extension APIClient: APIClientProtocol {
                 .discard: "TRUE"
               ]) else { return }
         HTTPCookieStorage.shared.setCookie(cookie)
+        Over18State.isAcknowledged = true
     }
 
     func getArticle(of params: ArticleParams, completion: @escaping (GetArticleResult) -> Void) {
@@ -660,14 +667,16 @@ extension APIClient: APIClientProtocol {
     func getArticleComments(
         bid: String,
         aid: String,
-        startIndex: String = ""
+        startIndex: String?
     ) async throws -> APIModel.BoardArticleCommentList {
         var urlComponent = rootURLComponents
         urlComponent.path = "/api/board/\(bid)/article/\(aid)/comments"
-        urlComponent.queryItems = [
-            URLQueryItem(name: "start_idx", value: startIndex),
-            URLQueryItem(name: "desc", value: "false")
-        ]
+        var queryItems = [URLQueryItem]()
+        queryItems.append(URLQueryItem(name: "desc", value: "false"))
+        if startIndex != nil {
+            queryItems.append(URLQueryItem(name: "start_idx", value: startIndex))
+        }
+        urlComponent.queryItems = queryItems
         guard let url = urlComponent.url else { throw APIError.urlError }
 
         var request = URLRequest(url: url)

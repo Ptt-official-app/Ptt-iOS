@@ -43,6 +43,8 @@ extension APIModel {
         let read: Bool
         /// 我的最愛.
         let fav: Bool
+        /// 十八禁
+        let is_over_18: Bool?
 
         init(brdname: String, title: String, nuser: Int = 0) {
             self.bid = "bid"
@@ -60,6 +62,7 @@ extension APIModel {
             self.stat_attr = .invalid
             self.fav = false
             self.idx = "0"
+            self.is_over_18 = nil
         }
     }
 
