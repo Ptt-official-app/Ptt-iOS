@@ -43,6 +43,7 @@ final class BoardSearchViewController: UITableViewController {
         tableView.separatorStyle = .none
         tableView.tableFooterView = UIView(frame: .zero)
         tableView.rowHeight = UITableView.automaticDimension
+        tableView.cellLayoutMarginsFollowReadableWidth = true
         tableView.register(BoardSearchCell.self, forCellReuseIdentifier: BoardSearchCell.cellID)
     }
 

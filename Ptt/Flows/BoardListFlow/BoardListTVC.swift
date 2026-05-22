@@ -238,6 +238,7 @@ extension BoardListTVC {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
         tableView.keyboardDismissMode = .onDrag // to dismiss from search bar
+        tableView.cellLayoutMarginsFollowReadableWidth = true
         tableView.register(BoardsTableViewCell.self, forCellReuseIdentifier: BoardsTableViewCell.cellID)
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(pullDownToRefresh), for: .valueChanged)

@@ -31,6 +31,7 @@ final class AppearanceModeViewController: UITableViewController, FullscreenSwipe
         title = L10n.appearanceMode
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = GlobalAppearance.backgroundColor
+        tableView.cellLayoutMarginsFollowReadableWidth = true
         tableView.register(SettingsTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
 
         enableFullscreenSwipeBack()

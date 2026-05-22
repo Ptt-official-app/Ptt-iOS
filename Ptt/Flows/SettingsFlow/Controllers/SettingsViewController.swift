@@ -34,6 +34,7 @@ final class SettingsViewController: UITableViewController {
         }
         view.backgroundColor = GlobalAppearance.backgroundColor
 
+        tableView.cellLayoutMarginsFollowReadableWidth = true
         tableView.register(SettingsTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
 
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeAppearanceMode), name: NotificationName.value(of: .didChangeAppearanceMode), object: nil)

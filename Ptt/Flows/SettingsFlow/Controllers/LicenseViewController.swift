@@ -20,6 +20,7 @@ final class LicenseViewController: UITableViewController, FullscreenSwipeable {
         tableView.backgroundColor = GlobalAppearance.backgroundColor
         tableView.separatorStyle = .none
         tableView.dataSource = self
+        tableView.cellLayoutMarginsFollowReadableWidth = true
         tableView.register(LicenseCell.self, forCellReuseIdentifier: "LicenseCell")
     }
 }

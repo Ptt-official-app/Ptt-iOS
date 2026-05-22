@@ -37,11 +37,13 @@ final class ArticleContentCell: UICollectionViewListCell {
         // See: https://stackoverflow.com/a/28589384/3796488
         contentTextView.accessibilityTraits = .staticText
         contentView.ptt_add(subviews: [contentTextView])
-        let viewsDict = ["contentTextView": contentTextView]
-        NSLayoutConstraint.activate(
-            NSLayoutConstraint.constraints(withVisualFormat: "H:|-(24)-[contentTextView]-(24)-|", metrics: nil, views: viewsDict) +
-            NSLayoutConstraint.constraints(withVisualFormat: "V:|-(18)-[contentTextView]-(18)-|", metrics: nil, views: viewsDict)
-        )
+        let readable = contentView.readableContentGuide
+        NSLayoutConstraint.activate([
+            contentTextView.leadingAnchor.constraint(equalTo: readable.leadingAnchor),
+            contentTextView.trailingAnchor.constraint(equalTo: readable.trailingAnchor),
+            contentTextView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 18),
+            contentTextView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -18)
+        ])
     }
 
     required init?(coder: NSCoder) {

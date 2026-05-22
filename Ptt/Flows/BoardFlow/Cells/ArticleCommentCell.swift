@@ -62,9 +62,10 @@ final class ArticleCommentCell: UICollectionViewListCell {
         }
 
         contentView.ptt_add(subviews: [typeLabel, ownerLabel, contentLabel, timeLabel])
+        let readable = contentView.readableContentGuide
         let margins = contentView.layoutMarginsGuide
         NSLayoutConstraint.activate([
-            typeLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            typeLabel.leadingAnchor.constraint(equalTo: readable.leadingAnchor),
             typeLabel.firstBaselineAnchor.constraint(equalTo: contentLabel.firstBaselineAnchor),
 
             ownerLabel.leadingAnchor.constraint(equalTo: typeLabel.trailingAnchor, constant: 4),
@@ -75,7 +76,7 @@ final class ArticleCommentCell: UICollectionViewListCell {
             contentLabel.topAnchor.constraint(equalTo: margins.topAnchor),
             contentLabel.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
 
-            timeLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+            timeLabel.trailingAnchor.constraint(equalTo: readable.trailingAnchor),
             timeLabel.firstBaselineAnchor.constraint(equalTo: contentLabel.firstBaselineAnchor)
         ])
     }

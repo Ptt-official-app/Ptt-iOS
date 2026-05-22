@@ -60,6 +60,7 @@ final class BoardViewController: UIViewController, FullscreenSwipeable, BoardVie
         tableView.delegate = self
         tableView.prefetchDataSource = self
         tableView.separatorStyle = .none
+        tableView.cellLayoutMarginsFollowReadableWidth = true
         tableView.register(BoardCell.self, forCellReuseIdentifier: "BoardCell")
 
         let refreshControl = UIRefreshControl()

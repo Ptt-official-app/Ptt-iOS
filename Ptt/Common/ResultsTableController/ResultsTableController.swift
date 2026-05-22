@@ -27,6 +27,7 @@ class ResultsTableController: UITableViewController, FavoriteView {
         tableView.estimatedRowHeight = 80.0
         tableView.separatorStyle = .none
         tableView.keyboardDismissMode = .onDrag // to dismiss from search bar
+        tableView.cellLayoutMarginsFollowReadableWidth = true
         tableView.register(BoardsTableViewCell.self, forCellReuseIdentifier: BoardsTableViewCell.cellIdentifier())
 
         activityIndicator.color = .lightGray

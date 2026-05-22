@@ -65,6 +65,7 @@ final class PopularArticlesViewController: UITableViewController {
         self.tableView.separatorStyle = .none
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.estimatedRowHeight = 113
+        self.tableView.cellLayoutMarginsFollowReadableWidth = true
         self.tableView.register(PopularArticleCell.nib,
                                 forCellReuseIdentifier: PopularArticleCell.reuseID)
     }

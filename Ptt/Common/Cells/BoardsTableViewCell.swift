@@ -50,16 +50,16 @@ class BoardsTableViewCell: UITableViewCell {
         }
 
         contentView.ptt_add(subviews: [boardNameLabel, boardTitleLabel])
-        let viewsDict = ["boardNameLabel": boardNameLabel, "boardTitleLabel": boardTitleLabel]
-        let metrics = ["hp": 20, "vp": 10, "vps": 4]
-        var constraints = [NSLayoutConstraint]()
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(hp)-[boardNameLabel]-|",
-                                                      options: [], metrics: metrics, views: viewsDict)
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(hp)-[boardTitleLabel]-|",
-                                                      options: [], metrics: metrics, views: viewsDict)
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|-(vp)-[boardNameLabel]-(vps)-[boardTitleLabel]-(vp)-|",
-                                                      options: [], metrics: metrics, views: viewsDict)
-        NSLayoutConstraint.activate(constraints)
+        let margins = contentView.layoutMarginsGuide
+        NSLayoutConstraint.activate([
+            boardNameLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            boardNameLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+            boardTitleLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            boardTitleLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+            boardNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            boardTitleLabel.topAnchor.constraint(equalTo: boardNameLabel.bottomAnchor, constant: 4),
+            boardTitleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
+        ])
     }
 
     required init?(coder: NSCoder) {

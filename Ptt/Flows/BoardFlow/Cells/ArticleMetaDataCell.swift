@@ -47,14 +47,23 @@ final class ArticleMetaDataCell: UICollectionViewListCell {
 
         contentView.ptt_add(subviews: [categoryImageView, categoryLabel, clockImageView, dateLabel, authorImageView, authorNameLabel])
         let viewsDict = ["categoryImageView": categoryImageView, "categoryLabel": categoryLabel, "clockImageView": clockImageView, "dateLabel": dateLabel, "authorImageView": authorImageView, "authorNameLabel": authorNameLabel]
+        let readable = contentView.readableContentGuide
         NSLayoutConstraint.activate(
             NSLayoutConstraint.constraints(withVisualFormat: "V:|-[categoryImageView]-(10)-[authorImageView]-(10)-[clockImageView]-|", metrics: nil, views: viewsDict) +
-            NSLayoutConstraint.constraints(withVisualFormat: "H:|-(44)-[categoryImageView]-[categoryLabel]", metrics: nil, views: viewsDict) +
-            NSLayoutConstraint.constraints(withVisualFormat: "H:|-(44)-[authorImageView]-[authorNameLabel]", metrics: nil, views: viewsDict) +
-            NSLayoutConstraint.constraints(withVisualFormat: "H:|-(44)-[clockImageView]-[dateLabel]", metrics: nil, views: viewsDict) +
-            [categoryImageView.centerYAnchor.constraint(equalTo: categoryLabel.centerYAnchor),
-             authorImageView.centerYAnchor.constraint(equalTo: authorNameLabel.centerYAnchor),
-             clockImageView.centerYAnchor.constraint(equalTo: dateLabel.centerYAnchor)]
+            [
+                categoryImageView.leadingAnchor.constraint(equalTo: readable.leadingAnchor),
+                authorImageView.leadingAnchor.constraint(equalTo: readable.leadingAnchor),
+                clockImageView.leadingAnchor.constraint(equalTo: readable.leadingAnchor),
+                categoryLabel.leadingAnchor.constraint(equalTo: categoryImageView.trailingAnchor, constant: 8),
+                authorNameLabel.leadingAnchor.constraint(equalTo: authorImageView.trailingAnchor, constant: 8),
+                dateLabel.leadingAnchor.constraint(equalTo: clockImageView.trailingAnchor, constant: 8),
+                categoryLabel.trailingAnchor.constraint(lessThanOrEqualTo: readable.trailingAnchor),
+                authorNameLabel.trailingAnchor.constraint(lessThanOrEqualTo: readable.trailingAnchor),
+                dateLabel.trailingAnchor.constraint(lessThanOrEqualTo: readable.trailingAnchor),
+                categoryImageView.centerYAnchor.constraint(equalTo: categoryLabel.centerYAnchor),
+                authorImageView.centerYAnchor.constraint(equalTo: authorNameLabel.centerYAnchor),
+                clockImageView.centerYAnchor.constraint(equalTo: dateLabel.centerYAnchor)
+            ]
         )
     }
 

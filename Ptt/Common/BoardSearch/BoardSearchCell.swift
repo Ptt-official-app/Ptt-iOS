@@ -76,10 +76,11 @@ extension BoardSearchCell {
 
     private func setUpContainer() {
         contentView.addSubview(container)
+        let margins = contentView.layoutMarginsGuide
         [
             container.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            container.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22.5),
-            container.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22.5),
+            container.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            container.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
             container.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ].active()
     }

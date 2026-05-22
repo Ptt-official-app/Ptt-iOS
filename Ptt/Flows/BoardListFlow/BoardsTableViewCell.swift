@@ -32,36 +32,23 @@ final class BoardsTableViewCell: UITableViewCell {
 extension BoardsTableViewCell {
     private func setUpSubViews() {
         backgroundColor = .clear
-        setUpBoardName()
-        setUpTitleLabel()
-        setUpUserNumberView()
-    }
-
-    private func setUpBoardName() {
         contentView.addSubview(boardNameLabel)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(userNumberView)
+        let margins = contentView.layoutMarginsGuide
         [
             boardNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            boardNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 23),
-            boardNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -100),
-            boardNameLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 20)
-        ].active()
-    }
+            boardNameLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            boardNameLabel.trailingAnchor.constraint(lessThanOrEqualTo: userNumberView.leadingAnchor, constant: -8),
+            boardNameLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 20),
 
-    private func setUpTitleLabel() {
-        contentView.addSubview(titleLabel)
-        [
             titleLabel.topAnchor.constraint(equalTo: boardNameLabel.bottomAnchor, constant: 9),
             titleLabel.leadingAnchor.constraint(equalTo: boardNameLabel.leadingAnchor),
-            titleLabel.trailingAnchor.constraint(equalTo: boardNameLabel.trailingAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
-        ].active()
-    }
+            titleLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
 
-    private func setUpUserNumberView() {
-        addSubview(userNumberView)
-        [
             userNumberView.centerYAnchor.constraint(equalTo: boardNameLabel.centerYAnchor),
-            userNumberView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -23)
+            userNumberView.trailingAnchor.constraint(equalTo: margins.trailingAnchor)
         ].active()
     }
 }
