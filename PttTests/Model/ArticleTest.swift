@@ -12,17 +12,14 @@ import XCTest
 class ArticleTest: XCTestCase {
 
     func testArticleCategory() {
-        let testCases = [
-            ("[category] title", "category", "title"),  // normal format, with spacing
-            ("[category]title", "category", "title"),
-            ("[category]  title", "category", "title"),
-            ("title", nil, "title"),
-            ("[category1][category2] title", "category1", "[category2] title")
+        let testCases: [(String, APIModel.SubjectType, String)] = [
+            ("title", .normal, "title"),
+            ("Re: title", .reply, "title"),
+            ("Fw: title", .forward, "title"),
         ]
-        for (title, expectedCategory, expectedTitleWithoutCategory) in testCases {
-            let article1 = APIModel.BoardArticle(title: title, date: "", author: "", boardID: "", articleID: "")
-            XCTAssertEqual(article1.category, expectedCategory)
-            XCTAssertEqual(article1.titleWithoutCategory, expectedTitleWithoutCategory)
+        for (displayTitle, subjectType, title) in testCases {
+            let article = APIModel.BoardArticle(bid: "", aid: "", subjectType: subjectType, class: "", title: title, date: "", owner: "", recommend: 0, boardID: "", articleID: "")
+            XCTAssertEqual(displayTitle, article.displayTitle)
         }
     }
 

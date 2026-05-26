@@ -309,13 +309,11 @@ private class BoardCell: UITableViewCell {
                 titleLabel.attributedText = nil
                 return
             }
-            categoryLabel.attributedText = article.category.map {
-                NSAttributedString(string: $0, attributes: metadataAttributes)
-            }
+            categoryLabel.attributedText = NSAttributedString(string: article.`class`, attributes: metadataAttributes)
             dateLabel.attributedText = NSAttributedString(string: article.date, attributes: metadataAttributes)
-            authorNameLabel.attributedText = NSAttributedString(string: article.author, attributes: metadataAttributes)
+            authorNameLabel.attributedText = NSAttributedString(string: article.owner, attributes: metadataAttributes)
             recommendLabel.attributedText = recommendAttributedText(for: article.recommend)
-            titleLabel.attributedText = NSAttributedString(string: article.titleWithoutCategory, attributes: titleAttributes)
+            titleLabel.attributedText = NSAttributedString(string: article.displayTitle, attributes: titleAttributes)
         }
     }
 

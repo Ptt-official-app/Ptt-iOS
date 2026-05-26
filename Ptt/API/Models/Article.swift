@@ -11,27 +11,26 @@ import Foundation
 protocol Article: Codable {
     var aid: String { get }
     var bid: String { get }
+    var subjectType: APIModel.SubjectType { get }
+    var `class`: String { get }
     var title: String { get }
     var date: String { get }
-    var author: String { get }
+    var owner: String { get }
 
     // implemented in protocol extension below
-    var category: String? { get }
-    var titleWithoutCategory: String { get }
+    var displayTitle: String { get }
 }
 
 extension Article {
-    var category: String? {
-        if let leftBracket = title.firstIndex(of: "["), let rightBracket = title.firstIndex(of: "]") {
-            let nextLeftBracket = title.index(after: leftBracket)
-            let range = nextLeftBracket..<rightBracket
-            let category = title[range]
-            return String(category)
-        }
-        return nil
-    }
 
-    var titleWithoutCategory: String {
-        title.withoutCategory
+    var displayTitle: String {
+        switch subjectType {
+        case .reply:
+            return "Re: " + title
+        case .forward:
+            return "Fw: " + title
+        case .normal, .locked, .deleted, .unknown:
+            return title
+        }
     }
 }

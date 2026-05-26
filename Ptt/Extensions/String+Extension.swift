@@ -9,16 +9,6 @@
 import Foundation
 
 extension String {
-    var withoutCategory: String {
-        if let leftBracket = firstIndex(of: "["),
-           let rightBracket = firstIndex(of: "]") {
-            var title = self
-            let range = leftBracket...rightBracket
-            title.removeSubrange(range)
-            return title.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-        return self
-    }
 
     func getBorderName() -> String {
         // Sample url

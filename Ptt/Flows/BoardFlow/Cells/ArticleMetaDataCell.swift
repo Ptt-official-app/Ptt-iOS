@@ -20,13 +20,13 @@ final class ArticleMetaDataCell: UICollectionViewListCell {
     var article: APIModel.FullArticle? {
         didSet {
             if let article {
-                if let category = article.category {
-                    categoryLabel.text = "\(article.board) / \(category)"
+                if !article.`class`.isEmpty {
+                    categoryLabel.text = "\(article.board) / \(article.`class`)"
                 } else {
                     categoryLabel.text = article.board
                 }
                 dateLabel.text = article.date
-                authorNameLabel.text = "\(article.author) (\(article.nickname))"
+                authorNameLabel.text = "\(article.owner) (\(article.nickname))"
             }
         }
     }

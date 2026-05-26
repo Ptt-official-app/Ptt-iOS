@@ -20,13 +20,4 @@ class StringExtensionTest: XCTestCase {
         let str2 = "http/localhost/bbs/test/M.1234567900.A.125"
         XCTAssertEqual(str2.getBorderName(), "")
     }
-
-    func testWithoutCategory() throws {
-        let str1 = "random string"
-        XCTAssertEqual(str1.withoutCategory, str1)
-
-        let str2 = "[Test] random string"
-        XCTAssertEqual(str2.withoutCategory, str1)
-
-    }
 }

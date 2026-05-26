@@ -274,7 +274,7 @@ extension SingleArticleViewController {
 
     private func amIAuthor() -> Bool {
         guard let loginToken: APIModel.LoginToken = keyChainItem.readObject(for: .loginToken) else { return false }
-        return loginToken.user_id == article?.author
+        return loginToken.user_id == article?.owner
     }
 
     private func deleteArticle() {
@@ -305,7 +305,7 @@ extension SingleArticleViewController {
 
 extension SingleArticleViewController {
     private func setupViews() {
-        title = boardArticle.article.title
+        title = boardArticle.article.displayTitle
         enableFullscreenSwipeBack()
 
         setupCollectionView()

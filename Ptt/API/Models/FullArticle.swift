@@ -13,9 +13,11 @@ extension APIModel {
     struct FullArticle: Article {
         let aid: String
         let bid: String
+        let subjectType: SubjectType
+        let `class`: String
         let title: String
         let date: String
-        let author: String
+        let owner: String
 
         let board: String
         let nickname: String
@@ -24,6 +26,22 @@ extension APIModel {
         let ip: String
 
         let url: String
+
+        enum CodingKeys: String, CodingKey {
+            case aid
+            case bid
+            case subjectType = "subject_type"
+            case `class`
+            case title
+            case date
+            case owner
+            case board
+            case nickname
+            case content
+            case comments
+            case ip
+            case url
+        }
 
         static func isPttArticle(url: URL) -> Bool {
             if (url.scheme == "https" || url.scheme == "http")
@@ -89,9 +107,11 @@ extension APIModel {
             let fullArticle = FullArticle(
                 aid: model.aid,
                 bid: model.bid,
-                title: "[" + model.`class` + "]" + model.title,
+                subjectType: .normal,
+                class: model.class,
+                title: model.title,
                 date: Date(timeIntervalSince1970: model.create_time).toArticleDateString(),
-                author: model.owner,
+                owner: model.owner,
                 board: model.brdname,
                 nickname: model.nickname,
                 content: arrangeContent,
@@ -103,6 +123,7 @@ extension APIModel {
         }
     }
 
+    @available(*, deprecated)
     struct GoBBSArticle: Codable {
         let data: GoBBSBrdArticleData
 
@@ -112,10 +133,11 @@ extension APIModel {
 
         static func adapter(model: GoBBSArticle) -> FullArticle {
             // TODO:
-            return FullArticle(aid: "", bid: "", title: "", date: "", author: "", board: "", nickname: "", content: "", comments: [APIModel.Comment](), ip: "", url: "")
+            return FullArticle(aid: "", bid: "", subjectType: .normal, class: "", title: "", date: "", owner: "", board: "", nickname: "", content: "", comments: [APIModel.Comment](), ip: "", url: "")
         }
     }
 
+    @available(*, deprecated)
     struct LegacyArticle: Codable {
         let board: String
         let title: String
@@ -127,19 +149,7 @@ extension APIModel {
         let comments: [Comment]
 
         static func adapter(model: LegacyArticle) -> FullArticle {
-            let fullArticle = FullArticle(
-                aid: "",
-                bid: "",
-                title: model.title,
-                date: model.date,
-                author: model.author,
-                board: model.board,
-                nickname: model.nickname,
-                content: model.content,
-                comments: model.comments,
-                ip: "",
-                url: model.href
-            )
+            let fullArticle = FullArticle(aid: "", bid: "", subjectType: .normal, class: "", title: "", date: model.date, owner: model.author, board: model.board, nickname: model.nickname, content: model.content, comments: model.comments, ip: "", url: model.href)
             return fullArticle
         }
     }

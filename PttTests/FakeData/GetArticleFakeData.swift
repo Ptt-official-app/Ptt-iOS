@@ -11,7 +11,9 @@ import Foundation
 enum GetArticleFakeData {
     static let successData: [String: Any] = [
         "board": "MyBoard",
-        "title": "[問卦] 有沒有問卦的八卦",
+        "subject_type": 0,
+        "class": "問卦",
+        "title": "有沒有問卦的八卦",
         "href": "https://www.ptt.cc/bbs/Gossiping/M.392837.A.F25.html",
         "author": "user3",
         "nickname": "ewfsfsdf",

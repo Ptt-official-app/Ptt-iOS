@@ -42,9 +42,9 @@ final class PopularArticleCell: UITableViewCell {
     func config(by info: APIModel.GoPttBBSBrdArticle) {
         self.categoryLabel.text = self.assembleCategoryText(info: info)
         self.metadataLabel.text = self.assembleMetadataText(info: info)
-        self.titleLabel.text = info.title.withoutCategory
+        self.titleLabel.text = info.title
         self.setupVote(recommend: info.recommend)
-        self.commentLabel.text = info.n_comments.easyRead
+        self.commentLabel.text = info.nComments.easyRead
     }
 
     private func assembleCategoryText(info: APIModel.GoPttBBSBrdArticle) -> String {

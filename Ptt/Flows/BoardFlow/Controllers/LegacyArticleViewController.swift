@@ -40,7 +40,7 @@ final class LegacyArticleViewController: UIViewController, FullscreenSwipeable, 
                 let separator = "\r\n"
                 let contentArray = article.content.components(separatedBy: separator)
                 DispatchQueue.main.async {
-                    self.title = article.titleWithoutCategory
+                    self.title = article.displayTitle
                     // lower level tip for NSAttributedString
                     // See: https://developer.apple.com/videos/play/wwdc2017/244/?time=2130
                     let attributedText = NSMutableAttributedString()
@@ -134,7 +134,7 @@ final class LegacyArticleViewController: UIViewController, FullscreenSwipeable, 
         self.filename = article.articleID
         self.apiClient = apiClient
         super.init(nibName: nil, bundle: nil)
-        self.title = article.titleWithoutCategory
+        self.title = article.displayTitle
         hidesBottomBarWhenPushed = true
 
         // Because self.article didSet will not be called in initializer
@@ -325,15 +325,15 @@ final class LegacyArticleViewController: UIViewController, FullscreenSwipeable, 
         headerAttributedString.append(NSAttributedString(attachment: categoryAttachment))
         // Workaround: We cannot vertically center align attachments easily, so use tab to align text.
         if let article = article as? APIModel.BoardArticle, let boardName = self.boardName {
-            headerAttributedString.append(NSAttributedString(string: "\t\(boardName) / \(article.category)\n"))
+            headerAttributedString.append(NSAttributedString(string: "\t\(boardName) / \(article.`class`)\n"))
         } else if let article = article as? APIModel.FullArticle {
-            headerAttributedString.append(NSAttributedString(string: "\t\(article.board) / \(article.category)\n"))
+            headerAttributedString.append(NSAttributedString(string: "\t\(article.board) / \(article.`class`)\n"))
         }
         headerAttributedString.append(NSAttributedString(attachment: authorAttachment))
         if let article = article as? APIModel.FullArticle {
-            headerAttributedString.append(NSAttributedString(string: "\t\(article.author) (\(article.nickname))\n"))
+            headerAttributedString.append(NSAttributedString(string: "\t\(article.owner) (\(article.nickname))\n"))
         } else {
-            headerAttributedString.append(NSAttributedString(string: "\t\(article.author)\n"))
+            headerAttributedString.append(NSAttributedString(string: "\t\(article.owner)\n"))
         }
         headerAttributedString.append(NSAttributedString(attachment: dateAttachment))
         if (article as? APIModel.BoardArticle) != nil {

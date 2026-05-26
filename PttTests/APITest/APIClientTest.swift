@@ -103,10 +103,8 @@ final class APIClientTest: XCTestCase {
                     XCTFail("Should be a FullArticle")
                     return
                 }
-                XCTAssert(article.author == "user3")
+                XCTAssert(article.owner == "user3")
                 XCTAssert(article.date == "Thu Nov 19 21:20:42 2020")
-                XCTAssert(article.category == "問卦")
-                XCTAssert(article.titleWithoutCategory == "有沒有問卦的八卦")
                 XCTAssert(fullArticle.comments.count == 2)
                 XCTAssert(fullArticle.comments[1].content == ": 叫學長啦")
             }
@@ -294,7 +292,7 @@ final class APIClientTest: XCTestCase {
     func testPopularBoards_succeed() async throws {
         urlSession.stub { path, headers, queryItem, _, completion in
             XCTAssertEqual(path, "/api/boards/popular")
-            XCTAssertEqual(headers["Authorization"], "bearer \(self.token ?? "")")
+            XCTAssertEqual(headers["Authorization"], "bearer \(self.token ?? "")
             XCTAssertEqual(queryItem.count, 0)
             completion(.success((200, BoardListFakeData.successData)))
         }
@@ -314,7 +312,7 @@ final class APIClientTest: XCTestCase {
         let result = try await apiClient.boardDetail(boardID: boardID)
         XCTAssertEqual(result.boardID, "PttApp")
         XCTAssertEqual(result.title, "測試與建議回饋的集散地")
-        XCTAssertEqual(result.postTypes[2], "蘋果")
+        XCTAssertEqual(result.postTypes?[2], "蘋果")
     }
 
     func testProfile_succeed() async throws {
