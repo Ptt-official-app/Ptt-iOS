@@ -8,7 +8,20 @@
 
 import UIKit
 
-final class ArticleCommentCell: UICollectionViewListCell {
+struct ArticleCommentConfiguration: UIContentConfiguration {
+
+    var comment: APIModel.BoardArticleComment?
+
+    func makeContentView() -> UIView & UIContentView {
+        ArticleCommentContentView(configuration: self)
+    }
+
+    func updated(for state: UIConfigurationState) -> ArticleCommentConfiguration {
+        self
+    }
+}
+
+final class ArticleCommentContentView: UIView, UIContentView {
 
     private let typeLabel = UILabel()
     private let ownerLabel = UILabel()
@@ -23,23 +36,26 @@ final class ArticleCommentCell: UICollectionViewListCell {
 
     private static let defaultContentColor = UIColor(red: 0.62, green: 0.59, blue: 0.16, alpha: 1.00) // #9D972A
 
-    var comment: APIModel.BoardArticleComment? {
+    var configuration: UIContentConfiguration {
         didSet {
-            guard let comment else { return }
-            typeLabel.text = Self.symbol(for: comment.type)
-            typeLabel.textColor = Self.color(for: comment.type)
-            ownerLabel.text = comment.owner
-            contentLabel.text = comment.plainContent
-            contentLabel.textColor = comment.type == .reply ? PttColors.paleGrey.color : Self.defaultContentColor
-            timeLabel.text = Self.timeFormatter.string(from: comment.createTime)
+            guard let configuration = configuration as? ArticleCommentConfiguration else { return }
+            apply(configuration)
         }
     }
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(configuration: ArticleCommentConfiguration) {
+        self.configuration = configuration
+        super.init(frame: .zero)
+        setUpViews()
+        apply(configuration)
+    }
 
-        backgroundColor = PttColors.codGray.color
-        contentView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 2, leading: 24, bottom: 2, trailing: 24)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private func setUpViews() {
+        directionalLayoutMargins = NSDirectionalEdgeInsets(top: 2, leading: 24, bottom: 2, trailing: 24)
 
         let bodyFont = UIFont.preferredFont(forTextStyle: .body)
         let boldFont = bodyFont.withTraits(.traitBold)
@@ -61,9 +77,9 @@ final class ArticleCommentCell: UICollectionViewListCell {
             label.setContentCompressionResistancePriority(.required, for: .horizontal)
         }
 
-        contentView.ptt_add(subviews: [typeLabel, ownerLabel, contentLabel, timeLabel])
-        let readable = contentView.readableContentGuide
-        let margins = contentView.layoutMarginsGuide
+        ptt_add(subviews: [typeLabel, ownerLabel, contentLabel, timeLabel])
+        let readable = readableContentGuide
+        let margins = layoutMarginsGuide
         NSLayoutConstraint.activate([
             typeLabel.leadingAnchor.constraint(equalTo: readable.leadingAnchor),
             typeLabel.firstBaselineAnchor.constraint(equalTo: contentLabel.firstBaselineAnchor),
@@ -81,8 +97,14 @@ final class ArticleCommentCell: UICollectionViewListCell {
         ])
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    private func apply(_ configuration: ArticleCommentConfiguration) {
+        guard let comment = configuration.comment else { return }
+        typeLabel.text = Self.symbol(for: comment.type)
+        typeLabel.textColor = Self.color(for: comment.type)
+        ownerLabel.text = comment.owner
+        contentLabel.text = comment.plainContent
+        contentLabel.textColor = comment.type == .reply ? PttColors.paleGrey.color : Self.defaultContentColor
+        timeLabel.text = Self.timeFormatter.string(from: comment.createTime)
     }
 
     // Symbols per go-pttbbs/ptttype/comment_type.go (CommentType.Bytes):

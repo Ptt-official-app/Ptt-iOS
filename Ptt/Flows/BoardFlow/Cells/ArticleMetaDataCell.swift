@@ -8,7 +8,20 @@
 
 import UIKit
 
-final class ArticleMetaDataCell: UICollectionViewListCell {
+struct ArticleMetaDataConfiguration: UIContentConfiguration {
+
+    var article: APIModel.FullArticle?
+
+    func makeContentView() -> UIView & UIContentView {
+        ArticleMetaDataContentView(configuration: self)
+    }
+
+    func updated(for state: UIConfigurationState) -> ArticleMetaDataConfiguration {
+        self
+    }
+}
+
+final class ArticleMetaDataContentView: UIView, UIContentView {
 
     private let categoryImageView = UIImageView()
     private let categoryLabel = UILabel()
@@ -17,23 +30,26 @@ final class ArticleMetaDataCell: UICollectionViewListCell {
     private let authorImageView = UIImageView()
     private let authorNameLabel = UILabel()
 
-    var article: APIModel.FullArticle? {
+    var configuration: UIContentConfiguration {
         didSet {
-            if let article {
-                if !article.`class`.isEmpty {
-                    categoryLabel.text = "\(article.board) / \(article.`class`)"
-                } else {
-                    categoryLabel.text = article.board
-                }
-                dateLabel.text = article.date
-                authorNameLabel.text = "\(article.owner) (\(article.nickname))"
-            }
+            guard let configuration = configuration as? ArticleMetaDataConfiguration else { return }
+            apply(configuration)
         }
     }
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(configuration: ArticleMetaDataConfiguration) {
+        self.configuration = configuration
+        super.init(frame: .zero)
+        preservesSuperviewLayoutMargins = true
+        setUpViews()
+        apply(configuration)
+    }
 
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private func setUpViews() {
         categoryImageView.image = StyleKit.imageOfBoardCategory()
         clockImageView.image = StyleKit.imageOfClock()
         authorImageView.image = StyleKit.imageOfAuthor()
@@ -45,9 +61,9 @@ final class ArticleMetaDataCell: UICollectionViewListCell {
         dateLabel.textColor = .systemGray
         authorNameLabel.textColor = .systemGray
 
-        contentView.ptt_add(subviews: [categoryImageView, categoryLabel, clockImageView, dateLabel, authorImageView, authorNameLabel])
+        ptt_add(subviews: [categoryImageView, categoryLabel, clockImageView, dateLabel, authorImageView, authorNameLabel])
         let viewsDict = ["categoryImageView": categoryImageView, "categoryLabel": categoryLabel, "clockImageView": clockImageView, "dateLabel": dateLabel, "authorImageView": authorImageView, "authorNameLabel": authorNameLabel]
-        let readable = contentView.readableContentGuide
+        let readable = readableContentGuide
         NSLayoutConstraint.activate(
             NSLayoutConstraint.constraints(withVisualFormat: "V:|-[categoryImageView]-(10)-[authorImageView]-(10)-[clockImageView]-|", metrics: nil, views: viewsDict) +
             [
@@ -67,7 +83,14 @@ final class ArticleMetaDataCell: UICollectionViewListCell {
         )
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    private func apply(_ configuration: ArticleMetaDataConfiguration) {
+        guard let article = configuration.article else { return }
+        if !article.`class`.isEmpty {
+            categoryLabel.text = "\(article.board) / \(article.`class`)"
+        } else {
+            categoryLabel.text = article.board
+        }
+        dateLabel.text = article.date
+        authorNameLabel.text = "\(article.owner) (\(article.nickname))"
     }
 }

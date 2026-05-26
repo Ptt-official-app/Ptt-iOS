@@ -8,7 +8,21 @@
 
 import UIKit
 
-final class ArticleContentCell: UICollectionViewListCell {
+struct ArticleContentConfiguration: UIContentConfiguration {
+
+    var article: APIModel.FullArticle?
+    weak var linkDelegate: (any UITextViewDelegate)?
+
+    func makeContentView() -> UIView & UIContentView {
+        ArticleContentContentView(configuration: self)
+    }
+
+    func updated(for state: UIConfigurationState) -> ArticleContentConfiguration {
+        self
+    }
+}
+
+final class ArticleContentContentView: UIView, UIContentView {
 
     private let contentTextView = UITextView()
 
@@ -16,38 +30,46 @@ final class ArticleContentCell: UICollectionViewListCell {
     private static let systemLineColor = UIColor(red: 0.00, green: 0.60, blue: 0.00, alpha: 1.00)
     private static let commentLineColor = UIColor(red: 0.00, green: 0.60, blue: 0.60, alpha: 1.00)
 
-    var article: APIModel.FullArticle? {
+    var configuration: UIContentConfiguration {
         didSet {
-            guard let article else { return }
-            contentTextView.attributedText = Self.attributedText(for: article)
+            guard let configuration = configuration as? ArticleContentConfiguration else { return }
+            apply(configuration)
         }
     }
 
-    func setLinkDelegate(_ delegate: UITextViewDelegate?) {
-        contentTextView.delegate = delegate
+    init(configuration: ArticleContentConfiguration) {
+        self.configuration = configuration
+        super.init(frame: .zero)
+        preservesSuperviewLayoutMargins = true
+        setUpViews()
+        apply(configuration)
     }
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
+    private func setUpViews() {
         contentTextView.backgroundColor = PttColors.codGray.color
         contentTextView.dataDetectorTypes = .all
         contentTextView.isEditable = false
         contentTextView.isScrollEnabled = false
         // See: https://stackoverflow.com/a/28589384/3796488
         contentTextView.accessibilityTraits = .staticText
-        contentView.ptt_add(subviews: [contentTextView])
-        let readable = contentView.readableContentGuide
+        ptt_add(subviews: [contentTextView])
+        let readable = readableContentGuide
         NSLayoutConstraint.activate([
             contentTextView.leadingAnchor.constraint(equalTo: readable.leadingAnchor),
             contentTextView.trailingAnchor.constraint(equalTo: readable.trailingAnchor),
-            contentTextView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 18),
-            contentTextView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -18)
+            contentTextView.topAnchor.constraint(equalTo: topAnchor, constant: 18),
+            contentTextView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -18)
         ])
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    private func apply(_ configuration: ArticleContentConfiguration) {
+        contentTextView.delegate = configuration.linkDelegate
+        guard let article = configuration.article else { return }
+        contentTextView.attributedText = Self.attributedText(for: article)
     }
 
     private static func attributedText(for article: APIModel.FullArticle) -> NSAttributedString {

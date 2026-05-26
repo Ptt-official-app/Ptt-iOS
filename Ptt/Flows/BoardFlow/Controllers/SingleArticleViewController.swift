@@ -150,23 +150,22 @@ final class SingleArticleViewController: UIViewController, FullscreenSwipeable, 
 extension SingleArticleViewController {
 
     private func configureDataSource() {
-        let metadataRegistration = UICollectionView.CellRegistration<ArticleMetaDataCell, Void> { [weak self] cell, _, _ in
-            cell.article = self?.article
+        let metadataRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Void> { [weak self] cell, _, _ in
+            cell.contentConfiguration = ArticleMetaDataConfiguration(article: self?.article)
             var backgroundConfig = UIBackgroundConfiguration.listPlainCell()
             backgroundConfig.backgroundColor = PttColors.black.color
             cell.backgroundConfiguration = backgroundConfig
         }
 
-        let contentRegistration = UICollectionView.CellRegistration<ArticleContentCell, Void> { [weak self] cell, _, _ in
-            cell.article = self?.article
-            cell.setLinkDelegate(self)
+        let contentRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Void> { [weak self] cell, _, _ in
+            cell.contentConfiguration = ArticleContentConfiguration(article: self?.article, linkDelegate: self)
             var backgroundConfig = UIBackgroundConfiguration.listPlainCell()
             backgroundConfig.backgroundColor = PttColors.codGray.color
             cell.backgroundConfiguration = backgroundConfig
         }
 
-        let commentRegistration = UICollectionView.CellRegistration<ArticleCommentCell, APIModel.BoardArticleComment> { cell, _, comment in
-            cell.comment = comment
+        let commentRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, APIModel.BoardArticleComment> { cell, _, comment in
+            cell.contentConfiguration = ArticleCommentConfiguration(comment: comment)
             var backgroundConfig = UIBackgroundConfiguration.listPlainCell()
             backgroundConfig.backgroundColor = PttColors.codGray.color
             cell.backgroundConfiguration = backgroundConfig
