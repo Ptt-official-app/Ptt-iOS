@@ -67,12 +67,19 @@ final class ArticleCommentContentView: UIView, UIContentView {
         timeLabel.font = UIFont.preferredFont(forTextStyle: .caption2)
         timeLabel.textColor = .systemGray
 
-        for label in [typeLabel, ownerLabel, contentLabel, timeLabel] {
-            label.numberOfLines = 0
-            label.lineBreakMode = .byWordWrapping
-            label.setContentCompressionResistancePriority(.required, for: .vertical)
-        }
+        // contentLabel is the only label that wraps; it yields width freely so it absorbs the
+        // remaining space between its compact neighbours.
+        contentLabel.numberOfLines = 0
+        contentLabel.lineBreakMode = .byWordWrapping
+        contentLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        contentLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        contentLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
+        // type / owner / time stay on a single line and are pinned to their intrinsic width:
+        // single line + required hugging (won't grow) + required compression resistance
+        // (won't shrink).
         for label in [typeLabel, ownerLabel, timeLabel] {
+            label.numberOfLines = 1
             label.setContentHuggingPriority(.required, for: .horizontal)
             label.setContentCompressionResistancePriority(.required, for: .horizontal)
         }
@@ -80,6 +87,11 @@ final class ArticleCommentContentView: UIView, UIContentView {
         ptt_add(subviews: [typeLabel, ownerLabel, contentLabel, timeLabel])
         let readable = readableContentGuide
         let margins = layoutMarginsGuide
+
+        // typeLabel + ownerLabel hug the leading edge and timeLabel hugs the trailing edge,
+        // each staying as compact as its content (required horizontal hugging above).
+        // contentLabel is pinned to both neighbours with equality, so it takes every point of
+        // the remaining width between them and wraps onto as many lines as it needs.
         NSLayoutConstraint.activate([
             typeLabel.leadingAnchor.constraint(equalTo: readable.leadingAnchor),
             typeLabel.firstBaselineAnchor.constraint(equalTo: contentLabel.firstBaselineAnchor),
@@ -88,7 +100,7 @@ final class ArticleCommentContentView: UIView, UIContentView {
             ownerLabel.firstBaselineAnchor.constraint(equalTo: contentLabel.firstBaselineAnchor),
 
             contentLabel.leadingAnchor.constraint(equalTo: ownerLabel.trailingAnchor, constant: 6),
-            contentLabel.trailingAnchor.constraint(lessThanOrEqualTo: timeLabel.leadingAnchor, constant: -6),
+            contentLabel.trailingAnchor.constraint(equalTo: timeLabel.leadingAnchor, constant: -6),
             contentLabel.topAnchor.constraint(equalTo: margins.topAnchor),
             contentLabel.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
 
