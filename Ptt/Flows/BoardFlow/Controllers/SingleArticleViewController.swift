@@ -395,8 +395,13 @@ extension SingleArticleViewController: UITextViewDelegate {
               scheme == "http" || scheme == "https" else {
             return true
         }
-        let safari = SFSafariViewController(url: URL)
-        present(safari, animated: true)
+        // Give the system a chance to open the URL in its associated app via a
+        // universal link first; fall back to in-app Safari only if nothing handles it.
+        UIApplication.shared.open(URL, options: [.universalLinksOnly: true]) { [weak self] opened in
+            guard !opened, let self else { return }
+            let safari = SFSafariViewController(url: URL)
+            self.present(safari, animated: true)
+        }
         return false
     }
 }
